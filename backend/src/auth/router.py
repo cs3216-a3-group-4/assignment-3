@@ -4,8 +4,17 @@ from typing import Annotated
 
 from datetime import timedelta
 from fastapi import Depends, APIRouter, HTTPException, Response
+from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
+import httpx
 from sqlalchemy import select
+from src.auth.utils import create_token
+from src.common.constants import (
+    FRONTEND_URL,
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    GOOGLE_REDIRECT_URI,
+)
 from src.common.dependencies import get_session
 from .schemas import SignUpData, UserPublic, Token
 
@@ -20,6 +29,10 @@ from .models import AccountType, User
 
 router = APIRouter(prefix="/auth")
 
+#######################
+# username & password #
+#######################
+
 
 @router.post("/signup")
 def sign_up(data: SignUpData, session=Depends(get_session)):
@@ -27,13 +40,12 @@ def sign_up(data: SignUpData, session=Depends(get_session)):
         select(User).where(User.email == data.email)
     ).first()
     if existing_user:
-        print(existing_user)
         raise HTTPException(HTTPStatus.CONFLICT)
 
     new_user = User(
         email=data.email,
         hashed_password=get_password_hash(data.password),
-        account_type=AccountType.normal,
+        account_type=AccountType.NORMAL,
     )
     session.add(new_user)
     session.commit()
@@ -52,17 +64,65 @@ def log_in(
             detail="Incorrect username or password.",
         )
 
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.id}, expires_delta=access_token_expires
-    )
+    return create_token(user, response)
 
-    response.set_cookie(key="session", value=access_token)
-    return Token(
-        access_token=access_token,
-        token_type="bearer",
-        user=UserPublic.model_validate(user),
-    )
+
+#######################
+#     google auth     #
+#######################
+@router.get("/login/google")
+async def login_google():
+    return {
+        "url": f"https://accounts.google.com/o/oauth2/auth?response_type=code&client_id={GOOGLE_CLIENT_ID}&redirect_uri={GOOGLE_REDIRECT_URI}&scope=openid%20profile%20email&access_type=offline"
+    }
+
+
+@router.get("/google")
+async def auth_google(code: str, response: Response, session=Depends(get_session)):
+    # 1. Do google oauth stuff
+    token_url = "https://accounts.google.com/o/oauth2/token"
+    data = {
+        "code": code,
+        "client_id": GOOGLE_CLIENT_ID,
+        "client_secret": GOOGLE_CLIENT_SECRET,  # noqa: F821
+        "redirect_uri": GOOGLE_REDIRECT_URI,  # noqa: F821
+        "grant_type": "authorization_code",
+    }
+
+    access_token = httpx.post(token_url, data=data).json().get("access_token")
+    user_info = httpx.get(
+        "https://www.googleapis.com/oauth2/v1/userinfo",
+        headers={"Authorization": f"Bearer {access_token}"},
+    ).json()
+
+    # 2. Check for existing user.
+    email = user_info["email"]
+    user = session.scalars(select(User).where(User.email == email)).first()
+    if user:
+        if user.account_type == AccountType.NORMAL:
+            raise HTTPException(
+                HTTPStatus.CONFLICT, "there exists a normal (non-google) account"
+            )
+    else:
+        user = User(
+            email=email,
+            # doesnt matter
+            hashed_password=get_password_hash(GOOGLE_CLIENT_SECRET),
+            account_type=AccountType.GOOGLE,
+        )
+        session.add(user)
+        session.commit()
+
+    # 3. Add jwt token
+    create_token(user, response)
+
+    # TODO: redirect to correct frontend page
+    return RedirectResponse(FRONTEND_URL)
+
+
+# @router.get("/token")
+# async def get_token(token: str = Depends(oauth2_scheme)):
+#     return jwt.decode(token, GOOGLE_CLIENT_SECRET, algorithms=["HS256"])
 
 
 @router.get("/session")

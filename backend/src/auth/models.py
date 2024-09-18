@@ -4,8 +4,8 @@ from src.common.base import Base
 
 
 class AccountType(str, Enum):
-    normal = "normal"
-    google = "google"
+    NORMAL = "normal"
+    GOOGLE = "google"
 
 
 class User(Base):

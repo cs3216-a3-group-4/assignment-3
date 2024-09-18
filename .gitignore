@@ -3,3 +3,4 @@ backend/src/scrapers
 .ruff_cache
 .venv
 __pycache__
+backend/.env
