@@ -2,7 +2,6 @@ from http import HTTPStatus
 from typing import Annotated
 
 
-from datetime import timedelta
 from fastapi import Depends, APIRouter, HTTPException, Response
 from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -16,12 +15,10 @@ from src.common.constants import (
     GOOGLE_REDIRECT_URI,
 )
 from src.common.dependencies import get_session
-from .schemas import SignUpData, UserPublic, Token
+from .schemas import SignUpData, UserPublic
 
 from src.auth.dependencies import (
-    ACCESS_TOKEN_EXPIRE_MINUTES,
     authenticate_user,
-    create_access_token,
     get_current_user,
     get_password_hash,
 )
@@ -78,7 +75,7 @@ async def login_google():
 
 
 @router.get("/google")
-async def auth_google(code: str, response: Response, session=Depends(get_session)):
+async def auth_google(code: str, session=Depends(get_session)):
     # 1. Do google oauth stuff
     token_url = "https://accounts.google.com/o/oauth2/token"
     data = {
@@ -114,15 +111,11 @@ async def auth_google(code: str, response: Response, session=Depends(get_session
         session.commit()
 
     # 3. Add jwt token
+    response = RedirectResponse(FRONTEND_URL)
     create_token(user, response)
 
     # TODO: redirect to correct frontend page
-    return RedirectResponse(FRONTEND_URL)
-
-
-# @router.get("/token")
-# async def get_token(token: str = Depends(oauth2_scheme)):
-#     return jwt.decode(token, GOOGLE_CLIENT_SECRET, algorithms=["HS256"])
+    return response
 
 
 @router.get("/session")
