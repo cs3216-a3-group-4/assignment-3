@@ -1,0 +1,5 @@
+backend/src/scrapers
+.DS_Store
+.ruff_cache
+.venv
+__pycache__
