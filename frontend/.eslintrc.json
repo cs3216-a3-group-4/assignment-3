@@ -1,7 +1,8 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
-  "plugins": ["simple-import-sort"],
+  "plugins": ["simple-import-sort", "prettier"],
   "rules": {
+    "react/jsx-sort-props": "error",
     "simple-import-sort/imports": [
       "error",
       {
@@ -16,6 +17,6 @@
       }
     ],
     "simple-import-sort/exports": "error",
-    "react/jsx-sort-props": "error"
+    "prettier/prettier": "error"
   }
 }
