@@ -1,4 +1,5 @@
-backend/src/scrapers
+backend/src/scrapers/cna/articles
+backend/src/scrapers/guardian/*.json
 .DS_Store
 .ruff_cache
 .venv
