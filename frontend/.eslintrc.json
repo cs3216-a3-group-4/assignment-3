@@ -1,5 +1,10 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "extends": [
+    "plugin:@dword-design/import-alias/recommended",
+    "next/core-web-vitals",
+    "next/typescript",
+    "prettier"
+  ],
   "plugins": ["simple-import-sort", "prettier"],
   "rules": {
     "react/jsx-sort-props": "error",
@@ -17,6 +22,17 @@
       }
     ],
     "simple-import-sort/exports": "error",
+    "@dword-design/import-alias/prefer-alias": [
+      "error",
+      {
+        "alias": {
+          "@": "./",
+          "@/components": "./components/",
+          "@/lib": "./lib/"
+        },
+        "aliasForSubpaths": true
+      }
+    ],
     "prettier/prettier": "error"
   }
 }
