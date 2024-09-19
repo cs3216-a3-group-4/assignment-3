@@ -5,6 +5,7 @@ import Navbar from "@/components/navigation/navbar";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,10 +29,12 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <div className="relative flex min-h-screen flex-col bg-background">
-          <Navbar />
-          <main className="flex flex-1 px-8 py-4 md:px-20">{children}</main>
-        </div>
+        <GoogleOAuthProvider clientId="<your_client_id>">
+          <div className="relative flex min-h-screen flex-col bg-background">
+            <Navbar />
+            <main className="flex flex-1 px-8 py-4 md:px-20">{children}</main>
+          </div>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

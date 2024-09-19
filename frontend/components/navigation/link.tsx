@@ -76,7 +76,7 @@ function Link({
     linkProps = { ...props, rel: "noopener noreferrer", target: "_blank" };
   }
   return (
-    <div className="flex items-center align-middle">
+    <div className="inline-flex items-center">
       <NextLink
         {...linkProps}
         className={cn(linkVariants({ variant, size }), className)}

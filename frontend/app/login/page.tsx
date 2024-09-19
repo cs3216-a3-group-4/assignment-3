@@ -7,6 +7,7 @@ import { z } from "zod";
 import PasswordField from "@/components/form/fields/password-field";
 import TextField from "@/components/form/fields/text-field";
 import Link from "@/components/navigation/link";
+import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
+import { GoogleLogin } from "@react-oauth/google";
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -39,37 +41,70 @@ function LoginPage() {
   const onSubmit: SubmitHandler<LoginForm> = (data) => console.log(data);
 
   return (
-    <Card className="flex flex-col m-auto w-full lg:max-w-md">
-      <CardHeader>
-        <CardTitle>Log in to {process.env.NEXT_PUBLIC_APP_NAME}</CardTitle>
-        <CardDescription>
-          Welcome back, let&apos;s get you signed in.
-        </CardDescription>
-      </CardHeader>
+    <Box className="flex flex-col m-auto w-full justify-center gap-y-6 lg:max-w-lg">
+      <Card className="flex flex-col px-12 py-6">
+        <CardHeader>
+          <CardTitle>Log in to {process.env.NEXT_PUBLIC_APP_NAME}</CardTitle>
+          <CardDescription>
+            By continuing, you agree to our&nbsp;
+            <Link
+              href="/policies/user-agreement"
+              size="sm"
+              className="text-foreground"
+            >
+              User Agreement
+            </Link>
+            &nbsp;and acknowledge that you understand our&nbsp;
+            <Link
+              href="/policies/privacy-policy"
+              size="sm"
+              className="text-foreground"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </CardDescription>
+        </CardHeader>
 
-      <CardContent>
-        <Form {...form}>
-          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-4">
-              <TextField label="Email" name="email" />
-              <PasswordField label="Password" name="password" />
+        <CardContent>
+          <Box className="space-y-6">
+            <Form {...form}>
+              <form
+                className="space-y-10"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <div className="space-y-4">
+                  <TextField label="Email" name="email" />
+                  <PasswordField label="Password" name="password" />
+                </div>
+                <Button className="w-full" type="submit">
+                  Log in
+                </Button>
+              </form>
+            </Form>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
             </div>
-            <Button className="w-full" type="submit">
-              Log in
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
 
-      <CardFooter>
-        <div className="flex gap-x-2">
-          <p className="text-sm text-muted-foreground">Not registered yet?</p>
-          <Link href="/register" size="sm">
-            Create an account
-          </Link>
-        </div>
-      </CardFooter>
-    </Card>
+            <GoogleLogin onSuccess={() => console.log("")} />
+          </Box>
+        </CardContent>
+      </Card>
+      <div className="flex gap-x-2 w-full justify-center">
+        <p className="text-sm text-muted-foreground">Not registered yet?</p>
+        <Link href="/register" size="sm">
+          Create an account
+        </Link>
+      </div>
+    </Box>
   );
 }
 
