@@ -8,11 +8,11 @@
       {
         "groups": [
           ["^react", "^next", "^@?\\w"], // Packages
-          ["^"], // Absolute imports, relative imports with alias @.
-          // Parent imports. Put `..` last.
+          ["^"], // Absolute imports, relative imports with alias @
+          // Parent imports. Put `..` last
           ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
-          // Other relative imports. Put same-folder imports and `.` last.
-          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"]
+          // Other relative imports. Put same-folder imports and `.` last
+          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$", "^.+\\.s?css$"]
         ]
       }
     ],
