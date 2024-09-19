@@ -17,4 +17,7 @@ SECRET_KEY: str = _get_env_var("SECRET_KEY", "", required=False)
 FRONTEND_URL: str = _get_env_var("FRONTEND_URL", required=False)
 GOOGLE_CLIENT_ID: str = _get_env_var("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET: str = _get_env_var("GOOGLE_CLIENT_SECRET")
-GOOGLE_REDIRECT_URI = _get_env_var("GOOGLE_REDIRECT_URI")
+GOOGLE_REDIRECT_URI: str = _get_env_var("GOOGLE_REDIRECT_URI")
+
+# for scrapers
+GUARDIAN_API_KEY: str = _get_env_var("GUARDIAN_API_KEY", required=False)
