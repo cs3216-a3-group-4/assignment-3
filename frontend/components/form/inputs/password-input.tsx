@@ -10,14 +10,14 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
   ({ className, ...props }, ref) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     return (
-      <Box className="flex flex-col space-y-3">
+      <Box className="flex flex-col space-y-2.5">
         <Input
           className={cn("hide-password-toggle pr-10", className)}
           ref={ref}
           type={isPasswordVisible ? "text" : "password"}
           {...props}
         />
-        <div className="flex items-center justify-between">
+        <div className="flex flex-row items-end justify-between">
           <div className="flex items-center space-x-2">
             <Checkbox
               checked={isPasswordVisible}

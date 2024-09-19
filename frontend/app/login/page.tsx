@@ -41,8 +41,8 @@ function LoginPage() {
   const onSubmit: SubmitHandler<LoginForm> = (data) => console.log(data);
 
   return (
-    <Box className="flex flex-col m-auto w-full justify-center gap-y-6 lg:max-w-lg">
-      <Card className="flex flex-col px-12 py-6">
+    <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-6">
+      <Card className="flex flex-col sm:px-12 sm:py-6 md:max-w-lg">
         <CardHeader>
           <CardTitle>Log in to {process.env.NEXT_PUBLIC_APP_NAME}</CardTitle>
           <CardDescription>
@@ -50,7 +50,7 @@ function LoginPage() {
             <Link
               href="/policies/user-agreement"
               size="sm"
-              className="text-foreground"
+              className="text-card-foreground"
             >
               User Agreement
             </Link>
@@ -58,7 +58,7 @@ function LoginPage() {
             <Link
               href="/policies/privacy-policy"
               size="sm"
-              className="text-foreground"
+              className="text-card-foreground"
             >
               Privacy Policy
             </Link>

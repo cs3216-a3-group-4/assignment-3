@@ -32,7 +32,9 @@ export default function RootLayout({
         <GoogleOAuthProvider clientId="<your_client_id>">
           <div className="relative flex min-h-screen flex-col bg-background">
             <Navbar />
-            <main className="flex flex-1 px-8 py-4 md:px-20">{children}</main>
+            <main className="flex flex-1 px-4 py-2 sm:px-8 sm:py-4 md:px-20">
+              {children}
+            </main>
           </div>
         </GoogleOAuthProvider>
       </body>

@@ -13,8 +13,8 @@ export const NavItems: NavItem[] = [];
 
 function Navbar() {
   return (
-    <header className="w-full sticky top-0 bg-background z-50 backdrop-opacity-80">
-      <div className="container flex items-center justify-between px-8 py-4 md:px-20">
+    <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex items-center justify-between px-4 py-4 sm:px-8 sm:py-4 md:px-20">
         <Link className="mr-6 flex items-center gap-x-2" href="/">
           <span className="inline-block font-bold">
             {process.env.NEXT_PUBLIC_APP_NAME}
