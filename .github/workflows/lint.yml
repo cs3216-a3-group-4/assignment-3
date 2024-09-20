@@ -1,5 +1,14 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
 jobs:
   frontend:
     name: frontend (eslint)
@@ -16,6 +25,8 @@ jobs:
         run: npm install
       - name: ESLint
         run: npm run lint
+      - name: Build
+        run: npm run build
   backend:
     name: backend (format, lint)
     runs-on: ubuntu-latest
