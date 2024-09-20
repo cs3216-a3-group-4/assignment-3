@@ -6,8 +6,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input, InputProps } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, ...props }, ref) => {
+export interface PasswordInputOnlyProps {
+  showForgetPassword?: boolean;
+  helperText?: string;
+}
+
+interface PasswordInputProps extends InputProps, PasswordInputOnlyProps {}
+
+const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
+  ({ showForgetPassword = false, helperText, className, ...props }, ref) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     return (
       <Box className="flex flex-col space-y-2.5">
@@ -17,6 +24,9 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
           type={isPasswordVisible ? "text" : "password"}
           {...props}
         />
+        {helperText && (
+          <p className="text-sm text-muted-foreground">{helperText}</p>
+        )}
         <div className="flex flex-row items-end justify-between">
           <div className="flex items-center space-x-2">
             <Checkbox
@@ -35,9 +45,12 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
               Show password
             </label>
           </div>
-          <Link href="/user/password-reset" size="sm">
-            Forgot password?
-          </Link>
+
+          {showForgetPassword && (
+            <Link href="/user/password-reset" size="sm">
+              Forgot password?
+            </Link>
+          )}
         </div>
       </Box>
     );

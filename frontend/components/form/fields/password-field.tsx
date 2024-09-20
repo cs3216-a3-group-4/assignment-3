@@ -1,27 +1,27 @@
 import { useFormContext } from "react-hook-form";
 
-import PasswordInput from "@/components/form/inputs/password-input";
+import PasswordInput, {
+  PasswordInputOnlyProps,
+} from "@/components/form/inputs/password-input";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
-interface PasswordFieldProps {
+interface PasswordFieldProps extends PasswordInputOnlyProps {
   name: string;
   label: string;
   placeholder?: string;
-  description?: string;
 }
 
 function PasswordField({
   name,
   label,
   placeholder,
-  description,
+  ...inputProps
 }: PasswordFieldProps) {
   const { control } = useFormContext();
   return (
@@ -32,10 +32,13 @@ function PasswordField({
         <FormItem>
           {label && <FormLabel className="!text-current">{label}</FormLabel>}
           <FormControl>
-            <PasswordInput placeholder={placeholder} {...field} />
+            <PasswordInput
+              placeholder={placeholder}
+              {...field}
+              {...inputProps}
+            />
           </FormControl>
           <FormMessage />
-          {description && <FormDescription>{description}</FormDescription>}
         </FormItem>
       )}
     />
