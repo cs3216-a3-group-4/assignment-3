@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 
 import Navbar from "@/components/navigation/navbar";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
@@ -31,6 +32,7 @@ export default function RootLayout({
         <div className="relative flex min-h-screen flex-col bg-background">
           <Navbar />
           <main className="w-full flex flex-1">{children}</main>
+          <Toaster />
         </div>
       </body>
     </html>
