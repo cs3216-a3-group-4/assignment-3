@@ -32,6 +32,7 @@ export default function GoogleOAuth() {
         }
         await authGoogleAuthGoogleGet({ query: { code } });
         setIsLoading(false);
+        router.push("/");
       })();
     }
   }, [code, router]);
