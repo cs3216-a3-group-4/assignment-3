@@ -7,6 +7,7 @@ import { z } from "zod";
 import { logInAuthLoginPost } from "@/client";
 import PasswordField from "@/components/form/fields/password-field";
 import TextField from "@/components/form/fields/text-field";
+import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 import Link from "@/components/navigation/link";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -39,7 +39,7 @@ function LoginPage() {
   });
 
   const onSubmit: SubmitHandler<LoginForm> = async (data) => {
-    const resp = await logInAuthLoginPost({
+    await logInAuthLoginPost({
       body: { username: data.email, password: data.password },
     });
   };

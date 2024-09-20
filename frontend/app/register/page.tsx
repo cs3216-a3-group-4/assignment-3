@@ -7,11 +7,11 @@ import { z } from "zod";
 import { signUpAuthSignupPost } from "@/client";
 import PasswordField from "@/components/form/fields/password-field";
 import TextField from "@/components/form/fields/text-field";
+import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 import Link from "@/components/navigation/link";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 
 const registerFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -32,9 +32,7 @@ function RegisterPage() {
   });
 
   const onSubmit: SubmitHandler<RegisterForm> = async (data) => {
-    const response = await signUpAuthSignupPost({
-      body: { ...data },
-    });
+    await signUpAuthSignupPost({ body: { ...data } });
   };
 
   return (
