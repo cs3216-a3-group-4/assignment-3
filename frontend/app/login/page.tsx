@@ -2,7 +2,6 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GoogleLogin } from "@react-oauth/google";
 import { z } from "zod";
 
 import { logInAuthLoginPost } from "@/client";
@@ -19,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
+import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -42,7 +42,6 @@ function LoginPage() {
     const resp = await logInAuthLoginPost({
       body: { username: data.email, password: data.password },
     });
-    console.log("resp", resp);
   };
 
   return (
@@ -99,7 +98,9 @@ function LoginPage() {
               </div>
             </div>
 
-            <GoogleLogin onSuccess={() => console.log("")} />
+            <div>
+              <GoogleOAuthButton />
+            </div>
           </Box>
         </CardContent>
       </Card>

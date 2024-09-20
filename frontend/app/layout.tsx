@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import Navbar from "@/components/navigation/navbar";
 import { cn } from "@/lib/utils";
@@ -29,12 +28,10 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <GoogleOAuthProvider clientId="<your_client_id>">
-          <div className="relative flex min-h-screen flex-col bg-background">
-            <Navbar />
-            <main className="w-full flex flex-1">{children}</main>
-          </div>
-        </GoogleOAuthProvider>
+        <div className="relative flex min-h-screen flex-col bg-background">
+          <Navbar />
+          <main className="w-full flex flex-1">{children}</main>
+        </div>
       </body>
     </html>
   );
