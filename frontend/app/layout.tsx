@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import Navbar from "@/components/navigation/navbar";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const fontSans = FontSans({
   subsets: ["latin"],

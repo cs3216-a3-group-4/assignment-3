@@ -2,6 +2,7 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { GoogleLogin } from "@react-oauth/google";
 import { z } from "zod";
 
 import PasswordField from "@/components/form/fields/password-field";
@@ -13,12 +14,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { GoogleLogin } from "@react-oauth/google";
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -48,17 +47,17 @@ function LoginPage() {
           <CardDescription>
             By continuing, you agree to our&nbsp;
             <Link
+              className="text-card-foreground"
               href="/policies/user-agreement"
               size="sm"
-              className="text-card-foreground"
             >
               User Agreement
             </Link>
             &nbsp;and acknowledge that you understand our&nbsp;
             <Link
+              className="text-card-foreground"
               href="/policies/privacy-policy"
               size="sm"
-              className="text-card-foreground"
             >
               Privacy Policy
             </Link>
