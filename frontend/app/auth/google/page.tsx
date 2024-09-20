@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircleIcon } from "lucide-react";
 
 import { authGoogleAuthGoogleGet } from "@/client";
+import Link from "@/components/navigation/link";
 import { Box } from "@/components/ui/box";
 import {
   Card,
@@ -32,6 +33,7 @@ export default function GoogleOAuth() {
         }
         await authGoogleAuthGoogleGet({ query: { code } });
         setIsLoading(false);
+        router.push("/");
       })();
     }
   }, [code, router]);
@@ -57,6 +59,11 @@ export default function GoogleOAuth() {
                 ? "Hang tight! We're logging you in. This shouldn't take too long."
                 : "All done! You should be redirected soon."}
             </span>
+            {!isLoading && (
+              <Link className="p-2" href={"/"} size={"sm"}>
+                Redirect now
+              </Link>
+            )}
           </CardDescription>
         </CardContent>
       </Card>
