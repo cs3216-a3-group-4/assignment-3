@@ -32,7 +32,7 @@ function RegisterPage() {
   });
 
   const onSubmit: SubmitHandler<RegisterForm> = async (data) => {
-    await signUpAuthSignupPost({ body: { ...data } });
+    await signUpAuthSignupPost({ body: { ...data }, withCredentials: true });
   };
 
   return (
