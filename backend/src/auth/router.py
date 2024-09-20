@@ -3,13 +3,11 @@ from typing import Annotated
 
 
 from fastapi import Depends, APIRouter, HTTPException, Response
-from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 import httpx
 from sqlalchemy import select
 from src.auth.utils import create_token
 from src.common.constants import (
-    FRONTEND_URL,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
     GOOGLE_REDIRECT_URI,
@@ -68,14 +66,18 @@ def log_in(
 #     google auth     #
 #######################
 @router.get("/login/google")
-async def login_google():
+def login_google():
     return {
         "url": f"https://accounts.google.com/o/oauth2/auth?response_type=code&client_id={GOOGLE_CLIENT_ID}&redirect_uri={GOOGLE_REDIRECT_URI}&scope=openid%20profile%20email&access_type=offline"
     }
 
 
 @router.get("/google")
-async def auth_google(code: str, session=Depends(get_session)):
+def auth_google(
+    code: str,
+    response: Response,
+    session=Depends(get_session),
+):
     # 1. Do google oauth stuff
     token_url = "https://accounts.google.com/o/oauth2/token"
     data = {
@@ -86,12 +88,12 @@ async def auth_google(code: str, session=Depends(get_session)):
         "grant_type": "authorization_code",
     }
 
-    access_token = httpx.post(token_url, data=data).json().get("access_token")
+    access_token_json = httpx.post(token_url, data=data).json()
+    access_token = access_token_json.get("access_token")
     user_info = httpx.get(
         "https://www.googleapis.com/oauth2/v1/userinfo",
         headers={"Authorization": f"Bearer {access_token}"},
     ).json()
-
     # 2. Check for existing user.
     email = user_info["email"]
     user = session.scalars(select(User).where(User.email == email)).first()
@@ -111,11 +113,10 @@ async def auth_google(code: str, session=Depends(get_session)):
         session.commit()
 
     # 3. Add jwt token
-    response = RedirectResponse(FRONTEND_URL)
-    create_token(user, response)
+    token = create_token(user, response)
 
     # TODO: redirect to correct frontend page
-    return response
+    return token
 
 
 @router.get("/session")
