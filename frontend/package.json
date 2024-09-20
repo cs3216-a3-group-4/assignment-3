@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-client": "openapi-ts --input http://localhost:8000/openapi.json --output ./client --client @hey-api/client-axios"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -15,6 +16,8 @@
     "@radix-ui/react-navigation-menu": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@react-oauth/google": "^0.12.1",
+    "@tanstack/react-query": "^5.56.2",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.441.0",
@@ -28,6 +31,8 @@
   },
   "devDependencies": {
     "@dword-design/eslint-plugin-import-alias": "https://github.com/chloeelim/eslint-plugin-import-alias/tarball/d5f7c350bc5400b8917c01fdd6b745afb6bcb35f",
+    "@hey-api/client-axios": "^0.2.4",
+    "@hey-api/openapi-ts": "^0.53.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

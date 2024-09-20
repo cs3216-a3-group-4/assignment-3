@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GoogleLogin } from "@react-oauth/google";
 import { z } from "zod";
 
+import { logInAuthLoginPost } from "@/client";
 import PasswordField from "@/components/form/fields/password-field";
 import TextField from "@/components/form/fields/text-field";
 import Link from "@/components/navigation/link";
@@ -37,12 +38,17 @@ function LoginPage() {
     defaultValues: loginFormDefault,
   });
 
-  const onSubmit: SubmitHandler<LoginForm> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<LoginForm> = async (data) => {
+    const resp = await logInAuthLoginPost({
+      body: { username: data.email, password: data.password },
+    });
+    console.log("resp", resp);
+  };
 
   return (
     <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-6">
-      <Card className="flex flex-col sm:px-12 sm:py-6 md:max-w-lg">
-        <CardHeader>
+      <Card className="flex flex-col border-0 md:border px-6 sm:px-12 sm:py-6 md:max-w-lg">
+        <CardHeader className="space-y-3">
           <CardTitle>Log in to {process.env.NEXT_PUBLIC_APP_NAME}</CardTitle>
           <CardDescription>
             By continuing, you agree to our&nbsp;
