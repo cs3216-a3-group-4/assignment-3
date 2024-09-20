@@ -17,7 +17,7 @@ jobs:
       - name: ESLint
         run: npm run lint
   backend:
-    name: format, lint
+    name: backend (format, lint)
     runs-on: ubuntu-latest
     defaults:
       run:
