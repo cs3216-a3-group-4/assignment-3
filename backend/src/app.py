@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 import logging
 
 from src.common.base import Base
+from src.common.constants import FRONTEND_URL
 from src.common.database import engine
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
@@ -19,8 +20,7 @@ async def lifespan(app: FastAPI):
 
 server = FastAPI(lifespan=lifespan)
 
-# TODO: refactor to env variable
-origins = ["http://localhost:3000"]
+origins = [FRONTEND_URL]
 
 server.add_middleware(
     CORSMiddleware,
