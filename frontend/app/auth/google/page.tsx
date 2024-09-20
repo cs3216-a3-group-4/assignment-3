@@ -57,7 +57,7 @@ export default function GoogleOAuth() {
             <span className="max-w-sm">
               {isLoading
                 ? "Hang tight! We're logging you in. This shouldn't take too long."
-                : "All done! You should be redirected :qsoon."}
+                : "All done! You should be redirected soon."}
             </span>
             {!isLoading && (
               <Link className="p-2" href={"/"} size={"sm"}>
