@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircleIcon } from "lucide-react";
 
 import { authGoogleAuthGoogleGet } from "@/client";
+import Link from "@/components/navigation/link";
 import { Box } from "@/components/ui/box";
 import {
   Card,
@@ -56,8 +57,13 @@ export default function GoogleOAuth() {
             <span className="max-w-sm">
               {isLoading
                 ? "Hang tight! We're logging you in. This shouldn't take too long."
-                : "All done! You should be redirected soon."}
+                : "All done! You should be redirected :qsoon."}
             </span>
+            {!isLoading && (
+              <Link className="p-2" href={"/"} size={"sm"}>
+                Redirect now
+              </Link>
+            )}
           </CardDescription>
         </CardContent>
       </Card>
