@@ -43,7 +43,7 @@ function RegisterPage() {
       <Box className="flex justify-center items-center bg-card text-card-foreground px-12 md:px-20 w-full lg:w-6/12">
         <Box className="flex-col space-y-8 w-full max-w-3xl">
           {/* Header */}
-          <Box className="flex flex-col space-y-2">
+          <Box className="flex flex-col space-y-3">
             <h3 className="text-2xl font-semibold leading-none tracking-tight">
               Join the {process.env.NEXT_PUBLIC_APP_NAME} community today
             </h3>
