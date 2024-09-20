@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CircleAlert } from "lucide-react";
 import { z } from "zod";
 
 import { signUpAuthSignupPost } from "@/client";
@@ -9,13 +11,14 @@ import PasswordField from "@/components/form/fields/password-field";
 import TextField from "@/components/form/fields/text-field";
 import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 import Link from "@/components/navigation/link";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 const registerFormSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password required"),
+  password: z.string().min(6, "Password should be at least 6 characters"),
 });
 
 const registerFormDefault = {
@@ -26,13 +29,23 @@ const registerFormDefault = {
 type RegisterForm = z.infer<typeof registerFormSchema>;
 
 function RegisterPage() {
+  const [isError, seIstError] = useState<boolean>(false);
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: registerFormDefault,
   });
 
   const onSubmit: SubmitHandler<RegisterForm> = async (data) => {
-    await signUpAuthSignupPost({ body: { ...data }, withCredentials: true });
+    const response = await signUpAuthSignupPost({
+      body: { ...data },
+      withCredentials: true,
+    });
+
+    if (response.error) {
+      seIstError(true);
+    } else {
+      seIstError(false);
+    }
   };
 
   return (
@@ -67,6 +80,18 @@ function RegisterPage() {
 
           {/* Body */}
           <Box className="space-y-6 pt-0 flex-col w-full">
+            {isError && (
+              <Alert variant="destructive">
+                <CircleAlert className="h-5 w-5" />
+                <AlertDescription>
+                  This email is already registered.{" "}
+                  <Link href="/login" size="sm">
+                    Sign in
+                  </Link>{" "}
+                  instead?
+                </AlertDescription>
+              </Alert>
+            )}
             <Form {...form}>
               <form
                 className="space-y-10"
@@ -81,7 +106,7 @@ function RegisterPage() {
                   <PasswordField
                     label="Password"
                     name="password"
-                    placeholder="Minimum 8 characters"
+                    placeholder="Minimum 6 characters"
                   />
                 </div>
 

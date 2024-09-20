@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CircleAlert } from "lucide-react";
 import { z } from "zod";
 
 import { logInAuthLoginPost } from "@/client";
@@ -9,6 +11,7 @@ import PasswordField from "@/components/form/fields/password-field";
 import TextField from "@/components/form/fields/text-field";
 import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 import Link from "@/components/navigation/link";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,21 +36,28 @@ const loginFormDefault = {
 type LoginForm = z.infer<typeof loginFormSchema>;
 
 function LoginPage() {
+  const [isError, seIstError] = useState<boolean>(false);
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: loginFormDefault,
   });
 
   const onSubmit: SubmitHandler<LoginForm> = async (data) => {
-    await logInAuthLoginPost({
+    const response = await logInAuthLoginPost({
       body: { username: data.email, password: data.password },
       withCredentials: true,
     });
+
+    if (response.error) {
+      seIstError(true);
+    } else {
+      seIstError(false);
+    }
   };
 
   return (
     <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-6">
-      <Card className="flex flex-col border-0 md:border px-6 sm:px-12 sm:py-6 md:max-w-lg">
+      <Card className="flex flex-col border-0 md:border px-6 sm:px-12 sm:py-3 md:max-w-lg">
         <CardHeader className="space-y-3">
           <CardTitle>Log in to {process.env.NEXT_PUBLIC_APP_NAME}</CardTitle>
           <CardDescription>
@@ -73,6 +83,18 @@ function LoginPage() {
 
         <CardContent>
           <Box className="space-y-6">
+            {isError && (
+              <Alert variant="destructive">
+                <CircleAlert className="h-5 w-5" />
+                <AlertDescription>
+                  Your email or password is incorrect. Please try again, or{" "}
+                  <Link href="/user/password-reset" size="sm">
+                    reset your password
+                  </Link>
+                  .
+                </AlertDescription>
+              </Alert>
+            )}
             <Form {...form}>
               <form
                 className="space-y-10"
