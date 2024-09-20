@@ -41,6 +41,7 @@ function LoginPage() {
   const onSubmit: SubmitHandler<LoginForm> = async (data) => {
     await logInAuthLoginPost({
       body: { username: data.email, password: data.password },
+      withCredentials: true,
     });
   };
 
