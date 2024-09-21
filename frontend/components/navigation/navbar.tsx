@@ -33,7 +33,7 @@ function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b-2">
-      <div className="w-full flex items-center justify-between px-4 py-4 sm:px-8 sm:py-4 md:px-20">
+      <div className="w-full min-h-[72px] flex items-center justify-between px-4 py-4 sm:px-8 sm:py-4 md:px-20">
         <div className="flex items-center">
           <Link className="mr-6 flex items-center gap-x-2" href="/">
             <span className="inline-block font-bold">
