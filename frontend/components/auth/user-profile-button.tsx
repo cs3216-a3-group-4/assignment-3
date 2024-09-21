@@ -1,6 +1,6 @@
+import { useRouter } from "next/navigation";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useUserStore } from "@/store/user/user-store-provider";
-import { getInitialFromEmail, getNameFromEmail } from "@/utils/string";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/user/user-store-provider";
+import { getInitialFromEmail, getNameFromEmail } from "@/utils/string";
 
 const UserProfileButton = () => {
   const { email, setNotLoggedIn } = useUserStore((state) => state);
