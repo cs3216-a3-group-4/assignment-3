@@ -5,9 +5,6 @@ from sqlalchemy.orm import Session
 from src.events.models import Article, ArticleSource
 from src.common.database import engine
 from pydantic import BaseModel, ConfigDict
-from bs4 import BeautifulSoup
-import os
-from pprint import pprint
 
 
 parser = argparse.ArgumentParser()
