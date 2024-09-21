@@ -78,6 +78,7 @@ export const SignUpDataSchema = {
     },
     password: {
       type: "string",
+      minLength: 6,
       title: "Password",
     },
   },

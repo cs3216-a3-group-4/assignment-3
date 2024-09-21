@@ -5,8 +5,7 @@ import {
   createConfig,
   type Options,
   urlSearchParamsBodySerializer,
-} from "@hey-api/client-axios";
-
+} from "./client";
 import type {
   AuthGoogleAuthGoogleGetData,
   AuthGoogleAuthGoogleGetError,
