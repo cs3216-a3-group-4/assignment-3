@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 
+import { logoutAuthLogoutGet } from "@/client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -16,6 +17,11 @@ import { getInitialFromEmail, getNameFromEmail } from "@/utils/string";
 const UserProfileButton = () => {
   const { email, setNotLoggedIn } = useUserStore((state) => state);
   const router = useRouter();
+
+  const signout = async () => {
+    await logoutAuthLogoutGet();
+    setNotLoggedIn();
+  };
 
   return (
     <div>
@@ -43,7 +49,7 @@ const UserProfileButton = () => {
           <DropdownMenuGroup>
             <DropdownMenuItem
               className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-              onClick={setNotLoggedIn}
+              onClick={signout}
             >
               Log out
             </DropdownMenuItem>
