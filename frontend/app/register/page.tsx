@@ -47,7 +47,7 @@ function RegisterPage() {
       setIsError(true);
     } else {
       setIsError(false);
-      router.push("/");
+      router.push("/login");
     }
   };
 
