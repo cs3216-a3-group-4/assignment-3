@@ -19,7 +19,7 @@ const UserProfileButton = () => {
   const router = useRouter();
 
   const signout = async () => {
-    await logoutAuthLogoutGet();
+    await logoutAuthLogoutGet({ withCredentials: true });
     setNotLoggedIn();
   };
 

@@ -26,7 +26,10 @@ import type {
 } from "./types.gen";
 
 export const client = createClient(
-  createConfig({ baseURL: process.env.NEXT_PUBLIC_BACKEND_URL }),
+  createConfig({
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    withCredentials: true,
+  }),
 );
 
 /**
