@@ -21,7 +21,7 @@ class Article(Base):
     source: Mapped[ArticleSource]
     date: Mapped[datetime]
 
-    event: Mapped["Event"] = relationship(back_populates="original_article")
+    events: Mapped[list["Event"]] = relationship(back_populates="original_article")
 
 
 class Event(Base):
@@ -40,7 +40,7 @@ class Event(Base):
         back_populates="events", secondary="event_category"
     )
 
-    original_article: Mapped[Article] = relationship(back_populates="event")
+    original_article: Mapped[Article] = relationship(back_populates="events")
 
 
 class Category(Base):
