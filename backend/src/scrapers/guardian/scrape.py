@@ -18,24 +18,24 @@ def query_page(page: int):
         },
     )
     response_json = response.json()
-    data = response_json["response"]
+    data = response_json.get("response")
     if data["status"] != "ok":
         print("something went wrong with page:", page)
         return []
     return data["results"]
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-o", "--output", help="output file path")
-parser.add_argument("-s", "--start", type=int, help="start index of page", default=0)
-parser.add_argument("-n", "--number", type=int, help="number of pages", default=50)
-args = parser.parse_args()
+# parser = argparse.ArgumentParser()
+# parser.add_argument("-o", "--output", help="output file path")
+# parser.add_argument("-s", "--start", type=int, help="start index of page", default=0)
+# parser.add_argument("-n", "--number", type=int, help="number of pages", default=50)
+# args = parser.parse_args()
 
-result = []
-for i in range(args.start, args.start + args.number):
-    result += query_page(i)
-    print("scraped:", i)
-    time.sleep(1)
+# result = []
+# for i in range(args.start, args.start + args.number):
+#     result += query_page(i)
+#     print("scraped:", i)
+#     time.sleep(1)
 
-with open(args.output, "w") as f:
-    json.dump(result, f)
+# with open(args.output, "w") as f:
+#     json.dump(result, f)
