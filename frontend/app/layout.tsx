@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 
-import Navbar from "@/components/navigation/navbar";
-import { Toaster } from "@/components/ui/toaster";
+import AppLayout from "@/components/layout/app-layout";
 import { cn } from "@/lib/utils";
+import { StoreProvider } from "@/store/store-provider";
 
 import "./globals.css";
 
@@ -29,11 +29,9 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <div className="relative flex min-h-screen flex-col bg-background">
-          <Navbar />
-          <main className="w-full flex flex-1">{children}</main>
-          <Toaster />
-        </div>
+        <StoreProvider>
+          <AppLayout>{children}</AppLayout>
+        </StoreProvider>
       </body>
     </html>
   );
