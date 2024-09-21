@@ -36,7 +36,7 @@ const loginFormDefault = {
 type LoginForm = z.infer<typeof loginFormSchema>;
 
 function LoginPage() {
-  const [isError, seIstError] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: loginFormDefault,
@@ -49,9 +49,9 @@ function LoginPage() {
     });
 
     if (response.error) {
-      seIstError(true);
+      setIsError(true);
     } else {
-      seIstError(false);
+      setIsError(false);
     }
   };
 
