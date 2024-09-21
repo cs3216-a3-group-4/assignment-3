@@ -7,9 +7,9 @@ import { CircleAlert } from "lucide-react";
 import { z } from "zod";
 
 import { logInAuthLoginPost } from "@/client";
+import GoogleOAuthButton from "@/components/auth/google-oauth-button";
 import PasswordField from "@/components/form/fields/password-field";
 import TextField from "@/components/form/fields/text-field";
-import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 import Link from "@/components/navigation/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Box } from "@/components/ui/box";

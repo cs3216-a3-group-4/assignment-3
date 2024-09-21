@@ -8,7 +8,7 @@ import {
 } from "@radix-ui/react-navigation-menu";
 import { useQuery } from "@tanstack/react-query";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import UserProfileButton from "@/components/auth/user-profile-button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -17,7 +17,7 @@ import { NavItem } from "@/types/navigation";
 export const NavItems: NavItem[] = [];
 
 function Navbar() {
-  const { email, isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
+  const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
     (state) => state,
   );
   const { data: userProfile, isSuccess: isUserProfileSuccess } =
@@ -30,8 +30,6 @@ function Navbar() {
       setNotLoggedIn();
     }
   }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
-
-  console.log(useUserStore((state) => state));
 
   return (
     <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b-2">
@@ -57,15 +55,8 @@ function Navbar() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <Avatar />
         </div>
-        {isLoggedIn && (
-          <div>
-            <Avatar>
-              <AvatarFallback>{email?.charAt(0)}</AvatarFallback>
-            </Avatar>
-          </div>
-        )}
+        {isLoggedIn && <UserProfileButton />}
       </div>
     </header>
   );
