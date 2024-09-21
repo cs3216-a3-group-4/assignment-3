@@ -4,5 +4,28 @@
       "path": ".."
     }
   ],
-  "settings": {}
+  "settings": {
+    "editor.formatOnSave": true,
+    "eslint.workingDirectories": ["./frontend"],
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "files.exclude": {
+      "frontend/.next": true,
+      "frontend/next-env.d.ts": true,
+      "frontend/node_modules": true,
+      "frontend/next.config.mjs": true,
+      "frontend/postcss.config.mjs": true
+    }
+  }
 }

@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleAlert } from "lucide-react";
 import { z } from "zod";
 
 import { signUpAuthSignupPost } from "@/client";
+import GoogleOAuthButton from "@/components/auth/google-oauth-button";
 import PasswordField from "@/components/form/fields/password-field";
 import TextField from "@/components/form/fields/text-field";
-import GoogleOAuthButton from "@/components/miscellaneous/google-oauth-button";
 import Link from "@/components/navigation/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Box } from "@/components/ui/box";
@@ -29,7 +30,8 @@ const registerFormDefault = {
 type RegisterForm = z.infer<typeof registerFormSchema>;
 
 function RegisterPage() {
-  const [isError, seIstError] = useState<boolean>(false);
+  const router = useRouter();
+  const [isError, setIsError] = useState<boolean>(false);
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: registerFormDefault,
@@ -42,9 +44,10 @@ function RegisterPage() {
     });
 
     if (response.error) {
-      seIstError(true);
+      setIsError(true);
     } else {
-      seIstError(false);
+      setIsError(false);
+      router.push("/login");
     }
   };
 

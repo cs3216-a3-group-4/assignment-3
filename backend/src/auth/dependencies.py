@@ -27,7 +27,7 @@ oauth2_scheme = OAuth2IgnoreError(tokenUrl="/auth/login")
 
 
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 10080
 
 ##################
 # Password utils #

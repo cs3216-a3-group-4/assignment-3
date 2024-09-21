@@ -78,12 +78,32 @@ export const SignUpDataSchema = {
     },
     password: {
       type: "string",
+      minLength: 6,
       title: "Password",
     },
   },
   type: "object",
   required: ["email", "password"],
   title: "SignUpData",
+} as const;
+
+export const TokenSchema = {
+  properties: {
+    access_token: {
+      type: "string",
+      title: "Access Token",
+    },
+    token_type: {
+      type: "string",
+      title: "Token Type",
+    },
+    user: {
+      $ref: "#/components/schemas/UserPublic",
+    },
+  },
+  type: "object",
+  required: ["access_token", "token_type", "user"],
+  title: "Token",
 } as const;
 
 export const UserPublicSchema = {
