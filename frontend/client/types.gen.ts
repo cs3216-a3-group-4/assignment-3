@@ -18,6 +18,12 @@ export type SignUpData = {
   password: string;
 };
 
+export type Token = {
+  access_token: string;
+  token_type: string;
+  user: UserPublic;
+};
+
 export type UserPublic = {
   id: number;
   email: string;
@@ -41,7 +47,7 @@ export type LogInAuthLoginPostData = {
   body: Body_log_in_auth_login_post;
 };
 
-export type LogInAuthLoginPostResponse = unknown;
+export type LogInAuthLoginPostResponse = Token;
 
 export type LogInAuthLoginPostError = HTTPValidationError;
 
@@ -64,3 +70,7 @@ export type GetUserAuthSessionGetData = unknown;
 export type GetUserAuthSessionGetResponse = UserPublic;
 
 export type GetUserAuthSessionGetError = HTTPValidationError;
+
+export type LogoutAuthLogoutGetResponse = unknown;
+
+export type LogoutAuthLogoutGetError = unknown;

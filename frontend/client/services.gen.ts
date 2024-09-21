@@ -18,14 +18,14 @@ import type {
   LogInAuthLoginPostResponse,
   LoginGoogleAuthLoginGoogleGetError,
   LoginGoogleAuthLoginGoogleGetResponse,
+  LogoutAuthLogoutGetError,
+  LogoutAuthLogoutGetResponse,
   SignUpAuthSignupPostData,
   SignUpAuthSignupPostError,
   SignUpAuthSignupPostResponse,
 } from "./types.gen";
 
-export const client = createClient(
-  createConfig({ baseURL: process.env.NEXT_PUBLIC_BACKEND_URL }),
-);
+export const client = createClient(createConfig());
 
 /**
  * Sign Up
@@ -111,5 +111,21 @@ export const getUserAuthSessionGet = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/auth/session",
+  });
+};
+
+/**
+ * Logout
+ */
+export const logoutAuthLogoutGet = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    LogoutAuthLogoutGetResponse,
+    LogoutAuthLogoutGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/auth/logout",
   });
 };
