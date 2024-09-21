@@ -12,6 +12,7 @@ from src.common.constants import (
     GOOGLE_CLIENT_SECRET,
     GOOGLE_REDIRECT_URI,
 )
+from src.auth.schemas import Token
 from src.common.dependencies import get_session
 from .schemas import SignUpData, UserPublic
 
@@ -51,7 +52,7 @@ def sign_up(data: SignUpData, session=Depends(get_session)):
 @router.post("/login")
 def log_in(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], response: Response
-):
+) -> Token:
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -122,3 +123,9 @@ def auth_google(
 @router.get("/session")
 def get_user(staff: Annotated[User, Depends(get_current_user)]) -> UserPublic:
     return staff
+
+
+@router.get("/logout")
+def logout(response: Response):
+    response.delete_cookie(key="session")
+    return ""
