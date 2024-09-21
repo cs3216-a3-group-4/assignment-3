@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class UserPublic(BaseModel):
@@ -16,4 +16,4 @@ class Token(BaseModel):
 
 class SignUpData(BaseModel):
     email: EmailStr
-    password: str
+    password: str = Field(min_length=6)

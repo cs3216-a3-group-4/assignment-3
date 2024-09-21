@@ -5,17 +5,16 @@ from contextlib import asynccontextmanager
 
 import logging
 
-from src.common.base import Base
 from src.common.constants import FRONTEND_URL
-from src.common.database import engine
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(engine)
+    # Run before server start
     yield
+    # Run after server stops
 
 
 server = FastAPI(lifespan=lifespan)
