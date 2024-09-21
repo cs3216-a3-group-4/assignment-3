@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleAlert } from "lucide-react";
 import { z } from "zod";
@@ -36,6 +37,7 @@ const loginFormDefault = {
 type LoginForm = z.infer<typeof loginFormSchema>;
 
 function LoginPage() {
+  const router = useRouter();
   const [isError, setIsError] = useState<boolean>(false);
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginFormSchema),
@@ -52,6 +54,7 @@ function LoginPage() {
       setIsError(true);
     } else {
       setIsError(false);
+      router.push("/");
     }
   };
 
