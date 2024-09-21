@@ -19,6 +19,9 @@ class Article(Base):
     body: Mapped[str]
     url: Mapped[str]
     source: Mapped[ArticleSource]
+    date: Mapped[datetime]
+
+    event: Mapped["Event"] = relationship(back_populates="original_article")
 
 
 class Event(Base):
@@ -30,10 +33,14 @@ class Event(Base):
     analysis: Mapped[str]
     duplicate: Mapped[bool]
     date: Mapped[datetime]
+    is_singapore: Mapped[bool]
+    original_article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
 
     categories: Mapped[list["Category"]] = relationship(
         back_populates="events", secondary="event_category"
     )
+
+    original_article: Mapped[Article] = relationship(back_populates="event")
 
 
 class Category(Base):
