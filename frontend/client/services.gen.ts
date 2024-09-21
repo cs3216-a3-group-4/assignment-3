@@ -25,7 +25,9 @@ import type {
   SignUpAuthSignupPostResponse,
 } from "./types.gen";
 
-export const client = createClient(createConfig());
+export const client = createClient(
+  createConfig({ baseURL: process.env.NEXT_PUBLIC_BACKEND_URL }),
+);
 
 /**
  * Sign Up
