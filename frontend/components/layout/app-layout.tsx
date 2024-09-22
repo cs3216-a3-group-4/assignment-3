@@ -1,15 +1,65 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ComponentProps, ReactNode, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import Navbar from "@/components/navigation/navbar";
 import Sidebar from "@/components/navigation/sidebar";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import { Toaster } from "@/components/ui/toaster";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
+import { MediaBreakpoint } from "@/utils/media";
+import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
+
+const breakpointConfigMap: Record<
+  MediaBreakpoint,
+  ComponentProps<typeof ResizablePanel>
+> = {
+  [MediaBreakpoint.Sm]: {
+    defaultSize: 30,
+    maxSize: 35,
+    minSize: 10,
+    collapsible: true,
+    collapsedSize: 1,
+  },
+  [MediaBreakpoint.Md]: {
+    defaultSize: 25,
+    maxSize: 40,
+    minSize: 20,
+    collapsible: true,
+    collapsedSize: 1,
+  },
+  [MediaBreakpoint.Lg]: {
+    defaultSize: 25,
+    maxSize: 40,
+    minSize: 20,
+    collapsible: true,
+    collapsedSize: 1,
+  },
+  [MediaBreakpoint.Xl]: {
+    defaultSize: 25,
+    maxSize: 40,
+    minSize: 15,
+    collapsible: true,
+    collapsedSize: 1,
+  },
+  [MediaBreakpoint.XXl]: {
+    defaultSize: 25,
+    maxSize: 40,
+    minSize: 15,
+    collapsible: true,
+    collapsedSize: 1,
+  },
+};
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
+  const mediaBreakpoint = useBreakpointMediaQuery();
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
     (state) => state,
   );
@@ -27,13 +77,32 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
       <Navbar />
-      <main
-        className={`flex flex-1 w-full h-[calc(100vh_-_72px)] ${isLoggedIn ? "" : ""}`}
-      >
-        {isLoggedIn && <Sidebar />}
-        <div className="flex flex-1 w-full max-h-[calc(100vh_-_72px)] overflow-y-scroll">
-          {children}
-        </div>
+      <main>
+        <ResizablePanelGroup
+          className="flex flex-1 w-full h-[calc(100vh_-_72px)]"
+          direction="horizontal"
+        >
+          {isLoggedIn && (
+            <>
+              <ResizablePanel
+                id="sidebar"
+                order={1}
+                className="flex w-full"
+                onCollapse={() => setIsCollapsed(true)}
+                onExpand={() => setIsCollapsed(false)}
+                {...breakpointConfigMap[mediaBreakpoint]}
+              >
+                <Sidebar />
+              </ResizablePanel>
+              <ResizableHandle withHandle={isCollapsed} />
+            </>
+          )}
+          <ResizablePanel defaultSize={75} order={2}>
+            <div className="flex flex-1 w-full h-[calc(100vh_-_72px)] min-h-[calc(100vh_-_72px)] overflow-y-scroll">
+              {children}
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </main>
       <Toaster />
     </div>
