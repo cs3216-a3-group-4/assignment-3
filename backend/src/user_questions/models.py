@@ -39,3 +39,12 @@ class Point(Base):
         primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "point"),
         backref="point",
     )
+
+    events = relationship("Event", secondary="point_note")
+
+
+class PointNote(Base):
+    __tablename__ = "point_note"
+
+    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), primary_key=True)
+    note_id: Mapped[int] = mapped_column(ForeignKey("point.id"), primary_key=True)
