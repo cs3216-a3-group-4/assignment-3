@@ -6,7 +6,7 @@ from fastapi import Depends, APIRouter, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 import httpx
 from sqlalchemy import select
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import selectinload
 from src.auth.utils import create_token
 from src.common.constants import (
     GOOGLE_CLIENT_ID,
