@@ -1,6 +1,7 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, and_
 from src.common.base import Base
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, foreign
+from src.notes.models import Note
 
 
 class UserQuestion(Base):
@@ -35,6 +36,6 @@ class Point(Base):
 
     notes = relationship(
         "Note",
-        primaryjoin="and_(Event.id == foreign(Note.parent_id), Note.parent_type=='event')",
+        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "note"),
         backref="point",
     )
