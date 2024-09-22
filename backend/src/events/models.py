@@ -28,6 +28,7 @@ class Article(Base):
     url: Mapped[str]
     source: Mapped[ArticleSource]
     date: Mapped[datetime]
+    image_url: Mapped[str]
 
     original_events: Mapped[list["Event"]] = relationship(
         back_populates="original_article"
@@ -49,6 +50,7 @@ class Event(Base):
     date: Mapped[datetime]
     is_singapore: Mapped[bool]
     original_article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
+    rating: Mapped[int]
 
     categories: Mapped[list["Category"]] = relationship(
         back_populates="events", secondary="event_category"
