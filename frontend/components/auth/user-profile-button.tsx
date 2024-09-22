@@ -35,10 +35,10 @@ const UserProfileButton = () => {
   };
 
   return (
-    <div>
+    <div className="cursor-pointer">
       <DropdownMenu onOpenChange={(isOpen) => setIsOpen(isOpen)}>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center w-full max-w-64 rounded">
+          <div className="flex items-center w-full max-w-64 rounded p-4 hover:bg-muted-foreground/5">
             <div className="flex space-x-6">
               <Avatar>
                 <AvatarFallback>{getInitialFromEmail(email)}</AvatarFallback>
