@@ -1,7 +1,9 @@
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.output_parsers import JsonOutputParser
 from typing import List
 from pydantic import BaseModel
 from src.scrapers.guardian.scrape import query_page
-
 from src.common.constants import LANGCHAIN_API_KEY
 from src.common.constants import LANGCHAIN_TRACING_V2
 from src.common.constants import OPENAI_API_KEY
@@ -12,14 +14,13 @@ os.environ["LANGCHAIN_API_KEY"] = LANGCHAIN_API_KEY
 os.environ["LANGCHAIN_TRACING_V2"] = LANGCHAIN_TRACING_V2
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_core.output_parsers import JsonOutputParser
-
 lm_model = ChatOpenAI(model="gpt-4o-mini")
+
+
 class CategoryAnalysis(BaseModel):
     category: str
     analysis: str
+
 
 class EventPublic(BaseModel):
     id: int
@@ -44,6 +45,7 @@ class Example(BaseModel):
 
 class EventDetails(BaseModel):
     examples: list[Example]
+
 
 SYSPROMPT = """
     You are a helpful assistant helping students find examples for their A Level general paper to substantiate their arguments in their essays.
@@ -125,6 +127,7 @@ Arsenal still had an opportunity to take all three points but Havertz and Saka b
 
 “But the team reacted to what we had to do playing at home with 10 men. We didn’t want to be so deep defending like this, but we read the game and we played the game that we had to play and we should have got rewarded.”"""
 
+
 def generate_events() -> List[EventPublic]:
     articles = query_page(1)
     articles = articles[:50]
@@ -136,7 +139,7 @@ def generate_events() -> List[EventPublic]:
         for example in event_details.get("examples"):
             res.append(form_event_json(example))
 
-    return res;
+    return res
 
 
 def form_event_json(event_details) -> dict:
@@ -149,23 +152,18 @@ def form_event_json(event_details) -> dict:
         date="",
         is_singapore=event_details.get("in_singapore", False),
         categories=event_details.get("category", []),
-        original_article_id=0
+        original_article_id=0,
     )
 
 
 def generate_events_from_article(article: str) -> dict:
-    messages = [
-        SystemMessage(content=SYSPROMPT),
-        HumanMessage(content=article)
-    ]
+    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=article)]
 
-    result = lm_model.invoke(messages);
+    result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=EventDetails)
     events = parser.invoke(result)
     return events
 
+
 # if __name__ == "__main__":
 #     print(generate_events())
-
-
-
