@@ -1,11 +1,11 @@
-import JippyClownIcon from "@/assets/jippy-clown";
+import JippyClown from "@/assets/jippy-clown";
 import { Button } from "@/components/ui/button";
 
 function AboutPage() {
   return (
     <div className="flex flex-col space-y-4 m-auto px-12 md:px-24">
       <div className="flex flex-col space-y-8">
-        <JippyClownIcon />
+        <JippyClown />
         <div className="flex flex-col space-y-2">
           <h3 className="text-lg md:text-2xl font-medium font-mono">
             404 Not Found Error

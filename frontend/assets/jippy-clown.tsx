@@ -1,4 +1,4 @@
-const JippyClownIcon = () => {
+const JippyClown = () => {
   return (
     <svg
       fill="none"
@@ -38,4 +38,4 @@ const JippyClownIcon = () => {
   );
 };
 
-export default JippyClownIcon;
+export default JippyClown;
