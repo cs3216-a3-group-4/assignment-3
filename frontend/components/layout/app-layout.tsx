@@ -43,14 +43,14 @@ const breakpointConfigMap: Record<
   },
   [MediaBreakpoint.Xl]: {
     defaultSize: 25,
-    maxSize: 40,
+    maxSize: 35,
     minSize: 15,
     collapsible: true,
     collapsedSize: 1,
   },
   [MediaBreakpoint.XXl]: {
     defaultSize: 25,
-    maxSize: 40,
+    maxSize: 35,
     minSize: 15,
     collapsible: true,
     collapsedSize: 1,
