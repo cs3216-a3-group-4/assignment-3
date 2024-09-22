@@ -21,6 +21,7 @@ GOOGLE_REDIRECT_URI: str = _get_env_var("GOOGLE_REDIRECT_URI")
 LANGCHAIN_API_KEY: str = _get_env_var("LANGCHAIN_API_KEY")
 LANGCHAIN_TRACING_V2: str = _get_env_var("LANGCHAIN_TRACING_V2")
 OPENAI_API_KEY: str = _get_env_var("OPENAI_API_KEY")
+PINECONE_API_KEY: str = _get_env_var("PINECONE_API_KEY")
 
 # for scrapers
 GUARDIAN_API_KEY: str = _get_env_var("GUARDIAN_API_KEY", required=False)

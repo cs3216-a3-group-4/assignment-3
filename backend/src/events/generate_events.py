@@ -45,37 +45,6 @@ class Example(BaseModel):
 class EventDetails(BaseModel):
     examples: list[Example]
 
-
-# SYSPROMPT = """
-# You are a helpful student assistant helping students find examples for their A Level general paper to substantiate their arguments in their essays.
-# Given an article, you should provide examples that can be used to support or refute arguments in a General Paper essay.
-# You should only provide at most 3 examples.
-# For each event, your titles should be specific enough so that I can guess your example without looking at the paragraph.
-# For each event, you should also categorize your examples into the following categories:
-# [ Arts & Humanities, Science & Tech, Politics, Media, Environment, Education, Sports, Gender & Equality, Religion, Society & Culture, Economic]
-# For each event, you should also indicate if the event happened in Singapore. If there is no indication in the article, you should assume that the event did not happen in Singapore.
-# You should give me your examples in the following json format.
-
-# { 
-# "examples": [
-#     { 
-#     "event_title": "Title of the event",
-#     "description": "The example that supports or refutes the argument", 
-#     "analysis": "The analysis of how the example can be used in a General Paper essay" },
-#     "category": "Array of categories. For example ['Arts & Humanities', 'Science & Tech'],
-#     "in_singapore": "Boolean value to indicate if the event happened in Singapore"
-#     },
-#     { 
-#     "event_title": "Title of the event",
-#     "description": "The example that supports or refutes the argument", 
-#     "analysis": "The analysis of how the example can be used in a General Paper essay" },
-#     "category": "Array of categories. For example ['Arts & Humanities', 'Science & Tech'],
-#     "in_singapore": "Boolean value to indicate if the event happened in Singapore"
-#     }
-#     ]
-# }
-# """
-
 SYSPROMPT = """
     You are a helpful assistant helping students find examples for their A Level general paper to substantiate their arguments in their essays.
     Given an article, you should provide examples that can be used to support or refute arguments in a General Paper essay.
@@ -86,7 +55,7 @@ SYSPROMPT = """
     [Arts & Humanities, Science & Tech, Politics, Media, Environment, Education, Sports, Gender & Equality, Religion, Society & Culture, Economic]
     Important Note: Only categorize an event if the connection to a category is direct, significant, and not merely tangential. Do NOT categorize an event if the connection is speculative or minor.
 
-    For each event, you should give an analysis of how the event can be used in the context of its respective category.
+    For each event, you should give an analysis of how the event can be used in the context of its respective category i.e. the categories that you have chosen for this event.
     The analysis should be specific to the category of the event and should be detailed enough to be used in a General Paper essay. Limit your analysis to 3 sentences.
     For each event, you should also indicate if the event happened in Singapore. If there is no indication in the article, you should assume that the event did not happen in Singapore.
     For each event, you should also give a rating from 1 to 5 on how useful the event is as an example for a General Paper essay.
@@ -157,13 +126,13 @@ Arsenal still had an opportunity to take all three points but Havertz and Saka b
 “But the team reacted to what we had to do playing at home with 10 men. We didn’t want to be so deep defending like this, but we read the game and we played the game that we had to play and we should have got rewarded.”"""
 
 def generate_events() -> List[EventPublic]:
-    # articles = query_page(1)
-    # articles = articles[:1]
-    articles = [sample_text]
+    articles = query_page(1)
+    articles = articles[:1]
+    # articles = [sample_text]
     res = []
     for article in articles:
-        # article_body = article.get("fields").get("bodyText")
-        article_body = article
+        article_body = article.get("fields").get("bodyText")
+        # article_body = article
         event_details = generate_events_from_article(article_body)
         for example in event_details.get("examples"):
             res.append(form_event_json(example))
