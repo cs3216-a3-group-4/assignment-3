@@ -7,7 +7,7 @@ from src.auth.models import User
 from src.auth.schemas import UserPublic
 from src.events.models import Category, Event
 from src.common.dependencies import get_session
-from src.events.schemas import EventIndexResponse
+from src.events.schemas import EventDTO, EventIndexResponse
 from src.profile.schemas import ProfileUpdate
 
 
@@ -43,5 +43,13 @@ def get_events(
 
 
 @router.get("/:id")
-def get_event(id: int):
-    pass
+def get_event(
+    id: int,
+    _: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
+) -> EventDTO:
+    event = session.scalar(
+        select(Event).where(Event.id == id).options(selectinload(Event.categories))
+    )
+    # TODO: link to more models, give more data
+    return event
