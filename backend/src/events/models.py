@@ -62,11 +62,13 @@ class Event(Base):
         back_populates="events", secondary="analysis"
     )
 
+    analysises: Mapped[list["Analysis"]] = relationship(back_populates="event")
+
     original_article: Mapped[Article] = relationship(back_populates="original_events")
     articles: Mapped[list[Article]] = relationship(
         back_populates="events", secondary=article_event_table
     )
-    gp_questions: Mapped["GPQuestion"] = relationship(back_populates="event")
+    gp_questions: Mapped[list["GPQuestion"]] = relationship(back_populates="event")
 
     notes = relationship(
         "Note",
@@ -84,16 +86,20 @@ class Category(Base):
     events: Mapped[list[Event]] = relationship(
         secondary="analysis", back_populates="categories"
     )
+    analysises: Mapped[list["Analysis"]] = relationship(back_populates="category")
 
 
 class Analysis(Base):
     __tablename__ = "analysis"
 
-    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), primary_key=True)
-    category_id: Mapped[int] = mapped_column(
-        ForeignKey("category.id"), primary_key=True
-    )
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"))
+    category_id: Mapped[int] = mapped_column(ForeignKey("category.id"))
     content: Mapped[str]
+
+    event: Mapped[Event] = relationship(back_populates="analysises")
+    category: Mapped[Category] = relationship(back_populates="analysises")
 
 
 class GPQuestion(Base):
