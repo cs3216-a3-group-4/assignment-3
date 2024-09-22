@@ -6,6 +6,7 @@ from fastapi import Depends, APIRouter, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 import httpx
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from src.auth.utils import create_token
 from src.common.constants import (
     GOOGLE_CLIENT_ID,
@@ -23,7 +24,7 @@ from src.auth.dependencies import (
 )
 from .models import AccountType, User
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 #######################
 # username & password #
@@ -97,7 +98,9 @@ def auth_google(
     ).json()
     # 2. Check for existing user.
     email = user_info["email"]
-    user = session.scalars(select(User).where(User.email == email)).first()
+    user = session.scalars(
+        select(User).where(User.email == email).options(selectinload(User.categories))
+    ).first()
     if user:
         if user.account_type == AccountType.NORMAL:
             raise HTTPException(

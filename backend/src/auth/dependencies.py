@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from fastapi import Cookie, Depends, HTTPException, Request, status
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from src.common.database import engine
 from .models import User
 import jwt
@@ -46,7 +46,11 @@ def get_password_hash(password: str):
 
 def authenticate_user(email: str, password: str):
     with Session(engine) as session:
-        user = session.scalars(select(User).where(User.email == email)).first()
+        user = session.scalars(
+            select(User)
+            .where(User.email == email)
+            .options(selectinload(User.categories))
+        ).first()
         if not user:
             return False
         if not verify_password(password, user.hashed_password):
@@ -90,11 +94,13 @@ async def get_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         id = payload.get("sub")
         with Session(engine) as session:
-            staff = session.get(User, id)
-        if not staff:
+            user = session.scalar(
+                select(User).where(User.id == id).options(selectinload(User.categories))
+            )
+        if not user:
             raise InvalidTokenError()
 
-        return staff
+        return user
 
     except InvalidTokenError:
         raise credentials_exception
