@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -14,11 +13,15 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
+import { Button } from "../ui/button";
+import Link from "./link";
 
 export const NavItems: NavItem[] = [];
 
 function Navbar() {
-  const { setLoggedIn, setNotLoggedIn } = useUserStore((state) => state);
+  const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
+    (state) => state,
+  );
   const { data: userProfile, isSuccess: isUserProfileSuccess } =
     useQuery(getUserProfile());
 
@@ -54,6 +57,20 @@ function Navbar() {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
+        {!isLoggedIn && (
+          <div className="flex flex-1 items-center gap-x-4 justify-end">
+            <nav className="flex items-center space-x-4">
+              <Link href="/register">
+                <Button size="sm">Register</Button>
+              </Link>
+              <Link href="/login">
+                <Button size="sm" variant="outline">
+                  Log in
+                </Button>
+              </Link>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
