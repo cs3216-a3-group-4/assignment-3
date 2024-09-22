@@ -4,11 +4,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
-from src.auth.schemas import UserPublic
 from src.events.models import Category, Event
 from src.common.dependencies import get_session
 from src.events.schemas import EventDTO, EventIndexResponse
-from src.profile.schemas import ProfileUpdate
 
 
 router = APIRouter(prefix="/events", tags=["events"])
