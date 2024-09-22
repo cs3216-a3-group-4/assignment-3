@@ -6,7 +6,7 @@ from src.auth.models import User
 from src.auth.schemas import UserPublic
 from src.events.models import Category
 from src.common.dependencies import get_session
-from src.profile.schema import ProfileUpdate
+from src.profile.schemas import ProfileUpdate
 
 
 router = APIRouter(prefix="/profile", tags=["profile"])
@@ -20,9 +20,11 @@ def update_profile(
 ) -> UserPublic:
     categories = session.scalars(
         select(Category).where(Category.id.in_(data.category_ids))
-    )
-    user.categories.clear()
-    user.categories.extend(categories)
+    ).all()
+
+    user = session.get(User, user.id)
+    user.categories = categories
+
     session.add(user)
     session.commit()
     session.refresh(user)
