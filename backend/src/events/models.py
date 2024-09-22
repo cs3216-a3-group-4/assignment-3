@@ -52,7 +52,6 @@ class Event(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
     description: Mapped[str]
-    analysis: Mapped[str]
     duplicate: Mapped[bool]
     date: Mapped[datetime]
     is_singapore: Mapped[bool]

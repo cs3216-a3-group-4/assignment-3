@@ -44,7 +44,6 @@ def test_associations():
         event = Event(
             title="test event 1",
             description="x",
-            analysis="x",
             duplicate=False,
             date=datetime.now(),
             is_singapore=False,
