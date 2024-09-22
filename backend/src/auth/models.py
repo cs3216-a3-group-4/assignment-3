@@ -22,7 +22,7 @@ class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str]
+    email: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
     account_type: Mapped[AccountType]
 

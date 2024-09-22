@@ -46,7 +46,11 @@ def get_password_hash(password: str):
 
 def authenticate_user(email: str, password: str):
     with Session(engine) as session:
-        user = session.scalars(select(User).where(User.email == email)).first()
+        user = session.scalars(
+            select(User)
+            .where(User.email == email)
+            .options(selectinload(User.categories))
+        ).first()
         if not user:
             return False
         if not verify_password(password, user.hashed_password):
