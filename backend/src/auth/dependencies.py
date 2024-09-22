@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from fastapi import Cookie, Depends, HTTPException, Request, status
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from src.common.database import engine
 from .models import User
 import jwt
@@ -90,7 +90,9 @@ async def get_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         id = payload.get("sub")
         with Session(engine) as session:
-            staff = session.get(User, id)
+            staff = session.scalar(
+                select(User).where(User.id == id).options(selectinload(User.categories))
+            )
         if not staff:
             raise InvalidTokenError()
 

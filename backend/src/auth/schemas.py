@@ -1,4 +1,5 @@
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from src.categories.schemas import CategoryDTO
 
 
 class UserPublic(BaseModel):
@@ -6,6 +7,8 @@ class UserPublic(BaseModel):
 
     id: int
     email: EmailStr
+
+    categories: list[CategoryDTO]
 
 
 class Token(BaseModel):
