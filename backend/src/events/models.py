@@ -58,6 +58,7 @@ class Event(Base):
     articles: Mapped[list[Article]] = relationship(
         back_populates="events", secondary=article_event_table
     )
+    gp_questions: Mapped["GPQuestion"] = relationship(back_populates="event")
 
 
 class Category(Base):
@@ -79,3 +80,29 @@ class Analysis(Base):
         ForeignKey("category.id"), primary_key=True
     )
     content: Mapped[str]
+
+
+class GPQuestion(Base):
+    __tablename__ = "gp_question"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    question: Mapped[str]
+    is_llm_generated: Mapped[bool] = mapped_column(default=True)
+    event_id = mapped_column(ForeignKey("event.id"))
+
+    categories: Mapped[list["Category"]] = relationship(
+        secondary="gp_question_categories"
+    )
+
+    event: Mapped[Event] = relationship(back_populates="gp_questions")
+
+
+class GPQuestionCategories(Base):
+    __tablename__ = "gp_question_categories"
+
+    gp_question_id: Mapped[int] = mapped_column(
+        ForeignKey("gp_question.id"), primary_key=True
+    )
+    category_id: Mapped[int] = mapped_column(
+        ForeignKey("category.id"), primary_key=True
+    )
