@@ -1,6 +1,6 @@
 from enum import Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
+from sqlalchemy import Column, ForeignKey, Table
 from datetime import datetime
 from src.common.base import Base
 
@@ -8,6 +8,14 @@ from src.common.base import Base
 class ArticleSource(str, Enum):
     CNA = "CNA"
     GUARDIAN = "GUARDIAN"
+
+
+article_event_table = Table(
+    "article_event",
+    Base.metadata,
+    Column("article_id", ForeignKey("article.id"), primary_key=True),
+    Column("event_id", ForeignKey("event.id"), primary_key=True),
+)
 
 
 class Article(Base):
@@ -21,7 +29,13 @@ class Article(Base):
     source: Mapped[ArticleSource]
     date: Mapped[datetime]
 
-    events: Mapped[list["Event"]] = relationship(back_populates="original_article")
+    original_events: Mapped[list["Event"]] = relationship(
+        back_populates="original_article"
+    )
+
+    events: Mapped[list["Event"]] = relationship(
+        back_populates="articles", secondary=article_event_table
+    )
 
 
 class Event(Base):
@@ -40,7 +54,10 @@ class Event(Base):
         back_populates="events", secondary="event_category"
     )
 
-    original_article: Mapped[Article] = relationship(back_populates="events")
+    original_article: Mapped[Article] = relationship(back_populates="original_events")
+    articles: Mapped[list[Article]] = relationship(
+        back_populates="events", secondary=article_event_table
+    )
 
 
 class Category(Base):
