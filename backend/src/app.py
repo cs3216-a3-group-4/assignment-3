@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.auth.router import router as auth_router
+from src.categories.router import router as category_router
 from contextlib import asynccontextmanager
 
 import logging
@@ -30,3 +31,4 @@ server.add_middleware(
 )
 
 server.include_router(auth_router)
+server.include_router(category_router)
