@@ -21,6 +21,7 @@ const UserProfileButton = () => {
   const signout = async () => {
     await logoutAuthLogoutGet({ withCredentials: true });
     setNotLoggedIn();
+    router.push("/");
   };
 
   return (
