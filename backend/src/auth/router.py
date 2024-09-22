@@ -23,7 +23,7 @@ from src.auth.dependencies import (
 )
 from .models import AccountType, User
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 #######################
 # username & password #
