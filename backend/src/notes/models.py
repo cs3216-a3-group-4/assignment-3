@@ -1,4 +1,4 @@
-from sqlalchemy import Enum
+from sqlalchemy import Enum, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from src.common.base import Base
 
@@ -20,5 +20,7 @@ class Note(Base):
 
     parent_id: Mapped[int]
     parent_type: Mapped[str]
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
     __mapper_args__ = {"polymorphic_on": "parent_type", "polymorphic_identity": "note"}

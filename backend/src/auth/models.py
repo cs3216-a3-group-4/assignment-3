@@ -3,6 +3,7 @@ from sqlalchemy import Column, ForeignKey, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.common.base import Base
 from src.events.models import Category
+from src.notes.models import Note
 
 
 class AccountType(str, Enum):
@@ -27,3 +28,4 @@ class User(Base):
     account_type: Mapped[AccountType]
 
     categories: Mapped[list[Category]] = relationship(secondary=user_category_table)
+    notes: Mapped[list[Note]] = relationship("Note", backref="user")
