@@ -71,10 +71,11 @@ class Category(Base):
     )
 
 
-class EventCategory(Base):
-    __tablename__ = "event_category"
+class Analysis(Base):
+    __tablename__ = "analysis"
 
     event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), primary_key=True)
     category_id: Mapped[int] = mapped_column(
         ForeignKey("category.id"), primary_key=True
     )
+    content: Mapped[str]
