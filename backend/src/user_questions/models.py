@@ -32,3 +32,9 @@ class Point(Base):
     answer_id: Mapped[int] = mapped_column(ForeignKey("answer.id"))
 
     answer: Mapped[Answer] = relationship(back_populates="points")
+
+    notes = relationship(
+        "Note",
+        primaryjoin="and_(Event.id == foreign(Note.parent_id), Note.parent_type=='event')",
+        backref="point",
+    )

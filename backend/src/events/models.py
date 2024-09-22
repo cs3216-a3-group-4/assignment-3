@@ -1,8 +1,9 @@
 from enum import Enum
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Column, ForeignKey, Table
+from sqlalchemy.orm import Mapped, mapped_column, relationship, foreign
+from sqlalchemy import Column, ForeignKey, Table, and_
 from datetime import datetime
 from src.common.base import Base
+from src.notes.models import Note
 
 
 class ArticleSource(str, Enum):
@@ -38,6 +39,12 @@ class Article(Base):
         back_populates="articles", secondary=article_event_table
     )
 
+    notes = relationship(
+        "Note",
+        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "article"),
+        backref="article",
+    )
+
 
 class Event(Base):
     __tablename__ = "event"
@@ -53,7 +60,7 @@ class Event(Base):
     rating: Mapped[int]
 
     categories: Mapped[list["Category"]] = relationship(
-        back_populates="events", secondary="event_category"
+        back_populates="events", secondary="analysis"
     )
 
     original_article: Mapped[Article] = relationship(back_populates="original_events")
@@ -61,6 +68,12 @@ class Event(Base):
         back_populates="events", secondary=article_event_table
     )
     gp_questions: Mapped["GPQuestion"] = relationship(back_populates="event")
+
+    notes = relationship(
+        "Note",
+        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "note"),
+        backref="event",
+    )
 
 
 class Category(Base):
@@ -70,7 +83,7 @@ class Category(Base):
     name: Mapped[str]
 
     events: Mapped[list[Event]] = relationship(
-        secondary="event_category", back_populates="categories"
+        secondary="analysis", back_populates="categories"
     )
 
 
