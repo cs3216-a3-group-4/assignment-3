@@ -43,6 +43,7 @@ class CNAArticle(BaseModel):
     field_summary: str | None = None
     description: str | None = None
     release_date: str
+    image_url: str
 
 
 async def process(category: str):
@@ -78,6 +79,7 @@ async def process(category: str):
                     source=ArticleSource.CNA,
                     body=body.strip(),
                     date=article.release_date,
+                    image_url=article.image_url,
                 )
                 with Session(engine) as session:
                     session.add(article_orm)

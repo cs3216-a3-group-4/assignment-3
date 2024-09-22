@@ -16,6 +16,7 @@ class GuardianArticleFields(BaseModel):
     model_config = ConfigDict(extra="allow")
     bodyText: str
     trailText: str | None = None
+    thumbnail: str | None = None
 
 
 class GuardianArticle(BaseModel):
@@ -37,6 +38,7 @@ with open(args.input) as f:
             source=ArticleSource.GUARDIAN,
             body=article.fields.bodyText,
             date=article.webPublicationDate,
+            image_url=article.fields.thumbnail or "",
         )
         with Session(engine) as session:
             session.add(article_orm)
