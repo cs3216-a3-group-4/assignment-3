@@ -94,13 +94,13 @@ async def get_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         id = payload.get("sub")
         with Session(engine) as session:
-            staff = session.scalar(
+            user = session.scalar(
                 select(User).where(User.id == id).options(selectinload(User.categories))
             )
-        if not staff:
+        if not user:
             raise InvalidTokenError()
 
-        return staff
+        return user
 
     except InvalidTokenError:
         raise credentials_exception
