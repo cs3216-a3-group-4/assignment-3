@@ -39,6 +39,7 @@ type LoginForm = z.infer<typeof loginFormSchema>;
 
 function LoginPage() {
   const router = useRouter();
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const setLoggedIn = useUserStore((state) => state.setLoggedIn);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -62,6 +63,10 @@ function LoginPage() {
       router.push("/");
     }
   };
+
+  if (isLoggedIn) {
+    router.push("/");
+  }
 
   return (
     <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-6">
