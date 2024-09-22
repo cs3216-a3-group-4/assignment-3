@@ -23,6 +23,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -38,7 +39,9 @@ type LoginForm = z.infer<typeof loginFormSchema>;
 
 function LoginPage() {
   const router = useRouter();
+  const setLoggedIn = useUserStore((state) => state.setLoggedIn);
   const [isError, setIsError] = useState<boolean>(false);
+
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: loginFormDefault,
@@ -54,6 +57,8 @@ function LoginPage() {
       setIsError(true);
     } else {
       setIsError(false);
+      const { id: userId, email } = response.data.user;
+      setLoggedIn(userId, email);
       router.push("/");
     }
   };
