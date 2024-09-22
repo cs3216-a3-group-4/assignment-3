@@ -1,5 +1,5 @@
 from sqlalchemy import Enum, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.common.base import Base
 
 
@@ -24,3 +24,12 @@ class Note(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
     __mapper_args__ = {"polymorphic_on": "parent_type", "polymorphic_identity": "note"}
+
+    events = relationship("Event", secondary="event_note")
+
+
+class EventNote(Base):
+    __tablename__ = "event_note"
+
+    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), primary_key=True)
+    note_id: Mapped[int] = mapped_column(ForeignKey("note.id"), primary_key=True)
