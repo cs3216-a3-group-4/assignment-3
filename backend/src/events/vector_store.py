@@ -47,7 +47,7 @@ vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
 def store_documents():
     events = generate_events()
-    print(events)
+    # print(events)
     id = 0
     documents = []
     for event in events:
@@ -65,12 +65,13 @@ def store_documents():
         id += 1
     uuids = [str(uuid4()) for _ in range(len(documents))]
     vector_store.add_documents(documents=documents, ids=uuids)
+    print("Job done")
     
 
 
 if __name__ == "__main__":
-    store_documents()
-    query = "Governments should give freedom to the press to report on any issue"
+    # store_documents()
+    query = "No, the use of performance enhancing drugs undermines the integrity of sport: The use of performance-enhancing drugs violates the principle of fair play. It creates an uneven playing field where success depends more on pharmaceutical intervention than talent or hard work, eroding the values that sports should represent."
     docs = vector_store.similarity_search_with_relevance_scores(query, k = 3)
     if (len(docs) == 0):
         print("No documents found")

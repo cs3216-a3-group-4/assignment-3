@@ -127,8 +127,7 @@ Arsenal still had an opportunity to take all three points but Havertz and Saka b
 
 def generate_events() -> List[EventPublic]:
     articles = query_page(1)
-    articles = articles[:1]
-    # articles = [sample_text]
+    articles = articles[:50]
     res = []
     for article in articles:
         article_body = article.get("fields").get("bodyText")
@@ -165,8 +164,8 @@ def generate_events_from_article(article: str) -> dict:
     events = parser.invoke(result)
     return events
 
-if __name__ == "__main__":
-    print(generate_events())
+# if __name__ == "__main__":
+#     print(generate_events())
 
 
 
