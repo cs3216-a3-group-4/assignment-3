@@ -1,6 +1,13 @@
 from datetime import datetime
 from sqlalchemy import select
-from src.events.models import Article, ArticleSource, Category, Event
+from src.events.models import (
+    Analysis,
+    Article,
+    ArticleSource,
+    Category,
+    Event,
+    GPQuestion,
+)
 from sqlalchemy.orm import Session
 from src.common.database import engine
 
@@ -40,6 +47,7 @@ def test_associations():
             source=ArticleSource.CNA,
             body="test body",
             date="2024-02-05",
+            image_url="",
         )
         event = Event(
             title="test event 1",
@@ -47,9 +55,18 @@ def test_associations():
             duplicate=False,
             date=datetime.now(),
             is_singapore=False,
+            rating=5,
         )
-        article.events.append(event)
+
+        analysis = Analysis(category_id=1, content="hello")
+        event.analysises.append(analysis)
+        event.gp_questions.append(
+            GPQuestion(question="whatever", is_llm_generated=False)
+        )
+
+        article.original_events.append(event)
         session.add(article)
+        session.add(event)
         session.commit()
 
         session.refresh(article)
@@ -60,10 +77,10 @@ def test_associations():
 
     with Session(engine) as session:
         event_again = session.scalar(select(Event).where(Event.id == event_id))
-        categories = session.scalars(
-            select(Category).where(Category.name.in_(["Environment", "Media"]))
-        )
-        event_again.categories.extend(categories)
+        # categories = session.scalars(
+        #     select(Category).where(Category.name.in_(["Environment", "Media"]))
+        # )
+        # event_again.categories.extend(categories)
         session.add(event_again)
         session.commit()
 
@@ -73,11 +90,11 @@ def test_associations():
         print(event_again.original_article)
         print(event_again.categories)
         event_again.categories.clear()
-        original_article = event_again.original_article
+        # original_article = event_again.original_article
         session.add(event_again)
         session.commit()
-        session.delete(event_again)
-        session.delete(original_article)
+        # session.delete(event_again)
+        # session.delete(original_article)
 
 
-# test_associations()
+test_associations()

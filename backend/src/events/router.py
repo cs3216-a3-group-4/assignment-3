@@ -1,11 +1,12 @@
 from datetime import datetime
+from http import HTTPStatus
 from typing import Annotated
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
-from src.events.models import Article, Category, Event
+from src.events.models import Analysis, Article, Category, Event, GPQuestion
 from src.common.dependencies import get_session
 from src.events.schemas import EventDTO, EventIndexResponse
 
@@ -59,7 +60,20 @@ def get_event(
     session=Depends(get_session),
 ) -> EventDTO:
     event = session.scalar(
-        select(Event).where(Event.id == id).options(selectinload(Event.categories))
+        select(Event)
+        .where(Event.id == id)
+        .options(
+            selectinload(
+                Event.gp_questions,
+                GPQuestion.categories,
+            ),
+            selectinload(
+                Event.categories,
+            ),
+            selectinload(Event.analysises, Analysis.category),
+        )
     )
-    # TODO: link to more models, give more data
+    if not event:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+
     return event
