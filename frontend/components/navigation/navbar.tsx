@@ -9,11 +9,12 @@ import { useQuery } from "@tanstack/react-query";
 
 import JippyIcon from "@/assets/jippy-icon/jippy-icon-sm";
 import JippyLogo from "@/assets/jippy-logo/jippy-logo-sm";
+import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
-import { Button } from "../ui/button";
+
 import Link from "./link";
 
 export const NavItems: NavItem[] = [];

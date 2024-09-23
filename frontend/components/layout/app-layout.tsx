@@ -4,17 +4,17 @@ import { ComponentProps, ReactNode, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import Navbar from "@/components/navigation/navbar";
-import Sidebar from "@/components/navigation/sidebar";
+import Sidebar from "@/components/navigation/sidebar/sidebar";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { Toaster } from "@/components/ui/toaster";
+import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { MediaBreakpoint } from "@/utils/media";
-import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 
 const breakpointConfigMap: Record<
   MediaBreakpoint,
@@ -85,11 +85,11 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           {isLoggedIn && (
             <>
               <ResizablePanel
-                id="sidebar"
-                order={1}
                 className="flex w-full"
+                id="sidebar"
                 onCollapse={() => setIsCollapsed(true)}
                 onExpand={() => setIsCollapsed(false)}
+                order={1}
                 {...breakpointConfigMap[mediaBreakpoint]}
               >
                 <Sidebar />

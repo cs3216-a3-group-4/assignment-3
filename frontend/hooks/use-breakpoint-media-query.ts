@@ -1,5 +1,6 @@
-import { MediaBreakpoint } from "@/utils/media";
 import { useMediaQuery } from "usehooks-ts";
+
+import { MediaBreakpoint } from "@/utils/media";
 
 function useBreakpointMediaQuery(): MediaBreakpoint {
   const isMdBreakpoint = useMediaQuery(`(min-width: ${MediaBreakpoint.Md})`);
