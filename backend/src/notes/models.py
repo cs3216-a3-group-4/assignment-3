@@ -1,6 +1,7 @@
-from sqlalchemy import Enum, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from src.common.base import Base
+from enum import Enum
 
 
 class NoteType(str, Enum):
@@ -24,3 +25,24 @@ class Note(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
     __mapper_args__ = {"polymorphic_on": "parent_type", "polymorphic_identity": "note"}
+
+
+class EventNote(Note):
+    __mapper_args__ = {
+        "polymorphic_on": "parent_type",
+        "polymorphic_identity": "event",
+    }
+
+
+class ArticleNote(Note):
+    __mapper_args__ = {
+        "polymorphic_on": "parent_type",
+        "polymorphic_identity": "article",
+    }
+
+
+class PointNote(Note):
+    __mapper_args__ = {
+        "polymorphic_on": "parent_type",
+        "polymorphic_identity": "point",
+    }
