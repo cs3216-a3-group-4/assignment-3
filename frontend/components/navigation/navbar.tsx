@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -8,11 +7,15 @@ import {
 } from "@radix-ui/react-navigation-menu";
 import { useQuery } from "@tanstack/react-query";
 
-import UserProfileButton from "@/components/auth/user-profile-button";
+import JippyIcon from "@/assets/jippy-icon/jippy-icon-sm";
+import JippyLogo from "@/assets/jippy-logo/jippy-logo-sm";
+import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
+
+import Link from "./link";
 
 export const NavItems: NavItem[] = [];
 
@@ -25,20 +28,19 @@ function Navbar() {
 
   useEffect(() => {
     if (isUserProfileSuccess && userProfile) {
-      setLoggedIn(userProfile.id, userProfile.email);
+      setLoggedIn(userProfile);
     } else {
       setNotLoggedIn();
     }
   }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b-2">
-      <div className="w-full min-h-[72px] flex items-center justify-between px-4 py-4 sm:px-8 sm:py-4 md:px-20">
+    <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b-[1px]">
+      <div className="w-full min-h-[72px] flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
           <Link className="mr-6 flex items-center gap-x-2" href="/">
-            <span className="inline-block font-bold">
-              {process.env.NEXT_PUBLIC_APP_NAME}
-            </span>
+            <JippyLogo classname="hidden sm:flex" />
+            <JippyIcon classname="sm:hidden" />
           </Link>
           <NavigationMenu>
             <NavigationMenuList>
@@ -56,7 +58,20 @@ function Navbar() {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        {isLoggedIn && <UserProfileButton />}
+        {!isLoggedIn && (
+          <div className="flex flex-1 items-center gap-x-4 justify-end">
+            <nav className="flex items-center gap-x-4">
+              <Link href="/register">
+                <Button size="sm">Register</Button>
+              </Link>
+              <Link href="/login">
+                <Button size="sm" variant="outline">
+                  Log in
+                </Button>
+              </Link>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -16,6 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const registerFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -31,6 +32,7 @@ type RegisterForm = z.infer<typeof registerFormSchema>;
 
 function RegisterPage() {
   const router = useRouter();
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const [isError, setIsError] = useState<boolean>(false);
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerFormSchema),
@@ -51,8 +53,12 @@ function RegisterPage() {
     }
   };
 
+  if (isLoggedIn) {
+    router.push("/");
+  }
+
   return (
-    <Box className="flex w-full space-x-24">
+    <Box className="flex w-full gap-x-24">
       <Box className="flex justify-center items-center bg-card text-card-foreground px-12 md:px-20 w-full lg:w-6/12">
         <Box className="flex-col space-y-8 w-full max-w-3xl">
           {/* Header */}

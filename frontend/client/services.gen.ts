@@ -10,9 +10,26 @@ import type {
   AuthGoogleAuthGoogleGetData,
   AuthGoogleAuthGoogleGetError,
   AuthGoogleAuthGoogleGetResponse,
+  CreateUserQuestionUserQuestionsPostData,
+  CreateUserQuestionUserQuestionsPostError,
+  CreateUserQuestionUserQuestionsPostResponse,
+  GetCategoriesCategoriesGetError,
+  GetCategoriesCategoriesGetResponse,
+  GetEventEventsIdGetData,
+  GetEventEventsIdGetError,
+  GetEventEventsIdGetResponse,
+  GetEventsEventsGetData,
+  GetEventsEventsGetError,
+  GetEventsEventsGetResponse,
   GetUserAuthSessionGetData,
   GetUserAuthSessionGetError,
   GetUserAuthSessionGetResponse,
+  GetUserQuestionsUserQuestionsGetData,
+  GetUserQuestionsUserQuestionsGetError,
+  GetUserQuestionsUserQuestionsGetResponse,
+  GetUserQuestionUserQuestionsIdGetData,
+  GetUserQuestionUserQuestionsIdGetError,
+  GetUserQuestionUserQuestionsIdGetResponse,
   LogInAuthLoginPostData,
   LogInAuthLoginPostError,
   LogInAuthLoginPostResponse,
@@ -23,6 +40,9 @@ import type {
   SignUpAuthSignupPostData,
   SignUpAuthSignupPostError,
   SignUpAuthSignupPostResponse,
+  UpdateProfileProfilePutData,
+  UpdateProfileProfilePutError,
+  UpdateProfileProfilePutResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
@@ -127,5 +147,125 @@ export const logoutAuthLogoutGet = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: "/auth/logout",
+  });
+};
+
+/**
+ * Get Categories
+ */
+export const getCategoriesCategoriesGet = <
+  ThrowOnError extends boolean = false,
+>(
+  options?: Options<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetCategoriesCategoriesGetResponse,
+    GetCategoriesCategoriesGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/categories/",
+  });
+};
+
+/**
+ * Update Profile
+ */
+export const updateProfileProfilePut = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateProfileProfilePutData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).put<
+    UpdateProfileProfilePutResponse,
+    UpdateProfileProfilePutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/profile/",
+  });
+};
+
+/**
+ * Get Events
+ */
+export const getEventsEventsGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetEventsEventsGetData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetEventsEventsGetResponse,
+    GetEventsEventsGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/events/",
+  });
+};
+
+/**
+ * Get Event
+ */
+export const getEventEventsIdGet = <ThrowOnError extends boolean = false>(
+  options: Options<GetEventEventsIdGetData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetEventEventsIdGetResponse,
+    GetEventEventsIdGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/events/:id",
+  });
+};
+
+/**
+ * Get User Questions
+ */
+export const getUserQuestionsUserQuestionsGet = <
+  ThrowOnError extends boolean = false,
+>(
+  options?: Options<GetUserQuestionsUserQuestionsGetData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetUserQuestionsUserQuestionsGetResponse,
+    GetUserQuestionsUserQuestionsGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/user-questions/",
+  });
+};
+
+/**
+ * Create User Question
+ */
+export const createUserQuestionUserQuestionsPost = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<CreateUserQuestionUserQuestionsPostData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    CreateUserQuestionUserQuestionsPostResponse,
+    CreateUserQuestionUserQuestionsPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/user-questions/",
+  });
+};
+
+/**
+ * Get User Question
+ */
+export const getUserQuestionUserQuestionsIdGet = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetUserQuestionUserQuestionsIdGetData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetUserQuestionUserQuestionsIdGetResponse,
+    GetUserQuestionUserQuestionsIdGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/user-questions/:id",
   });
 };
