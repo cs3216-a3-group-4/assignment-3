@@ -5,3 +5,7 @@ repos:
         name: ruff
         language: system
         entry: bash -c 'cd backend && uvx ruff check --fix; uvx ruff format'
+      - id: eslint
+        name: eslint
+        language: system
+        entry: bash -c 'cd frontend && npm run lint -- --fix'
