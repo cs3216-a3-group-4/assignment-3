@@ -17,7 +17,7 @@ const sampleArticleCategories = [
 
 const NewsArticle = () => {
   return (
-    <div className="flex flex-col-reverse lg:flex-row w-full border-y-[1px] py-10 px-6 gap-x-16">
+    <div className="flex flex-col-reverse py-10 lg:flex-row w-auto lg:py-6 xl:py-4 gap-x-16 border-y-[1px] lg:border-y-[0px] hover:bg-muted/70 lg:rounded-md px-4 md:px-8">
       <div className="flex flex-col w-full lg:w-7/12">
         <div className="flex w-full justify-between text-sm text-offblack">
           <span>
