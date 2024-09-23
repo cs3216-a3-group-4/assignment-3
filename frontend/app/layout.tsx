@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 import AppLayout from "@/components/layout/app-layout";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
