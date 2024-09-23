@@ -5,7 +5,7 @@ from src.categories.router import router as category_router
 from src.profile.router import router as profile_router
 from src.events.router import router as events_router
 from src.user_questions.router import router as user_questions_router
-from src.notes.router import router as notes_router
+from src.notes.router import router as notes_router, points_router
 from contextlib import asynccontextmanager
 
 import logging
@@ -40,3 +40,4 @@ server.include_router(profile_router)
 server.include_router(events_router)
 server.include_router(user_questions_router)
 server.include_router(notes_router)
+server.include_router(points_router)

@@ -77,3 +77,21 @@ def delete_note(
 ):
     session.delete(note)
     session.commit()
+
+
+points_router = APIRouter(prefix="/points", tags=["points"])
+
+
+@points_router.get("/:id/notes")
+def get_point_notes(
+    user: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
+):
+    # TODO: validate point
+    notes = session.scalars(
+        select(Note)
+        .where(Note.parent_id == id)
+        .where(Note.parent_type == NoteType.POINT)
+        .where(Note.user_id == user.id)
+    )
+    return notes
