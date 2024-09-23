@@ -1,4 +1,5 @@
 import JippyClown from "@/assets/jippy-clown";
+import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 
 function AboutPage() {
@@ -20,7 +21,9 @@ function AboutPage() {
           The page you were looking for doesn&apos;t exist. The page might have
           moved, or you might have clicked on a bad link.
         </p>
-        <Button size="lg">Bring me back to my home page</Button>
+        <Link href="/">
+          <Button size="lg">Bring me back to my home page</Button>
+        </Link>
       </div>
     </div>
   );

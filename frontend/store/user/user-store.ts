@@ -1,9 +1,10 @@
 import { createStore } from "zustand";
 
+import { UserPublic } from "@/client";
+
 interface UserState {
   isLoggedIn: boolean;
-  userId?: number;
-  email?: string;
+  user?: UserPublic;
 }
 
 export const defaultUserState: UserState = {
@@ -11,7 +12,7 @@ export const defaultUserState: UserState = {
 };
 
 interface UserActions {
-  setLoggedIn: (userId?: number, email?: string) => void;
+  setLoggedIn: (user: UserPublic) => void;
   setNotLoggedIn: () => void;
 }
 
@@ -20,13 +21,11 @@ export type UserStore = UserState & UserActions;
 export const createUserStore = (initState: UserState = defaultUserState) => {
   return createStore<UserStore>()((set) => ({
     ...initState,
-    setLoggedIn: (userId, email) =>
-      set(() => ({ isLoggedIn: true, userId, email })),
+    setLoggedIn: (user) => set(() => ({ isLoggedIn: true, user })),
     setNotLoggedIn: () =>
       set(() => ({
         isLoggedIn: false,
-        userId: undefined,
-        email: undefined,
+        user: undefined,
       })),
   }));
 };

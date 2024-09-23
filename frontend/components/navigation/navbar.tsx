@@ -28,7 +28,7 @@ function Navbar() {
 
   useEffect(() => {
     if (isUserProfileSuccess && userProfile) {
-      setLoggedIn(userProfile.id, userProfile.email);
+      setLoggedIn(userProfile);
     } else {
       setNotLoggedIn();
     }

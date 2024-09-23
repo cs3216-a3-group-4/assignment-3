@@ -58,8 +58,7 @@ function LoginPage() {
       setIsError(true);
     } else {
       setIsError(false);
-      const { id: userId, email } = response.data.user;
-      setLoggedIn(userId, email);
+      setLoggedIn(response.data.user);
       router.push("/");
     }
   };

@@ -24,9 +24,9 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import { getInitialFromEmail, getNameFromEmail } from "@/utils/string";
 
 const UserProfileButton = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { email, setNotLoggedIn } = useUserStore((state) => state);
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { user, setNotLoggedIn } = useUserStore((state) => state);
 
   const signout = async () => {
     await logoutAuthLogoutGet({ withCredentials: true });
@@ -34,6 +34,7 @@ const UserProfileButton = () => {
     router.push("/");
   };
 
+  const email = user.email;
   return (
     <div className="cursor-pointer">
       <DropdownMenu onOpenChange={(isOpen) => setIsOpen(isOpen)}>
