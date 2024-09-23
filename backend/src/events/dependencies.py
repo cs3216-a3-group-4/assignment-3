@@ -22,6 +22,7 @@ def retrieve_event(
                 Event.categories,
             ),
             selectinload(Event.analysises, Analysis.category),
+            selectinload(Event.original_article),
         )
     )
     if not event:
