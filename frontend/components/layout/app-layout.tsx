@@ -21,16 +21,16 @@ const breakpointConfigMap: Record<
   ComponentProps<typeof ResizablePanel>
 > = {
   [MediaBreakpoint.Sm]: {
-    defaultSize: 50,
+    defaultSize: 25,
     maxSize: 60,
-    minSize: 30,
+    minSize: 20,
     collapsible: true,
     collapsedSize: 1,
   },
   [MediaBreakpoint.Md]: {
     defaultSize: 20,
     maxSize: 40,
-    minSize: 16,
+    minSize: 10,
     collapsible: true,
     collapsedSize: 1,
   },

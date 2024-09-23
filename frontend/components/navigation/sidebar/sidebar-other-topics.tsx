@@ -1,35 +1,25 @@
 import { ComponentProps } from "react";
-import {
-  Building2,
-  DollarSign,
-  Film,
-  HeartHandshake,
-  Leaf,
-  Medal,
-  Microscope,
-  Palette,
-  Scale,
-  UsersRound,
-} from "lucide-react";
 
-import { Categories } from "@/types/categories";
+import {
+  categoriesToDisplayName,
+  categoriesToIconsMap,
+  Category,
+} from "@/types/categories";
 
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
 
-interface TopicItem extends ComponentProps<typeof SidebarItemWithIcon> {}
-
 // TODO: dynamically fetch
-const otherTopics: TopicItem[] = [
-  { Icon: Microscope, label: Categories.SciTech },
-  { Icon: Palette, label: Categories.ArtsHumanities },
-  { Icon: Building2, label: Categories.Politics },
-  { Icon: Film, label: Categories.Media },
-  { Icon: Leaf, label: Categories.Environment },
-  { Icon: DollarSign, label: Categories.Economics },
-  { Icon: Medal, label: Categories.Sports },
-  { Icon: Scale, label: Categories.GenderEquality },
-  { Icon: HeartHandshake, label: Categories.Religion },
-  { Icon: UsersRound, label: Categories.SocietyCulture },
+const otherTopics = [
+  Category.SciTech,
+  Category.ArtsHumanities,
+  Category.Politics,
+  Category.Media,
+  Category.Environment,
+  Category.Economics,
+  Category.Sports,
+  Category.GenderEquality,
+  Category.Religion,
+  Category.SocietyCulture,
 ];
 
 const SidebarOtherTopics = () => {
@@ -39,9 +29,17 @@ const SidebarOtherTopics = () => {
         Other topics
       </h1>
       <div className="flex flex-col">
-        {otherTopics.map((topicItem) => (
-          <SidebarItemWithIcon key={topicItem.label} {...topicItem} />
-        ))}
+        {otherTopics.map((topicItem) => {
+          const categoryLabel = categoriesToDisplayName[topicItem];
+          const categoryIcon = categoriesToIconsMap[topicItem];
+          return (
+            <SidebarItemWithIcon
+              key={categoryLabel}
+              label={categoryLabel}
+              Icon={categoryIcon}
+            />
+          );
+        })}
       </div>
     </div>
   );
