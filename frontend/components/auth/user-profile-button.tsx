@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { getInitialFromEmail, getNameFromEmail } from "@/utils/string";
 
@@ -33,6 +34,20 @@ const UserProfileButton = () => {
     setNotLoggedIn();
     router.push("/");
   };
+
+  if (!user) {
+    return (
+      <div className="flex items-center w-full max-w-64 rounded p-4 hover:bg-muted-foreground/5">
+        <div className="flex space-x-6 items-center w-full">
+          <Skeleton className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-sm bg-[#e7e9e7]/80" />
+          <div className="flex flex-col space-y-2 w-full">
+            <Skeleton className="flex h-3 w-full shrink-0 overflow-hidden rounded-sm bg-[#e7e9e7]/80" />
+            <Skeleton className="flex h-3 w-full shrink-0 overflow-hidden rounded-sm bg-[#e7e9e7]/80" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const email = user.email;
   return (
