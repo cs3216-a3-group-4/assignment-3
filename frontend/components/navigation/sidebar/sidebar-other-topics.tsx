@@ -1,5 +1,3 @@
-import { ComponentProps } from "react";
-
 import {
   categoriesToDisplayName,
   categoriesToIconsMap,
@@ -29,14 +27,14 @@ const SidebarOtherTopics = () => {
         Other topics
       </h1>
       <div className="flex flex-col">
-        {otherTopics.map((topicItem) => {
-          const categoryLabel = categoriesToDisplayName[topicItem];
-          const categoryIcon = categoriesToIconsMap[topicItem];
+        {otherTopics.map((category) => {
+          const categoryLabel = categoriesToDisplayName[category];
+          const categoryIcon = categoriesToIconsMap[category];
           return (
             <SidebarItemWithIcon
-              key={categoryLabel}
-              label={categoryLabel}
               Icon={categoryIcon}
+              key={category}
+              label={categoryLabel}
             />
           );
         })}

@@ -1,6 +1,5 @@
 import {
   Building2,
-  Car,
   DollarSign,
   Film,
   HeartHandshake,

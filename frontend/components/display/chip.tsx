@@ -1,8 +1,8 @@
 import { cva, VariantProps } from "class-variance-authority";
+import { LucideIcon } from "lucide-react";
 
 import { Box } from "@/components/ui/box";
 import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
 
 const chipVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
@@ -36,7 +36,7 @@ interface ChipProps extends VariantProps<typeof chipVariants> {
 const Chip = ({ label, variant, size, className, Icon }: ChipProps) => {
   return (
     <Box className={cn(chipVariants({ variant, size }), className)}>
-      {Icon && <Icon size={16} strokeWidth={1.8} className="mr-2" />}
+      {Icon && <Icon className="mr-2" size={16} strokeWidth={1.8} />}
       {label}
     </Box>
   );
