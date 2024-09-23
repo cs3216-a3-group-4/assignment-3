@@ -58,7 +58,7 @@ function RegisterPage() {
   }
 
   return (
-    <Box className="flex w-full space-x-24">
+    <Box className="flex w-full gap-x-24">
       <Box className="flex justify-center items-center bg-card text-card-foreground px-12 md:px-20 w-full lg:w-6/12">
         <Box className="flex-col space-y-8 w-full max-w-3xl">
           {/* Header */}

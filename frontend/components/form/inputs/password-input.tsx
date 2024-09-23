@@ -28,7 +28,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           <p className="text-sm text-muted-foreground">{helperText}</p>
         )}
         <div className="flex flex-row items-end justify-between">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <Checkbox
               checked={isPasswordVisible}
               id="password-visibility"

@@ -60,7 +60,7 @@ function Navbar() {
         </div>
         {!isLoggedIn && (
           <div className="flex flex-1 items-center gap-x-4 justify-end">
-            <nav className="flex items-center space-x-4">
+            <nav className="flex items-center gap-x-4">
               <Link href="/register">
                 <Button size="sm">Register</Button>
               </Link>
