@@ -35,6 +35,7 @@ def get_events(
     event_query = (
         select(Event)
         .options(selectinload(Event.categories))
+        .options(selectinload(Event.original_article))
         .where(Event.id.in_(relevant_ids))
     )
     if limit is not None:
