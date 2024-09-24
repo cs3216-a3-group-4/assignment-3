@@ -48,8 +48,8 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
           </span>
           <span>{parseDate(newsEvent.date)}</span>
         </div>
-        <h2 className="text-lg font-semibold mt-2">{newsArticle.title}</h2>
-        <p className="text-sm text-offblack">{newsArticle.summary}</p>
+        <h2 className="text-lg font-semibold mt-2">{newsEvent.title}</h2>
+        <p className="text-sm text-offblack">{newsEvent.description}</p>
         <div className="flex flex-wrap gap-x-2 gap-y-2 mt-6">
           {categories?.map((category: Category) => (
             <Chip
