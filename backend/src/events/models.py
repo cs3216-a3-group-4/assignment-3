@@ -76,6 +76,19 @@ class Event(Base):
         backref="event",
     )
 
+    reads: Mapped[list["UserReadEvent"]] = relationship(backref="user")
+
+
+class UserReadEvent(Base):
+    __tablename__ = "user_read_event"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"))
+    first_read: Mapped[datetime]
+    last_read: Mapped[datetime]
+
 
 class Category(Base):
     __tablename__ = "category"
