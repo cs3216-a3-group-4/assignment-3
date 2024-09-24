@@ -39,7 +39,7 @@ export default function GoogleOAuth() {
         router.push("/");
       })();
     }
-  }, [code, router]);
+  }, [code, router, setLoggedIn]);
 
   return (
     <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-10">

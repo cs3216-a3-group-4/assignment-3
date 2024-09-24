@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { SparklesIcon } from "lucide-react";
 
 import {
@@ -22,6 +25,8 @@ const EventAnalysis = () => {
     Category.Media,
     Category.Politics,
   ];
+
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
 
   // TODO: I'm too lazy to fix this- this will be removed anyways
   const mockAnalysis: { [key in Category]: string } = Object.freeze({
@@ -52,8 +57,10 @@ const EventAnalysis = () => {
         <div className="flex w-full">
           <ToggleGroup
             className="gap-3"
+            onValueChange={(value) => setActiveCategories(value)}
             size="lg"
             type="multiple"
+            value={activeCategories}
             variant="outline"
           >
             {eventCategories.map((category) => {
@@ -76,7 +83,12 @@ const EventAnalysis = () => {
           </ToggleGroup>
         </div>
       </div>
-      <Accordion className="flex flex-col gap-y-6" type="multiple">
+      <Accordion
+        className="flex flex-col gap-y-6"
+        onValueChange={(value) => setActiveCategories(value)}
+        type="multiple"
+        value={activeCategories}
+      >
         {Object.entries(mockAnalysis).map((item) => {
           const [category, analysis] = item;
           const CategoryIcon = categoriesToIconsMap[category as Category];
