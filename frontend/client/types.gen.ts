@@ -166,7 +166,7 @@ export type SignUpAuthSignupPostData = {
     body: SignUpData;
 };
 
-export type SignUpAuthSignupPostResponse = (unknown);
+export type SignUpAuthSignupPostResponse = (Token);
 
 export type SignUpAuthSignupPostError = (HTTPValidationError);
 
