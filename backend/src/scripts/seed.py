@@ -15,7 +15,7 @@ from src.common.database import engine
 def add_categories():
     CATEGORIES = [
         "Arts & Humanities",
-        "Science & Tech",
+        "Science & Technology",
         "Politics",
         "Media",
         "Environment",
