@@ -13,8 +13,7 @@ import EventSummary from "./event-summary";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
-  const { data, isLoading, isError } = useQuery(getEvent(id));
-  console.log({ data, isLoading, isError });
+  const { data, isLoading } = useQuery(getEvent(id));
 
   if (isLoading) {
     return (

@@ -61,7 +61,9 @@ const EventDetails = ({ event }: Props) => {
           News source
         </span>
         <span className="col-span-1 md:col-span-8 xl:col-span-9 text-black font-normal">
-          {event.original_article.source.replace("GUARDIAN", "Guardian")}
+          <a className="underline" href={event.original_article.url}>
+            {event.original_article.source.replace("GUARDIAN", "Guardian")}
+          </a>
         </span>
       </div>
     </div>
