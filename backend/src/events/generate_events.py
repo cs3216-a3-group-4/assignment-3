@@ -1,3 +1,4 @@
+import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
@@ -32,11 +33,13 @@ class EventPublic(BaseModel):
     is_singapore: bool
     original_article_id: int
     categories: list[str]
+    questions: list[str]
 
 
 class Example(BaseModel):
     event_title: str
     description: str
+    questions: list[str]
     analysis_list: list[CategoryAnalysis]
     category: list[str]
     in_singapore: bool
@@ -48,8 +51,9 @@ class EventDetails(BaseModel):
 
 
 SYSPROMPT = """
-    You are a helpful assistant helping students find examples for their A Level general paper to substantiate their arguments in their essays.
-    Given an article, you should provide examples that can be used to support or refute arguments in a General Paper essay.
+    You are a Singaporean student studying for your A Levels. You are curating examples to supplement and bolster your arguments in your General Paper essays.
+    Given an article, you should provide relevant examples that can be used to support or refute arguments in a General Paper essay.
+    Given the article, you should also generate 2-3 GCE A Level General Paper essay questions that can potentially be answered using the events you have provided.
     You should provide at most 3 example events. If there are no relevant events, you should provide an empty list. You do not have to always provide 3 examples.
 
     For each event, your title should be specific enough so that I can guess your example without looking at the paragraph.
@@ -58,7 +62,11 @@ SYSPROMPT = """
     Important Note: Only categorize an event if the connection to a category is direct, significant, and not merely tangential. Do NOT categorize an event if the connection is speculative or minor.
 
     For each event, you should give an analysis of how the event can be used in the context of its respective category i.e. the categories that you have chosen for this event.
-    The analysis should be specific to the category of the event and should be detailed enough to be used in a General Paper essay. Limit your analysis to 3 sentences.
+    The analysis should be specific to the category of the event and should be tailored to the context of General Paper essays. Provide coherent arguments and insights. Be sure to give a detailed analysis of 3-4 sentences.
+    In your analysis, you should not mention "General Paper" or "A Levels".
+    For the analysis, remember that this is in the context of General Paper which emphasises critical thinking and the ability to construct coherent arguments.
+    If needed, you can think about the questions you have generated and how the event can be used to write about points for/against the argument in the question.
+
     For each event, you should also indicate if the event happened in Singapore. If there is no indication in the article, you should assume that the event did not happen in Singapore.
     For each event, you should also give a rating from 1 to 5 on how useful the event is as an example for a General Paper essay.
     You should give me your examples in the following json format:
@@ -68,6 +76,7 @@ SYSPROMPT = """
         { 
         "event_title": "Title of the event",
         "description": "The example that supports or refutes the argument",
+        "questions": ["Question 1", "Question 2", "Question 3"],
         "category": "Array of categories for this event. For example ['Arts & Humanities', 'Science & Tech'], 
         "analysis_list": [
             {
@@ -127,18 +136,26 @@ Arsenal still had an opportunity to take all three points but Havertz and Saka b
 
 “But the team reacted to what we had to do playing at home with 10 men. We didn’t want to be so deep defending like this, but we read the game and we played the game that we had to play and we should have got rewarded.”"""
 
+file_path = "data.json"
+
+
+def get_articles() -> List[str]:
+    articles = query_page(1)
+    articles = articles[:1]
+    return articles
+
 
 def generate_events() -> List[EventPublic]:
-    articles = query_page(1)
-    articles = articles[:50]
+    articles = get_articles()
     res = []
     for article in articles:
         article_body = article.get("fields").get("bodyText")
-        # article_body = article
         event_details = generate_events_from_article(article_body)
         for example in event_details.get("examples"):
             res.append(form_event_json(example))
 
+    with open(file_path, "w") as json_file:
+        json.dump(res, json_file, indent=4)
     return res
 
 
@@ -153,7 +170,47 @@ def form_event_json(event_details) -> dict:
         is_singapore=event_details.get("in_singapore", False),
         categories=event_details.get("category", []),
         original_article_id=0,
-    )
+        questions=event_details.get("questions", []),
+    ).model_dump()
+
+
+"""
+Generate a batch of prompts for OpenAI Batch API to generate events from articles
+"""
+
+
+def generate_batch_prompts() -> List[str]:
+    articles = get_articles()
+    batch_prompts = []
+    id = 0
+    for article in articles:
+        request_id = f"request_{id}"
+        id += 1
+        batch_prompts.append(
+            {
+                "custom_id": request_id,
+                "method": "POST",
+                "url": "/v1/chat/completions",
+                "body": {
+                    "model": "gpt-4o-mini",
+                    "messages": [
+                        {"role": "system", "content": SYSPROMPT},
+                        {
+                            "role": "user",
+                            "content": article.get("fields").get("bodyText"),
+                        },
+                    ],
+                    # "metadata": {
+                    #     "article_id": f"article_{id}",
+                    # },
+                    "max_tokens": 1000,
+                },
+            }
+        )
+
+    with open("batch_prompts.jsonl", "w") as jsonl_file:
+        for item in batch_prompts:
+            jsonl_file.write(json.dumps(item) + "\n")
 
 
 def generate_events_from_article(article: str) -> dict:
@@ -165,5 +222,5 @@ def generate_events_from_article(article: str) -> dict:
     return events
 
 
-# if __name__ == "__main__":
-#     print(generate_events())
+if __name__ == "__main__":
+    generate_batch_prompts()

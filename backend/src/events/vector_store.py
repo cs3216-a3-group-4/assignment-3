@@ -23,7 +23,7 @@ os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
-index_name = "langchain-test-index"  # change if desired
+index_name = "langchain-test-index-2"  # change to create a new index
 
 existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
@@ -38,6 +38,8 @@ if index_name not in existing_indexes:
         time.sleep(1)
 
 index = pc.Index(index_name)
+
+print(index)
 
 embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
 
@@ -57,6 +59,7 @@ def store_documents():
                 "description": event.description,
                 "categories": str(event.categories),
                 "is_singapore": event.is_singapore,
+                "questions": event.questions,
             },
             id=id,
         )
@@ -69,7 +72,7 @@ def store_documents():
 
 if __name__ == "__main__":
     # store_documents()
-    query = "No, the use of performance enhancing drugs undermines the integrity of sport: The use of performance-enhancing drugs violates the principle of fair play. It creates an uneven playing field where success depends more on pharmaceutical intervention than talent or hard work, eroding the values that sports should represent."
+    query = "There is a need for more stringent regulations on social media platforms."
     docs = vector_store.similarity_search_with_relevance_scores(query, k=3)
     if len(docs) == 0:
         print("No documents found")
