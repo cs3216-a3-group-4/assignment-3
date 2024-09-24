@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from src.lm.generate_events import lm_model
 from src.embeddings.vector_store import get_similar_results
 
-from src.lm.prompts import EVENT_GEN_SYSPROMPT as SYSPROMPT
+from src.lm.prompts import QUESTION_POINT_GEN_SYSPROMPT as SYSPROMPT
 
 
 class Points(BaseModel):
@@ -14,7 +14,7 @@ class Points(BaseModel):
 
 
 def generate_points_from_question(question: str) -> dict:
-    messages = [SystemMessage(text=SYSPROMPT), HumanMessage(text=question)]
+    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=question)]
 
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=Points)
@@ -42,3 +42,9 @@ def get_relevant_analyses(question: str, analyses_per_point: int = 3) -> List[st
         )
 
     return relevant_results
+
+
+if __name__ == "__main__":
+    question = "Should the government provide free education for all citizens?"
+    relevant_analyses = get_relevant_analyses(question)
+    print(relevant_analyses)
