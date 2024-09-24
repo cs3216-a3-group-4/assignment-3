@@ -1,22 +1,22 @@
+import { format } from "date-fns";
 import { ClockIcon, LayoutDashboardIcon, NewspaperIcon } from "lucide-react";
 
+import { EventDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import {
   categoriesToDisplayName,
   categoriesToIconsMap,
-  Category,
+  getCategoryFor,
 } from "@/types/categories";
 
-// TODO: this whole file is ugly
-const EventDetails = () => {
-  const eventDate = "21 Sep 2024";
-  const newsSource = "CNA, Guardian";
-  const eventCategories = [
-    Category.Economics,
-    Category.Environment,
-    Category.Media,
-    Category.Politics,
-  ];
+interface Props {
+  event: EventDTO;
+}
+
+const EventDetails = ({ event }: Props) => {
+  const eventCategories = event.categories.map((category) =>
+    getCategoryFor(category.name),
+  );
 
   return (
     <div className="flex flex-col px-6 text-muted-foreground font-medium space-y-2 md:space-y-4">
@@ -47,7 +47,7 @@ const EventDetails = () => {
           Event date
         </span>
         <span className="col-span-1  md:col-span-8 xl:col-span-9 text-black font-normal">
-          {eventDate}
+          {format(event.date, "d MMM yyyy")}
         </span>
       </div>
 
@@ -61,7 +61,7 @@ const EventDetails = () => {
           News source
         </span>
         <span className="col-span-1 md:col-span-8 xl:col-span-9 text-black font-normal">
-          {newsSource}
+          {event.original_article.source.replace("GUARDIAN", "Guardian")}
         </span>
       </div>
     </div>
