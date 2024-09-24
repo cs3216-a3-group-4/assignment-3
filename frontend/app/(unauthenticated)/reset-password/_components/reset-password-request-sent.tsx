@@ -35,7 +35,7 @@ export default function ResetPasswordRequestSent({
           <p className="mt-6">
             Please check again. If you still haven&apos;t received an email,{" "}
             <span
-              className="text-green-800 font-medium cursor-pointer"
+              className="font-medium cursor-pointer"
               onClick={() => reset()}
             >
               try a different email
@@ -53,14 +53,14 @@ export default function ResetPasswordRequestSent({
           <p className="mt-6">
             If you haven&apos;t received an email in 5 minutes, check your spam,{" "}
             <span
-              className="text-green-800 font-medium cursor-pointer"
+              className="font-medium cursor-pointer"
               onClick={() => resend()}
             >
               resend
             </span>{" "}
             or{" "}
             <span
-              className="text-green-800 font-medium cursor-pointer"
+              className="font-medium cursor-pointer"
               onClick={() => reset()}
             >
               try a different email
