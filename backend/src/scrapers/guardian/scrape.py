@@ -1,7 +1,4 @@
 import httpx
-import json
-import argparse
-import time
 
 from src.common.constants import GUARDIAN_API_KEY
 

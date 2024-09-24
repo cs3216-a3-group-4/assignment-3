@@ -5,7 +5,6 @@ from langchain_core.output_parsers import JsonOutputParser
 from src.scrapers.guardian.get_articles import get_articles
 from typing import List
 from pydantic import BaseModel
-from src.scrapers.guardian.scrape import query_page
 from src.common.constants import LANGCHAIN_API_KEY
 from src.common.constants import LANGCHAIN_TRACING_V2
 from src.common.constants import OPENAI_API_KEY
