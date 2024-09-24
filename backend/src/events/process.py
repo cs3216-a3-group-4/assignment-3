@@ -41,8 +41,7 @@ def add_event_to_db(event: EventLLM) -> bool:
         eventORM = session.scalars(
             select(Event).where(
                 Event.title == event.title,
-                Event.description == Event.description,
-                Event.duplicate == event.duplicate,
+                Event.description == event.description,
                 Event.is_singapore == event.is_singapore,
                 Event.original_article_id == event.original_article_id,
             )
