@@ -1,6 +1,25 @@
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 from src.categories.schemas import CategoryDTO
+from src.events.models import ArticleSource
+
+
+class ArticleDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    title: str
+    summary: str
+    body: str
+    url: str
+    source: ArticleSource
+    date: datetime
+    image_url: str
+
+
+class ReadDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    first_read: datetime
+    last_read: datetime
 
 
 class MiniEventDTO(BaseModel):
@@ -12,6 +31,8 @@ class MiniEventDTO(BaseModel):
     date: datetime
 
     categories: list[CategoryDTO]
+    original_article: ArticleDTO
+    reads: list[ReadDTO]
 
 
 class AnalysisDTO(BaseModel):

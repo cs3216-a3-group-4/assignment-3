@@ -29,3 +29,12 @@ class User(Base):
 
     categories: Mapped[list[Category]] = relationship(secondary=user_category_table)
     notes: Mapped[list[Note]] = relationship("Note", backref="user")
+
+
+class PasswordReset(Base):
+    __tablename__ = "password-reset"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    code: Mapped[str]
+    used: Mapped[bool]

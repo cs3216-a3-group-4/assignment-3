@@ -1,14 +1,16 @@
 from datetime import datetime
-from http import HTTPStatus
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
-from src.events.models import Analysis, Article, Category, Event, GPQuestion
+from src.events.dependencies import retrieve_event
+from src.events.models import Article, Category, Event, UserReadEvent
 from src.common.dependencies import get_session
 from src.events.schemas import EventDTO, EventIndexResponse
+from src.notes.models import Note, NoteType
+from src.notes.schemas import NoteDTO
 
 
 router = APIRouter(prefix="/events", tags=["events"])
@@ -16,7 +18,7 @@ router = APIRouter(prefix="/events", tags=["events"])
 
 @router.get("/")
 def get_events(
-    _: Annotated[User, Depends(get_current_user)],
+    user: Annotated[User, Depends(get_current_user)],
     start_date: Annotated[datetime | None, Query()] = None,
     end_date: Annotated[datetime | None, Query()] = None,
     session=Depends(get_session),
@@ -33,6 +35,9 @@ def get_events(
     event_query = (
         select(Event)
         .options(selectinload(Event.categories))
+        .options(selectinload(Event.original_article))
+        .options(selectinload(Event.reads.and_(UserReadEvent.user_id == user.id)))
+        .outerjoin(Event.reads.and_(UserReadEvent.user_id == user.id))
         .where(Event.id.in_(relevant_ids))
     )
     if limit is not None:
@@ -55,25 +60,51 @@ def get_events(
 
 @router.get("/:id")
 def get_event(
-    id: int,
     _: Annotated[User, Depends(get_current_user)],
-    session=Depends(get_session),
+    event=Depends(retrieve_event),
 ) -> EventDTO:
-    event = session.scalar(
-        select(Event)
-        .where(Event.id == id)
-        .options(
-            selectinload(
-                Event.gp_questions,
-                GPQuestion.categories,
-            ),
-            selectinload(
-                Event.categories,
-            ),
-            selectinload(Event.analysises, Analysis.category),
-        )
-    )
-    if not event:
-        raise HTTPException(HTTPStatus.NOT_FOUND)
-
     return event
+
+
+@router.get("/:id/notes")
+def get_event_notes(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    _=Depends(retrieve_event),
+    session=Depends(get_session),
+) -> list[NoteDTO]:
+    notes = session.scalars(
+        select(Note)
+        .where(Note.parent_id == id)
+        .where(Note.parent_type == NoteType.EVENT)
+        .where(Note.user_id == user.id)
+    )
+    return notes
+
+
+@router.post("/:id/read")
+def read_event(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    _=Depends(retrieve_event),
+    session=Depends(get_session),
+):
+    read_event = session.scalars(
+        select(UserReadEvent)
+        .where(UserReadEvent.event_id == id)
+        .where(UserReadEvent.user_id == user.id)
+    ).first()
+
+    if read_event:
+        read_event.last_read = datetime.now()
+    else:
+        date = datetime.now()
+        read_event = UserReadEvent(
+            event_id=id,
+            user_id=user.id,
+            first_read=date,
+            last_read=date,
+        )
+    session.add(read_event)
+    session.commit()
+    return

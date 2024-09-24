@@ -1,13 +1,14 @@
 from http import HTTPStatus
 from typing import Annotated
+from uuid import uuid4
 
 
-from fastapi import Depends, APIRouter, HTTPException, Response
+from fastapi import BackgroundTasks, Depends, APIRouter, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 import httpx
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from src.auth.utils import create_token
+from src.auth.utils import create_token, send_reset_password_email
 from src.common.constants import (
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
@@ -15,14 +16,19 @@ from src.common.constants import (
 )
 from src.auth.schemas import Token
 from src.common.dependencies import get_session
-from .schemas import SignUpData, UserPublic
+from .schemas import (
+    PasswordResetCompleteData,
+    PasswordResetRequestData,
+    SignUpData,
+    UserPublic,
+)
 
 from src.auth.dependencies import (
     authenticate_user,
     get_current_user,
     get_password_hash,
 )
-from .models import AccountType, User
+from .models import AccountType, PasswordReset, User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -124,11 +130,65 @@ def auth_google(
 
 
 @router.get("/session")
-def get_user(staff: Annotated[User, Depends(get_current_user)]) -> UserPublic:
-    return staff
+def get_user(user: Annotated[User, Depends(get_current_user)]) -> UserPublic:
+    return user
 
 
 @router.get("/logout")
 def logout(response: Response):
     response.delete_cookie(key="session")
     return ""
+
+
+@router.post("/password-reset")
+def request_password_reset(
+    data: PasswordResetRequestData,
+    background_task: BackgroundTasks,
+    session=Depends(get_session),
+):
+    email = data.email
+    user = session.scalars(
+        select(User)
+        .where(User.email == email)
+        .where(User.account_type == AccountType.NORMAL)
+    ).first()
+    if not user:
+        return
+
+    code = str(uuid4())
+    password_reset = PasswordReset(user_id=user.id, code=code, used=False)
+    session.add(password_reset)
+    session.commit()
+    background_task.add_task(send_reset_password_email, email, code)
+
+
+@router.put("/password-reset")
+def complete_password_reset(
+    code: str,
+    data: PasswordResetCompleteData,
+    session=Depends(get_session),
+):
+    # 9b90a1bd-ccab-4dcb-93c9-9ef2367dbcc4
+    password_reset = session.scalars(
+        select(PasswordReset).where(PasswordReset.code == code)
+    ).first()
+    if not password_reset or password_reset.used:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+
+    user = session.get(User, password_reset.user_id)
+    user.hashed_password = get_password_hash(data.password)
+    password_reset.used = True
+    session.add(user)
+    session.add(password_reset)
+    session.commit()
+
+
+@router.put("/change-password")
+def change_password(
+    user: Annotated[User, Depends(get_current_user)],
+    data: PasswordResetCompleteData,
+    session=Depends(get_session),
+):
+    user.hashed_password = get_password_hash(data.password)
+    session.add(user)
+    session.commit()
