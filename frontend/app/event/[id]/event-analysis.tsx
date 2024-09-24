@@ -10,7 +10,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   categoriesToDisplayName,
@@ -118,11 +117,12 @@ const EventAnalysis = ({ event }: Props) => {
               <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
                 <div>
                   <div>{analysis}</div>
-                  <Separator className="my-4" />
+                  {/* Commenting out GP questions for now */}
+                  {/* <Separator className="my-4" />
                   <div>
                     How does the commercialization of global sports impact
                     societal values and economies?
-                  </div>
+                  </div> */}
                 </div>
               </AccordionContent>
             </AccordionItem>
