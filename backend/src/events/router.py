@@ -55,7 +55,6 @@ def get_events(
     event_query = event_query.order_by(Event.rating.desc(), Event.date.desc())
 
     events = list(session.scalars(event_query))
-    print(events[0].reads)
     return EventIndexResponse(total_count=total_count, count=len(events), data=events)
 
 
