@@ -39,7 +39,6 @@ type LoginForm = z.infer<typeof loginFormSchema>;
 
 function LoginPage() {
   const router = useRouter();
-  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const setLoggedIn = useUserStore((state) => state.setLoggedIn);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -62,10 +61,6 @@ function LoginPage() {
       router.push("/");
     }
   };
-
-  if (isLoggedIn) {
-    router.push("/");
-  }
 
   return (
     <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-6">
@@ -143,6 +138,11 @@ function LoginPage() {
         <p className="text-sm text-muted-foreground">Not registered yet?</p>
         <Link href="/register" size="sm">
           Create an account
+        </Link>
+      </div>
+      <div className="flex gap-x-2 w-full justify-center">
+        <Link href="/reset-password" size="sm">
+          Forgot your password?
         </Link>
       </div>
     </Box>
