@@ -16,6 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const registerFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -31,6 +32,7 @@ type RegisterForm = z.infer<typeof registerFormSchema>;
 
 function RegisterPage() {
   const router = useRouter();
+  const setLoggedIn = useUserStore((state) => state.setLoggedIn);
   const [isError, setIsError] = useState<boolean>(false);
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerFormSchema),
@@ -47,6 +49,7 @@ function RegisterPage() {
       setIsError(true);
     } else {
       setIsError(false);
+      setLoggedIn(response.data.user);
       router.push("/login");
     }
   };
