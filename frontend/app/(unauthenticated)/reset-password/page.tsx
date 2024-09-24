@@ -8,11 +8,9 @@ import { Box } from "@/components/ui/box";
 import ResetPasswordCompleteForm from "./_components/reset-password-complete-form";
 import ResetPasswordCompleteSent from "./_components/reset-password-complete-sent";
 import ResetPasswordCreateRequestForm from "./_components/reset-password-create-request-form";
-import ResetPasswordRequestSent from "./_components/reset-password-request-sent";
 
 enum ResetPasswordState {
   CreatingRequest,
-  SentRequest,
   PendingReset,
   End,
 }
@@ -29,12 +27,7 @@ function ResetPasswordPage() {
   return (
     <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-6">
       {pageState === ResetPasswordState.CreatingRequest && (
-        <ResetPasswordCreateRequestForm
-          onComplete={() => setPageState(ResetPasswordState.SentRequest)}
-        />
-      )}
-      {pageState === ResetPasswordState.SentRequest && (
-        <ResetPasswordRequestSent />
+        <ResetPasswordCreateRequestForm />
       )}
       {pageState === ResetPasswordState.PendingReset && (
         <ResetPasswordCompleteForm
