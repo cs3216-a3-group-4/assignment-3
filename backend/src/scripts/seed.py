@@ -306,7 +306,6 @@ Cons: no zoom camera, face unlock option not as secure as Face ID, raw performan
         session.refresh(event2)
         print(article2)
         print(event2)
-        event_id = event.id
 
 
 # put_sample_events()
