@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -11,5 +12,5 @@ export default function RedirectIfAuthenticated({
   if (isLoggedIn) {
     router.push("/");
   }
-  return children;
+  return <Suspense>{children}</Suspense>;
 }
