@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
+
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import NewsArticle from "@/components/news/news-article";
-import { useEffect, useState } from "react";
 
 const NUM_TOP_EVENTS = 10;
 const DAYS_PER_WEEK = 7;
@@ -15,12 +16,16 @@ const Home = () => {
       const dateNow = new Date();
       const eventStartDate = new Date(dateNow);
       eventStartDate.setDate(dateNow.getDate() - DAYS_PER_WEEK);
-      const formattedEventStartDate = eventStartDate.toISOString().split('T')[0];
+      const formattedEventStartDate = eventStartDate
+        .toISOString()
+        .split("T")[0];
 
-      const response = await getEventsEventsGet({ query: {
-        start_date: formattedEventStartDate,
-        limit: NUM_TOP_EVENTS
-      }});
+      const response = await getEventsEventsGet({
+        query: {
+          start_date: formattedEventStartDate,
+          limit: NUM_TOP_EVENTS,
+        },
+      });
 
       if (response.error) {
         console.log(response.error);
@@ -28,7 +33,7 @@ const Home = () => {
         setTopEvents(response.data.data);
         setIsLoaded(true);
       }
-    }
+    };
 
     fetchTopEvents();
   }, []);
@@ -45,12 +50,12 @@ const Home = () => {
       </div>
 
       <div className="flex flex-col w-auto mx-4 md:mx-8 xl:mx-24">
-        { !isLoaded ? (
+        {!isLoaded ? (
           <p>Loading data...</p>
         ) : (
           topEvents.map((newsEvent: MiniEventDTO, index: number) => (
-            <NewsArticle newsEvent={newsEvent} />
-          ))  
+            <NewsArticle key={index} newsEvent={newsEvent} />
+          ))
         )}
       </div>
     </div>

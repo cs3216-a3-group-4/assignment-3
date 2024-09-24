@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowUpRightIcon } from "lucide-react";
 
+import { CategoryDTO, MiniEventDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import {
   categoriesToDisplayName,
@@ -8,46 +10,46 @@ import {
   Category,
   getCategoryFor,
 } from "@/types/categories";
-import { CategoryDTO, MiniEventDTO } from "@/client";
-import { useEffect, useState } from "react";
 
-const NewsArticle = (props: { newsEvent: MiniEventDTO; }) => {
+const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
   const newsEvent = props.newsEvent;
   const newsArticle = newsEvent.original_article;
   const [categories, setCategories] = useState<Category[]>([]);
-  const PLACEHOLDER_IMG_URL = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+  const PLACEHOLDER_IMG_URL =
+    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
 
   useEffect(() => {
-    setCategories(newsEvent.categories.map((category: CategoryDTO) => getCategoryFor(category.name)));
+    setCategories(
+      newsEvent.categories.map((category: CategoryDTO) =>
+        getCategoryFor(category.name),
+      ),
+    );
   }, [newsEvent]);
 
   const parseDate = (dateString: string) => {
     const PLACEHOLDER_DATE = "-";
 
     try {
-      var date: Date = new Date(dateString);
+      const date: Date = new Date(dateString);
       return date.toDateString();
     } catch (error) {
       console.log(error);
       return PLACEHOLDER_DATE;
     }
   };
-  
+
   return (
     <div className="flex flex-col-reverse py-10 lg:flex-row w-auto lg:py-6 xl:py-4 gap-x-16 border-y-[1px] lg:border-y-[0px] hover:bg-muted/70 lg:rounded-md px-4 md:px-8">
       <div className="flex flex-col w-full lg:w-7/12 2xl:w-9/12 3xl:w-10/12">
         <div className="flex w-full justify-between text-sm text-offblack">
           <span>
-            <ArrowUpRightIcon className="inline-flex" size={16} /> {newsArticle.source}
+            <ArrowUpRightIcon className="inline-flex" size={16} />
+            {newsArticle.source}
           </span>
           <span>{parseDate(newsEvent.date)}</span>
         </div>
-        <h2 className="text-lg font-semibold mt-2">
-          {newsArticle.title}
-        </h2>
-        <p className="text-sm text-offblack">
-          {newsArticle.summary}
-        </p>
+        <h2 className="text-lg font-semibold mt-2">{newsArticle.title}</h2>
+        <p className="text-sm text-offblack">{newsArticle.summary}</p>
         <div className="flex flex-wrap gap-x-2 gap-y-2 mt-6">
           {categories?.map((category: Category) => (
             <Chip
