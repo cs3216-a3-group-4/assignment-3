@@ -12,21 +12,21 @@ import {
 } from "lucide-react";
 
 import Chip from "@/components/display/chip";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import {
-  categoriesToDisplayName,
-  categoriesToIconsMap,
-  Category,
-} from "@/types/categories";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  categoriesToDisplayName,
+  categoriesToIconsMap,
+  Category,
+} from "@/types/categories";
 
 const Page = () => {
   const eventTitle = "Norris Claims Singapore GP Pole Amid Ferrari’s Setback";
@@ -151,9 +151,9 @@ const Page = () => {
           </span>
           <div className="flex w-full">
             <ToggleGroup
-              type="multiple"
-              size="xs"
               className="gap-3"
+              size="xs"
+              type="multiple"
               variant="outline"
             >
               {eventCategories.map((category) => {
@@ -161,12 +161,12 @@ const Page = () => {
                 const CategoryIcon = categoriesToIconsMap[category];
                 return (
                   <ToggleGroupItem
-                    value={category}
-                    className="border-none bg-muted text-muted-foreground data-[state=on]:bg-orange-400/10 data-[state=on]:text-orange-600 rounded-xl hover:bg-orange-200/10 hover:text-orange-400"
                     aria-label={`Toggle ${categoryName}`}
+                    className="border-none bg-muted text-muted-foreground data-[state=on]:bg-orange-400/10 data-[state=on]:text-orange-600 rounded-xl hover:bg-orange-200/10 hover:text-orange-400"
+                    value={category}
                   >
                     <span className="flex items-center">
-                      <CategoryIcon size={18} className="inline-flex mr-2" />
+                      <CategoryIcon className="inline-flex mr-2" size={18} />
                       {categoryName}
                     </span>
                   </ToggleGroupItem>
@@ -179,7 +179,7 @@ const Page = () => {
           {Object.entries(mockAnalysis).map((item) => {
             const [category, analysis] = item;
             return (
-              <AccordionItem value={category}>
+              <AccordionItem value={category} className="">
                 <AccordionTrigger className="text-lg">
                   {categoriesToDisplayName[category as Category]}
                 </AccordionTrigger>
