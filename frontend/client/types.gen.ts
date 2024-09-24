@@ -188,7 +188,7 @@ export type AuthGoogleAuthGoogleGetData = {
     };
 };
 
-export type AuthGoogleAuthGoogleGetResponse = (unknown);
+export type AuthGoogleAuthGoogleGetResponse = (Token);
 
 export type AuthGoogleAuthGoogleGetError = (HTTPValidationError);
 
@@ -284,6 +284,16 @@ export type ReadEventEventsIdReadPostData = {
 export type ReadEventEventsIdReadPostResponse = (unknown);
 
 export type ReadEventEventsIdReadPostError = (HTTPValidationError);
+
+export type SearchWhateverEventsSearchGetData = {
+    query: {
+        query: string;
+    };
+};
+
+export type SearchWhateverEventsSearchGetResponse = (unknown);
+
+export type SearchWhateverEventsSearchGetError = (HTTPValidationError);
 
 export type GetUserQuestionsUserQuestionsGetData = unknown;
 
