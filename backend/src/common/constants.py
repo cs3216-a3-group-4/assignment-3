@@ -25,3 +25,6 @@ PINECONE_API_KEY: str = _get_env_var("PINECONE_API_KEY")
 
 # for scrapers
 GUARDIAN_API_KEY: str = _get_env_var("GUARDIAN_API_KEY", required=False)
+
+GOOGLE_EMAIL: str = _get_env_var("GOOGLE_EMAIL")
+GOOGLE_APP_PASSWORD: str = _get_env_var("GOOGLE_APP_PASSWORD")
