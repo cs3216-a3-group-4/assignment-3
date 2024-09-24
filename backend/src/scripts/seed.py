@@ -99,18 +99,19 @@ def test_associations():
 
 test_associations()
 
+
 def put_sample_events():
     """
     {
-        'event_title': 'Controversial Red Card Decision in Premier League Match', 
-        'description': 'Leandro Trossard was sent off for kicking the ball away after receiving a yellow card, raising questions about the consistency of refereeing decisions.', 
-        'category': ['Sports', 'Politics'], 
+        'event_title': 'Controversial Red Card Decision in Premier League Match',
+        'description': 'Leandro Trossard was sent off for kicking the ball away after receiving a yellow card, raising questions about the consistency of refereeing decisions.',
+        'category': ['Sports', 'Politics'],
         'analysis_list': [{
             'category': 'Sports', 'analysis': "This example can be used to discuss the role of referees in sports and how their decisions can significantly influence the outcome of a game. The controversy surrounding Trossard's red card highlights the debate about whether refereeing decisions are applied inconsistently, which can affect teams' performances and strategies during critical matches."
         }, {
             'category': 'Politics', 'analysis': "The incident reflects broader societal issues regarding authority and accountability, as it showcases how officials' decisions can lead to public outcry and scrutiny. It can be related to discussions on governance and the importance of transparency and fairness in decision-making processes."
-        }], 
-        'in_singapore': False, 
+        }],
+        'in_singapore': False,
         'rating': 4
     }
     """
@@ -169,10 +170,16 @@ Reduced to taking a series of long-range surface-to-air potshots before sending 
             rating=4,
         )
 
-        analysis = Analysis(category_id=7, content="This event can illustrate how teams must adapt to unexpected challenges during matches, showcasing tactical flexibility and mental fortitude. It highlights the importance of depth in squad management and coaching strategies in overcoming adversity during competitive sports.")
+        analysis = Analysis(
+            category_id=7,
+            content="This event can illustrate how teams must adapt to unexpected challenges during matches, showcasing tactical flexibility and mental fortitude. It highlights the importance of depth in squad management and coaching strategies in overcoming adversity during competitive sports.",
+        )
         event.analysises.append(analysis)
         event.gp_questions.append(
-            GPQuestion(question="To what extent can resilience and strategic depth be cultivated through sports?", is_llm_generated=False)
+            GPQuestion(
+                question="To what extent can resilience and strategic depth be cultivated through sports?",
+                is_llm_generated=False,
+            )
         )
 
         article.original_events.append(event)
@@ -273,10 +280,16 @@ Cons: no zoom camera, face unlock option not as secure as Face ID, raw performan
             is_singapore=False,
             rating=3,
         )
-        analysis2 = Analysis(category_id=2, content="The use of advanced AI models like Google's Gemini Nano demonstrates the transformative impact of AI in consumer tech, significantly enhancing photography, editing, and usability in smartphones. It also raises debates on AI's role in augmenting everyday tools, improving productivity, and shaping the future of technology, making it relevant to discussions on the ethical and social implications of AI adoption. This can be used to argue both for and against the role of AI in society.")
+        analysis2 = Analysis(
+            category_id=2,
+            content="The use of advanced AI models like Google's Gemini Nano demonstrates the transformative impact of AI in consumer tech, significantly enhancing photography, editing, and usability in smartphones. It also raises debates on AI's role in augmenting everyday tools, improving productivity, and shaping the future of technology, making it relevant to discussions on the ethical and social implications of AI adoption. This can be used to argue both for and against the role of AI in society.",
+        )
         event2.analysises.append(analysis2)
         event2.gp_questions.append(
-            GPQuestion(question="To what extent has AI become an integral part of our daily lives?", is_llm_generated=False)
+            GPQuestion(
+                question="To what extent has AI become an integral part of our daily lives?",
+                is_llm_generated=False,
+            )
         )
 
         article2.original_events.append(event2)
@@ -289,11 +302,11 @@ Cons: no zoom camera, face unlock option not as secure as Face ID, raw performan
         print(article)
         print(event)
 
-
         session.refresh(article2)
         session.refresh(event2)
         print(article2)
         print(event2)
         event_id = event.id
+
 
 # put_sample_events()
