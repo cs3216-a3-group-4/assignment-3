@@ -10,6 +10,7 @@ from src.events.models import Event
 from src.notes.models import Note
 from src.user_questions.models import Answer, Point, UserQuestion
 from src.user_questions.schemas import CreateUserQuestion, UserQuestionMiniDTO
+from src.lm.generate_points import get_relevant_analyses
 
 
 router = APIRouter(prefix="/user-questions", tags=["user-questions"])
@@ -91,3 +92,8 @@ def create_user_question(
     session.commit()
     session.refresh(user_question)
     return user_question
+
+
+@router.get("/ask-gp-question")
+def ask_gp_question(question: str):
+    return get_relevant_analyses(question)

@@ -68,8 +68,15 @@ def store_documents():
         )
         documents.append(document)
 
-    uuids = [str(uuid4()) for _ in range(len(documents))]
-    vector_store.add_documents(documents=documents, ids=uuids)
+    ids = [
+        str(document.metadata["id"])
+        + "-"
+        + str(document.metadata["event_id"])
+        + "-"
+        + str(document.metadata["category_id"])
+        for document in documents
+    ]
+    vector_store.add_documents(documents=documents, ids=ids)
 
     print(f"Stored {len(documents)} documents")
 
