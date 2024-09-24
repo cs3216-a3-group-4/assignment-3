@@ -27,20 +27,20 @@ export enum Category {
 
 export const getCategoryFor = (categoryName: string) => {
   const mappings: Record<string, Category> = {
-    "science & technology": Category.SciTech,
+    "science & tech": Category.SciTech,
     "arts & humanities": Category.ArtsHumanities,
-    "politics": Category.Politics,
-    "media":Category.Media,
-    "environment": Category.Environment,
-    "economics": Category.Economics,
-    "sports": Category.Sports,
+    politics: Category.Politics,
+    media: Category.Media,
+    environment: Category.Environment,
+    economics: Category.Economics,
+    sports: Category.Sports,
     "gender & equality": Category.GenderEquality,
-    "religion": Category.Religion,
-    "society & culture": Category.SocietyCulture
+    religion: Category.Religion,
+    "society & culture": Category.SocietyCulture,
   };
   const formattedName = categoryName.toLowerCase();
   return mappings[formattedName];
-}
+};
 
 export const categoriesToDisplayName: Record<Category, string> = {
   [Category.SciTech]: "Science & technology",
