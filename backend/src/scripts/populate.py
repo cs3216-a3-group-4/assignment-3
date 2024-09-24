@@ -3,14 +3,9 @@ from src.events.process import add_event_to_db
 from src.embeddings.vector_store import store_documents
 from src.events.process import EventLLM
 
-# NOTE: this is for the purpose of populating the database with
-# the LM generated events and analyses
 
-
+# Populate the db with events from lm_events_output.json
 def populate():
-    # TODO: Query articles from DB
-    # NOTE: articles are expected to be in json with all the necessary fields
-
     with open("backend/lm_events_output.json", "r") as f:
         events = json.load(f)
     for event in events:
@@ -24,9 +19,6 @@ def populate():
             rating=int(event.get("rating", "0")),
         )
         add_event_to_db(event_obj)
-
-    # TODO: Embed analyses and push to pinecone
-    store_documents(events)
 
 
 if __name__ == "__main__":
