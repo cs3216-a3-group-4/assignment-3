@@ -9,10 +9,13 @@ def get_articles():
         # Select the first 5 articles
         result = session.scalars(select(Article).limit(5))
 
+        articles = []
         # Iterate over the result and print each article
         for article in result:
-            print(article.title)
+            data_dict = {
+                "id": article.id,
+                "bodyText": article.body,
+            }
+            articles.append(data_dict)
 
-
-if __name__ == "__main__":
-    get_articles()
+        return articles

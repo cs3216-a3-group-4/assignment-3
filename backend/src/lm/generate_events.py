@@ -2,6 +2,7 @@ import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
+from src.scrapers.guardian.get_articles import get_articles
 from typing import List
 from pydantic import BaseModel
 from src.scrapers.guardian.scrape import query_page
@@ -92,27 +93,19 @@ Arsenal still had an opportunity to take all three points but Havertz and Saka b
 file_path = "lm_events_output.json"
 
 
-def get_articles() -> List[str]:
-    articles = query_page(1)
-    articles = articles[:1]
-    return articles
-
-
-def generate_events(artcles: list[dict]) -> List[EventPublic]:
-    articles = get_articles()
+def generate_events(articles: list[dict]) -> List[EventPublic]:
     res = []
     for article in articles:
-        article_body = article.get("fields").get("bodyText")
-        event_details = generate_events_from_article(article_body)
+        event_details = generate_events_from_article(article)
         for example in event_details.get("examples"):
-            res.append(form_event_json(example))
+            res.append(form_event_json(example, article))
 
     with open(file_path, "w") as json_file:
         json.dump(res, json_file, indent=4)
     return res
 
 
-def form_event_json(event_details) -> dict:
+def form_event_json(event_details, article) -> dict:
     return EventPublic(
         id=0,
         title=event_details.get("event_title", ""),
@@ -122,7 +115,7 @@ def form_event_json(event_details) -> dict:
         date="",
         is_singapore=event_details.get("in_singapore", False),
         categories=event_details.get("category", []),
-        original_article_id=0,
+        original_article_id=article.get("id"),
         questions=event_details.get("questions", []),
     ).model_dump()
 
@@ -133,9 +126,16 @@ Generate a batch of prompts for OpenAI Batch API to generate events from article
 
 
 def generate_events_from_article(article: dict) -> dict:
-    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=article)]
+    article_body = article.get("bodyText")
+    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=article_body)]
 
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=EventDetails)
     events = parser.invoke(result)
     return events
+
+
+if __name__ == "__main__":
+    articles = get_articles()
+    print(len(articles))
+    generate_events(articles)

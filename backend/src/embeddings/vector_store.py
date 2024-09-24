@@ -23,7 +23,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "langchain-test-index-2"  # change to create a new index
+    index_name = "langchain-test-index-3"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
@@ -56,19 +56,22 @@ def store_documents(events: list[dict]):
     id = 0
     documents = []
     for event in events:
-        document = Document(
-            page_content=event.analysis_list[0].analysis,
-            metadata={
-                "title": event.title,
-                "description": event.description,
-                "categories": str(event.categories),
-                "is_singapore": event.is_singapore,
-                "questions": event.questions,
-            },
-            id=id,
-        )
-        documents.append(document)
-        id += 1
+        analysis_list = event.get("analysis_list")
+        for analysis in analysis_list:
+            document = Document(
+                page_content=analysis.get("analysis"),
+                metadata={
+                    "title": event.get("title"),
+                    "description": event.get("description"),
+                    "categories": str(event.get("categories")),
+                    "is_singapore": event.get("is_singapore"),
+                    "questions": event.get("questions"),
+                },
+                id=id,
+            )
+            documents.append(document)
+            id += 1
+
     uuids = [str(uuid4()) for _ in range(len(documents))]
     vector_store.add_documents(documents=documents, ids=uuids)
     print("Job done")
