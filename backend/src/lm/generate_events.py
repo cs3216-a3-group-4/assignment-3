@@ -89,7 +89,7 @@ Arsenal still had an opportunity to take all three points but Havertz and Saka b
 
 “But the team reacted to what we had to do playing at home with 10 men. We didn’t want to be so deep defending like this, but we read the game and we played the game that we had to play and we should have got rewarded.”"""
 
-file_path = "data.json"
+file_path = "lm_events_output.json"
 
 
 def get_articles() -> List[str]:
@@ -98,7 +98,7 @@ def get_articles() -> List[str]:
     return articles
 
 
-def generate_events() -> List[EventPublic]:
+def generate_events(artcles: list[dict]) -> List[EventPublic]:
     articles = get_articles()
     res = []
     for article in articles:
@@ -132,14 +132,10 @@ Generate a batch of prompts for OpenAI Batch API to generate events from article
 """
 
 
-def generate_events_from_article(article: str) -> dict:
+def generate_events_from_article(article: dict) -> dict:
     messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=article)]
 
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=EventDetails)
     events = parser.invoke(result)
     return events
-
-
-if __name__ == "__main__":
-    generate_batch_prompts()
