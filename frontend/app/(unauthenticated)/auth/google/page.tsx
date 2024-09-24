@@ -15,9 +15,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 export default function GoogleOAuth() {
   const router = useRouter();
+  const setLoggedIn = useUserStore((state) => state.setLoggedIn);
   const sentAuthentication = useRef(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const searchParams = useSearchParams();
@@ -31,8 +33,9 @@ export default function GoogleOAuth() {
           router.push("/login");
           return;
         }
-        await authGoogleAuthGoogleGet({ query: { code } });
+        const response = await authGoogleAuthGoogleGet({ query: { code } });
         setIsLoading(false);
+        setLoggedIn(response.data!.user);
         router.push("/");
       })();
     }

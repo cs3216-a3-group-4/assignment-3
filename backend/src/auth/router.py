@@ -88,7 +88,7 @@ def auth_google(
     code: str,
     response: Response,
     session=Depends(get_session),
-):
+) -> Token:
     # 1. Do google oauth stuff
     token_url = "https://accounts.google.com/o/oauth2/token"
     data = {
