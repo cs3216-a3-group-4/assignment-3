@@ -1,13 +1,9 @@
 import Image from "next/image";
 import {
-  Bold,
   ClockIcon,
-  Italic,
   LayoutDashboardIcon,
   NewspaperIcon,
-  SparkleIcon,
   SparklesIcon,
-  Underline,
   ZapIcon,
 } from "lucide-react";
 
@@ -19,7 +15,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
@@ -163,8 +158,8 @@ const Page = () => {
                   <ToggleGroupItem
                     aria-label={`Toggle ${categoryName}`}
                     className="border-none bg-muted text-muted-foreground data-[state=on]:bg-green-400/30 data-[state=on]:text-green-600 rounded-xl hover:bg-green-200/30 hover:text-green-500"
-                    value={category}
                     key={category}
+                    value={category}
                   >
                     <span className="flex items-center">
                       <CategoryIcon className="inline-flex mr-2" size={18} />
@@ -176,19 +171,19 @@ const Page = () => {
             </ToggleGroup>
           </div>
         </div>
-        <Accordion type="multiple" className="flex flex-col gap-y-8">
+        <Accordion className="flex flex-col gap-y-6" type="multiple">
           {Object.entries(mockAnalysis).map((item) => {
             const [category, analysis] = item;
             const CategoryIcon = categoriesToIconsMap[category as Category];
             return (
               <AccordionItem
                 className="border rounded-lg px-8 py-2 border-cyan-400/40 bg-cyan-50/30"
-                value={category}
                 key={category}
+                value={category}
               >
                 <AccordionTrigger
-                  className="text-xl text-cyan-600 font-semibold"
                   chevronClassName="h-6 w-6 stroke-[2.5]"
+                  className="text-xl text-cyan-600 font-semibold"
                 >
                   <span className="flex items-center">
                     <CategoryIcon className="inline-flex mr-4" />
