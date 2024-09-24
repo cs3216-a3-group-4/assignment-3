@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 
+import ResetPasswordRequestSent from "./reset-password-request-sent";
+
 const resetPasswordRequestFormSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
@@ -32,12 +34,9 @@ const resetPasswordFormDefault = {
 
 type ResetPasswordRequestForm = z.infer<typeof resetPasswordRequestFormSchema>;
 
-export default function ResetPasswordCreateRequestForm({
-  onComplete,
-}: {
-  onComplete: () => void;
-}) {
+export default function ResetPasswordCreateRequestForm() {
   const [isError, setIsError] = useState<boolean>(false);
+  const [sent, setSent] = useState<boolean>(false);
 
   const form = useForm<ResetPasswordRequestForm>({
     resolver: zodResolver(resetPasswordRequestFormSchema),
@@ -54,11 +53,16 @@ export default function ResetPasswordCreateRequestForm({
       setIsError(true);
     } else {
       setIsError(false);
-      onComplete();
+      setSent(true);
     }
   };
 
-  return (
+  return sent ? (
+    <ResetPasswordRequestSent
+      email={form.getValues().email}
+      reset={() => setSent(false)}
+    />
+  ) : (
     <>
       <Card className="flex flex-col border-0 md:border px-6 sm:px-12 sm:py-3 md:max-w-lg">
         <CardHeader className="space-y-3">

@@ -14,7 +14,7 @@ export default function ResetPasswordCompleteSent() {
   return (
     <Card className="flex flex-col border-0 md:border px-6 sm:px-12 sm:py-3 md:w-[32em] md:max-w-lg">
       <CardHeader className="space-y-3">
-        <CardTitle>Reset your password</CardTitle>
+        <CardTitle>Check your email</CardTitle>
         <CardDescription>
           All done! Login with your new password.
         </CardDescription>
