@@ -77,7 +77,7 @@ const Page = () => {
           />
         </div>
         <h1 className="text-3xl font-bold px-6">{eventTitle}</h1>
-        <div className="flex flex-col px-6 text-sm text-muted-foreground font-medium space-y-6 md:space-y-6">
+        <div className="flex flex-col px-6 text-muted-foreground font-medium space-y-2 md:space-y-4">
           <div className="grid grid-cols-12 gap-x-4 gap-y-3 place-items-start">
             <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
               <LayoutDashboardIcon
@@ -128,9 +128,9 @@ const Page = () => {
           </div>
         </div>
         <div className="px-6">
-          <Alert variant="yellow">
-            <ZapIcon className="h-4 w-4 stroke-lime-700" />
-            <AlertTitle className="text-lime-700 mb-2">
+          <Alert variant="teal">
+            <ZapIcon className="h-4 w-4 stroke-teal-700 fill-teal-700" />
+            <AlertTitle className="text-teal-700 mb-2">
               AI-generated summary
             </AlertTitle>
             <AlertDescription className="text-base font-[450]">
@@ -162,8 +162,9 @@ const Page = () => {
                 return (
                   <ToggleGroupItem
                     aria-label={`Toggle ${categoryName}`}
-                    className="border-none bg-muted text-muted-foreground data-[state=on]:bg-orange-400/10 data-[state=on]:text-orange-600 rounded-xl hover:bg-orange-200/10 hover:text-orange-400"
+                    className="border-none bg-muted text-muted-foreground data-[state=on]:bg-green-400/30 data-[state=on]:text-green-600 rounded-xl hover:bg-green-200/30 hover:text-green-500"
                     value={category}
+                    key={category}
                   >
                     <span className="flex items-center">
                       <CategoryIcon className="inline-flex mr-2" size={18} />
@@ -175,17 +176,29 @@ const Page = () => {
             </ToggleGroup>
           </div>
         </div>
-        <Accordion type="multiple">
+        <Accordion type="multiple" className="flex flex-col gap-y-8">
           {Object.entries(mockAnalysis).map((item) => {
             const [category, analysis] = item;
+            const CategoryIcon = categoriesToIconsMap[category as Category];
             return (
-              <AccordionItem value={category} className="">
-                <AccordionTrigger className="text-lg">
-                  {categoriesToDisplayName[category as Category]}
+              <AccordionItem
+                className="border rounded-lg px-8 py-2 border-cyan-400/40 bg-cyan-50/30"
+                value={category}
+                key={category}
+              >
+                <AccordionTrigger
+                  className="text-xl text-cyan-600 font-semibold"
+                  chevronClassName="h-6 w-6 stroke-[2.5]"
+                >
+                  <span className="flex items-center">
+                    <CategoryIcon className="inline-flex mr-4" />
+                    {categoriesToDisplayName[category as Category]}
+                  </span>
                 </AccordionTrigger>
-                <AccordionContent>
+                <AccordionContent className="text-lg pt-2">
                   <div>
                     <div>{analysis}</div>
+                    <Separator className="my-4" />
                     <div>
                       How does the commercialization of global sports impact
                       societal values and economies?
@@ -197,6 +210,7 @@ const Page = () => {
           })}
         </Accordion>
       </div>
+      <Separator className="my-10" />
     </div>
   );
 };
