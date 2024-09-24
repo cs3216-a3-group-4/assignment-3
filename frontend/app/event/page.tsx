@@ -71,7 +71,7 @@ const Page = () => {
             width={273}
           />
         </div>
-        <h1 className="text-3xl font-bold px-6">{eventTitle}</h1>
+        <h1 className="text-4xl font-bold px-6">{eventTitle}</h1>
         <div className="flex flex-col px-6 text-muted-foreground font-medium space-y-2 md:space-y-4">
           <div className="grid grid-cols-12 gap-x-4 gap-y-3 place-items-start">
             <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
@@ -124,30 +124,32 @@ const Page = () => {
         </div>
         <div className="px-6">
           <Alert variant="teal">
-            <ZapIcon className="h-4 w-4 stroke-teal-700 fill-teal-700" />
-            <AlertTitle className="text-teal-700 mb-2">
-              AI-generated summary
-            </AlertTitle>
-            <AlertDescription className="text-base font-[450]">
+            <div className="flex items-center mb-2">
+              <ZapIcon
+                className="stroke-teal-700 fill-teal-700 mr-3"
+                size={20}
+              />
+              <AlertTitle className="text-teal-700 text-lg mb-0">
+                AI-generated summary
+              </AlertTitle>
+            </div>
+            <AlertDescription className="text-lg font-[450]">
               {eventSummary}
             </AlertDescription>
           </Alert>
         </div>
       </div>
       <Separator className="my-10" />
-      <div className="flex flex-col px-6 gap-y-4">
+      <div className="flex flex-col px-6 gap-y-8">
         <div className="flex flex-col gap-y-1">
-          <span className="flex items-center font-medium text-2xl mb-4">
-            <SparklesIcon
-              className="inline-flex mr-3 stroke-offblack fill-muted"
-              size={24}
-            />
+          <span className="flex items-center font-medium text-3xl mb-6">
+            <SparklesIcon className="inline-flex mr-3 stroke-offblack fill-muted" />
             AI-powered topical analysis
           </span>
           <div className="flex w-full">
             <ToggleGroup
               className="gap-3"
-              size="xs"
+              size="lg"
               type="multiple"
               variant="outline"
             >
@@ -157,7 +159,7 @@ const Page = () => {
                 return (
                   <ToggleGroupItem
                     aria-label={`Toggle ${categoryName}`}
-                    className="border-none bg-muted text-muted-foreground data-[state=on]:bg-green-400/30 data-[state=on]:text-green-600 rounded-xl hover:bg-green-200/30 hover:text-green-500"
+                    className="border-none bg-muted text-muted-foreground data-[state=on]:bg-cyan-400/30 data-[state=on]:text-cyan-600 rounded-xl hover:bg-cyan-200/30 hover:text-cyan-500"
                     key={category}
                     value={category}
                   >
@@ -177,7 +179,7 @@ const Page = () => {
             const CategoryIcon = categoriesToIconsMap[category as Category];
             return (
               <AccordionItem
-                className="border rounded-lg px-8 py-2 border-cyan-400/40 bg-cyan-50/30"
+                className="border rounded-lg px-8 py-2 border-cyan-600/60 bg-cyan-50/30"
                 key={category}
                 value={category}
               >
@@ -190,7 +192,7 @@ const Page = () => {
                     {categoriesToDisplayName[category as Category]}
                   </span>
                 </AccordionTrigger>
-                <AccordionContent className="text-lg pt-2">
+                <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
                   <div>
                     <div>{analysis}</div>
                     <Separator className="my-4" />
