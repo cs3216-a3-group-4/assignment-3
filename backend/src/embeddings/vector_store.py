@@ -10,6 +10,8 @@ from src.common.constants import LANGCHAIN_TRACING_V2
 from src.common.constants import OPENAI_API_KEY
 from src.common.constants import PINECONE_API_KEY
 
+from src.scrapers.guardian.get_analyses import get_analyses
+
 import os
 import time
 
@@ -23,7 +25,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "langchain-test-index-3"  # change to create a new index
+    index_name = "langchain-test-index-4"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
@@ -51,37 +53,40 @@ def create_vector_store():
 vector_store = create_vector_store()
 
 
-def store_documents(events: list[dict]):
-    # print(events)
-    id = 0
+def store_documents():
     documents = []
-    for event in events:
-        analysis_list = event.get("analysis_list")
-        for analysis in analysis_list:
-            document = Document(
-                page_content=analysis.get("analysis"),
-                metadata={
-                    "title": event.get("title"),
-                    "description": event.get("description"),
-                    "categories": str(event.get("categories")),
-                    "is_singapore": event.get("is_singapore"),
-                    "questions": event.get("questions"),
-                },
-                id=id,
-            )
-            documents.append(document)
-            id += 1
+
+    analysis_list = get_analyses()
+    for analysis in analysis_list:
+        document = Document(
+            page_content=analysis.get("content"),
+            metadata={
+                "id": analysis.get("id"),
+                "event_id": analysis.get("event_id"),
+                "category_id": analysis.get("category_id"),
+            },
+        )
+        documents.append(document)
 
     uuids = [str(uuid4()) for _ in range(len(documents))]
     vector_store.add_documents(documents=documents, ids=uuids)
-    print("Job done")
+
+    print(f"Stored {len(documents)} documents")
 
 
-# if __name__ == "__main__":
-#     # store_documents()
-#     query = "There is a need for more stringent regulations on social media platforms."
-#     docs = vector_store.similarity_search_with_relevance_scores(query, k=3)
-#     if len(docs) == 0:
-#         print("No documents found")
-#     for doc in docs:
-#         print(doc)
+def get_similar_results(query: str, top_k: int = 5):
+    documents = vector_store.similarity_search_with_relevance_scores(
+        query=query, k=top_k
+    )
+    results = []
+    for document, score in documents:
+        results.append(
+            {
+                "id": document.metadata["id"],
+                "event_id": document.metadata["event_id"],
+                "category_id": document.metadata["category_id"],
+                "content": document.page_content,
+                "score": score,
+            }
+        )
+    return results

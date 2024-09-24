@@ -11,6 +11,7 @@ from src.common.dependencies import get_session
 from src.events.schemas import EventDTO, EventIndexResponse
 from src.notes.models import Note, NoteType
 from src.notes.schemas import NoteDTO
+from src.embeddings.vector_store import get_similar_results
 
 
 router = APIRouter(prefix="/events", tags=["events"])
@@ -108,3 +109,10 @@ def read_event(
     session.add(read_event)
     session.commit()
     return
+
+
+@router.get("/search")
+def search_whatever(query: str):
+    # call your function and return the result
+    results = get_similar_results(query)
+    return results

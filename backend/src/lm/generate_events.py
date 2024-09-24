@@ -95,10 +95,13 @@ file_path = "lm_events_output.json"
 
 def generate_events(articles: list[dict]) -> List[EventPublic]:
     res = []
+    count = 1
     for article in articles:
         event_details = generate_events_from_article(article)
         for example in event_details.get("examples"):
             res.append(form_event_json(example, article))
+        print(f"Generated {count} events")
+        count += 1
 
     with open(file_path, "w") as json_file:
         json.dump(res, json_file, indent=4)
