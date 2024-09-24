@@ -13,7 +13,7 @@ dependencies = [
     "python-dotenv",
     "setuptools",
     "wheel",
-    "psycopg2>=2.9.9",
+    "psycopg2-binary>=2.9.9",
     "email-validator>=2.2.0",
     "bcrypt>=4.2.0",
     "jwt>=1.3.1",

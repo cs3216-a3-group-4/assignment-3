@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from sqlalchemy import select
-from src.events.generate_events import CategoryAnalysis
+from src.lm.generate_events import CategoryAnalysis
 from src.events.models import Analysis, Article, Category, Event
 from src.common.database import engine
 from sqlalchemy.orm import Session

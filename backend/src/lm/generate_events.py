@@ -1,12 +1,14 @@
+import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
+from src.scrapers.guardian.get_articles import get_articles
 from typing import List
 from pydantic import BaseModel
-from src.scrapers.guardian.scrape import query_page
 from src.common.constants import LANGCHAIN_API_KEY
 from src.common.constants import LANGCHAIN_TRACING_V2
 from src.common.constants import OPENAI_API_KEY
+from src.lm.prompts import SYSPROMPT
 
 import os
 
@@ -32,11 +34,13 @@ class EventPublic(BaseModel):
     is_singapore: bool
     original_article_id: int
     categories: list[str]
+    questions: list[str]
 
 
 class Example(BaseModel):
     event_title: str
     description: str
+    questions: list[str]
     analysis_list: list[CategoryAnalysis]
     category: list[str]
     in_singapore: bool
@@ -46,48 +50,6 @@ class Example(BaseModel):
 class EventDetails(BaseModel):
     examples: list[Example]
 
-
-SYSPROMPT = """
-    You are a helpful assistant helping students find examples for their A Level general paper to substantiate their arguments in their essays.
-    Given an article, you should provide examples that can be used to support or refute arguments in a General Paper essay.
-    You should provide at most 3 example events. If there are no relevant events, you should provide an empty list. You do not have to always provide 3 examples.
-
-    For each event, your title should be specific enough so that I can guess your example without looking at the paragraph.
-    For each event, you should categorize your examples into the following categories:
-    [Arts & Humanities, Science & Tech, Politics, Media, Environment, Education, Sports, Gender & Equality, Religion, Society & Culture, Economic]
-    Important Note: Only categorize an event if the connection to a category is direct, significant, and not merely tangential. Do NOT categorize an event if the connection is speculative or minor.
-
-    For each event, you should give an analysis of how the event can be used in the context of its respective category i.e. the categories that you have chosen for this event.
-    The analysis should be specific to the category of the event and should be detailed enough to be used in a General Paper essay. Limit your analysis to 3 sentences.
-    For each event, you should also indicate if the event happened in Singapore. If there is no indication in the article, you should assume that the event did not happen in Singapore.
-    For each event, you should also give a rating from 1 to 5 on how useful the event is as an example for a General Paper essay.
-    You should give me your examples in the following json format:
-
-    { 
-    "examples": [
-        { 
-        "event_title": "Title of the event",
-        "description": "The example that supports or refutes the argument",
-        "category": "Array of categories for this event. For example ['Arts & Humanities', 'Science & Tech'], 
-        "analysis_list": [
-            {
-            "category": "The category of the event for example 'Arts & Humanities'",
-            "analysis": "The analysis of how the example can be used in a General Paper essay for Arts & Humanities"
-            },
-            {
-            "category": "The category of the event for example 'Science & Tech'",
-            "analysis": "The analysis of how the example can be used in a General Paper essay for Science & Tech"
-            }
-        ],
-        "in_singapore": "Boolean value to indicate if the event happened in Singapore",
-        "rating": "The rating of how useful the event is as an example for a General Paper essay"
-        }
-        ]
-    }
-
-    The article:
-
-"""
 
 sample_text = """
 A seething Mikel Arteta admitted that he was “amazed about how inconsistent the decisions can be” after Declan Rice was sent off as Arsenal dropped their first points of the new season against Brighton.
@@ -127,22 +89,25 @@ Arsenal still had an opportunity to take all three points but Havertz and Saka b
 
 “But the team reacted to what we had to do playing at home with 10 men. We didn’t want to be so deep defending like this, but we read the game and we played the game that we had to play and we should have got rewarded.”"""
 
+file_path = "lm_events_output.json"
 
-def generate_events() -> List[EventPublic]:
-    articles = query_page(1)
-    articles = articles[:50]
+
+def generate_events(articles: list[dict]) -> List[EventPublic]:
     res = []
+    count = 1
     for article in articles:
-        article_body = article.get("fields").get("bodyText")
-        # article_body = article
-        event_details = generate_events_from_article(article_body)
+        event_details = generate_events_from_article(article)
         for example in event_details.get("examples"):
-            res.append(form_event_json(example))
+            res.append(form_event_json(example, article))
+        print(f"Generated {count} events")
+        count += 1
 
+    with open(file_path, "w") as json_file:
+        json.dump(res, json_file, indent=4)
     return res
 
 
-def form_event_json(event_details) -> dict:
+def form_event_json(event_details, article) -> dict:
     return EventPublic(
         id=0,
         title=event_details.get("event_title", ""),
@@ -152,12 +117,19 @@ def form_event_json(event_details) -> dict:
         date="",
         is_singapore=event_details.get("in_singapore", False),
         categories=event_details.get("category", []),
-        original_article_id=0,
-    )
+        original_article_id=article.get("id"),
+        questions=event_details.get("questions", []),
+    ).model_dump()
 
 
-def generate_events_from_article(article: str) -> dict:
-    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=article)]
+"""
+Generate a batch of prompts for OpenAI Batch API to generate events from articles
+"""
+
+
+def generate_events_from_article(article: dict) -> dict:
+    article_body = article.get("bodyText")
+    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=article_body)]
 
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=EventDetails)
@@ -165,5 +137,7 @@ def generate_events_from_article(article: str) -> dict:
     return events
 
 
-# if __name__ == "__main__":
-#     print(generate_events())
+if __name__ == "__main__":
+    articles = get_articles()
+    print(len(articles))
+    generate_events(articles)
