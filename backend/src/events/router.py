@@ -6,7 +6,7 @@ from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.events.dependencies import retrieve_event
-from src.events.models import Article, Category, Event
+from src.events.models import Article, Category, Event, UserReadEvent
 from src.common.dependencies import get_session
 from src.events.schemas import EventDTO, EventIndexResponse
 from src.notes.models import Note, NoteType
@@ -18,7 +18,7 @@ router = APIRouter(prefix="/events", tags=["events"])
 
 @router.get("/")
 def get_events(
-    _: Annotated[User, Depends(get_current_user)],
+    user: Annotated[User, Depends(get_current_user)],
     start_date: Annotated[datetime | None, Query()] = None,
     end_date: Annotated[datetime | None, Query()] = None,
     session=Depends(get_session),
@@ -36,6 +36,8 @@ def get_events(
         select(Event)
         .options(selectinload(Event.categories))
         .options(selectinload(Event.original_article))
+        .options(selectinload(Event.reads.and_(UserReadEvent.user_id == user.id)))
+        .outerjoin(Event.reads.and_(UserReadEvent.user_id == user.id))
         .where(Event.id.in_(relevant_ids))
     )
     if limit is not None:
@@ -53,6 +55,7 @@ def get_events(
     event_query = event_query.order_by(Event.rating.desc(), Event.date.desc())
 
     events = list(session.scalars(event_query))
+    print(events[0].reads)
     return EventIndexResponse(total_count=total_count, count=len(events), data=events)
 
 
@@ -78,3 +81,31 @@ def get_event_notes(
         .where(Note.user_id == user.id)
     )
     return notes
+
+
+@router.post("/:id/read")
+def read_event(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    _=Depends(retrieve_event),
+    session=Depends(get_session),
+):
+    read_event = session.scalars(
+        select(UserReadEvent)
+        .where(UserReadEvent.event_id == id)
+        .where(UserReadEvent.user_id == user.id)
+    ).first()
+
+    if read_event:
+        read_event.last_read = datetime.now()
+    else:
+        date = datetime.now()
+        read_event = UserReadEvent(
+            event_id=id,
+            user_id=user.id,
+            first_read=date,
+            last_read=date,
+        )
+    session.add(read_event)
+    session.commit()
+    return

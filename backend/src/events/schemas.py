@@ -16,6 +16,12 @@ class ArticleDTO(BaseModel):
     image_url: str
 
 
+class ReadDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    first_read: datetime
+    last_read: datetime
+
+
 class MiniEventDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
@@ -26,6 +32,7 @@ class MiniEventDTO(BaseModel):
 
     categories: list[CategoryDTO]
     original_article: ArticleDTO
+    reads: list[ReadDTO]
 
 
 class AnalysisDTO(BaseModel):
