@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from src.common.constants import LANGCHAIN_API_KEY
 from src.common.constants import LANGCHAIN_TRACING_V2
 from src.common.constants import OPENAI_API_KEY
-from src.lm.prompts import SYSPROMPT
+from src.lm.prompts import EVENT_GEN_SYSPROMPT as SYSPROMPT
 
 import os
 
