@@ -1,6 +1,6 @@
+import { ArticleSource } from "@/client";
 import CnaLogo from "@/public/events/cna-logo";
 import GuardianLogo from "@/public/events/guardian-logo";
-import { ArticleSource } from "@/client";
 
 export interface ArticleSourceLogoProps {
   height?: number;
