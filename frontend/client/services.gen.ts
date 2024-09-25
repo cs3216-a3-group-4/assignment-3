@@ -6,6 +6,7 @@ import {
   type Options,
   urlSearchParamsBodySerializer,
 } from "./client";
+import { categoryIdsSerializer } from "./core/utils";
 import type {
   AskGpQuestionUserQuestionsAskGpQuestionGetData,
   AskGpQuestionUserQuestionsAskGpQuestionGetError,
@@ -286,6 +287,7 @@ export const getEventsEventsGet = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
+    paramsSerializer: categoryIdsSerializer,
     url: "/events/",
   });
 };
