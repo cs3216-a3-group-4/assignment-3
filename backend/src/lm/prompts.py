@@ -110,9 +110,9 @@ QUESTION_ANALYSIS_GEN_SYSPROMPT = """
     For each example, you should provide a detailed elaboration illustrating how this event can be used as an example to support or refute the argument in the question.
     If the example event is relevant to the point, you should provide a coherent and detailed elaboration of the point using the example event and analysis as support for the argument.
     
-    Important note: The elaboration must directly address and strengthen the specific point being made. If the connection between the event and the point is unclear or speculative, SKIP the example and provide no elaboration for it. Avoid tangential interpretations.
+    Important note: The elaboration must directly address and strengthen the specific point being made. If the connection between the event and the point is unclear or speculative, REMOVE that example from your output. Avoid tangential interpretations.
     Important note: Your elaborations must clearly tie the example to the point. If the event does not obviously support or refute the point in a direct and non-speculative way, DO NOT force a connection.
-    Important note: Structure your elaborations using this format: "<Agreement/Disagreement with the statement> because <clear reason based on the event>". The explanation should leave no ambiguity about why the event strengthens or weakens the argument.
+    Important note: Structure your elaborations using this format: "<A statement that clearly supports/refutes the given question> because <clear reason based on the event>". The explanation should leave no ambiguity about why the event strengthens or weakens the argument.
 
     If there are no relevant examples for a point, you can skip that point.
     The elaboration should be specific to the category of the event and should be tailored to the context of General Paper essays. Provide coherent arguments and insights. Be sure to give a detailed analysis of 3-4 sentences.
