@@ -4,7 +4,7 @@ from sqlalchemy import select
 from src.events.models import Article
 
 
-def get_articles():
+def get_articles() -> list[dict]:
     with Session(engine) as session:
         # Select the first 5 articles
         result = session.scalars(select(Article).limit(100))

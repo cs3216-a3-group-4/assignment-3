@@ -3,7 +3,7 @@ import httpx
 
 from src.common.constants import GUARDIAN_API_KEY
 from sqlalchemy import select
-from src.events.models import Article, ArticleSource
+from src.events.models import Article, ArticleSource, Event
 from src.common.database import engine
 from sqlalchemy.orm import Session
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
@@ -44,7 +44,7 @@ def get_today_articles():
     return result
 
 
-def form_guardian_artilcle_obj(article: dict):
+def form_guardian_article_obj(article: dict):
     article_obj = GuardianArticle(
         fields=GuardianArticleFields(
             bodyText=article["fields"]["bodyText"],
@@ -98,9 +98,27 @@ def populate_daily_articles():
     articles = get_today_articles()
     articles = articles[:1]
     for article in articles:
-        article_obj = form_guardian_artilcle_obj(article)
+        article_obj = form_guardian_article_obj(article)
         add_daily_articles_to_db(article_obj)
 
 
-if __name__ == "__main__":
-    populate_daily_articles()
+def process_new_articles() -> list[dict]:
+    with Session(engine) as session:
+        result = session.scalars(
+            select(Article).where(
+                Article.id.not_in(
+                    list(session.scalars(select(Event.original_article_id)))
+                )
+            )
+        ).all()
+
+        articles = []
+
+        for article in result:
+            data_dict = {
+                "id": article.id,
+                "bodyText": article.body,
+            }
+            articles.append(data_dict)
+
+        return articles
