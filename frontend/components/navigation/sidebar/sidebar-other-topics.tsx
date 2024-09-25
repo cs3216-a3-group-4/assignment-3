@@ -1,39 +1,25 @@
+"use client";
+
 import { createElement, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 
-import {
-  categoriesToDisplayName,
-  categoriesToIconsMap,
-  Category,
-} from "@/types/categories";
+import { useQuery } from "@tanstack/react-query";
+
+import { getCategories } from "@/queries/category";
+import { getIconFor } from "@/types/categories";
 
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
 
-// TODO: dynamically fetch
-const otherTopics: Category[] = [
-  Category.SciTech,
-  Category.ArtsHumanities,
-  Category.Politics,
-  Category.Media,
-  Category.Environment,
-  Category.Economics,
-  Category.Sports,
-  Category.GenderEquality,
-  Category.Religion,
-  Category.SocietyCulture,
-];
-
 const SidebarOtherTopics = () => {
-  const router = useRouter();
+  const { data: categories, isSuccess } = useQuery(getCategories());
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
-  const numTopics = otherTopics.length;
+  const numTopics = categories?.length;
 
   return (
     <div className="flex flex-col space-y-2.5 w-full max-w-xs">
       <div className="flex items-center cursor-pointer w-full justify-between">
         <h1 className="text-sm font-medium text-muted-foreground/80 px-2">
-          Other topics ({numTopics})
+          Other topics {isSuccess && `(${numTopics})`}
         </h1>
         {createElement(isExpanded ? ChevronsUpDownIcon : ChevronsDownUpIcon, {
           onClick: () => setIsExpanded((prevState) => !prevState),
@@ -43,17 +29,15 @@ const SidebarOtherTopics = () => {
         })}
       </div>
       <div className={`flex flex-col ${isExpanded ? "" : "hidden"}`}>
-        {otherTopics.map((category) => {
-          const categoryLabel = categoriesToDisplayName[category];
-          const categoryIcon = categoriesToIconsMap[category];
+        {categories?.map((category) => {
+          const categoryIcon = getIconFor(category.name);
           return (
             // TODO: active category
             <SidebarItemWithIcon
               Icon={categoryIcon}
-              key={category}
-              label={categoryLabel}
-              // TODO: fix this once merged with main
-              onClick={() => router.push(`/categories/${category}`)}
+              categoryId={category.id}
+              key={category.id}
+              label={category.name}
             />
           );
         })}

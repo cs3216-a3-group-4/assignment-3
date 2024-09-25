@@ -27,19 +27,20 @@ class GuardianArticle(BaseModel):
     webPublicationDate: str
 
 
-with open(args.input) as f:
-    data = json.load(f)
-    for row in data:
-        article = GuardianArticle.model_validate(row)
-        article_orm = Article(
-            title=article.webTitle,
-            summary=article.fields.trailText if article.fields.trailText else "",
-            url=article.webUrl,
-            source=ArticleSource.GUARDIAN,
-            body=article.fields.bodyText,
-            date=article.webPublicationDate,
-            image_url=article.fields.thumbnail or "",
-        )
-        with Session(engine) as session:
-            session.add(article_orm)
-            session.commit()
+def populate_existing_articles():
+    with open(args.input) as f:
+        data = json.load(f)
+        for row in data:
+            article = GuardianArticle.model_validate(row)
+            article_orm = Article(
+                title=article.webTitle,
+                summary=article.fields.trailText if article.fields.trailText else "",
+                url=article.webUrl,
+                source=ArticleSource.GUARDIAN,
+                body=article.fields.bodyText,
+                date=article.webPublicationDate,
+                image_url=article.fields.thumbnail or "",
+            )
+            with Session(engine) as session:
+                session.add(article_orm)
+                session.commit()

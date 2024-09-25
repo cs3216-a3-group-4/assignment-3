@@ -331,6 +331,10 @@ export const formDataBodySerializer = {
   },
 };
 
+export const categoryIdsSerializer = (params: Record<string, any>) => {
+  return params.category_ids?.map((categoryId: number) => `category_ids=${categoryId}`).join("&");
+};
+
 export const jsonBodySerializer = {
   bodySerializer: <T>(body: T) => JSON.stringify(body),
 };
