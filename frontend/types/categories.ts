@@ -31,7 +31,7 @@ export enum Category {
 
 export const getCategoryFor = (categoryName: string) => {
   const mappings: Record<string, Category> = {
-    "science & tech": Category.SciTech,
+    "science & technology": Category.SciTech,
     "arts & humanities": Category.ArtsHumanities,
     politics: Category.Politics,
     media: Category.Media,
@@ -78,4 +78,9 @@ export const categoriesToIconsMap: Record<Category, LucideIcon> = {
   [Category.SocietyCulture]: UsersRound,
   [Category.Education]: School,
   [Category.Others]: CircleHelp,
+};
+
+export const getIconFor = (categoryName: string) => {
+  const category = getCategoryFor(categoryName);
+  return categoriesToIconsMap[category];
 };
