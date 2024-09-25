@@ -10,13 +10,13 @@ import {
   Category,
   getCategoryFor,
 } from "@/types/categories";
+import PlaceholderImage from "../icons/placeholder-image";
 
 const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
   const newsEvent = props.newsEvent;
   const newsArticle = newsEvent.original_article;
   const [categories, setCategories] = useState<Category[]>([]);
-  const PLACEHOLDER_IMG_URL =
-    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
+  const IMG_HEIGHT = 154;
 
   useEffect(() => {
     try {
@@ -67,17 +67,23 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
         </div>
       </div>
       <div className="flex w-full lg:w-5/12 2xl:w-3/12 3xl:w-2/12 mb-6 items-center">
-        <Image
-          alt=""
-          height={154}
-          src={newsArticle.image_url || PLACEHOLDER_IMG_URL}
-          style={{
-            width: "100%",
-            height: "fit-content",
-          }}
-          unoptimized
-          width={273}
-        />
+        { newsArticle.image_url ? (
+          <Image
+            alt=""
+            height={IMG_HEIGHT}
+            src={newsArticle.image_url}
+            style={{
+              width: "100%",
+              height: "fit-content",
+            }}
+            unoptimized
+            width={273}
+          />
+        ) : (
+          <div style={{height: `${IMG_HEIGHT}px`}} className="flex w-full">
+            <PlaceholderImage />
+          </div>
+        )}
       </div>
     </div>
   );
