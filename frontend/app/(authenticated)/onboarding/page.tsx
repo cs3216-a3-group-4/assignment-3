@@ -17,6 +17,7 @@ export default function Onboarding() {
   const { data: categories, isLoading } = useQuery(getCategories());
   const [categoryIds, setCategoryIds] = useState<number[]>([]);
   const user = useUserStore((state) => state.user);
+  const setLoggedIn = useUserStore((state) => state.setLoggedIn);
 
   const toggleCategory = (id: number) => {
     if (!categoryIds.includes(id)) {
@@ -33,7 +34,8 @@ export default function Onboarding() {
     updateProfileMutation.mutate(
       { categoryIds },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          setLoggedIn(data.data!);
           router.push("/");
         },
       },
