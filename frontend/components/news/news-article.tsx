@@ -12,6 +12,7 @@ import {
   Category,
   getCategoryFor,
 } from "@/types/categories";
+import { parseDate } from "@/utils/date";
 
 const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
   const newsEvent = props.newsEvent;
@@ -32,18 +33,6 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
       setCategories([Category.Others]);
     }
   }, [newsEvent]);
-
-  const parseDate = (dateString: string) => {
-    const PLACEHOLDER_DATE = "-";
-
-    try {
-      const date: Date = new Date(dateString);
-      return date.toDateString();
-    } catch (error) {
-      console.log(error);
-      return PLACEHOLDER_DATE;
-    }
-  };
 
   const onClick = () => {
     router.push(`/events/${newsEvent.id}`);

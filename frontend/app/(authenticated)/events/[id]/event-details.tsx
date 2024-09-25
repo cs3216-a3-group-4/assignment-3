@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 import { ClockIcon, LayoutDashboardIcon, NewspaperIcon } from "lucide-react";
 
 import { EventDTO } from "@/client";
@@ -8,6 +7,7 @@ import {
   categoriesToIconsMap,
   getCategoryFor,
 } from "@/types/categories";
+import { parseDate } from "@/utils/date";
 
 interface Props {
   event: EventDTO;
@@ -47,7 +47,7 @@ const EventDetails = ({ event }: Props) => {
           Event date
         </span>
         <span className="col-span-1  md:col-span-8 xl:col-span-9 text-black font-normal">
-          {format(event.date, "d MMM yyyy")}
+          {parseDate(event.date)}
         </span>
       </div>
 
