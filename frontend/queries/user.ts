@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 
 import {
+  changePasswordAuthChangePasswordPut,
   getUserAuthSessionGet,
   updateProfileProfilePut,
 } from "@/client/services.gen";
@@ -32,6 +33,28 @@ export const useUpdateProfile = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.UserProfile] });
+    },
+  });
+};
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: ({
+      password,
+      confirmPassword,
+      oldPassword,
+    }: {
+      password: string;
+      confirmPassword: string;
+      oldPassword: string;
+    }) => {
+      return changePasswordAuthChangePasswordPut({
+        body: {
+          password,
+          confirm_password: confirmPassword,
+          old_password: oldPassword,
+        },
+      });
     },
   });
 };
