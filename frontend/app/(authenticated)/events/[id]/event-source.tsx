@@ -39,7 +39,7 @@ const EventSource = () => {
           <NewspaperIcon className="inline-flex mr-3 stroke-offblack fill-muted" />
           Event source
         </span>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-4">
           {originalArticles.map((article) => {
             const articleSource = article.source;
             const sourceName = articleSourceToDisplayNameMap[articleSource];
@@ -50,7 +50,7 @@ const EventSource = () => {
                   <SourceIcon />
                   <div className="flex flex-col gap-y-4">
                     <Link
-                      className="font-medium no-underline"
+                      className="font-medium no-underline hover:underline"
                       href={article.articleUrl}
                       isExternal
                     >
