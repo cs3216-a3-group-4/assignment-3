@@ -16,7 +16,7 @@ os.environ["LANGCHAIN_API_KEY"] = LANGCHAIN_API_KEY
 os.environ["LANGCHAIN_TRACING_V2"] = LANGCHAIN_TRACING_V2
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
-lm_model = ChatOpenAI(model="gpt-4o-mini")
+lm_model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 
 class CategoryAnalysis(BaseModel):
@@ -76,7 +76,7 @@ def form_event_json(event_details, article) -> dict:
         description=event_details.get("description", ""),
         analysis_list=event_details.get("analysis_list", {}),
         duplicate=False,
-        date="",
+        date=str(article.get("webPublicationDate")),
         is_singapore=event_details.get("in_singapore", False),
         categories=event_details.get("category", []),
         original_article_id=article.get("id"),
@@ -96,6 +96,7 @@ def generate_events_from_article(article: dict) -> dict:
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=EventDetails)
     events = parser.invoke(result)
+    print(f"Model temp: {lm_model.temperature}")
     return events
 
 

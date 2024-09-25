@@ -8,6 +8,10 @@ from src.common.database import engine
 from sqlalchemy.orm import Session
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
 
+from src.lm.generate_events import generate_events
+from src.scripts.populate import populate
+from src.embeddings.vector_store import store_documents
+
 
 def query_page(page: int, date):
     response = httpx.get(
@@ -122,3 +126,20 @@ def process_new_articles() -> list[dict]:
             articles.append(data_dict)
 
         return articles
+
+
+# NOTE: this method should work with no issue as long as the number of calls is less than 500 which is the rate limit by OpenAI
+# This should not be an issue as long as we ensure the 25k articles in the database have already been processed
+
+
+def run():
+    # Add new articles to database
+    populate_daily_articles()
+    # Process new articles i.e. find articles that we have not generated events for
+    articles = process_new_articles()
+    # Generate events from articles, written to lm_events_output.json
+    generate_events(articles)
+    # Populate the database with events from lm_events_output.json
+    populate()
+    # Store analyses in vector store
+    store_documents()
