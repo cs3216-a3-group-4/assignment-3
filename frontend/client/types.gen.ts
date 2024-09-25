@@ -166,7 +166,7 @@ export type SignUpAuthSignupPostData = {
   body: SignUpData;
 };
 
-export type SignUpAuthSignupPostResponse = unknown;
+export type SignUpAuthSignupPostResponse = Token;
 
 export type SignUpAuthSignupPostError = HTTPValidationError;
 
@@ -188,7 +188,7 @@ export type AuthGoogleAuthGoogleGetData = {
   };
 };
 
-export type AuthGoogleAuthGoogleGetResponse = unknown;
+export type AuthGoogleAuthGoogleGetResponse = Token;
 
 export type AuthGoogleAuthGoogleGetError = HTTPValidationError;
 
@@ -266,6 +266,16 @@ export type GetEventEventsIdGetData = {
 export type GetEventEventsIdGetResponse = EventDTO;
 
 export type GetEventEventsIdGetError = HTTPValidationError;
+
+export type SearchWhateverEventsSearchGetData = {
+  query: {
+    query: string;
+  };
+};
+
+export type SearchWhateverEventsSearchGetResponse = unknown;
+
+export type SearchWhateverEventsSearchGetError = HTTPValidationError;
 
 export type GetEventNotesEventsIdNotesGetData = {
   query: {

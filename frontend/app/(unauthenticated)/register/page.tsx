@@ -32,7 +32,7 @@ type RegisterForm = z.infer<typeof registerFormSchema>;
 
 function RegisterPage() {
   const router = useRouter();
-  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const setLoggedIn = useUserStore((state) => state.setLoggedIn);
   const [isError, setIsError] = useState<boolean>(false);
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerFormSchema),
@@ -49,13 +49,10 @@ function RegisterPage() {
       setIsError(true);
     } else {
       setIsError(false);
+      setLoggedIn(response.data.user);
       router.push("/login");
     }
   };
-
-  if (isLoggedIn) {
-    router.push("/");
-  }
 
   return (
     <Box className="flex w-full gap-x-24">

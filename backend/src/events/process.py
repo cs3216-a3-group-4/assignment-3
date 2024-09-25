@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from sqlalchemy import select
-from src.events.generate_events import CategoryAnalysis
+from src.lm.generate_events import CategoryAnalysis
 from src.events.models import Analysis, Article, Category, Event
 from src.common.database import engine
 from sqlalchemy.orm import Session
@@ -37,6 +37,19 @@ def add_event_to_db(event: EventLLM) -> bool:
     categories = get_categories()
 
     with Session(engine) as session:
+        # Check for duplicates
+        eventORM = session.scalars(
+            select(Event).where(
+                Event.title == event.title,
+                Event.description == event.description,
+                Event.is_singapore == event.is_singapore,
+                Event.original_article_id == event.original_article_id,
+            )
+        ).first()
+        if eventORM:
+            print("duplicate detected:", event)
+            return False
+
         try:
             article = session.get(Article, event.original_article_id)
             if not article:

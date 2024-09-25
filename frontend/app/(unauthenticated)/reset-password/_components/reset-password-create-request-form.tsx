@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleAlert } from "lucide-react";
 import { z } from "zod";
 
-import { logInAuthLoginPost } from "@/client";
-import GoogleOAuthButton from "@/components/auth/google-oauth-button";
-import PasswordField from "@/components/form/fields/password-field";
+import { requestPasswordResetAuthPasswordResetPost } from "@/client";
 import TextField from "@/components/form/fields/text-field";
 import Link from "@/components/navigation/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -23,34 +20,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { useUserStore } from "@/store/user/user-store-provider";
 
-const loginFormSchema = z.object({
+import ResetPasswordRequestSent from "./reset-password-request-sent";
+
+const resetPasswordRequestFormSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password required"),
 });
 
-const loginFormDefault = {
+const resetPasswordFormDefault = {
   email: "",
   password: "",
 };
 
-type LoginForm = z.infer<typeof loginFormSchema>;
+type ResetPasswordRequestForm = z.infer<typeof resetPasswordRequestFormSchema>;
 
-function LoginPage() {
-  const router = useRouter();
-  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
-  const setLoggedIn = useUserStore((state) => state.setLoggedIn);
+export default function ResetPasswordCreateRequestForm() {
   const [isError, setIsError] = useState<boolean>(false);
+  const [sent, setSent] = useState<boolean>(false);
 
-  const form = useForm<LoginForm>({
-    resolver: zodResolver(loginFormSchema),
-    defaultValues: loginFormDefault,
+  const form = useForm<ResetPasswordRequestForm>({
+    resolver: zodResolver(resetPasswordRequestFormSchema),
+    defaultValues: resetPasswordFormDefault,
   });
 
-  const onSubmit: SubmitHandler<LoginForm> = async (data) => {
-    const response = await logInAuthLoginPost({
-      body: { username: data.email, password: data.password },
+  const onSubmit: SubmitHandler<ResetPasswordRequestForm> = async (data) => {
+    const response = await requestPasswordResetAuthPasswordResetPost({
+      body: { email: data.email },
       withCredentials: true,
     });
 
@@ -58,38 +53,23 @@ function LoginPage() {
       setIsError(true);
     } else {
       setIsError(false);
-      setLoggedIn(response.data.user);
-      router.push("/");
+      setSent(true);
     }
   };
 
-  if (isLoggedIn) {
-    router.push("/");
-  }
-
-  return (
-    <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-6">
+  return sent ? (
+    <ResetPasswordRequestSent
+      email={form.getValues().email}
+      reset={() => setSent(false)}
+    />
+  ) : (
+    <>
       <Card className="flex flex-col border-0 md:border px-6 sm:px-12 sm:py-3 md:max-w-lg">
         <CardHeader className="space-y-3">
-          <CardTitle>Log in to {process.env.NEXT_PUBLIC_APP_NAME}</CardTitle>
+          <CardTitle>Reset your password</CardTitle>
           <CardDescription>
-            By continuing, you agree to our&nbsp;
-            <Link
-              className="text-card-foreground"
-              href="/policies/user-agreement"
-              size="sm"
-            >
-              User Agreement
-            </Link>
-            &nbsp;and acknowledge that you understand our&nbsp;
-            <Link
-              className="text-card-foreground"
-              href="/policies/privacy-policy"
-              size="sm"
-            >
-              Privacy Policy
-            </Link>
-            .
+            Don&apos;t worry, enter the email associated with your Jippy account
+            and we will send you a link to reset your password.
           </CardDescription>
         </CardHeader>
 
@@ -114,28 +94,12 @@ function LoginPage() {
               >
                 <div className="space-y-4">
                   <TextField label="Email" name="email" />
-                  <PasswordField label="Password" name="password" />
                 </div>
                 <Button className="w-full" type="submit">
-                  Log in
+                  Continue
                 </Button>
               </form>
             </Form>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <GoogleOAuthButton />
-            </div>
           </Box>
         </CardContent>
       </Card>
@@ -145,8 +109,6 @@ function LoginPage() {
           Create an account
         </Link>
       </div>
-    </Box>
+    </>
   );
 }
-
-export default LoginPage;

@@ -38,7 +38,9 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/signup")
-def sign_up(data: SignUpData, session=Depends(get_session)):
+def sign_up(
+    data: SignUpData, response: Response, session=Depends(get_session)
+) -> Token:
     existing_user = session.scalars(
         select(User).where(User.email == data.email)
     ).first()
@@ -52,8 +54,9 @@ def sign_up(data: SignUpData, session=Depends(get_session)):
     )
     session.add(new_user)
     session.commit()
+    session.refresh(new_user)
 
-    return
+    return create_token(new_user, response)
 
 
 @router.post("/login")
@@ -85,7 +88,7 @@ def auth_google(
     code: str,
     response: Response,
     session=Depends(get_session),
-):
+) -> Token:
     # 1. Do google oauth stuff
     token_url = "https://accounts.google.com/o/oauth2/token"
     data = {

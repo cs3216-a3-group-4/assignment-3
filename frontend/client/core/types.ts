@@ -5,14 +5,14 @@ import type {
   AxiosResponse,
   AxiosStatic,
   CreateAxiosDefaults,
-} from "axios";
+} from 'axios';
 
-import type { BodySerializer } from "./utils";
+import type { BodySerializer } from './utils';
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export interface Config<ThrowOnError extends boolean = boolean>
-  extends Omit<CreateAxiosDefaults, "headers"> {
+  extends Omit<CreateAxiosDefaults, 'headers'> {
   /**
    * Axios implementation. You can use this option to provide a custom
    * Axios instance.
@@ -37,7 +37,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
    */
   headers?:
-    | CreateAxiosDefaults["headers"]
+    | CreateAxiosDefaults['headers']
     | Record<
         string,
         | string
@@ -54,15 +54,15 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
    */
   method?:
-    | "connect"
-    | "delete"
-    | "get"
-    | "head"
-    | "options"
-    | "patch"
-    | "post"
-    | "put"
-    | "trace";
+    | 'connect'
+    | 'delete'
+    | 'get'
+    | 'head'
+    | 'options'
+    | 'patch'
+    | 'post'
+    | 'put'
+    | 'trace';
   /**
    * A function for transforming response data before it's returned to the
    * caller function. This is an ideal place to post-process server data,
@@ -99,7 +99,7 @@ type MethodFn = <
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
-  options: Omit<RequestOptionsBase<ThrowOnError>, "method">,
+  options: Omit<RequestOptionsBase<ThrowOnError>, 'method'>,
 ) => RequestResult<Data, TError, ThrowOnError>;
 
 type RequestFn = <
@@ -107,8 +107,8 @@ type RequestFn = <
   TError = unknown,
   ThrowOnError extends boolean = false,
 >(
-  options: Omit<RequestOptionsBase<ThrowOnError>, "method"> &
-    Pick<Required<RequestOptionsBase<ThrowOnError>>, "method">,
+  options: Omit<RequestOptionsBase<ThrowOnError>, 'method'> &
+    Pick<Required<RequestOptionsBase<ThrowOnError>>, 'method'>,
 ) => RequestResult<Data, TError, ThrowOnError>;
 
 export interface Client {
@@ -127,12 +127,12 @@ export interface Client {
 
 export type RequestOptions = RequestOptionsBase<false> &
   Config<false> & {
-    headers: AxiosRequestConfig["headers"];
+    headers: AxiosRequestConfig['headers'];
   };
 
 type OptionsBase<ThrowOnError extends boolean> = Omit<
   RequestOptionsBase<ThrowOnError>,
-  "url"
+  'url'
 > & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
@@ -147,12 +147,12 @@ export type Options<
   ThrowOnError extends boolean = boolean,
 > = T extends { body?: any }
   ? T extends { headers?: any }
-    ? OmitKeys<OptionsBase<ThrowOnError>, "body" | "headers"> & T
-    : OmitKeys<OptionsBase<ThrowOnError>, "body"> &
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'body' | 'headers'> & T
+    : OmitKeys<OptionsBase<ThrowOnError>, 'body'> &
         T &
-        Pick<OptionsBase<ThrowOnError>, "headers">
+        Pick<OptionsBase<ThrowOnError>, 'headers'>
   : T extends { headers?: any }
-    ? OmitKeys<OptionsBase<ThrowOnError>, "headers"> &
+    ? OmitKeys<OptionsBase<ThrowOnError>, 'headers'> &
         T &
-        Pick<OptionsBase<ThrowOnError>, "body">
+        Pick<OptionsBase<ThrowOnError>, 'body'>
     : OptionsBase<ThrowOnError> & T;
