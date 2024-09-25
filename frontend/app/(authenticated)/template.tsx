@@ -10,17 +10,19 @@ export default function RedirectIfNotAuthenticated({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const router = useRouter();
-  const { status } = useQuery(getUserProfile());
+  const { fetchStatus } = useQuery(getUserProfile());
 
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const user = useUserStore((state) => state.user);
-  console.log({ isLoggedIn, status });
 
-  if (!isLoggedIn && !status) {
-    router.push("/login");
-  }
-  if (isLoggedIn && !user!.categories.length) {
-    router.push("/onboarding");
+  if (fetchStatus !== "fetching") {
+    if (!isLoggedIn) {
+      router.push("/login");
+    }
+    console.log("fetching", user);
+    if (isLoggedIn && !user!.categories.length) {
+      router.push("/onboarding");
+    }
   }
 
   return <Suspense>{children}</Suspense>;
