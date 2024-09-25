@@ -16,7 +16,7 @@ os.environ["LANGCHAIN_API_KEY"] = LANGCHAIN_API_KEY
 os.environ["LANGCHAIN_TRACING_V2"] = LANGCHAIN_TRACING_V2
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
-lm_model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+lm_model = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
 
 
 class CategoryAnalysis(BaseModel):

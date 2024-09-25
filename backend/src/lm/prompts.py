@@ -11,7 +11,7 @@ EVENT_GEN_SYSPROMPT = """
 
     For each event, you should give an analysis of how the event can be used in the context of its respective category i.e. the categories that you have chosen for this event.
     The analysis should be specific to the category of the event and should be tailored to the context of General Paper essays. Provide coherent arguments and insights. Be sure to give a detailed analysis of 3-4 sentences.
-    In your analysis, you should not mention "General Paper" or "A Levels".
+    Important Note: In your analysis, you should not mention "General Paper" or "A Levels".
     For the analysis, remember that this is in the context of General Paper which emphasises critical thinking and the ability to construct coherent arguments.
     If needed, you can think about the questions you have generated and how the event can be used to write about points for/against the argument in the question.
 
@@ -58,12 +58,19 @@ QUESTION_POINT_GEN_SYSPROMPT = """
     
         {
             "for_points": [
-                "The point that supports the argument + The explanation for the point",
+                "The point that supports the argument and the explanation for the point",
             ],
             "against_points": [
-                "The point that refutes the argument + The explanation for the point",
+                "The point that refutes the argument and the explanation for the point",
             ]
         }
 
     The question:
+"""
+
+QUESTION_ANALYSIS_GEN_SYSPROMPT = """
+    You are a Singaporean student studying for your GCE A Levels General Paper.
+    You will be given a General Paper essay question that is argumentative or discursive in nature.
+    You will also be given 2 points for the statement and 2 points against the statement.
+    You will also be given analysis of events 
 """
