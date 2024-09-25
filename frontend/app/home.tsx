@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
+import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
 import { useUserStore } from "@/store/user/user-store-provider";
 
@@ -12,6 +13,7 @@ const DAYS_PER_WEEK = 7;
 const Home = () => {
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const user = useUserStore((state) => state.user);
 
   const router = useRouter();
   const user = useUserStore((state) => state.user);
@@ -28,12 +30,24 @@ const Home = () => {
         .toISOString()
         .split("T")[0];
 
-      const response = await getEventsEventsGet({
-        query: {
-          start_date: formattedEventStartDate,
-          limit: NUM_TOP_EVENTS,
-        },
-      });
+      let eventQuery;
+      if (user?.categories && user.categories.length > 0) {
+        eventQuery = {
+          query: {
+            start_date: formattedEventStartDate,
+            limit: NUM_TOP_EVENTS,
+            category_ids: user.categories.map((category) => category.id),
+          },
+        };
+      } else {
+        eventQuery = {
+          query: {
+            start_date: formattedEventStartDate,
+            limit: NUM_TOP_EVENTS,
+          },
+        };
+      }
+      const response = await getEventsEventsGet(eventQuery);
 
       if (response.error) {
         console.log(response.error);
@@ -44,7 +58,7 @@ const Home = () => {
     };
 
     fetchTopEvents();
-  }, []);
+  }, [user]);
 
   return (
     <div className="flex flex-col w-full py-8">
@@ -59,7 +73,11 @@ const Home = () => {
 
       <div className="flex flex-col w-auto mx-4 md:mx-8 xl:mx-24">
         {!isLoaded ? (
-          <p>Loading data...</p>
+          <>
+            <ArticleLoading />
+            <ArticleLoading />
+            <ArticleLoading />
+          </>
         ) : (
           topEvents.map((newsEvent: MiniEventDTO, index: number) => (
             <NewsArticle key={index} newsEvent={newsEvent} />

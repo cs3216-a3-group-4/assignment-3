@@ -1,6 +1,6 @@
-import JippyClown from "@/assets/jippy-clown";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
+import JippyClown from "@/public/jippy-clown";
 
 function AboutPage() {
   return (
