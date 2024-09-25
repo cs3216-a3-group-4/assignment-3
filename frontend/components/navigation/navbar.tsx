@@ -34,7 +34,7 @@ function Navbar() {
   }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b-[1px]">
+    <header className="sticky top-0 z-50 w-full border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b-[1px]">
       <div className="w-full min-h-[72px] flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
           <Link className="mr-6 flex items-center gap-x-2" href="/">
