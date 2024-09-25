@@ -2,6 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 from src.categories.schemas import CategoryDTO
 from src.events.models import ArticleSource
+from src.likes.schemas import LikeDTO
 
 
 class ArticleDTO(BaseModel):
@@ -40,6 +41,7 @@ class AnalysisDTO(BaseModel):
     id: int
     category: CategoryDTO
     content: str
+    likes: list[LikeDTO]
 
 
 class GPQuestionDTO(BaseModel):
