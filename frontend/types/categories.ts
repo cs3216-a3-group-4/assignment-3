@@ -10,6 +10,7 @@ import {
   Microscope,
   Palette,
   Scale,
+  School,
   UsersRound,
 } from "lucide-react";
 
@@ -19,6 +20,7 @@ export enum Category {
   Politics = "Politics",
   Media = "Media",
   Environment = "Environment",
+  Education = "Education",
   Economics = "Economics",
   Sports = "Sports",
   GenderEquality = "Gender & equality",
@@ -39,6 +41,7 @@ export const getCategoryFor = (categoryName: string) => {
     "gender & equality": Category.GenderEquality,
     religion: Category.Religion,
     "society & culture": Category.SocietyCulture,
+    education: Category.Education,
   };
   const formattedName = categoryName.toLowerCase();
   if (formattedName in mappings) {
@@ -58,6 +61,7 @@ export const categoriesToDisplayName: Record<Category, string> = {
   [Category.GenderEquality]: "Gender & equality",
   [Category.Religion]: "Religion",
   [Category.SocietyCulture]: "Society & culture",
+  [Category.Education]: "Education",
   [Category.Others]: "Others",
 };
 
@@ -72,5 +76,6 @@ export const categoriesToIconsMap: Record<Category, LucideIcon> = {
   [Category.GenderEquality]: Scale,
   [Category.Religion]: HeartHandshake,
   [Category.SocietyCulture]: UsersRound,
+  [Category.Education]: School,
   [Category.Others]: CircleHelp,
 };

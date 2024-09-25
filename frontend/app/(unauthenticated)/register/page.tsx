@@ -50,7 +50,7 @@ function RegisterPage() {
     } else {
       setIsError(false);
       setLoggedIn(response.data.user);
-      router.push("/login");
+      router.push("/onboarding");
     }
   };
 

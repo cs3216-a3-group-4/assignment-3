@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import ArticleLoading from "@/components/news/article-loading";
@@ -13,6 +14,11 @@ const Home = () => {
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const user = useUserStore((state) => state.user);
+
+  const router = useRouter();
+  if (!user!.categories.length) {
+    router.push("/onboarding");
+  }
 
   useEffect(() => {
     const fetchTopEvents = async () => {
