@@ -4,8 +4,8 @@ import { Separator } from "@/components/ui/separator";
 
 import EventAnalysis from "./event-analysis";
 import EventDetails from "./event-details";
-import EventSummary from "./event-summary";
 import EventSource from "./event-source";
+import EventSummary from "./event-summary";
 
 const Page = () => {
   // TODO: dynamically fetch

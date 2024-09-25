@@ -2,13 +2,7 @@ import { NewspaperIcon } from "lucide-react";
 
 import { ArticleSource } from "@/client";
 import Link from "@/components/navigation/link";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   articleSourceToDisplayNameMap,
@@ -51,7 +45,7 @@ const EventSource = () => {
             const sourceName = articleSourceToDisplayNameMap[articleSource];
             const SourceIcon = articleSourceToIconMap[articleSource];
             return (
-              <Card className="col-span-1">
+              <Card className="col-span-1" key={article.name}>
                 <div className="flex flex-col items-center h-fit p-6 gap-y-4">
                   <SourceIcon />
                   <div className="flex flex-col gap-y-4">
