@@ -1,5 +1,12 @@
 from pydantic import BaseModel, ConfigDict
-from src.events.schemas import EventDTO
+from src.events.schemas import MiniEventDTO
+
+
+class AnalysisDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    content: str
+    event: MiniEventDTO
 
 
 class PointMiniDTO(BaseModel):
@@ -7,7 +14,7 @@ class PointMiniDTO(BaseModel):
     id: int
     title: str
     body: str
-    events: list[EventDTO]
+    analysises: list[AnalysisDTO]
 
 
 class AnswerDTO(BaseModel):

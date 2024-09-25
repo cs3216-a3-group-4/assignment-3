@@ -2,11 +2,11 @@ from http import HTTPStatus
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload, with_polymorphic
+from sqlalchemy.orm import with_polymorphic
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
-from src.events.models import Event
+from src.events.models import Analysis, Event
 from src.notes.models import Note
 from src.user_questions.models import Answer, Point, UserQuestion
 from src.user_questions.schemas import CreateUserQuestion, UserQuestionMiniDTO
@@ -26,11 +26,12 @@ def get_user_questions(
     user_questions = session.scalars(
         select(UserQuestion)
         .where(UserQuestion.user_id == user.id)
-        .options(
-            selectinload(
-                UserQuestion.answer, Answer.points, Point.events, Event.categories
-            ),
-        )
+        .join(UserQuestion.answer)
+        .join(Answer.points)
+        .join(Point.analysises)
+        .join(Analysis.event)
+        .join(Event.original_article)
+        .join(Analysis.category)
     )
     return user_questions
 
@@ -40,30 +41,21 @@ def get_user_question(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-):
-    user_question = (
-        session.execute(
-            select(UserQuestion.id == id)
-            .where(UserQuestion.user_id == user.id)
-            .where(UserQuestion.id)
-            .options(
-                selectinload(UserQuestion.answer)
-                .selectinload(Answer.points)
-                .selectinload(Point.events)
-                .selectinload(Event.categories),
-                selectinload(UserQuestion.answer)
-                .selectinload(Answer.points)
-                .selectinload(Point.notes),
-            )
-        )
-        .scalars()
-        .first()
+) -> UserQuestionMiniDTO:
+    user_question = session.scalar(
+        select(UserQuestion)
+        .where(UserQuestion.id == id)
+        .where(UserQuestion.user_id == user.id)
+        .join(UserQuestion.answer)
+        .join(Answer.points)
+        .join(Point.analysises)
+        .join(Analysis.event)
+        .join(Event.original_article)
+        .join(Analysis.category)
     )
-
     if not user_question:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
-    # TODO: support notes in schema
     return user_question
 
 
@@ -75,23 +67,35 @@ def create_user_question(
 ) -> UserQuestionMiniDTO:
     user_question = UserQuestion(question=data.question, user_id=user.id)
 
-    # TODO: rag magic or whatever [workflow 2]
-
     answer = Answer()
     user_question.answer = answer
 
-    point = Point(title="placeholder", body="placeholder")
+    results = get_relevant_analyses(data.question)
+    for row in results["for_points"] + results["against_points"]:
+        point = row["point"]
+        analyses = row["analyses"]
+        point = Point(title="point", body="")
+        analysis_id = [analysis["id"] for analysis in analyses]
 
-    # if this threw an error seed your db
-    event = session.scalars(select(Event)).first()
-    point.events.append(event)
-
-    answer.points.append(point)
+        point.analysises = list(
+            session.scalars(select(Analysis).where(Analysis.id.in_(analysis_id)))
+        )
+        answer.points.append(point)
 
     session.add(user_question)
     session.commit()
     session.refresh(user_question)
-    return user_question
+    same_user_question = session.scalar(
+        select(UserQuestion)
+        .where(UserQuestion.id == user_question.id)
+        .join(UserQuestion.answer)
+        .join(Answer.points)
+        .join(Point.analysises)
+        .join(Analysis.event)
+        .join(Event.original_article)
+        .join(Analysis.category)
+    )
+    return same_user_question
 
 
 @router.get("/ask-gp-question")
