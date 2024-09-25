@@ -4,16 +4,19 @@ interface SidebarItemWithIconProps {
   Icon: LucideIcon;
   label: string;
   isActive?: boolean;
+  onClick?: () => void;
 }
 
 const SidebarItemWithIcon = ({
   Icon,
   label,
   isActive = false,
+  onClick,
 }: SidebarItemWithIconProps) => {
   return (
     <div
       className={`flex rounded px-2 py-1.5 items-center ${isActive ? "bg-primary-400/30" : "hover:bg-primary-200/20"}`}
+      onClick={onClick}
     >
       <Icon
         className="mr-3 text-primary flex-shrink-0"

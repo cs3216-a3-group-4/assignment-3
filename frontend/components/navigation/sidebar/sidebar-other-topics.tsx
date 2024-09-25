@@ -7,9 +7,10 @@ import {
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
 import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 import { createElement, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // TODO: dynamically fetch
-const otherTopics = [
+const otherTopics: Category[] = [
   Category.SciTech,
   Category.ArtsHumanities,
   Category.Politics,
@@ -23,6 +24,7 @@ const otherTopics = [
 ];
 
 const SidebarOtherTopics = () => {
+  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const numTopics = otherTopics.length;
 
@@ -49,6 +51,8 @@ const SidebarOtherTopics = () => {
               Icon={categoryIcon}
               key={category}
               label={categoryLabel}
+              // TODO: fix this once merged with main
+              onClick={() => router.push(`/categories/${category}`)}
             />
           );
         })}
