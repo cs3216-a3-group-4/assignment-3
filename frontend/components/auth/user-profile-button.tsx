@@ -1,12 +1,5 @@
-import { createElement, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ChevronsDownUpIcon,
-  ChevronsUpDownIcon,
-  CreditCardIcon,
-  LogOutIcon,
-  UserIcon,
-} from "lucide-react";
+import { CreditCardIcon, LogOutIcon, UserIcon } from "lucide-react";
 
 import { logoutAuthLogoutGet } from "@/client";
 import Chip from "@/components/display/chip";
@@ -22,11 +15,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserStore } from "@/store/user/user-store-provider";
-import { getInitialFromEmail, getNameFromEmail } from "@/utils/string";
+import { getInitialFromEmail } from "@/utils/string";
 
 const UserProfileButton = () => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const { user, setNotLoggedIn } = useUserStore((state) => state);
 
   const signout = async () => {
@@ -52,7 +44,7 @@ const UserProfileButton = () => {
   const email = user.email;
   return (
     <div className="cursor-pointer">
-      <DropdownMenu onOpenChange={(isOpen) => setIsOpen(isOpen)}>
+      <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex items-center w-full max-w-64 rounded-full p-2 hover:bg-muted-foreground/10">
             <Avatar className="h-9 w-9">
