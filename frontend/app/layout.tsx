@@ -27,7 +27,7 @@ export default function RootLayout({
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased text-text",
           fontSans.variable,
         )}
       >
