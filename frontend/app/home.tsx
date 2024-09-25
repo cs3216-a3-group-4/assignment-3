@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import NewsArticle from "@/components/news/news-article";
 import ArticleLoading from "@/components/news/article-loading";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const NUM_TOP_EVENTS = 10;
 const DAYS_PER_WEEK = 7;
@@ -11,6 +12,7 @@ const DAYS_PER_WEEK = 7;
 const Home = () => {
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
     const fetchTopEvents = async () => {
@@ -21,12 +23,24 @@ const Home = () => {
         .toISOString()
         .split("T")[0];
 
-      const response = await getEventsEventsGet({
-        query: {
-          start_date: formattedEventStartDate,
-          limit: NUM_TOP_EVENTS,
-        },
-      });
+      let eventQuery;
+      if (user?.categories && user.categories.length > 0) {
+        eventQuery = {
+          query: {
+            start_date: formattedEventStartDate,
+            limit: NUM_TOP_EVENTS,
+            category_ids: user.categories.map((category) => category.id),
+          },
+        };
+      } else {
+        eventQuery = {
+          query: {
+            start_date: formattedEventStartDate,
+            limit: NUM_TOP_EVENTS,
+          },
+        };
+      }
+      const response = await getEventsEventsGet(eventQuery);
 
       if (response.error) {
         console.log(response.error);
@@ -37,7 +51,7 @@ const Home = () => {
     };
 
     fetchTopEvents();
-  }, []);
+  }, [user]);
 
   return (
     <div className="flex flex-col w-full py-8">
