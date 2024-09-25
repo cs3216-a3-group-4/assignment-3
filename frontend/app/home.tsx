@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import NewsArticle from "@/components/news/news-article";
+import ArticleLoading from "@/components/news/article-loading";
 
 const NUM_TOP_EVENTS = 10;
 const DAYS_PER_WEEK = 7;
@@ -51,7 +52,11 @@ const Home = () => {
 
       <div className="flex flex-col w-auto mx-4 md:mx-8 xl:mx-24">
         {!isLoaded ? (
-          <p>Loading data...</p>
+          <>
+            <ArticleLoading />
+            <ArticleLoading />
+            <ArticleLoading />
+          </>
         ) : (
           topEvents.map((newsEvent: MiniEventDTO, index: number) => (
             <NewsArticle key={index} newsEvent={newsEvent} />
