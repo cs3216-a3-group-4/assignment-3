@@ -267,16 +267,6 @@ export type GetEventEventsIdGetResponse = EventDTO;
 
 export type GetEventEventsIdGetError = HTTPValidationError;
 
-export type SearchWhateverEventsSearchGetData = {
-  query: {
-    query: string;
-  };
-};
-
-export type SearchWhateverEventsSearchGetResponse = unknown;
-
-export type SearchWhateverEventsSearchGetError = HTTPValidationError;
-
 export type GetEventNotesEventsIdNotesGetData = {
   query: {
     id: number;
@@ -296,6 +286,16 @@ export type ReadEventEventsIdReadPostData = {
 export type ReadEventEventsIdReadPostResponse = unknown;
 
 export type ReadEventEventsIdReadPostError = HTTPValidationError;
+
+export type SearchWhateverEventsSearchGetData = {
+  query: {
+    query: string;
+  };
+};
+
+export type SearchWhateverEventsSearchGetResponse = unknown;
+
+export type SearchWhateverEventsSearchGetError = HTTPValidationError;
 
 export type GetUserQuestionsUserQuestionsGetData = unknown;
 
@@ -321,6 +321,17 @@ export type GetUserQuestionUserQuestionsIdGetData = {
 export type GetUserQuestionUserQuestionsIdGetResponse = unknown;
 
 export type GetUserQuestionUserQuestionsIdGetError = HTTPValidationError;
+
+export type AskGpQuestionUserQuestionsAskGpQuestionGetData = {
+  query: {
+    question: string;
+  };
+};
+
+export type AskGpQuestionUserQuestionsAskGpQuestionGetResponse = unknown;
+
+export type AskGpQuestionUserQuestionsAskGpQuestionGetError =
+  HTTPValidationError;
 
 export type GetAllNotesNotesGetData = unknown;
 
