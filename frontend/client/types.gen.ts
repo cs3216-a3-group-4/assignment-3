@@ -11,6 +11,19 @@ export type AnswerDTO = {
   points: Array<PointMiniDTO>;
 };
 
+export type ArticleDTO = {
+  id: number;
+  title: string;
+  summary: string;
+  body: string;
+  url: string;
+  source: ArticleSource;
+  date: string;
+  image_url: string;
+};
+
+export type ArticleSource = "CNA" | "GUARDIAN";
+
 export type Body_log_in_auth_login_post = {
   grant_type?: string | null;
   username: string;
@@ -36,6 +49,8 @@ export type EventDTO = {
   is_singapore: boolean;
   date: string;
   categories: Array<CategoryDTO>;
+  original_article: ArticleDTO;
+  reads: Array<ReadDTO>;
   analysises: Array<AnalysisDTO>;
   gp_questions: Array<GPQuestionDTO>;
 };
@@ -64,6 +79,42 @@ export type MiniEventDTO = {
   is_singapore: boolean;
   date: string;
   categories: Array<CategoryDTO>;
+  original_article: ArticleDTO;
+  reads: Array<ReadDTO>;
+};
+
+export type NoteCreate = {
+  content: string;
+  start_index: number;
+  end_index: number;
+  parent_id: number;
+  parent_type: NoteType;
+};
+
+export type NoteDTO = {
+  id: number;
+  content: string;
+  start_index: number;
+  end_index: number;
+  parent_id: number;
+  parent_type: NoteType;
+};
+
+export type NoteType = "event" | "article" | "point";
+
+export type NoteUpdate = {
+  content: string;
+  start_index: number;
+  end_index: number;
+};
+
+export type PasswordResetCompleteData = {
+  password: string;
+  confirm_password: string;
+};
+
+export type PasswordResetRequestData = {
+  email: string;
 };
 
 export type PointMiniDTO = {
@@ -75,6 +126,11 @@ export type PointMiniDTO = {
 
 export type ProfileUpdate = {
   category_ids: Array<number>;
+};
+
+export type ReadDTO = {
+  first_read: string;
+  last_read: string;
 };
 
 export type SignUpData = {
@@ -146,6 +202,35 @@ export type LogoutAuthLogoutGetResponse = unknown;
 
 export type LogoutAuthLogoutGetError = unknown;
 
+export type RequestPasswordResetAuthPasswordResetPostData = {
+  body: PasswordResetRequestData;
+};
+
+export type RequestPasswordResetAuthPasswordResetPostResponse = unknown;
+
+export type RequestPasswordResetAuthPasswordResetPostError =
+  HTTPValidationError;
+
+export type CompletePasswordResetAuthPasswordResetPutData = {
+  body: PasswordResetCompleteData;
+  query: {
+    code: string;
+  };
+};
+
+export type CompletePasswordResetAuthPasswordResetPutResponse = unknown;
+
+export type CompletePasswordResetAuthPasswordResetPutError =
+  HTTPValidationError;
+
+export type ChangePasswordAuthChangePasswordPutData = {
+  body: PasswordResetCompleteData;
+};
+
+export type ChangePasswordAuthChangePasswordPutResponse = unknown;
+
+export type ChangePasswordAuthChangePasswordPutError = HTTPValidationError;
+
 export type GetCategoriesCategoriesGetResponse = Array<CategoryDTO>;
 
 export type GetCategoriesCategoriesGetError = unknown;
@@ -182,6 +267,26 @@ export type GetEventEventsIdGetResponse = EventDTO;
 
 export type GetEventEventsIdGetError = HTTPValidationError;
 
+export type GetEventNotesEventsIdNotesGetData = {
+  query: {
+    id: number;
+  };
+};
+
+export type GetEventNotesEventsIdNotesGetResponse = Array<NoteDTO>;
+
+export type GetEventNotesEventsIdNotesGetError = HTTPValidationError;
+
+export type ReadEventEventsIdReadPostData = {
+  query: {
+    id: number;
+  };
+};
+
+export type ReadEventEventsIdReadPostResponse = unknown;
+
+export type ReadEventEventsIdReadPostError = HTTPValidationError;
+
 export type GetUserQuestionsUserQuestionsGetData = unknown;
 
 export type GetUserQuestionsUserQuestionsGetResponse =
@@ -206,3 +311,44 @@ export type GetUserQuestionUserQuestionsIdGetData = {
 export type GetUserQuestionUserQuestionsIdGetResponse = unknown;
 
 export type GetUserQuestionUserQuestionsIdGetError = HTTPValidationError;
+
+export type GetAllNotesNotesGetData = unknown;
+
+export type GetAllNotesNotesGetResponse = Array<NoteDTO>;
+
+export type GetAllNotesNotesGetError = HTTPValidationError;
+
+export type CreateNoteNotesPostData = {
+  body: NoteCreate;
+};
+
+export type CreateNoteNotesPostResponse = NoteDTO;
+
+export type CreateNoteNotesPostError = HTTPValidationError;
+
+export type UpdateNoteNotesIdPutData = {
+  body: NoteUpdate;
+  query: {
+    id: number;
+  };
+};
+
+export type UpdateNoteNotesIdPutResponse = NoteDTO;
+
+export type UpdateNoteNotesIdPutError = HTTPValidationError;
+
+export type DeleteNoteNotesIdDeleteData = {
+  query: {
+    id: number;
+  };
+};
+
+export type DeleteNoteNotesIdDeleteResponse = unknown;
+
+export type DeleteNoteNotesIdDeleteError = HTTPValidationError;
+
+export type GetPointNotesPointsIdNotesGetData = unknown;
+
+export type GetPointNotesPointsIdNotesGetResponse = unknown;
+
+export type GetPointNotesPointsIdNotesGetError = HTTPValidationError;

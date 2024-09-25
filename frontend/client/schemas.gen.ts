@@ -38,6 +38,61 @@ export const AnswerDTOSchema = {
   title: "AnswerDTO",
 } as const;
 
+export const ArticleDTOSchema = {
+  properties: {
+    id: {
+      type: "integer",
+      title: "Id",
+    },
+    title: {
+      type: "string",
+      title: "Title",
+    },
+    summary: {
+      type: "string",
+      title: "Summary",
+    },
+    body: {
+      type: "string",
+      title: "Body",
+    },
+    url: {
+      type: "string",
+      title: "Url",
+    },
+    source: {
+      $ref: "#/components/schemas/ArticleSource",
+    },
+    date: {
+      type: "string",
+      format: "date-time",
+      title: "Date",
+    },
+    image_url: {
+      type: "string",
+      title: "Image Url",
+    },
+  },
+  type: "object",
+  required: [
+    "id",
+    "title",
+    "summary",
+    "body",
+    "url",
+    "source",
+    "date",
+    "image_url",
+  ],
+  title: "ArticleDTO",
+} as const;
+
+export const ArticleSourceSchema = {
+  type: "string",
+  enum: ["CNA", "GUARDIAN"],
+  title: "ArticleSource",
+} as const;
+
 export const Body_log_in_auth_login_postSchema = {
   properties: {
     grant_type: {
@@ -151,6 +206,16 @@ export const EventDTOSchema = {
       type: "array",
       title: "Categories",
     },
+    original_article: {
+      $ref: "#/components/schemas/ArticleDTO",
+    },
+    reads: {
+      items: {
+        $ref: "#/components/schemas/ReadDTO",
+      },
+      type: "array",
+      title: "Reads",
+    },
     analysises: {
       items: {
         $ref: "#/components/schemas/AnalysisDTO",
@@ -174,6 +239,8 @@ export const EventDTOSchema = {
     "is_singapore",
     "date",
     "categories",
+    "original_article",
+    "reads",
     "analysises",
     "gp_questions",
   ],
@@ -274,6 +341,16 @@ export const MiniEventDTOSchema = {
       type: "array",
       title: "Categories",
     },
+    original_article: {
+      $ref: "#/components/schemas/ArticleDTO",
+    },
+    reads: {
+      items: {
+        $ref: "#/components/schemas/ReadDTO",
+      },
+      type: "array",
+      title: "Reads",
+    },
   },
   type: "object",
   required: [
@@ -283,8 +360,132 @@ export const MiniEventDTOSchema = {
     "is_singapore",
     "date",
     "categories",
+    "original_article",
+    "reads",
   ],
   title: "MiniEventDTO",
+} as const;
+
+export const NoteCreateSchema = {
+  properties: {
+    content: {
+      type: "string",
+      title: "Content",
+    },
+    start_index: {
+      type: "integer",
+      title: "Start Index",
+    },
+    end_index: {
+      type: "integer",
+      title: "End Index",
+    },
+    parent_id: {
+      type: "integer",
+      title: "Parent Id",
+    },
+    parent_type: {
+      $ref: "#/components/schemas/NoteType",
+    },
+  },
+  type: "object",
+  required: ["content", "start_index", "end_index", "parent_id", "parent_type"],
+  title: "NoteCreate",
+} as const;
+
+export const NoteDTOSchema = {
+  properties: {
+    id: {
+      type: "integer",
+      title: "Id",
+    },
+    content: {
+      type: "string",
+      title: "Content",
+    },
+    start_index: {
+      type: "integer",
+      title: "Start Index",
+    },
+    end_index: {
+      type: "integer",
+      title: "End Index",
+    },
+    parent_id: {
+      type: "integer",
+      title: "Parent Id",
+    },
+    parent_type: {
+      $ref: "#/components/schemas/NoteType",
+    },
+  },
+  type: "object",
+  required: [
+    "id",
+    "content",
+    "start_index",
+    "end_index",
+    "parent_id",
+    "parent_type",
+  ],
+  title: "NoteDTO",
+} as const;
+
+export const NoteTypeSchema = {
+  type: "string",
+  enum: ["event", "article", "point"],
+  title: "NoteType",
+} as const;
+
+export const NoteUpdateSchema = {
+  properties: {
+    content: {
+      type: "string",
+      title: "Content",
+    },
+    start_index: {
+      type: "integer",
+      title: "Start Index",
+    },
+    end_index: {
+      type: "integer",
+      title: "End Index",
+    },
+  },
+  type: "object",
+  required: ["content", "start_index", "end_index"],
+  title: "NoteUpdate",
+} as const;
+
+export const PasswordResetCompleteDataSchema = {
+  properties: {
+    password: {
+      type: "string",
+      minLength: 6,
+      title: "Password",
+    },
+    confirm_password: {
+      type: "string",
+      minLength: 6,
+      title: "Confirm Password",
+    },
+  },
+  type: "object",
+  required: ["password", "confirm_password"],
+  title: "PasswordResetCompleteData",
+} as const;
+
+export const PasswordResetRequestDataSchema = {
+  properties: {
+    email: {
+      type: "string",
+      format: "email",
+      title: "Email",
+    },
+  },
+  type: "object",
+  required: ["email"],
+  title: "PasswordResetRequestData",
 } as const;
 
 export const PointMiniDTOSchema = {
@@ -327,6 +528,24 @@ export const ProfileUpdateSchema = {
   type: "object",
   required: ["category_ids"],
   title: "ProfileUpdate",
+} as const;
+
+export const ReadDTOSchema = {
+  properties: {
+    first_read: {
+      type: "string",
+      format: "date-time",
+      title: "First Read",
+    },
+    last_read: {
+      type: "string",
+      format: "date-time",
+      title: "Last Read",
+    },
+  },
+  type: "object",
+  required: ["first_read", "last_read"],
+  title: "ReadDTO",
 } as const;
 
 export const SignUpDataSchema = {

@@ -7,42 +7,72 @@ import {
   urlSearchParamsBodySerializer,
 } from "./client";
 import type {
-  AuthGoogleAuthGoogleGetData,
-  AuthGoogleAuthGoogleGetError,
-  AuthGoogleAuthGoogleGetResponse,
-  CreateUserQuestionUserQuestionsPostData,
-  CreateUserQuestionUserQuestionsPostError,
-  CreateUserQuestionUserQuestionsPostResponse,
-  GetCategoriesCategoriesGetError,
-  GetCategoriesCategoriesGetResponse,
-  GetEventEventsIdGetData,
-  GetEventEventsIdGetError,
-  GetEventEventsIdGetResponse,
-  GetEventsEventsGetData,
-  GetEventsEventsGetError,
-  GetEventsEventsGetResponse,
-  GetUserAuthSessionGetData,
-  GetUserAuthSessionGetError,
-  GetUserAuthSessionGetResponse,
-  GetUserQuestionsUserQuestionsGetData,
-  GetUserQuestionsUserQuestionsGetError,
-  GetUserQuestionsUserQuestionsGetResponse,
-  GetUserQuestionUserQuestionsIdGetData,
-  GetUserQuestionUserQuestionsIdGetError,
-  GetUserQuestionUserQuestionsIdGetResponse,
+  SignUpAuthSignupPostData,
+  SignUpAuthSignupPostError,
+  SignUpAuthSignupPostResponse,
   LogInAuthLoginPostData,
   LogInAuthLoginPostError,
   LogInAuthLoginPostResponse,
   LoginGoogleAuthLoginGoogleGetError,
   LoginGoogleAuthLoginGoogleGetResponse,
+  AuthGoogleAuthGoogleGetData,
+  AuthGoogleAuthGoogleGetError,
+  AuthGoogleAuthGoogleGetResponse,
+  GetUserAuthSessionGetData,
+  GetUserAuthSessionGetError,
+  GetUserAuthSessionGetResponse,
   LogoutAuthLogoutGetError,
   LogoutAuthLogoutGetResponse,
-  SignUpAuthSignupPostData,
-  SignUpAuthSignupPostError,
-  SignUpAuthSignupPostResponse,
+  RequestPasswordResetAuthPasswordResetPostData,
+  RequestPasswordResetAuthPasswordResetPostError,
+  RequestPasswordResetAuthPasswordResetPostResponse,
+  CompletePasswordResetAuthPasswordResetPutData,
+  CompletePasswordResetAuthPasswordResetPutError,
+  CompletePasswordResetAuthPasswordResetPutResponse,
+  ChangePasswordAuthChangePasswordPutData,
+  ChangePasswordAuthChangePasswordPutError,
+  ChangePasswordAuthChangePasswordPutResponse,
+  GetCategoriesCategoriesGetError,
+  GetCategoriesCategoriesGetResponse,
   UpdateProfileProfilePutData,
   UpdateProfileProfilePutError,
   UpdateProfileProfilePutResponse,
+  GetEventsEventsGetData,
+  GetEventsEventsGetError,
+  GetEventsEventsGetResponse,
+  GetEventEventsIdGetData,
+  GetEventEventsIdGetError,
+  GetEventEventsIdGetResponse,
+  GetEventNotesEventsIdNotesGetData,
+  GetEventNotesEventsIdNotesGetError,
+  GetEventNotesEventsIdNotesGetResponse,
+  ReadEventEventsIdReadPostData,
+  ReadEventEventsIdReadPostError,
+  ReadEventEventsIdReadPostResponse,
+  GetUserQuestionsUserQuestionsGetData,
+  GetUserQuestionsUserQuestionsGetError,
+  GetUserQuestionsUserQuestionsGetResponse,
+  CreateUserQuestionUserQuestionsPostData,
+  CreateUserQuestionUserQuestionsPostError,
+  CreateUserQuestionUserQuestionsPostResponse,
+  GetUserQuestionUserQuestionsIdGetData,
+  GetUserQuestionUserQuestionsIdGetError,
+  GetUserQuestionUserQuestionsIdGetResponse,
+  GetAllNotesNotesGetData,
+  GetAllNotesNotesGetError,
+  GetAllNotesNotesGetResponse,
+  CreateNoteNotesPostData,
+  CreateNoteNotesPostError,
+  CreateNoteNotesPostResponse,
+  UpdateNoteNotesIdPutData,
+  UpdateNoteNotesIdPutError,
+  UpdateNoteNotesIdPutResponse,
+  DeleteNoteNotesIdDeleteData,
+  DeleteNoteNotesIdDeleteError,
+  DeleteNoteNotesIdDeleteResponse,
+  GetPointNotesPointsIdNotesGetData,
+  GetPointNotesPointsIdNotesGetError,
+  GetPointNotesPointsIdNotesGetResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
@@ -151,6 +181,60 @@ export const logoutAuthLogoutGet = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Request Password Reset
+ */
+export const requestPasswordResetAuthPasswordResetPost = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<RequestPasswordResetAuthPasswordResetPostData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    RequestPasswordResetAuthPasswordResetPostResponse,
+    RequestPasswordResetAuthPasswordResetPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/auth/password-reset",
+  });
+};
+
+/**
+ * Complete Password Reset
+ */
+export const completePasswordResetAuthPasswordResetPut = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<CompletePasswordResetAuthPasswordResetPutData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).put<
+    CompletePasswordResetAuthPasswordResetPutResponse,
+    CompletePasswordResetAuthPasswordResetPutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/auth/password-reset",
+  });
+};
+
+/**
+ * Change Password
+ */
+export const changePasswordAuthChangePasswordPut = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<ChangePasswordAuthChangePasswordPutData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).put<
+    ChangePasswordAuthChangePasswordPutResponse,
+    ChangePasswordAuthChangePasswordPutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/auth/change-password",
+  });
+};
+
+/**
  * Get Categories
  */
 export const getCategoriesCategoriesGet = <
@@ -217,6 +301,40 @@ export const getEventEventsIdGet = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Get Event Notes
+ */
+export const getEventNotesEventsIdNotesGet = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetEventNotesEventsIdNotesGetData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetEventNotesEventsIdNotesGetResponse,
+    GetEventNotesEventsIdNotesGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/events/:id/notes",
+  });
+};
+
+/**
+ * Read Event
+ */
+export const readEventEventsIdReadPost = <ThrowOnError extends boolean = false>(
+  options: Options<ReadEventEventsIdReadPostData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    ReadEventEventsIdReadPostResponse,
+    ReadEventEventsIdReadPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/events/:id/read",
+  });
+};
+
+/**
  * Get User Questions
  */
 export const getUserQuestionsUserQuestionsGet = <
@@ -267,5 +385,87 @@ export const getUserQuestionUserQuestionsIdGet = <
   >({
     ...options,
     url: "/user-questions/:id",
+  });
+};
+
+/**
+ * Get All Notes
+ */
+export const getAllNotesNotesGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetAllNotesNotesGetData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetAllNotesNotesGetResponse,
+    GetAllNotesNotesGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/notes/",
+  });
+};
+
+/**
+ * Create Note
+ */
+export const createNoteNotesPost = <ThrowOnError extends boolean = false>(
+  options: Options<CreateNoteNotesPostData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    CreateNoteNotesPostResponse,
+    CreateNoteNotesPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/notes/",
+  });
+};
+
+/**
+ * Update Note
+ */
+export const updateNoteNotesIdPut = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateNoteNotesIdPutData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).put<
+    UpdateNoteNotesIdPutResponse,
+    UpdateNoteNotesIdPutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/notes/:id",
+  });
+};
+
+/**
+ * Delete Note
+ */
+export const deleteNoteNotesIdDelete = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteNoteNotesIdDeleteData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).delete<
+    DeleteNoteNotesIdDeleteResponse,
+    DeleteNoteNotesIdDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/notes/:id",
+  });
+};
+
+/**
+ * Get Point Notes
+ */
+export const getPointNotesPointsIdNotesGet = <
+  ThrowOnError extends boolean = false,
+>(
+  options?: Options<GetPointNotesPointsIdNotesGetData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    GetPointNotesPointsIdNotesGetResponse,
+    GetPointNotesPointsIdNotesGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/points/:id/notes",
   });
 };
