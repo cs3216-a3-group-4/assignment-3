@@ -6,6 +6,7 @@ from sqlalchemy import select
 from src.events.models import Article, ArticleSource, Event
 from src.common.database import engine
 from sqlalchemy.orm import Session
+from src.scrapers.guardian.get_articles import get_articles
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
 
 from src.lm.generate_events import generate_events
@@ -134,12 +135,15 @@ def process_new_articles() -> list[dict]:
 
 def run():
     # Add new articles to database
-    populate_daily_articles()
+    # populate_daily_articles()
     # Process new articles i.e. find articles that we have not generated events for
-    articles = process_new_articles()
+    articles = get_articles()
     # Generate events from articles, written to lm_events_output.json
     generate_events(articles)
     # Populate the database with events from lm_events_output.json
     populate()
     # Store analyses in vector store
     store_documents()
+
+
+run()

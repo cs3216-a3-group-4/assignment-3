@@ -11,6 +11,7 @@ from src.likes.models import Like
 from src.notes.models import Note
 from src.user_questions.models import Answer, Point, UserQuestion
 from src.user_questions.schemas import CreateUserQuestion, UserQuestionMiniDTO
+from src.lm.generate_response import generate_response
 from src.lm.generate_points import get_relevant_analyses
 
 
@@ -127,4 +128,4 @@ def create_user_question(
 
 @router.get("/ask-gp-question")
 def ask_gp_question(question: str):
-    return get_relevant_analyses(question)
+    return generate_response(question)
