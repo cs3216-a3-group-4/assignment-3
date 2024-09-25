@@ -24,7 +24,7 @@ export const getEventsForCategory = (categoryId: number) =>
       getEventsEventsGet({
         withCredentials: true,
         query: {
-          category_ids: [ categoryId ]
+          category_ids: [ categoryId ],
         },
       }).then((data) => data.data),
   });

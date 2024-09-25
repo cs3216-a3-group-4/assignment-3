@@ -1,5 +1,5 @@
-import { LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { LucideIcon } from "lucide-react";
 
 interface SidebarItemWithIconProps {
   Icon: LucideIcon;
@@ -7,13 +7,20 @@ interface SidebarItemWithIconProps {
   categoryId: number;
 }
 
-const SidebarItemWithIcon = ({ Icon, label, categoryId }: SidebarItemWithIconProps) => {
+const SidebarItemWithIcon = ({
+  Icon,
+  label,
+  categoryId,
+}: SidebarItemWithIconProps) => {
   const router = useRouter();
 
   const onClickCategory = () => router.push(`/categories/${categoryId}`);
 
   return (
-    <div onClick={onClickCategory} className="flex rounded px-2 py-1.5 hover:bg-muted-foreground/5 text-sm font-medium items-center">
+    <div
+      className="flex rounded px-2 py-1.5 hover:bg-muted-foreground/5 text-sm font-medium items-center"
+      onClick={onClickCategory}
+    >
       <Icon
         className="mr-3 text-muted-foreground"
         size={16}

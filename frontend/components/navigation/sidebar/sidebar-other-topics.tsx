@@ -1,16 +1,14 @@
 "use client";
 
-import {
-  getIconFor,
-} from "@/types/categories";
-
-import SidebarItemWithIcon from "./sidebar-item-with-icon";
-import { useEffect } from "react";
-import { getCategories } from "@/queries/category";
 import { useQuery } from "@tanstack/react-query";
 
+import { getCategories } from "@/queries/category";
+import { getIconFor } from "@/types/categories";
+
+import SidebarItemWithIcon from "./sidebar-item-with-icon";
+
 const SidebarOtherTopics = () => {
-  const { data: categories, isSuccess: isCategoriesSuccess } = useQuery(getCategories());
+  const { data: categories } = useQuery(getCategories());
 
   return (
     <div className="flex flex-col space-y-2.5">
@@ -18,17 +16,16 @@ const SidebarOtherTopics = () => {
         Other topics
       </h1>
       <div className="flex flex-col">
-        {
-        categories?.map((category) => {
+        {categories?.map((category) => {
           const categoryIcon = getIconFor(category.name);
           return (
             <SidebarItemWithIcon
-              Icon={categoryIcon} 
-              key={category.id} 
-              label={category.name} 
+              Icon={categoryIcon}
               categoryId={category.id}
+              key={category.id}
+              label={category.name}
             />
-          )
+          );
         })}
       </div>
     </div>
