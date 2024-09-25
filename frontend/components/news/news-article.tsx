@@ -51,10 +51,10 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
         <h2 className="text-lg font-semibold mt-2">{newsEvent.title}</h2>
         <p className="text-sm text-offblack">{newsEvent.description}</p>
         <div className="flex flex-wrap gap-x-2 gap-y-2 mt-6">
-          {categories?.map((category: Category) => (
+          {categories?.map((category: Category, index: number) => (
             <Chip
               Icon={categoriesToIconsMap[category]}
-              key={category}
+              key={index}
               label={categoriesToDisplayName[category]}
               variant="greygreen"
             />
