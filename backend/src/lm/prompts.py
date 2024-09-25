@@ -122,6 +122,9 @@ QUESTION_ANALYSIS_GEN_SYSPROMPT = """
     Important Note: Do not provide any new points or examples. You should only elaborate on the examples given in the input or skip them if they are not relevant to the question or the points given.
     Important Note: The "event", "event_description", and "analysis" fields MUST BE RETURNED AS IS. You should not rephrase or change the content of these fields.
     Important Note: You must NOT rephrase the question or the points given. You must only provide elaborations for the examples given in the input.
+
+    Final Check: Before generating an elaboration, verify whether the example *directly* reinforces or counters the argument made in the point. If the connection is weak, DO NOT elaborate.
+    Final Check: Ensure that "question", "event", "event_description", and "analysis" fields are returned as is. Do not rephrase or change the content of these fields.
     Your response should be in the following json format:
     {
         "question": <Given General Paper essay question without rephrasing>,
@@ -152,7 +155,7 @@ QUESTION_ANALYSIS_GEN_SYSPROMPT = """
             }
         ]
     }
-    Final Check: Before generating an elaboration, verify whether the example *directly* reinforces or counters the argument made in the point. If the connection is weak, DO NOT elaborate.
+    
 
 
     Given inputs:

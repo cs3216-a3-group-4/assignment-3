@@ -27,9 +27,9 @@ def format_analyses(relevant_analyses: dict, question: str):
                 "point": point["point"],
                 "examples": [
                     {
-                        "event_title": get_event_by_id(point["event_id"]).title,
+                        "event_title": get_event_by_id(analysis["event_id"]).title,
                         "event_description": get_event_by_id(
-                            point["event_id"]
+                            analysis["event_id"]
                         ).description,
                         "analysis": analysis["content"],
                     }
@@ -43,9 +43,9 @@ def format_analyses(relevant_analyses: dict, question: str):
                 "point": point["point"],
                 "examples": [
                     {
-                        "event": get_event_by_id(point["event_id"]).title,
+                        "event": get_event_by_id(analysis["event_id"]).title,
                         "event_description": get_event_by_id(
-                            point["event_id"]
+                            analysis["event_id"]
                         ).description,
                         "analysis": analysis["content"],
                     }
@@ -65,9 +65,10 @@ def get_event_by_id(event_id: int) -> Event:
 
 def generate_response(question: str) -> dict:
     relevant_analyses = get_relevant_analyses(question)
+    formatted_analyses = format_analyses(relevant_analyses, question)
     messages = [
         SystemMessage(content=SYSPROMPT),
-        HumanMessage(content=json.dumps(relevant_analyses)),
+        HumanMessage(content=json.dumps(formatted_analyses)),
     ]
 
     result = lm_model.invoke(messages)
