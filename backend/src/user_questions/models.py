@@ -40,11 +40,13 @@ class Point(Base):
         backref="point",
     )
 
-    events = relationship("Event", secondary="point_note")
+    analysises = relationship("Analysis", secondary="point_analysis")
 
 
-class PointNote(Base):
-    __tablename__ = "point_note"
+class PointAnalysis(Base):
+    __tablename__ = "point_analysis"
 
-    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), primary_key=True)
-    note_id: Mapped[int] = mapped_column(ForeignKey("point.id"), primary_key=True)
+    analysis_id: Mapped[int] = mapped_column(
+        ForeignKey("analysis.id"), primary_key=True
+    )
+    point_id: Mapped[int] = mapped_column(ForeignKey("point.id"), primary_key=True)
