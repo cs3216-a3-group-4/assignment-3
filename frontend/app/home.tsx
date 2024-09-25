@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import NewsArticle from "@/components/news/news-article";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const NUM_TOP_EVENTS = 10;
 const DAYS_PER_WEEK = 7;
@@ -10,6 +12,12 @@ const DAYS_PER_WEEK = 7;
 const Home = () => {
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  const router = useRouter();
+  const user = useUserStore((state) => state.user);
+  if (!user!.categories.length) {
+    router.push("/onboarding");
+  }
 
   useEffect(() => {
     const fetchTopEvents = async () => {
