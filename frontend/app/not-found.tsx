@@ -1,4 +1,4 @@
-import JippyClown from "@/assets/jippy-clown";
+import JippyClown from "@/public/jippy-clown";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 

@@ -7,8 +7,8 @@ import {
 } from "@radix-ui/react-navigation-menu";
 import { useQuery } from "@tanstack/react-query";
 
-import JippyIcon from "@/assets/jippy-icon/jippy-icon-sm";
-import JippyLogo from "@/assets/jippy-logo/jippy-logo-sm";
+import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
+import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
 import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { getUserProfile } from "@/queries/user";
