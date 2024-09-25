@@ -18,6 +18,7 @@ from src.auth.schemas import Token
 from src.common.dependencies import get_session
 from .schemas import (
     PasswordResetCompleteData,
+    PasswordResetMoreCompleteData,
     PasswordResetRequestData,
     SignUpData,
     UserPublic,
@@ -27,6 +28,7 @@ from src.auth.dependencies import (
     authenticate_user,
     get_current_user,
     get_password_hash,
+    verify_password,
 )
 from .models import AccountType, PasswordReset, User
 
@@ -189,9 +191,11 @@ def complete_password_reset(
 @router.put("/change-password")
 def change_password(
     user: Annotated[User, Depends(get_current_user)],
-    data: PasswordResetCompleteData,
+    data: PasswordResetMoreCompleteData,
     session=Depends(get_session),
 ):
+    if not verify_password(data.old_password, user.hashed_password):
+        raise HTTPException(HTTPStatus.UNAUTHORIZED)
     user.hashed_password = get_password_hash(data.password)
     session.add(user)
     session.commit()
