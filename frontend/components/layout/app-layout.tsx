@@ -1,6 +1,7 @@
 "use client";
 
 import { ComponentProps, ReactNode, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import Navbar from "@/components/navigation/navbar";
@@ -81,35 +82,42 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     }
   }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
 
+  const pathname = usePathname();
+  const isOnboarding = pathname === "/onboarding";
+
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
       <Navbar />
       <main>
-        <ResizablePanelGroup
-          className="flex flex-1 w-full h-[calc(100vh_-_72px)]"
-          direction="horizontal"
-        >
-          {isLoggedIn && (
-            <>
-              <ResizablePanel
-                className="flex w-full"
-                id="sidebar"
-                onCollapse={() => setIsCollapsed(true)}
-                onExpand={() => setIsCollapsed(false)}
-                order={1}
-                {...breakpointConfigMap[mediaBreakpoint]}
-              >
-                <Sidebar />
-              </ResizablePanel>
-              <ResizableHandle withHandle={isCollapsed} />
-            </>
-          )}
-          <ResizablePanel defaultSize={75} order={2}>
-            <div className="flex flex-1 w-full h-[calc(100vh_-_72px)] min-h-[calc(100vh_-_72px)] overflow-y-scroll">
-              {children}
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+        {isOnboarding ? (
+          children
+        ) : (
+          <ResizablePanelGroup
+            className="flex flex-1 w-full h-[calc(100vh_-_72px)]"
+            direction="horizontal"
+          >
+            {isLoggedIn && (
+              <>
+                <ResizablePanel
+                  className="flex w-full"
+                  id="sidebar"
+                  onCollapse={() => setIsCollapsed(true)}
+                  onExpand={() => setIsCollapsed(false)}
+                  order={1}
+                  {...breakpointConfigMap[mediaBreakpoint]}
+                >
+                  <Sidebar />
+                </ResizablePanel>
+                <ResizableHandle withHandle={isCollapsed} />
+              </>
+            )}
+            <ResizablePanel defaultSize={75} order={2}>
+              <div className="flex flex-1 w-full h-[calc(100vh_-_72px)] min-h-[calc(100vh_-_72px)] overflow-y-scroll">
+                {children}
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        )}
       </main>
       <Toaster />
     </div>
