@@ -5,6 +5,8 @@ import {
 } from "@/types/categories";
 
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
+import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
+import { createElement, useState } from "react";
 
 // TODO: dynamically fetch
 const otherTopics = [
@@ -21,12 +23,23 @@ const otherTopics = [
 ];
 
 const SidebarOtherTopics = () => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const numTopics = otherTopics.length;
+
   return (
-    <div className="flex flex-col space-y-2.5">
-      <h1 className="text-sm font-medium text-muted-foreground/80 px-2">
-        Other topics
-      </h1>
-      <div className="flex flex-col">
+    <div className="flex flex-col space-y-2.5 w-full max-w-xs">
+      <div className="flex items-center cursor-pointer w-full justify-between">
+        <h1 className="text-sm font-medium text-muted-foreground/80 px-2">
+          Other topics ({numTopics})
+        </h1>
+        {createElement(isExpanded ? ChevronsUpDownIcon : ChevronsDownUpIcon, {
+          onClick: () => setIsExpanded((prevState) => !prevState),
+          size: 14,
+          strokeWidth: 2.4,
+          className: "text-muted-foreground",
+        })}
+      </div>
+      <div className={`flex flex-col ${isExpanded ? "" : "hidden"}`}>
         {otherTopics.map((category) => {
           const categoryLabel = categoriesToDisplayName[category];
           const categoryIcon = categoriesToIconsMap[category];
