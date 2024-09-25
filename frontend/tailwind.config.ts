@@ -38,6 +38,8 @@ const config: Config = {
           "5": "hsl(var(--chart-5))",
         },
         text: {
+          DEFAULT: "hsl(var(--text))",
+          muted: "hsl(var(--text-muted))",
           50: "hsl(var(--text-50))",
           100: "hsl(var(--text-100))",
           200: "hsl(var(--text-200))",
