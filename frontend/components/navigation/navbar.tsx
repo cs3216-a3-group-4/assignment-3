@@ -7,15 +7,14 @@ import {
 } from "@radix-ui/react-navigation-menu";
 import { useQuery } from "@tanstack/react-query";
 
-import JippyIcon from "@/assets/jippy-icon/jippy-icon-sm";
-import JippyLogo from "@/assets/jippy-logo/jippy-logo-sm";
+import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
+import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
-
-import Link from "./link";
 
 export const NavItems: NavItem[] = [];
 

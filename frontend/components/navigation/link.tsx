@@ -22,7 +22,7 @@ type LinkClassValueSize = {
 };
 
 type LinkClassValue = LinkClassValueVariant & LinkClassValueSize;
-const linkVariants = cva<LinkClassValue>("underline", {
+const linkVariants = cva<LinkClassValue>("underline hover:text-black/75", {
   variants: {
     variant: { ghost: "", underlined: "underline" },
     size: {
@@ -40,7 +40,7 @@ const linkVariants = cva<LinkClassValue>("underline", {
 });
 
 type ExternalIconClassValue = LinkClassValueSize;
-const externalIconVariants = cva<ExternalIconClassValue>(undefined, {
+const externalIconVariants = cva<ExternalIconClassValue>("inline-flex", {
   variants: {
     size: {
       xs: "h-3 w-3 ml-1",
@@ -76,7 +76,7 @@ function Link({
     linkProps = { ...props, rel: "noopener noreferrer", target: "_blank" };
   }
   return (
-    <div className="inline-flex items-center">
+    <div className="inline">
       <NextLink
         {...linkProps}
         className={cn(linkVariants({ variant, size }), className)}

@@ -9,6 +9,7 @@ import { getEvent } from "@/queries/event";
 
 import EventAnalysis from "./event-analysis";
 import EventDetails from "./event-details";
+import EventSource from "./event-source";
 import EventSummary from "./event-summary";
 
 const Page = ({ params }: { params: { id: string } }) => {
@@ -18,7 +19,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center w-full">
-        <LoadingSpinner className="w-24 h-24 stroke-green-700" />
+        <LoadingSpinner className="w-24 h-24" />
       </div>
     );
   }
@@ -46,6 +47,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         <Separator className="my-10" />
         <EventAnalysis event={data} />
         <Separator className="my-10" />
+        <EventSource />
       </div>
     )
   );
