@@ -74,7 +74,7 @@ def create_user_question(
     for row in results["for_points"] + results["against_points"]:
         point = row["point"]
         analyses = row["analyses"]
-        point = Point(title="point", body="")
+        point = Point(title=point, body="")
         analysis_id = [analysis["id"] for analysis in analyses]
 
         point.analysises = list(
