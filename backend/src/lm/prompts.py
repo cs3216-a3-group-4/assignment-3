@@ -110,8 +110,10 @@ QUESTION_ANALYSIS_GEN_SYSPROMPT = """
     For each example, you should provide a detailed elaboration illustrating how this event can be used as an example to support or refute the argument in the question.
     If the example event is relevant to the point, you should provide a coherent and detailed elaboration of the point using the example event and analysis as support for the argument.
     
-    Important note: If a particular analysis or example is not directly connected and merely tangential to the question or the points given, you MUST SKIP that analysis. Do NOT force an elaboration if the connection is speculative or minor or if the link is weak or unclear.
-    Important note: Your elaborations should be relevant if you structure them like this: <Point> because <reason>. For example, <event example> highlights this point because <elaboration>.
+    Important note: The elaboration must directly address and strengthen the specific point being made. If the connection between the event and the point is unclear or speculative, SKIP the example and provide no elaboration for it. Avoid tangential interpretations.
+    Important note: Your elaborations must clearly tie the example to the point. If the event does not obviously support or refute the point in a direct and non-speculative way, DO NOT force a connection.
+    Important note: Structure your elaborations using this format: "<Agreement/Disagreement with the statement> because <clear reason based on the event>". The explanation should leave no ambiguity about why the event strengthens or weakens the argument.
+
     If there are no relevant examples for a point, you can skip that point.
     The elaboration should be specific to the category of the event and should be tailored to the context of General Paper essays. Provide coherent arguments and insights. Be sure to give a detailed analysis of 3-4 sentences.
     Important Note: In your analysis, you should not mention "General Paper" or "A Levels".
@@ -150,6 +152,8 @@ QUESTION_ANALYSIS_GEN_SYSPROMPT = """
             }
         ]
     }
+    Final Check: Before generating an elaboration, verify whether the example *directly* reinforces or counters the argument made in the point. If the connection is weak, DO NOT elaborate.
+
 
     Given inputs:
 """
