@@ -2,7 +2,7 @@ from http import HTTPStatus
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload, with_polymorphic
+from sqlalchemy.orm import with_polymorphic
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
@@ -26,11 +26,12 @@ def get_user_questions(
     user_questions = session.scalars(
         select(UserQuestion)
         .where(UserQuestion.user_id == user.id)
-        .options(
-            selectinload(
-                UserQuestion.answer, Answer.points, Point.events, Event.categories
-            ),
-        )
+        .join(UserQuestion.answer)
+        .join(Answer.points)
+        .join(Point.analysises)
+        .join(Analysis.event)
+        .join(Event.original_article)
+        .join(Analysis.category)
     )
     return user_questions
 
@@ -40,30 +41,21 @@ def get_user_question(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-):
-    user_question = (
-        session.execute(
-            select(UserQuestion.id == id)
-            .where(UserQuestion.user_id == user.id)
-            .where(UserQuestion.id)
-            .options(
-                selectinload(UserQuestion.answer)
-                .selectinload(Answer.points)
-                .selectinload(Point.events)
-                .selectinload(Event.categories),
-                selectinload(UserQuestion.answer)
-                .selectinload(Answer.points)
-                .selectinload(Point.notes),
-            )
-        )
-        .scalars()
-        .first()
+) -> UserQuestionMiniDTO:
+    user_question = session.scalar(
+        select(UserQuestion)
+        .where(UserQuestion.id == id)
+        .where(UserQuestion.user_id == user.id)
+        .join(UserQuestion.answer)
+        .join(Answer.points)
+        .join(Point.analysises)
+        .join(Analysis.event)
+        .join(Event.original_article)
+        .join(Analysis.category)
     )
-
     if not user_question:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
-    # TODO: support notes in schema
     return user_question
 
 
@@ -102,14 +94,6 @@ def create_user_question(
         .join(Analysis.event)
         .join(Event.original_article)
         .join(Analysis.category)
-        # .options(
-        #     selectinload(
-        #         UserQuestion.answer, Answer.points, Point.analysises, Analysis.event, Event.ca
-        #     ),
-        #     selectinload(
-        #         UserQuestion.answer, Answer.points, Point.analysises, Analysis.category
-        #     ),
-        # )
     )
     return same_user_question
 
