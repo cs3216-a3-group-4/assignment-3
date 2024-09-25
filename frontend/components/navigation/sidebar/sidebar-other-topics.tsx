@@ -31,6 +31,7 @@ const SidebarOtherTopics = () => {
           const categoryLabel = categoriesToDisplayName[category];
           const categoryIcon = categoriesToIconsMap[category];
           return (
+            // TODO: active category
             <SidebarItemWithIcon
               Icon={categoryIcon}
               key={category}
