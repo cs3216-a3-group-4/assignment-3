@@ -47,7 +47,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         <Separator className="my-10" />
         <EventAnalysis event={data} />
         <Separator className="my-10" />
-        <EventSource />
+        <EventSource originalSource={data.original_article} />
       </div>
     )
   );
