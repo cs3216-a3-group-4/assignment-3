@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
-import { QueryKeys } from "@/queries/utils/query-keys";
+
 import { getCategoriesCategoriesGet } from "@/client";
+import { QueryKeys } from "@/queries/utils/query-keys";
 
 export const getCategories = () =>
   queryOptions({
