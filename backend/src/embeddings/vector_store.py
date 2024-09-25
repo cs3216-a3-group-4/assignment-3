@@ -80,7 +80,7 @@ def store_documents():
     print(f"Stored {len(documents)} documents")
 
 
-def get_similar_results(query: str, top_k: int = 3):
+def get_similar_results(query: str, top_k: int = 5):
     documents = vector_store.similarity_search_with_relevance_scores(
         query=query, k=top_k
     )
