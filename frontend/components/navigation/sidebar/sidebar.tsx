@@ -1,7 +1,9 @@
-import SidebarOtherTopics from "@/components/navigation/sidebar/sidebar-other-topics";
-import { HomeIcon } from "lucide-react";
-import SidebarItemWithIcon from "./sidebar-item-with-icon";
 import { useRouter } from "next/navigation";
+import { HomeIcon } from "lucide-react";
+
+import SidebarOtherTopics from "@/components/navigation/sidebar/sidebar-other-topics";
+
+import SidebarItemWithIcon from "./sidebar-item-with-icon";
 
 /* Assumption: This component is only rendered if the user is logged in */
 const Sidebar = () => {

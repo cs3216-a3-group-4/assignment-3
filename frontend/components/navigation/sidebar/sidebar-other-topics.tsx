@@ -1,3 +1,7 @@
+import { createElement, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
+
 import {
   categoriesToDisplayName,
   categoriesToIconsMap,
@@ -5,9 +9,6 @@ import {
 } from "@/types/categories";
 
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
-import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
-import { createElement, useState } from "react";
-import { useRouter } from "next/navigation";
 
 // TODO: dynamically fetch
 const otherTopics: Category[] = [
