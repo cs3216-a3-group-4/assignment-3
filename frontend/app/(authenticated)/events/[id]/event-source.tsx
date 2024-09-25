@@ -8,6 +8,7 @@ import {
   articleSourceToDisplayNameMap,
   articleSourceToIconMap,
 } from "@/types/events";
+import { parseDate } from "@/utils/date";
 
 interface EventSourceProps {
   originalSource: ArticleDTO;
@@ -40,7 +41,7 @@ const EventSource = ({ originalSource }: EventSourceProps) => {
                     {articleSourceToDisplayNameMap[originalSource.source]}
                   </span>
                   <Separator className="h-5" orientation="vertical" />
-                  <span>{originalSource.date}</span>
+                  <span>{parseDate(originalSource.date)}</span>
                 </div>
               </div>
             </div>
