@@ -16,7 +16,6 @@ const Home = () => {
   const user = useUserStore((state) => state.user);
 
   const router = useRouter();
-  const user = useUserStore((state) => state.user);
   if (!user!.categories.length) {
     router.push("/onboarding");
   }
