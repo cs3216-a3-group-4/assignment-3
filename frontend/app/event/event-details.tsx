@@ -19,7 +19,7 @@ const EventDetails = () => {
   ];
 
   return (
-    <div className="flex flex-col px-6 text-muted-foreground font-medium space-y-2 md:space-y-4">
+    <div className="flex flex-col px-6 text-muted-foreground font-[450] space-y-2 md:space-y-4">
       <div className="grid grid-cols-12 gap-x-4 gap-y-3 place-items-start">
         <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
           <LayoutDashboardIcon

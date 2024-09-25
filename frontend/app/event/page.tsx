@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import EventAnalysis from "./event-analysis";
 import EventDetails from "./event-details";
 import EventSummary from "./event-summary";
+import EventSource from "./event-source";
 
 const Page = () => {
   // TODO: dynamically fetch
@@ -32,6 +33,7 @@ const Page = () => {
       <Separator className="my-10" />
       <EventAnalysis />
       <Separator className="my-10" />
+      <EventSource />
     </div>
   );
 };
