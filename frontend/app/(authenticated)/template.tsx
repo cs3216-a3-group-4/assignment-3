@@ -19,7 +19,6 @@ export default function RedirectIfNotAuthenticated({
     if (!isLoggedIn) {
       router.push("/login");
     }
-    console.log("fetching", user);
     if (isLoggedIn && !user!.categories.length) {
       router.push("/onboarding");
     }
