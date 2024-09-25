@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
-import NewsArticle from "@/components/news/news-article";
 import ArticleLoading from "@/components/news/article-loading";
+import NewsArticle from "@/components/news/news-article";
 import { useUserStore } from "@/store/user/user-store-provider";
 
 const NUM_TOP_EVENTS = 10;

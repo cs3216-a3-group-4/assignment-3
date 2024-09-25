@@ -4,13 +4,13 @@ import { ArrowUpRightIcon } from "lucide-react";
 
 import { CategoryDTO, MiniEventDTO } from "@/client";
 import Chip from "@/components/display/chip";
+import PlaceholderImage from "@/components/icons/placeholder-image";
 import {
   categoriesToDisplayName,
   categoriesToIconsMap,
   Category,
   getCategoryFor,
 } from "@/types/categories";
-import PlaceholderImage from "../icons/placeholder-image";
 
 const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
   const newsEvent = props.newsEvent;
@@ -67,7 +67,7 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
         </div>
       </div>
       <div className="flex w-full lg:w-5/12 2xl:w-3/12 3xl:w-2/12 mb-6 items-center">
-        { newsArticle.image_url ? (
+        {newsArticle.image_url ? (
           <Image
             alt=""
             height={IMG_HEIGHT}
@@ -80,7 +80,7 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
             width={273}
           />
         ) : (
-          <div style={{height: `${IMG_HEIGHT}px`}} className="flex w-full">
+          <div className="flex w-full" style={{ height: `${IMG_HEIGHT}px` }}>
             <PlaceholderImage />
           </div>
         )}
