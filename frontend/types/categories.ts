@@ -1,5 +1,6 @@
 import {
   Building2,
+  CircleHelp,
   DollarSign,
   Film,
   HeartHandshake,
@@ -23,6 +24,7 @@ export enum Category {
   GenderEquality = "Gender & equality",
   Religion = "Religion",
   SocietyCulture = "Society & culture",
+  Others = "Others",
 }
 
 export const getCategoryFor = (categoryName: string) => {
@@ -39,7 +41,10 @@ export const getCategoryFor = (categoryName: string) => {
     "society & culture": Category.SocietyCulture,
   };
   const formattedName = categoryName.toLowerCase();
-  return mappings[formattedName];
+  if (formattedName in mappings) {
+    return mappings[formattedName];
+  }
+  return Category.Others;
 };
 
 export const categoriesToDisplayName: Record<Category, string> = {
@@ -53,6 +58,7 @@ export const categoriesToDisplayName: Record<Category, string> = {
   [Category.GenderEquality]: "Gender & equality",
   [Category.Religion]: "Religion",
   [Category.SocietyCulture]: "Society & culture",
+  [Category.Others]: "Others",
 };
 
 export const categoriesToIconsMap: Record<Category, LucideIcon> = {
@@ -66,4 +72,5 @@ export const categoriesToIconsMap: Record<Category, LucideIcon> = {
   [Category.GenderEquality]: Scale,
   [Category.Religion]: HeartHandshake,
   [Category.SocietyCulture]: UsersRound,
+  [Category.Others]: CircleHelp,
 };

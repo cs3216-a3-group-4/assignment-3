@@ -19,11 +19,16 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
     "https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg";
 
   useEffect(() => {
-    setCategories(
-      newsEvent.categories.map((category: CategoryDTO) =>
-        getCategoryFor(category.name),
-      ),
-    );
+    try {
+      setCategories(
+        newsEvent.categories.map((category: CategoryDTO) =>
+          getCategoryFor(category.name),
+        ),
+      );
+    } catch (error) {
+      console.log(error);
+      setCategories([Category.Others]);
+    }
   }, [newsEvent]);
 
   const parseDate = (dateString: string) => {
