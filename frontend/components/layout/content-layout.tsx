@@ -17,7 +17,7 @@ interface ContentLayoutProps {
 const sidebarBreakpointConfigMap: Record<MediaBreakpoint, number> = {
   [MediaBreakpoint.Sm]: 0,
   [MediaBreakpoint.Md]: 20,
-  [MediaBreakpoint.Lg]: 20,
+  [MediaBreakpoint.Lg]: 30,
   [MediaBreakpoint.Xl]: 16,
   [MediaBreakpoint.Xxl]: 10,
   [MediaBreakpoint.Xxxl]: 8,
@@ -26,7 +26,7 @@ const sidebarBreakpointConfigMap: Record<MediaBreakpoint, number> = {
 const mainBreakpointConfigMap: Record<MediaBreakpoint, number> = {
   [MediaBreakpoint.Sm]: 100,
   [MediaBreakpoint.Md]: 80,
-  [MediaBreakpoint.Lg]: 80,
+  [MediaBreakpoint.Lg]: 70,
   [MediaBreakpoint.Xl]: 84,
   [MediaBreakpoint.Xxl]: 94,
   [MediaBreakpoint.Xxxl]: 92,
@@ -38,6 +38,8 @@ const ContentLayout = ({ isLoading, children }: ContentLayoutProps) => {
   const mediaBreakpoint = useBreakpointMediaQuery();
   const pathname = usePathname();
   const isOnboarding = pathname === "/onboarding";
+
+  console.log(mediaBreakpoint);
 
   // TODO: fix all loading elements
   if (isLoading)
