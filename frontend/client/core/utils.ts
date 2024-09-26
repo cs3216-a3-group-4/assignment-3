@@ -329,25 +329,6 @@ export const formDataBodySerializer = {
   },
 };
 
-export const categoryIdsSerializer = (params: Record<string, any>) => {
-  // Override serialization logic for category_ids
-  const categoryIds = params.category_ids
-    ?.map((categoryId: number) => `category_ids=${categoryId}`)
-    .join("&");
-
-  // Remove category_ids from params to avoid double serialization
-  const { category_ids, ...otherParams } = params;
-
-  // Use the default URLSearchParams to serialize the rest of the query parameters
-  const searchParams = new URLSearchParams(otherParams);
-
-  // Combine the serialized query parameters
-  const otherParamsSerialized = searchParams.toString();
-
-  // Return the complete serialized param
-  return [categoryIds, otherParamsSerialized].filter(Boolean).join("&");
-};
-
 export const jsonBodySerializer = {
   bodySerializer: <T>(body: T) => JSON.stringify(body),
 };

@@ -579,10 +579,10 @@ export const ProfileUpdateSchema = {
     top_events_period: {
       type: "integer",
       title: "Top Events Period",
+      default: 7,
     },
   },
   type: "object",
-  required: [],
   title: "ProfileUpdate",
 } as const;
 
