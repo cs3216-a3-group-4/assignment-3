@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
@@ -12,8 +12,11 @@ const DAYS_PER_WEEK = 7;
 
 /* This component should only be rendered to authenticated users */
 const Home = () => {
-  const eventStartDate = new Date();
-  eventStartDate.setDate(eventStartDate.getDate() - DAYS_PER_WEEK);
+  const eventStartDate = useMemo(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - DAYS_PER_WEEK);
+    return date;
+  }, []);
 
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -58,7 +61,7 @@ const Home = () => {
     };
 
     fetchTopEvents();
-  }, [user]);
+  }, [user, eventStartDate]);
 
   return (
     <div className="flex w-full h-fit bg-muted py-8">

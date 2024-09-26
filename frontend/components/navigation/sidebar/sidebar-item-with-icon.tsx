@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import { LucideIcon } from "lucide-react";
 
 interface SidebarItemWithIconProps {

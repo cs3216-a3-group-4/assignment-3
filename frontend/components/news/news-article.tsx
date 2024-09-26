@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowUpRightIcon } from "lucide-react";
 
 import { CategoryDTO, MiniEventDTO } from "@/client";
 import Chip from "@/components/display/chip";
@@ -14,8 +13,8 @@ import {
   Category,
   getCategoryFor,
 } from "@/types/categories";
-import { parseDate } from "@/utils/date";
 import { articleSourceToDisplayNameMap } from "@/types/events";
+import { parseDate } from "@/utils/date";
 
 const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
   const newsEvent = props.newsEvent;
@@ -64,8 +63,8 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
               Icon={categoriesToIconsMap[category]}
               key={index}
               label={categoriesToDisplayName[category]}
-              variant="primary"
               size="lg"
+              variant="primary"
             />
           ))}
         </div>
