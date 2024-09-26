@@ -42,6 +42,7 @@ def generate_response(question: str) -> dict:
     ):
         point = point_dict.get("point")
         analyses = point_dict.get("analyses")
+        elaborated_analyses = []
         for analysis in analyses:
             prompt_input = format_prompt_input(question, analysis, point)
             messages = [
@@ -52,7 +53,10 @@ def generate_response(question: str) -> dict:
             result = lm_model.invoke(messages)
 
             analysis["elaborations"] = result.content
+            if analysis["elaborations"] != "NOT RELEVANT":
+                elaborated_analyses.append(analysis)
 
+        point_dict["analyses"] = elaborated_analyses
     return relevant_analyses
 
     # formatted_analyses = format_analyses(relevant_analyses, question)
