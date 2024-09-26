@@ -61,28 +61,31 @@ const Home = () => {
   }, [user]);
 
   return (
-    <div className="flex flex-col w-full py-8">
-      <div className="flex flex-col mb-4 gap-y-2 mx-8 md:mx-16 xl:mx-36">
-        <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-          What happened this week
-        </h1>
-        <span className="text-primary text-lg">
-          {parseDate(eventStartDate)} - {parseDate(new Date())}
-        </span>
-      </div>
+    <div className="flex w-full h-fit bg-muted py-8">
+      <div className="flex flex-col py-12 w-fit h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
+        {/* TODO: x-padding here is tied to the news article */}
+        <div className="flex flex-col mb-4 gap-y-2 xl:px-12">
+          <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
+            What happened this week
+          </h1>
+          <span className="text-primary text-lg">
+            {parseDate(eventStartDate)} - {parseDate(new Date())}
+          </span>
+        </div>
 
-      <div className="flex flex-col w-auto mx-4 md:mx-8 xl:mx-24">
-        {!isLoaded ? (
-          <>
-            <ArticleLoading />
-            <ArticleLoading />
-            <ArticleLoading />
-          </>
-        ) : (
-          topEvents.map((newsEvent: MiniEventDTO, index: number) => (
-            <NewsArticle key={index} newsEvent={newsEvent} />
-          ))
-        )}
+        <div className="flex flex-col w-auto">
+          {!isLoaded ? (
+            <>
+              <ArticleLoading />
+              <ArticleLoading />
+              <ArticleLoading />
+            </>
+          ) : (
+            topEvents.map((newsEvent: MiniEventDTO, index: number) => (
+              <NewsArticle key={index} newsEvent={newsEvent} />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
