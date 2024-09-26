@@ -8,4 +8,5 @@ export const getCategories = () =>
     queryKey: [QueryKeys.Categories],
     queryFn: () =>
       getCategoriesCategoriesGet().then((response) => response.data),
+    staleTime: Infinity,
   });
