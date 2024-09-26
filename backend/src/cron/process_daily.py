@@ -4,9 +4,10 @@ from typing import List
 
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from src.common.databsae import engine
+from src.common.database import engine
 
-from src.events.process import EventLLM
+from src.embeddings.vector_store import store_documents
+from src.events.models import Analysis
 
 from src.lm.generate_events import (
     CONCURRENCY,
@@ -49,11 +50,8 @@ async def process_daily_articles(articles: list[dict]):
     events_ids = populate(file_path=file_path)
 
     with Session(engine) as session:
-        for event_id in events_ids:
-            session.add(EventLLM(event_id=event_id, is_daily=True))
+        analyses = session.scalars(
+            select(Analysis).where(Analysis.event_id.in_(events_ids))
+        )
 
-
-if __name__ == "__main__":
-    event_ids = populate()
-
-    print(event_ids)
+        store_documents(analyses)
