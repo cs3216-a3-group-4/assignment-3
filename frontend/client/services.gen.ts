@@ -305,7 +305,7 @@ export const getEventEventsIdGet = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/events/:id",
+    url: "/events/{id}",
   });
 };
 
@@ -323,7 +323,7 @@ export const getEventNotesEventsIdNotesGet = <
     ThrowOnError
   >({
     ...options,
-    url: "/events/:id/notes",
+    url: "/events/{id}/notes",
   });
 };
 
@@ -339,7 +339,7 @@ export const readEventEventsIdReadPost = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/events/:id/read",
+    url: "/events/{id}/read",
   });
 };
 
@@ -411,7 +411,7 @@ export const getUserQuestionUserQuestionsIdGet = <
     ThrowOnError
   >({
     ...options,
-    url: "/user-questions/:id",
+    url: "/user-questions/{id}",
   });
 };
 
@@ -480,7 +480,7 @@ export const updateNoteNotesIdPut = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/notes/:id",
+    url: "/notes/{id}",
   });
 };
 
@@ -496,7 +496,7 @@ export const deleteNoteNotesIdDelete = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/notes/:id",
+    url: "/notes/{id}",
   });
 };
 
@@ -514,7 +514,7 @@ export const getPointNotesPointsIdNotesGet = <
     ThrowOnError
   >({
     ...options,
-    url: "/points/:id/notes",
+    url: "/points/{id}/notes",
   });
 };
 

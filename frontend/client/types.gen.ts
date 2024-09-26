@@ -9,7 +9,6 @@ export type ArticleDTO = {
   id: number;
   title: string;
   summary: string;
-  body: string;
   url: string;
   source: ArticleSource;
   date: string;
@@ -287,7 +286,7 @@ export type GetEventsEventsGetResponse = EventIndexResponse;
 export type GetEventsEventsGetError = HTTPValidationError;
 
 export type GetEventEventsIdGetData = {
-  query: {
+  path: {
     id: number;
   };
 };
@@ -297,7 +296,7 @@ export type GetEventEventsIdGetResponse = EventDTO;
 export type GetEventEventsIdGetError = HTTPValidationError;
 
 export type GetEventNotesEventsIdNotesGetData = {
-  query: {
+  path: {
     id: number;
   };
 };
@@ -307,7 +306,7 @@ export type GetEventNotesEventsIdNotesGetResponse = Array<NoteDTO>;
 export type GetEventNotesEventsIdNotesGetError = HTTPValidationError;
 
 export type ReadEventEventsIdReadPostData = {
-  query: {
+  path: {
     id: number;
   };
 };
@@ -342,7 +341,7 @@ export type CreateUserQuestionUserQuestionsPostResponse = UserQuestionMiniDTO;
 export type CreateUserQuestionUserQuestionsPostError = HTTPValidationError;
 
 export type GetUserQuestionUserQuestionsIdGetData = {
-  query: {
+  path: {
     id: number;
   };
 };
@@ -378,7 +377,7 @@ export type CreateNoteNotesPostError = HTTPValidationError;
 
 export type UpdateNoteNotesIdPutData = {
   body: NoteUpdate;
-  query: {
+  path: {
     id: number;
   };
 };
@@ -388,7 +387,7 @@ export type UpdateNoteNotesIdPutResponse = NoteDTO;
 export type UpdateNoteNotesIdPutError = HTTPValidationError;
 
 export type DeleteNoteNotesIdDeleteData = {
-  query: {
+  path: {
     id: number;
   };
 };
