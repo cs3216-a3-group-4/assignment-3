@@ -45,7 +45,7 @@ const NewsArticle = (props: { newsEvent: MiniEventDTO }) => {
 
   return (
     <div
-      className="flex flex-col-reverse py-10 lg:flex-row w-auto lg:py-6 xl:px-12 xl:py-10 gap-x-28 border-y-[1px] lg:border-y-[0px] hover:bg-primary-alt-foreground/[2.5%] lg:rounded-md px-4 md:px-8 cursor-pointer"
+      className="flex flex-col-reverse py-10 lg:flex-row w-full lg:py-6 px-4 md:px-8 xl:px-12 xl:py-10 gap-x-28 border-y-[1px] lg:border-y-[0px] hover:bg-primary-alt-foreground/[2.5%] lg:rounded-md cursor-pointer"
       onClick={onClick}
     >
       <div className="flex flex-col w-full lg:w-8/12 2xl:w-9/12 3xl:w-10/12">

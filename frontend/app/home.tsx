@@ -70,9 +70,12 @@ const Home = () => {
         className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
         id="home-page"
       >
-        <div className="flex flex-col py-12 w-fit h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
+        <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
           {/* TODO: x-padding here is tied to the news article */}
-          <div className="flex flex-col mb-4 gap-y-2 xl:px-12" id="homePage">
+          <div
+            className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
+            id="homePage"
+          >
             <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
               What happened this week
             </h1>
@@ -81,13 +84,13 @@ const Home = () => {
             </span>
           </div>
 
-          <div className="flex flex-col w-auto">
+          <div className="flex flex-col w-full">
             {!isLoaded ? (
-              <>
+              <div className="flex flex-col w-full">
                 <ArticleLoading />
                 <ArticleLoading />
                 <ArticleLoading />
-              </>
+              </div>
             ) : (
               topEvents.map((newsEvent: MiniEventDTO, index: number) => (
                 <NewsArticle key={index} newsEvent={newsEvent} />
