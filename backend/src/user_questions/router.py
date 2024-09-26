@@ -2,14 +2,19 @@ from http import HTTPStatus
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import with_polymorphic, aliased, selectinload
+from sqlalchemy.orm import with_polymorphic, selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.events.models import Analysis, Event
-from src.likes.models import Like
 from src.notes.models import Note
-from src.user_questions.models import Answer, Point, UserQuestion
+from src.user_questions.models import (
+    Answer,
+    Fallback,
+    Point,
+    PointAnalysis,
+    UserQuestion,
+)
 from src.user_questions.schemas import CreateUserQuestion, UserQuestionMiniDTO
 from src.lm.generate_response import generate_response
 from src.lm.generate_points import get_relevant_analyses
@@ -26,37 +31,29 @@ def get_user_questions(
     session=Depends(get_session),
 ) -> list[UserQuestionMiniDTO]:
     # Create an alias for the Point table to use for the Like condition
-    point_alias = aliased(Point)
     user_questions = session.scalars(
         select(UserQuestion)
         .where(UserQuestion.user_id == user.id)
-        .join(UserQuestion.answer)
-        .join(Answer.points)
-        .join(point_alias.analysises)
-        .join(Analysis.event)
-        .join(Event.original_article)
-        .join(Analysis.category)
-        .join(Analysis.likes)
-        .where(Like.point_id == point_alias.id)
         .options(
             selectinload(
                 UserQuestion.answer,
-                Answer.points.of_type(point_alias),
-                point_alias.analysises,
+                Answer.points,
+                Point.point_analysises,
+                PointAnalysis.analysis,
                 Analysis.event,
                 Event.original_article,
             ),
             selectinload(
                 UserQuestion.answer,
-                Answer.points.of_type(point_alias),
-                point_alias.analysises,
-                Analysis.category,
+                Answer.points,
+                Point.fallback,
             ),
             selectinload(
                 UserQuestion.answer,
-                Answer.points.of_type(point_alias),
-                point_alias.analysises,
-                Analysis.likes,
+                Answer.points,
+                Point.point_analysises,
+                PointAnalysis.analysis,
+                Analysis.category,
             ),
         )
     )
@@ -83,13 +80,28 @@ def get_user_question(
         select(UserQuestion)
         .where(UserQuestion.id == id)
         .where(UserQuestion.user_id == user.id)
-        .join(UserQuestion.answer)
-        .join(Answer.points)
-        .join(Point.analysises)
-        .join(Analysis.event)
-        .join(Event.original_article)
-        .join(Analysis.category)
-        .join(Analysis.likes)
+        .options(
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_analysises,
+                PointAnalysis.analysis,
+                Analysis.event,
+                Event.original_article,
+            ),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.fallback,
+            ),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_analysises,
+                PointAnalysis.analysis,
+                Analysis.category,
+            ),
+        )
     )
     if not user_question:
         raise HTTPException(HTTPStatus.NOT_FOUND)
@@ -108,16 +120,43 @@ def create_user_question(
     answer = Answer()
     user_question.answer = answer
 
-    results = get_relevant_analyses(data.question)
-    for row in results["for_points"] + results["against_points"]:
+    results = generate_response(data.question)
+
+    for row in results["for_points"]:
         point = row["point"]
         analyses = row["analyses"]
-        point = Point(title=point, body="")
-        analysis_id = [analysis["id"] for analysis in analyses]
+        point = Point(title=point, body="", positive=True)
 
-        point.analysises = list(
-            session.scalars(select(Analysis).where(Analysis.id.in_(analysis_id)))
-        )
+        for analysis in analyses:
+            point.point_analysises.append(
+                PointAnalysis(
+                    elaboration=analysis["elaborations"],
+                    analysis_id=analysis["id"],
+                )
+            )
+        if not analyses:
+            point.fallback = Fallback(
+                alt_approach=row["fall_back_response"]["alt_approach"],
+                general_argument=row["fall_back_response"]["general_argument"],
+            )
+        answer.points.append(point)
+
+    for row in results["against_points"]:
+        point = row["point"]
+        analyses = row["analyses"]
+        point = Point(title=point, body="", positive=False)
+        for analysis in analyses:
+            point.point_analysises.append(
+                PointAnalysis(
+                    elaboration=analysis["elaborations"],
+                    analysis_id=analysis["id"],
+                )
+            )
+        if not analyses:
+            point.fallback = Fallback(
+                alt_approach=row["fall_back_response"]["alt_approach"],
+                general_argument=row["fall_back_response"]["general_argument"],
+            )
         answer.points.append(point)
 
     session.add(user_question)
@@ -126,11 +165,28 @@ def create_user_question(
     same_user_question = session.scalar(
         select(UserQuestion)
         .where(UserQuestion.id == user_question.id)
-        .join(UserQuestion.answer)
-        .join(Answer.points)
-        .join(Point.analysises)
-        .join(Analysis.event)
-        .join(Event.original_article)
-        .join(Analysis.category)
+        .options(
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_analysises,
+                PointAnalysis.analysis,
+                Analysis.event,
+                Event.original_article,
+            ),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.fallback,
+            ),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_analysises,
+                PointAnalysis.analysis,
+                Analysis.category,
+            ),
+        )
     )
+
     return same_user_question
