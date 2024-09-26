@@ -16,6 +16,7 @@ import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { MediaBreakpoint } from "@/utils/media";
+import MobileNavbar from "@/components/navigation/mobile/mobile-navbar";
 
 const breakpointConfigMap: Record<
   MediaBreakpoint,
@@ -88,6 +89,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="relative flex min-h-screen max-h-screen flex-col bg-background">
       <Navbar />
+      <MobileNavbar />
       <main className="flex w-full h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
         {isOnboarding ? (
           children
