@@ -9,6 +9,7 @@ class UserPublic(BaseModel):
     email: EmailStr
 
     categories: list[CategoryDTO]
+    top_events_period: int = 7
 
 
 class Token(BaseModel):
