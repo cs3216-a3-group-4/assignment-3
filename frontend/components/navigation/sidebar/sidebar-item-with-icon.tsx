@@ -1,5 +1,4 @@
 import { LucideIcon } from "lucide-react";
-
 interface SidebarItemWithIconProps {
   Icon: LucideIcon;
   label: string;
@@ -15,19 +14,15 @@ const SidebarItemWithIcon = ({
 }: SidebarItemWithIconProps) => {
   return (
     <div
-      className={`flex rounded px-2 py-1.5 items-center ${isActive ? "bg-primary-400/30" : "hover:bg-primary-200/20"}`}
+      className={`flex rounded px-2 py-1.5 items-center ${isActive ? "text-primary-alt-800/90 font-medium bg-primary-400/30" : "text-primary-alt-foreground/70 hover:bg-primary-200/20"}`}
       onClick={onClick}
     >
       <Icon
-        className="mr-3 text-primary flex-shrink-0"
+        className="mr-3 flex-shrink-0"
         size={20}
-        strokeWidth={isActive ? 1.7 : 1.5}
+        strokeWidth={isActive ? 1.9 : 1.7}
       />
-      <span
-        className={`text-primary/90 pointer-events-none hover:text-primary ${isActive ? "font-medium" : "font-normal"}`}
-      >
-        {label}
-      </span>
+      <span className="pointer-events-none">{label}</span>
     </div>
   );
 };

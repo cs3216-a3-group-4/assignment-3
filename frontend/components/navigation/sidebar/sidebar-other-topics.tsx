@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 
@@ -15,6 +15,11 @@ const SidebarOtherTopics = () => {
   const { data: categories, isSuccess } = useQuery(getCategories());
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const numTopics = categories?.length;
+
+  const pathname = usePathname();
+  const segments = pathname.slice(1).split("/");
+  const isCategoryUrl = segments[0] === "categories";
+  const activeCategoryId = segments[1];
 
   return (
     <div className="flex flex-col space-y-2.5 w-full max-w-xs">
@@ -37,6 +42,9 @@ const SidebarOtherTopics = () => {
             // TODO: active category
             <SidebarItemWithIcon
               Icon={categoryIcon}
+              isActive={
+                isCategoryUrl && activeCategoryId === category.id.toString()
+              }
               key={category.id}
               label={category.name}
               onClick={onClick}

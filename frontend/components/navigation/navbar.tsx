@@ -35,8 +35,8 @@ function Navbar() {
   }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-border bg-primary/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 border-b-[1px]">
-      <div className="w-full min-h-[84px] flex items-center justify-between px-8 py-4">
+    <header className="sticky top-0 z-50 w-full border-border bg-primary/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 border-b-[1px] min-h-[84px] max-h-[84px]">
+      <div className="w-full flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
           <Link className="mr-6 flex items-center gap-x-2" href="/">
             <JippyLogo classname="hidden sm:flex" />

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
+import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -64,32 +65,42 @@ const Home = () => {
   }, [user, eventStartDate]);
 
   return (
-    <div className="flex w-full h-fit bg-muted py-8">
-      <div className="flex flex-col py-12 w-fit h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
-        {/* TODO: x-padding here is tied to the news article */}
-        <div className="flex flex-col mb-4 gap-y-2 xl:px-12">
-          <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-            What happened this week
-          </h1>
-          <span className="text-primary text-lg">
-            {parseDate(eventStartDate)} - {parseDate(new Date())}
-          </span>
-        </div>
+    <div className="relative w-full h-full">
+      <div
+        className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
+        id="home-page"
+      >
+        <div className="flex flex-col py-12 w-fit h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
+          {/* TODO: x-padding here is tied to the news article */}
+          <div className="flex flex-col mb-4 gap-y-2 xl:px-12" id="homePage">
+            <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
+              What happened this week
+            </h1>
+            <span className="text-primary text-lg">
+              {parseDate(eventStartDate)} - {parseDate(new Date())}
+            </span>
+          </div>
 
-        <div className="flex flex-col w-auto">
-          {!isLoaded ? (
-            <>
-              <ArticleLoading />
-              <ArticleLoading />
-              <ArticleLoading />
-            </>
-          ) : (
-            topEvents.map((newsEvent: MiniEventDTO, index: number) => (
-              <NewsArticle key={index} newsEvent={newsEvent} />
-            ))
-          )}
+          <div className="flex flex-col w-auto">
+            {!isLoaded ? (
+              <>
+                <ArticleLoading />
+                <ArticleLoading />
+                <ArticleLoading />
+              </>
+            ) : (
+              topEvents.map((newsEvent: MiniEventDTO, index: number) => (
+                <NewsArticle key={index} newsEvent={newsEvent} />
+              ))
+            )}
+          </div>
         </div>
       </div>
+      <ScrollToTopButton
+        className="absolute right-4 bottom-4"
+        minHeight={200}
+        scrollElementId="home-page"
+      />
     </div>
   );
 };
