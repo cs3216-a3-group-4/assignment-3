@@ -5,14 +5,14 @@ import { ChevronDown } from "lucide-react";
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
-import { useUserStore } from "@/store/user/user-store-provider";
 import { useUpdateTopEventsPeriod } from "@/queries/user";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const enum Period {
   Day = 1,
   Week = 7,
   Month = 30,
-};
+}
 
 const getDisplayValueFor = (period: Period) => {
   switch (period) {
@@ -24,7 +24,7 @@ const getDisplayValueFor = (period: Period) => {
     default:
       return "week";
   }
-}
+};
 
 const NUM_TOP_EVENTS = 10;
 const DEFAULT_EVENT_PERIOD = Period.Week;
@@ -34,11 +34,12 @@ const Home = () => {
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const [selectedPeriod, setSelectedPeriod] = useState<Period>(DEFAULT_EVENT_PERIOD);
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<Period>(DEFAULT_EVENT_PERIOD);
   const user = useUserStore((state) => state.user);
   const updateTopEventsMutation = useUpdateTopEventsPeriod();
   const router = useRouter();
-  
+
   if (!user!.categories.length) {
     router.push("/onboarding");
   }
@@ -48,7 +49,9 @@ const Home = () => {
       setIsLoaded(false);
       const dateNow = new Date();
       const eventStartDate = new Date(dateNow);
-      const eventPeriod = user?.top_events_period ? user.top_events_period : DEFAULT_EVENT_PERIOD;
+      const eventPeriod = user?.top_events_period
+        ? user.top_events_period
+        : DEFAULT_EVENT_PERIOD;
       setSelectedPeriod(eventPeriod);
       eventStartDate.setDate(dateNow.getDate() - eventPeriod);
       const formattedEventStartDate = eventStartDate
