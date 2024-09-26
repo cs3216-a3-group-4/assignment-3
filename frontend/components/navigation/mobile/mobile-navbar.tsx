@@ -44,8 +44,10 @@ function MobileNavbar() {
             <JippyIcon classname="sm:hidden" />
           </Link>
         </div>
-        <MobileSidebar />
-        <div className="flex flex-1 items-center gap-x-4 justify-end min-h-[52px] max-h-[52px]">
+        <div className="flex flex-1 justify-center">
+          <MobileSidebar />
+        </div>
+        <div className="flex items-center gap-x-4 justify-end min-h-[52px] max-h-[52px] min-w-fit ml-8">
           {isLoggedIn ? (
             <UserProfileButton />
           ) : (

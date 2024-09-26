@@ -6,34 +6,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
-import { NavItem } from "@/types/navigation";
 import SidebarOtherTopics from "../sidebar/sidebar-other-topics";
-
-// export const NavItems: NavItem[] = ["Home"];
+import DynamicBreadcrumb from "../dynamic-breadcrumb";
+import { HomeIcon } from "lucide-react";
+import SidebarItemWithIcon from "../sidebar/sidebar-item-with-icon";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 const MobileSidebar = () => {
-  //   const [selectedAccount, setSelectedAccount] = useState<NavItem>(
-  //     accounts[0].email,
-  //   );
-
-  const setSelectedAccount = () => {};
-  const isCollapsed = false;
+  const pathname = usePathname();
+  const router = useRouter();
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
   return (
-    <Select defaultValue={"selectedAccount"} onValueChange={setSelectedAccount}>
+    <Select
+      defaultValue={pathname}
+      onValueChange={() => setIsCollapsed((prevValue) => !prevValue)}
+    >
       <SelectTrigger
         className={cn(
-          "flex items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
+          "border-muted-foreground/20 flex max-w-full items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
           isCollapsed &&
-            "flex h-9 w-9 shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden",
+            "flex h-9 max-w-full shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden",
         )}
-        aria-label="Select account"
+        aria-label="Navbar"
       >
-        <SelectValue placeholder="Select an account">test</SelectValue>
+        <SelectValue>
+          <DynamicBreadcrumb pathname={pathname} />
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        <SidebarOtherTopics />
+        <div className="flex flex-col bg-primary-100/20 space-y-6 py-4 px-8">
+          <SidebarItemWithIcon
+            Icon={HomeIcon}
+            isActive={pathname === "/"}
+            label="Home"
+            onClick={() => router.push("/")}
+          />
+          <SidebarOtherTopics />
+        </div>
       </SelectContent>
     </Select>
   );
