@@ -86,20 +86,20 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const isOnboarding = pathname === "/onboarding";
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
+    <div className="relative flex min-h-screen max-h-screen flex-col bg-background">
       <Navbar />
-      <main>
+      <main className="flex w-full h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
         {isOnboarding ? (
           children
         ) : (
           <ResizablePanelGroup
-            className="flex flex-1 w-full h-[calc(100vh_-_72px)]"
+            className="flex flex-1 w-full h-full min-h-full max-h-full"
             direction="horizontal"
           >
             {isLoggedIn && (
               <>
                 <ResizablePanel
-                  className="flex w-full"
+                  className="flex w-full h-full"
                   id="sidebar"
                   onCollapse={() => setIsCollapsed(true)}
                   onExpand={() => setIsCollapsed(false)}
@@ -111,10 +111,12 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                 <ResizableHandle withHandle={isCollapsed} />
               </>
             )}
-            <ResizablePanel defaultSize={75} order={2}>
-              <div className="flex flex-1 w-full h-[calc(100vh_-_72px)] min-h-[calc(100vh_-_72px)] overflow-y-scroll">
-                {children}
-              </div>
+            <ResizablePanel
+              defaultSize={75}
+              order={2}
+              className="flex flex-1 w-full h-full max-h-full overflow-y-auto"
+            >
+              {children}
             </ResizablePanel>
           </ResizablePanelGroup>
         )}
