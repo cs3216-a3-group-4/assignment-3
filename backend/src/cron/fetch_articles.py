@@ -1,12 +1,15 @@
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import httpx
+import os
 
 from src.common.constants import GUARDIAN_API_KEY
 from sqlalchemy import select
 from src.events.models import Article, ArticleSource, Event
 from src.common.database import engine
 from sqlalchemy.orm import Session
+from src.scrapers.cna.process import process_all_categories
+from src.scrapers.cna.scrape import scrape_from_date
 from src.scrapers.guardian.get_articles import get_articles
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
 
@@ -108,6 +111,20 @@ def populate_daily_articles():
         add_daily_articles_to_db(article_obj)
 
 
+async def populate_daily_articles_cna():
+    # create articles folder if doesnt exist
+    if "articles" not in os.listdir("./src/scrapers/cna"):
+        os.mkdir("./src/scrapers/cna/articles")
+
+    yesterday = datetime.combine(datetime.now() - timedelta(days=1), time.min)
+
+    # this function doesnt care about duplicates and just destroys the json
+    await scrape_from_date(start_date=yesterday)
+    # this function already checks for articles not in db that are in json
+    # may salvage the broken json
+    await process_all_categories()
+
+
 def process_new_articles() -> list[dict]:
     with Session(engine) as session:
         result = session.scalars(
@@ -136,7 +153,7 @@ def process_new_articles() -> list[dict]:
 
 async def run(limit: int = 30):
     # Add new articles to database
-    # populate_daily_articles()
+    await populate_daily_articles_cna()
     # ADD CNA HERE.
     # Process new articles i.e. find articles that we have not generated events for
     articles = get_articles(limit)

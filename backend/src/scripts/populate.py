@@ -26,3 +26,7 @@ def set_up():
     populate()
     # store analyses in vector store
     store_documents()
+
+
+if __name__ == "__main__":
+    set_up()
