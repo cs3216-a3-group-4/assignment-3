@@ -35,6 +35,7 @@ const EventDetails = ({ event }: Props) => {
               Icon={categoriesToIconsMap[category]}
               key={category}
               label={categoriesToDisplayName[category]}
+              size={"lg"}
               variant="primary" // TODO: this is ugly
             />
           ))}
@@ -46,7 +47,7 @@ const EventDetails = ({ event }: Props) => {
           <ClockIcon className="inline-flex mr-2" size={16} strokeWidth={2.3} />
           Event date
         </span>
-        <span className="col-span-1  md:col-span-8 xl:col-span-9 text-black font-normal">
+        <span className="col-span-10  md:col-span-8 xl:col-span-9 text-black font-normal">
           {parseDate(event.date)}
         </span>
       </div>

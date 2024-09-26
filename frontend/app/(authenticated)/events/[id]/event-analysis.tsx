@@ -27,7 +27,9 @@ const EventAnalysis = ({ event }: Props) => {
     getCategoryFor(category.name),
   );
 
-  const [activeCategories, setActiveCategories] = useState<string[]>([]);
+  const [activeCategories, setActiveCategories] = useState<string[]>(
+    event.analysises.map((item) => getCategoryFor(item.category.name)),
+  );
 
   // @ts-expect-error deadline doesnt give me time to bother with type errors
   const analysis: { [key in Category]: string } = {};
