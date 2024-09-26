@@ -112,9 +112,9 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
               </>
             )}
             <ResizablePanel
+              className="flex flex-1 w-full h-full max-h-full overflow-y-auto"
               defaultSize={75}
               order={2}
-              className="flex flex-1 w-full h-full max-h-full overflow-y-auto"
             >
               {children}
             </ResizablePanel>

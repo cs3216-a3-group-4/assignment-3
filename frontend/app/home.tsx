@@ -98,8 +98,8 @@ const Home = () => {
       </div>
       <ScrollToTopButton
         className="absolute right-4 bottom-4"
-        scrollElementId="home-page"
         minHeight={200}
+        scrollElementId="home-page"
       />
     </div>
   );

@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import { ArrowUpIcon } from "lucide-react";
 
 import { Button, ButtonProps } from "@/components/ui/button";
-import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 interface ScrollToTopButtonProps extends Omit<ButtonProps, "children"> {
@@ -32,23 +32,23 @@ const ScrollToTopButton = ({
     onScroll();
     scrollElement.addEventListener("scroll", onScroll);
     return () => scrollElement.removeEventListener("scroll", onScroll);
-  }, [scrollElement]);
+  }, [scrollElement, minHeight]);
 
   return (
     <>
       {visible && (
         <Button
-          onClick={onScrollBack}
           className={cn(
             "group animate-fade-up transition-all ease-in-out delay-75 duration-300 text-lg hover:bg-primary hover:text-primary-foreground",
             className,
           )}
+          onClick={onScrollBack}
           variant="ghost"
           {...props}
         >
           <ArrowUpIcon
-            strokeWidth={2.5}
             className="stroke-primary group-hover:stroke-primary-foreground"
+            strokeWidth={2.5}
           />
           <span className="hidden group-hover:inline-flex group-hover:animate-fade-left ml-4">
             Scroll to top
