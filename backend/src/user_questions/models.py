@@ -1,6 +1,7 @@
 from sqlalchemy import ForeignKey, and_
 from src.common.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship, foreign
+from src.events.models import Analysis
 from src.notes.models import Note
 
 
@@ -39,8 +40,14 @@ class Point(Base):
         primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "point"),
         backref="point",
     )
+    positive: Mapped[bool]
 
-    analysises = relationship("Analysis", secondary="point_analysis")
+    # analysises = relationship("Analysis", secondary="point_analysis")
+    point_analysises: Mapped[list["PointAnalysis"]] = relationship(
+        back_populates="point"
+    )
+
+    fallback: Mapped["Fallback"] = relationship(back_populates="point")
 
 
 class PointAnalysis(Base):
@@ -50,3 +57,19 @@ class PointAnalysis(Base):
         ForeignKey("analysis.id"), primary_key=True
     )
     point_id: Mapped[int] = mapped_column(ForeignKey("point.id"), primary_key=True)
+    elaboration: Mapped[str]
+
+    point: Mapped[Point] = relationship(back_populates="point_analysises")
+    analysis: Mapped[Analysis] = relationship(backref="point_analysises")
+
+
+class Fallback(Base):
+    __tablename__ = "fallback"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    point_id: Mapped[int] = mapped_column(ForeignKey("point.id"))
+    alt_approach: Mapped[str]
+    general_argument: Mapped[str]
+
+    point: Mapped[Point] = relationship(back_populates="fallback")
