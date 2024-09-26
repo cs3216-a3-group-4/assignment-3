@@ -1,9 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import {
-  getEventEventsIdGet,
-  getEventsEventsGet,
-} from "@/client/services.gen";
+import { getEventEventsIdGet, getEventsEventsGet } from "@/client/services.gen";
 
 import { QueryKeys } from "./utils/query-keys";
 
@@ -13,7 +10,9 @@ export const getEvent = (id: number) =>
     queryFn: () =>
       getEventEventsIdGet({
         withCredentials: true,
-        query: { id },
+        path: {
+          id,
+        },
       }).then((data) => data.data),
   });
 
@@ -24,8 +23,7 @@ export const getEventsForCategory = (categoryId: number) =>
       getEventsEventsGet({
         withCredentials: true,
         query: {
-          category_ids: [ categoryId ],
+          category_ids: [categoryId],
         },
       }).then((data) => data.data),
   });
-  

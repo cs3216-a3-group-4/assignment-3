@@ -4,10 +4,10 @@ from sqlalchemy import select
 from src.events.models import Article
 
 
-def get_articles() -> list[dict]:
+def get_articles(limit: int = 30) -> list[dict]:
     with Session(engine) as session:
         # Select the first 5 articles
-        result = session.scalars(select(Article).limit(30))
+        result = session.scalars(select(Article).limit(limit))
 
         articles = []
         # Iterate over the result and print each article
