@@ -58,7 +58,7 @@ function Navbar() {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        <div className="flex flex-1 items-center gap-x-4 justify-end">
+        <div className="flex flex-1 items-center gap-x-4 justify-end min-h-[52px] max-h-[52px]">
           {isLoggedIn ? (
             <UserProfileButton />
           ) : (
