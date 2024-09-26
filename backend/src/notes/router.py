@@ -55,7 +55,7 @@ def create_note(
     return new_note
 
 
-@router.put("/:id")
+@router.put("/{id}")
 def update_note(
     data: NoteUpdate,
     note: Note = Depends(retrieve_note),
@@ -70,7 +70,7 @@ def update_note(
     return note
 
 
-@router.delete("/:id")
+@router.delete("/{id}")
 def delete_note(
     note=Depends(retrieve_note),
     session=Depends(get_session),
@@ -82,7 +82,7 @@ def delete_note(
 points_router = APIRouter(prefix="/points", tags=["points"])
 
 
-@points_router.get("/:id/notes")
+@points_router.get("/{id}/notes")
 def get_point_notes(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
