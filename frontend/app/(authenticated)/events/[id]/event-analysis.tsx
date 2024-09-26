@@ -47,7 +47,7 @@ const EventAnalysis = ({ event }: Props) => {
         </span>
         <div className="flex w-full">
           <ToggleGroup
-            className="gap-3"
+            className="flex flex-col sm:flex-row flex-wrap md:flex-row gap-3"
             onValueChange={(value) => setActiveCategories(value)}
             size="lg"
             type="multiple"
