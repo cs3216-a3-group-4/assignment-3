@@ -45,10 +45,10 @@ export const CnaLogo = ({
           y1="42.8904"
           y2="59.2836"
         >
-          <stop stop-color="#534B48" />
-          <stop offset="0.27" stop-color="#4A423F" />
-          <stop offset="0.7" stop-color="#312B29" />
-          <stop offset="1" stop-color="#1D1816" />
+          <stop stopColor="#534B48" />
+          <stop offset="0.27" stopColor="#4A423F" />
+          <stop offset="0.7" stopColor="#312B29" />
+          <stop offset="1" stopColor="#1D1816" />
         </linearGradient>
         <linearGradient
           gradientUnits="userSpaceOnUse"
@@ -58,10 +58,10 @@ export const CnaLogo = ({
           y1="42.8987"
           y2="59.518"
         >
-          <stop stop-color="#534B48" />
-          <stop offset="0.27" stop-color="#4A423F" />
-          <stop offset="0.7" stop-color="#312B29" />
-          <stop offset="1" stop-color="#1D1816" />
+          <stop stopColor="#534B48" />
+          <stop offset="0.27" stopColor="#4A423F" />
+          <stop offset="0.7" stopColor="#312B29" />
+          <stop offset="1" stopColor="#1D1816" />
         </linearGradient>
         <linearGradient
           gradientUnits="userSpaceOnUse"
@@ -71,10 +71,10 @@ export const CnaLogo = ({
           y1="42.8086"
           y2="59.5016"
         >
-          <stop stop-color="#534B48" />
-          <stop offset="0.27" stop-color="#4A423F" />
-          <stop offset="0.7" stop-color="#312B29" />
-          <stop offset="1" stop-color="#1D1816" />
+          <stop stopColor="#534B48" />
+          <stop offset="0.27" stopColor="#4A423F" />
+          <stop offset="0.7" stopColor="#312B29" />
+          <stop offset="1" stopColor="#1D1816" />
         </linearGradient>
         <linearGradient
           gradientUnits="userSpaceOnUse"
@@ -84,11 +84,11 @@ export const CnaLogo = ({
           y1="39.4623"
           y2="0"
         >
-          <stop stop-color="#ED2227" />
-          <stop offset="0.17" stop-color="#E42125" />
-          <stop offset="0.45" stop-color="#CB1E22" />
-          <stop offset="0.8" stop-color="#A41A1E" />
-          <stop offset="1" stop-color="#8B181B" />
+          <stop stopColor="#ED2227" />
+          <stop offset="0.17" stopColor="#E42125" />
+          <stop offset="0.45" stopColor="#CB1E22" />
+          <stop offset="0.8" stopColor="#A41A1E" />
+          <stop offset="1" stopColor="#8B181B" />
         </linearGradient>
         <linearGradient
           gradientUnits="userSpaceOnUse"
@@ -98,11 +98,11 @@ export const CnaLogo = ({
           y1="2.91393"
           y2="36.5483"
         >
-          <stop stop-color="#ED2227" />
-          <stop offset="0.17" stop-color="#E42125" />
-          <stop offset="0.45" stop-color="#CB1E22" />
-          <stop offset="0.8" stop-color="#A41A1E" />
-          <stop offset="1" stop-color="#8B181B" />
+          <stop stopColor="#ED2227" />
+          <stop offset="0.17" stopColor="#E42125" />
+          <stop offset="0.45" stopColor="#CB1E22" />
+          <stop offset="0.8" stopColor="#A41A1E" />
+          <stop offset="1" stopColor="#8B181B" />
         </linearGradient>
       </defs>
     </svg>
