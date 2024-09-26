@@ -5,7 +5,8 @@ from src.embeddings.vector_store import store_documents
 
 
 # Populate the db with events from lm_events_output.json
-def populate():
+def populate() -> list[int]:
+    ids = []
     with open("lm_events_output.json", "r") as f:
         events = json.load(f)
     for event in events:
@@ -18,7 +19,10 @@ def populate():
             original_article_id=event.get("original_article_id"),
             rating=int(event.get("rating", "0")),
         )
-        add_event_to_db(event_obj)
+        success, id = add_event_to_db(event_obj)
+        if success:
+            ids.append(id)
+    return ids
 
 
 def set_up():
