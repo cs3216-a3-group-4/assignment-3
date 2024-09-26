@@ -68,6 +68,11 @@ def ask_gp_question(question: str):
     return generate_response(question)
 
 
+@router.get("/gen-points")
+def gen_points(question: str):
+    return get_relevant_analyses(question)
+
+
 @router.get("/{id}")
 def get_user_question(
     id: int,

@@ -1,11 +1,12 @@
 from src.lm.generate_points import get_relevant_analyses
 from src.lm.generate_events import lm_model
-from pydantic import BaseModel
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_core.output_parsers import JsonOutputParser
 from src.lm.prompts import QUESTION_ANALYSIS_GEN_SYSPROMPT_2 as SYSPROMPT
-import json
+from src.lm.prompts import (
+    QUESTION_ANALYSIS_GEN_FALLBACK_SYSPROMPT as FALLBACK_SYSPROMPT,
+)
 
+from langchain_core.output_parsers import JsonOutputParser
 from sqlalchemy.orm import Session
 from src.common.database import engine
 from sqlalchemy import select
@@ -36,10 +37,11 @@ def format_prompt_input(question: str, analysis: dict, point: str) -> str:
 
 def generate_response(question: str) -> dict:
     relevant_analyses = get_relevant_analyses(question)
-
+    count = 0
     for point_dict in (
         relevant_analyses["for_points"] + relevant_analyses["against_points"]
     ):
+        count += 1
         point = point_dict.get("point")
         analyses = point_dict.get("analyses")
         elaborated_analyses = []
@@ -55,20 +57,26 @@ def generate_response(question: str) -> dict:
             analysis["elaborations"] = result.content
             if analysis["elaborations"] != "NOT RELEVANT":
                 elaborated_analyses.append(analysis)
-
         point_dict["analyses"] = elaborated_analyses
+
+        if len(elaborated_analyses) == 0:
+            point_dict["fall_back_response"] = generate_fallback_response(
+                question, point
+            )
+
+    print(count)
     return relevant_analyses
 
-    # formatted_analyses = format_analyses(relevant_analyses, question)
-    # messages = [
-    #     SystemMessage(content=SYSPROMPT),
-    #     HumanMessage(content=json.dumps(formatted_analyses)),
-    # ]
 
-    # result = lm_model.invoke(messages)
-    # parser = JsonOutputParser(pydantic_object=Elaborations)
-    # elaborations = parser.invoke(result)
-    # return elaborations
+def generate_fallback_response(question: str, point: str):
+    messages = [
+        SystemMessage(content=FALLBACK_SYSPROMPT),
+        HumanMessage(content=f"Question: {question}\nPoint: {point}"),
+    ]
+
+    result = lm_model.invoke(messages)
+    parser = JsonOutputParser()
+    return parser.invoke(result)
 
 
 if __name__ == "__main__":
