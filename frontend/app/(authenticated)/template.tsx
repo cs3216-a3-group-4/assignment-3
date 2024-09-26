@@ -21,7 +21,6 @@ export default function RedirectIfNotAuthenticated({
   } = useQuery(getUserProfile());
 
   useEffect(() => {
-    console.log({ isUserProfileSuccess, userProfile });
     if (!isFetching) {
       if (!userProfile) {
         if (!isLoggedIn) {

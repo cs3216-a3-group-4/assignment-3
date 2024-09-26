@@ -1,5 +1,4 @@
 import { LucideIcon } from "lucide-react";
-
 interface SidebarItemWithIconProps {
   Icon: LucideIcon;
   label: string;
