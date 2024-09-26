@@ -63,7 +63,7 @@ def get_user_questions(
     return user_questions
 
 
-@router.get("/:id")
+@router.get("/{id}")
 def get_user_question(
     id: int,
     user: Annotated[User, Depends(get_current_user)],

@@ -10,7 +10,6 @@ class ArticleDTO(BaseModel):
     id: int
     title: str
     summary: str
-    body: str
     url: str
     source: ArticleSource
     date: datetime

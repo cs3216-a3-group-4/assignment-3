@@ -10,7 +10,9 @@ export const getEvent = (id: number) =>
     queryFn: () =>
       getEventEventsIdGet({
         withCredentials: true,
-        query: { id },
+        path: {
+          id,
+        },
       }).then((data) => data.data),
   });
 

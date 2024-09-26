@@ -28,6 +28,11 @@ def get_events(
     offset: int | None = None,
 ) -> EventIndexResponse:
     query = select(Event.id).distinct()
+    if start_date is not None:
+        query = query.where(Event.original_article.has(Article.date >= start_date))
+    if end_date is not None:
+        query = query.where(Event.original_article.has(Article.date <= end_date))
+
     if category_ids:
         query = query.join(Event.categories.and_(Category.id.in_(category_ids)))
     relevant_ids = [id for id in session.scalars(query)]
@@ -45,21 +50,14 @@ def get_events(
         event_query = event_query.limit(limit)
     if offset is not None:
         event_query = event_query.offset(offset)
-    if start_date is not None:
-        event_query = event_query.where(
-            Event.original_article.has(Article.date >= start_date)
-        )
-    if end_date is not None:
-        event_query = event_query.where(
-            Event.original_article.has(Article.date <= end_date)
-        )
+
     event_query = event_query.order_by(Event.rating.desc(), Event.date.desc())
 
     events = list(session.scalars(event_query))
     return EventIndexResponse(total_count=total_count, count=len(events), data=events)
 
 
-@router.get("/:id")
+@router.get("/{id}")
 def get_event(
     _: Annotated[User, Depends(get_current_user)],
     event=Depends(retrieve_event),
@@ -67,7 +65,7 @@ def get_event(
     return event
 
 
-@router.get("/:id/notes")
+@router.get("/{id}/notes")
 def get_event_notes(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
@@ -83,7 +81,7 @@ def get_event_notes(
     return notes
 
 
-@router.post("/:id/read")
+@router.post("/{id}/read")
 def read_event(
     id: int,
     user: Annotated[User, Depends(get_current_user)],

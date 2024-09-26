@@ -24,7 +24,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "langchain-test-index-4"  # change to create a new index
+    index_name = "langchain-test-index-5"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 

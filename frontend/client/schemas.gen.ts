@@ -354,6 +354,68 @@ export const LikeTypeSchema = {
   title: "LikeType",
 } as const;
 
+export const LikeDTOSchema = {
+  properties: {
+    point_id: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Point Id",
+    },
+    analysis_id: {
+      type: "integer",
+      title: "Analysis Id",
+    },
+    type: {
+      $ref: "#/components/schemas/LikeType",
+    },
+    user_id: {
+      type: "integer",
+      title: "User Id",
+    },
+  },
+  type: "object",
+  required: ["analysis_id", "type", "user_id"],
+  title: "LikeDTO",
+} as const;
+
+export const LikeDataSchema = {
+  properties: {
+    point_id: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Point Id",
+    },
+    analysis_id: {
+      type: "integer",
+      title: "Analysis Id",
+    },
+    type: {
+      $ref: "#/components/schemas/LikeType",
+    },
+  },
+  type: "object",
+  required: ["analysis_id", "type"],
+  title: "LikeData",
+} as const;
+
+export const LikeTypeSchema = {
+  type: "integer",
+  enum: [1, -1],
+  title: "LikeType",
+} as const;
+
 export const MiniEventDTOSchema = {
   properties: {
     id: {
