@@ -22,11 +22,11 @@ const breakpointConfigMap: Record<
   ComponentProps<typeof ResizablePanel>
 > = {
   [MediaBreakpoint.Sm]: {
-    defaultSize: 25,
-    maxSize: 60,
-    minSize: 20,
-    collapsible: true,
-    collapsedSize: 1,
+    defaultSize: 0,
+    maxSize: 0,
+    minSize: 0,
+    collapsible: false,
+    collapsedSize: 0,
   },
   [MediaBreakpoint.Md]: {
     defaultSize: 20,
@@ -113,7 +113,6 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             )}
             <ResizablePanel
               className="flex flex-1 w-full h-full max-h-full !overflow-y-auto"
-              defaultSize={75}
               order={2}
             >
               {children}
