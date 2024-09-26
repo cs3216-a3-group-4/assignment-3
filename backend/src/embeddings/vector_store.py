@@ -1,3 +1,4 @@
+from typing import List
 from langchain_openai import OpenAIEmbeddings
 
 from langchain_pinecone import PineconeVectorStore
@@ -9,7 +10,7 @@ from src.common.constants import LANGCHAIN_TRACING_V2
 from src.common.constants import OPENAI_API_KEY
 from src.common.constants import PINECONE_API_KEY
 
-from src.scrapers.guardian.get_analyses import get_analyses
+from src.events.models import Analysis
 
 import os
 import time
@@ -52,17 +53,15 @@ def create_vector_store():
 vector_store = create_vector_store()
 
 
-def store_documents():
+def store_documents(analysis_list: List[Analysis]):
     documents = []
-
-    analysis_list = get_analyses()
     for analysis in analysis_list:
         document = Document(
-            page_content=analysis.get("content"),
+            page_content=analysis.content,
             metadata={
-                "id": analysis.get("id"),
-                "event_id": analysis.get("event_id"),
-                "category_id": analysis.get("category_id"),
+                "id": analysis.id,
+                "event_id": analysis.event_id,
+                "category_id": analysis.category_id,
             },
         )
         documents.append(document)
