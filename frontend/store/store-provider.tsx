@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import qs from "qs";
 
 import { client } from "@/client";
 
@@ -12,6 +13,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   client.setConfig({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
     withCredentials: true,
+    paramsSerializer: (params) => {
+      return qs.stringify(params, { indices: false });
+    },
   });
 
   return (
