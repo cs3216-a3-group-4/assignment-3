@@ -8,6 +8,7 @@ import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
 import { useUpdateTopEventsPeriod } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
+import { parseDate } from "@/utils/date";
 
 const enum Period {
   Day = 1,
@@ -32,38 +33,33 @@ const DEFAULT_EVENT_PERIOD = Period.Week;
 
 /* This component should only be rendered to authenticated users */
 const Home = () => {
-  // TODO: handle this merge conflict
-  const eventStartDate = useMemo(() => {
-    const date = new Date();
-    date.setDate(date.getDate() - Period.Week);
-    return date;
-  }, []);
-
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [selectedPeriod, setSelectedPeriod] =
     useState<Period>(DEFAULT_EVENT_PERIOD);
+
   const user = useUserStore((state) => state.user);
   const updateTopEventsMutation = useUpdateTopEventsPeriod();
   const router = useRouter();
 
-  if (!user!.categories.length) {
-    router.push("/onboarding");
-  }
+  const eventPeriod = useMemo(
+    () =>
+      user?.top_events_period ? user.top_events_period : DEFAULT_EVENT_PERIOD,
+    [user?.top_events_period],
+  );
+
+  const eventStartDate = useMemo(() => {
+    const eventStartDate = new Date();
+    eventStartDate.setDate(eventStartDate.getDate() - eventPeriod);
+    return eventStartDate;
+  }, [eventPeriod]);
+
+  useEffect(() => setSelectedPeriod(eventPeriod), [eventPeriod]);
 
   useEffect(() => {
     const fetchTopEvents = async () => {
-      // TODO: resolve this merge conflict
       setIsLoaded(false);
-      const dateNow = new Date();
-      const eventStartDate = new Date(dateNow);
-      const eventPeriod = user?.top_events_period
-        ? user.top_events_period
-        : DEFAULT_EVENT_PERIOD;
-      setSelectedPeriod(eventPeriod);
-      eventStartDate.setDate(dateNow.getDate() - eventPeriod);
-
       const formattedEventStartDate = eventStartDate
         .toISOString()
         .split("T")[0];
@@ -85,8 +81,8 @@ const Home = () => {
           },
         };
       }
-      const response = await getEventsEventsGet(eventQuery);
 
+      const response = await getEventsEventsGet(eventQuery);
       if (response.error) {
         console.log(response.error);
       } else {
@@ -95,12 +91,9 @@ const Home = () => {
       }
     };
 
+    user?.top_events_period && setSelectedPeriod(user.top_events_period);
     fetchTopEvents();
   }, [user, eventStartDate]);
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
 
   // Handle the option selection and close dropdown
   const handleSelection = (period: Period) => {
@@ -113,27 +106,34 @@ const Home = () => {
     setShowDropdown(false);
   };
 
+  if (!user!.categories.length) {
+    router.push("/onboarding");
+  }
+
   return (
     <div className="relative w-full h-full">
       <div
         className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
         id="home-page"
       >
-        <div className="flex flex-col w-full py-8">
-          <div className="flex flex-col mb-8 gap-y-2 mx-8 md:mx-16 xl:mx-32">
-            <span className="text-sm text-muted-foreground">
-              {new Date().toDateString()}
-            </span>
-            <div className="flex items-center gap-x-2">
-              <h1 className="text-3xl 2xl:text-4xl font-bold">
+        <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
+          {/* TODO: x-padding here is tied to the news article */}
+          <div
+            className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
+            id="homePage"
+          >
+            <div className="flex">
+              <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
                 What happened this
-              </h1>
+              </span>
               <div className="relative">
                 <button
-                  className="flex items-center space-x-2 text-3xl 2xl:text-4xl font-bold font-bold hover:underline"
-                  onClick={toggleDropdown}
+                  className="flex items-center space-x-2 text-3xl 2xl:text-4xl font-bold hover:underline"
+                  onClick={() => setShowDropdown(!showDropdown)}
                 >
-                  <span>{getDisplayValueFor(selectedPeriod)}</span>
+                  <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
+                    &nbsp;{getDisplayValueFor(selectedPeriod)}
+                  </span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
                 {showDropdown && (
@@ -162,27 +162,10 @@ const Home = () => {
                 )}
               </div>
             </div>
-          </div>
-
-          {/* TODO: resolve this merge conflict */}
-          {/* <div className="relative w-full h-full">
-      <div
-        className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
-        id="home-page"
-      >
-        <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8"> */}
-          {/* TODO: x-padding here is tied to the news article */}
-          {/* <div
-            className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
-            id="homePage"
-          >
-            <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-              What happened this week
-            </h1>
             <span className="text-primary text-lg">
               {parseDate(eventStartDate)} - {parseDate(new Date())}
             </span>
-          </div> */}
+          </div>
 
           <div className="flex flex-col w-full">
             {!isLoaded ? (
