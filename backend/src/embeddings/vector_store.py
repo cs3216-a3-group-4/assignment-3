@@ -6,7 +6,6 @@ from pinecone import Pinecone, ServerlessSpec
 from langchain_core.documents import Document
 
 from src.common.constants import LANGCHAIN_API_KEY
-from src.common.constants import LANGCHAIN_TRACING_V2
 from src.common.constants import OPENAI_API_KEY
 from src.common.constants import PINECONE_API_KEY
 
@@ -15,7 +14,6 @@ from src.events.models import Analysis
 import os
 import time
 
-os.environ["LANGCHAIN_TRACING_V2"] = LANGCHAIN_TRACING_V2
 os.environ["LANGCHAIN_API_KEY"] = LANGCHAIN_API_KEY
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
@@ -25,7 +23,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "langchain-test-index-5"  # change to create a new index
+    index_name = "main-index-1"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
