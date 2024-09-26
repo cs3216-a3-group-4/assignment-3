@@ -509,10 +509,14 @@ export const ProfileUpdateSchema = {
             },
             type: 'array',
             title: 'Category Ids'
+        },
+        top_events_period: {
+            type: 'integer',
+            title: 'Top Events Period'
         }
     },
     type: 'object',
-    required: ['category_ids'],
+    required: [],
     title: 'ProfileUpdate'
 } as const;
 
@@ -588,6 +592,11 @@ export const UserPublicSchema = {
             },
             type: 'array',
             title: 'Categories'
+        },
+        top_events_period: {
+            type: 'integer',
+            title: 'Top Events Period',
+            default: 7,
         }
     },
     type: 'object',

@@ -131,7 +131,8 @@ export type PointMiniDTO = {
 };
 
 export type ProfileUpdate = {
-    category_ids: Array<(number)>;
+    category_ids?: Array<(number)>;
+    top_events_period?: number;
 };
 
 export type ReadDTO = {
@@ -154,6 +155,7 @@ export type UserPublic = {
     id: number;
     email: string;
     categories: Array<CategoryDTO>;
+    top_events_period?: number;
 };
 
 export type UserQuestionMiniDTO = {

@@ -1,5 +1,5 @@
 from enum import Enum
-from sqlalchemy import Column, ForeignKey, Table
+from sqlalchemy import Column, ForeignKey, Integer, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.common.base import Base
 from src.events.models import Category
@@ -29,6 +29,7 @@ class User(Base):
 
     categories: Mapped[list[Category]] = relationship(secondary=user_category_table)
     notes: Mapped[list[Note]] = relationship("Note", backref="user")
+    top_events_period: Mapped[int] = mapped_column(Integer, default = 7)
 
 
 class PasswordReset(Base):

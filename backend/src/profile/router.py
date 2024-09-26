@@ -18,15 +18,19 @@ def update_profile(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
 ) -> UserPublic:
-    categories = session.scalars(
-        select(Category).where(Category.id.in_(data.category_ids))
-    ).all()
-
     user = session.get(User, user.id)
-    user.categories = categories
 
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    if data.category_ids:
+        categories = session.scalars(
+            select(Category).where(Category.id.in_(data.category_ids))
+        ).all()
+        user.categories = categories
+    if data.top_events_period:
+        user.top_events_period = data.top_events_period
+
+    if data.category_ids or data.top_events_period:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
 
     return user
