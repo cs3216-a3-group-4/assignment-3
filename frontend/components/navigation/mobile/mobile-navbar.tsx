@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -42,20 +44,21 @@ function MobileNavbar() {
           <MobileSidebar />
         </div>
         <div className="flex items-center gap-x-4 justify-end min-h-[52px] max-h-[52px] min-w-fit ml-8">
-          {isLoggedIn ? (
-            <UserProfileButton />
-          ) : (
-            <nav className="flex items-center gap-x-4">
-              <Link href="/register">
-                <Button size="sm">Register</Button>
-              </Link>
-              <Link href="/login">
-                <Button size="sm" variant="outline">
-                  Log in
-                </Button>
-              </Link>
-            </nav>
-          )}
+          {isLoggedIn !== undefined &&
+            (isLoggedIn ? (
+              <UserProfileButton />
+            ) : (
+              <nav className="flex items-center gap-x-4">
+                <Link href="/register">
+                  <Button size="sm">Register</Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="sm" variant="outline">
+                    Log in
+                  </Button>
+                </Link>
+              </nav>
+            ))}
         </div>
       </div>
     </header>

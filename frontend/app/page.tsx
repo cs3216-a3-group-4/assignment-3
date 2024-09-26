@@ -6,6 +6,11 @@ import { useUserStore } from "@/store/user/user-store-provider";
 
 const RootPage = () => {
   const isLoggedIn = useUserStore((store) => store.isLoggedIn);
+
+  if (isLoggedIn === undefined) {
+    return <>Loading</>;
+  }
+
   return isLoggedIn ? <Home /> : <Landing />;
 };
 
