@@ -1,14 +1,14 @@
 import json
 from src.events.process import add_event_to_db
 from src.events.process import EventLLM
-from src.embeddings.vector_store import store_documents
 
 
 # Populate the db with events from lm_events_output.json
 def populate() -> list[int]:
     ids = []
-    with open("lm_events_output.json", "r") as f:
+    with open("backend/lm_events_output.json", "r") as f:
         events = json.load(f)
+
     for event in events:
         event_obj = EventLLM(
             title=event.get("title"),
@@ -23,14 +23,3 @@ def populate() -> list[int]:
         if success:
             ids.append(id)
     return ids
-
-
-def set_up():
-    # add events + analyses to db
-    populate()
-    # store analyses in vector store
-    store_documents()
-
-
-if __name__ == "__main__":
-    set_up()

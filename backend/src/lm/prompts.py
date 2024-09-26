@@ -136,7 +136,7 @@ QUESTION_ANALYSIS_GEN_SYSPROMPT = """
                         "event": "The title of the event",
                         "event_description": "The description of the event",
                         "analysis": "The analysis of how the event can be used as an example to support the argument in the question",
-                        "elaboration": The elaboration of the point using the example event and analysis as support for the argument
+                        "elaboration": The elaboration of the point using the example event and analysis as support for the for-point
                     }
                 ],
             }
@@ -149,9 +149,10 @@ QUESTION_ANALYSIS_GEN_SYSPROMPT = """
                         "event": "The title of the event",
                         "event_description": "The description of the event",
                         "analysis": "The analysis of how the event can be used as an example to refute the argument in the question",
+                        "elaboration": The elaboration of the point using the example event and analysis as support for the against-point
                     }
                 ],
-                "elaboration": The elaboration of the point using the example event and analysis as support for the argument
+                
             }
         ]
     }

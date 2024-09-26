@@ -14,8 +14,6 @@ from src.scrapers.guardian.get_articles import get_articles
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
 
 from src.lm.generate_events import generate_events
-from src.scripts.populate import populate
-from src.embeddings.vector_store import store_documents
 
 
 def query_page(page: int, date):
@@ -159,10 +157,6 @@ async def run(limit: int = 30):
     articles = get_articles(limit)
     # Generate events from articles, written to lm_events_output.json
     await generate_events(articles)
-    # Populate the database with events from lm_events_output.json
-    populate()
-    # Store analyses in vector store
-    store_documents()
 
 
 if __name__ == "__main__":
