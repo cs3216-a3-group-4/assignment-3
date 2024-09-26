@@ -28,35 +28,14 @@ const PanelLayout = ({
 
   return (
     <>
-      <ResizablePanelGroup
-        className="flex flex-1 w-full h-full min-h-full max-h-full"
-        direction="horizontal"
-        onLayout={onLayout}
-      >
-        <ResizablePanel
-          className="flex w-full h-full"
-          collapsedSize={1}
-          collapsible
-          defaultSize={sidebarSize}
-          id="sidebar"
-          minSize={1}
-          onCollapse={() => setIsCollapsed(true)}
-          onExpand={() => setIsCollapsed(false)}
-          order={1}
-        >
+      <div className="flex flex-1 w-full h-full min-h-full max-h-full">
+        <div className="flex w-[320px] h-full">
           <Sidebar />
-        </ResizablePanel>
-        <ResizableHandle withHandle={isCollapsed} />
-
-        <ResizablePanel
-          className="flex flex-1 w-full h-full max-h-full !overflow-y-auto"
-          defaultSize={mainContentSize}
-          id="main-content"
-          order={2}
-        >
+        </div>
+        <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto">
           {children}
-        </ResizablePanel>
-      </ResizablePanelGroup>
+        </div>
+      </div>
     </>
   );
 };
