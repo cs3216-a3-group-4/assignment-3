@@ -1,34 +1,28 @@
-import { useRouter } from "next/navigation";
 import { LucideIcon } from "lucide-react";
-
 interface SidebarItemWithIconProps {
   Icon: LucideIcon;
   label: string;
-  categoryId: number;
+  isActive?: boolean;
+  onClick?: () => void;
 }
 
 const SidebarItemWithIcon = ({
   Icon,
   label,
-  categoryId,
+  isActive = false,
+  onClick,
 }: SidebarItemWithIconProps) => {
-  const router = useRouter();
-
-  const onClickCategory = () => router.push(`/categories/${categoryId}`);
-
   return (
     <div
-      className="flex rounded px-2 py-1.5 hover:bg-muted-foreground/5 text-sm font-medium items-center"
-      onClick={onClickCategory}
+      className={`flex rounded px-2 py-1.5 items-center ${isActive ? "text-primary-alt-800/90 font-medium bg-primary-400/30" : "text-primary-alt-foreground/70 hover:bg-primary-200/20"}`}
+      onClick={onClick}
     >
       <Icon
-        className="mr-3 text-muted-foreground"
-        size={16}
-        strokeWidth={1.8}
+        className="mr-3 flex-shrink-0"
+        size={20}
+        strokeWidth={isActive ? 1.9 : 1.7}
       />
-      <span className="text-offblack/80 pointer-events-none hover:text-offblack">
-        {label}
-      </span>
+      <span className="pointer-events-none">{label}</span>
     </div>
   );
 };

@@ -31,7 +31,7 @@ def get_categories():
         return {category.name: category.id for category in categories}
 
 
-def add_event_to_db(event: EventLLM) -> bool:
+def add_event_to_db(event: EventLLM) -> tuple[bool, int]:
     """Returns whether adding the event was successful.
     Can fail if category does not exist/article is invalid."""
     categories = get_categories()
@@ -48,7 +48,7 @@ def add_event_to_db(event: EventLLM) -> bool:
         ).first()
         if eventORM:
             print("duplicate detected:", event)
-            return False
+            return False, 0
 
         try:
             article = session.get(Article, event.original_article_id)
@@ -82,11 +82,13 @@ def add_event_to_db(event: EventLLM) -> bool:
 
             session.add(eventORM)
             session.commit()
+            session.refresh(eventORM)
+            return True, eventORM.id
 
         except Exception as e:  # noqa: E722
             print("something went wrong:", event)
             print(e)
-            return False
+            return False, 0
 
 
 if __name__ == "__main__":

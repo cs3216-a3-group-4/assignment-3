@@ -4,6 +4,7 @@ import { ComponentProps, ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
+import MobileNavbar from "@/components/navigation/mobile/mobile-navbar";
 import Navbar from "@/components/navigation/navbar";
 import Sidebar from "@/components/navigation/sidebar/sidebar";
 import {
@@ -22,11 +23,11 @@ const breakpointConfigMap: Record<
   ComponentProps<typeof ResizablePanel>
 > = {
   [MediaBreakpoint.Sm]: {
-    defaultSize: 25,
-    maxSize: 60,
-    minSize: 20,
-    collapsible: true,
-    collapsedSize: 1,
+    defaultSize: 0,
+    maxSize: 0,
+    minSize: 0,
+    collapsible: false,
+    collapsedSize: 0,
   },
   [MediaBreakpoint.Md]: {
     defaultSize: 20,
@@ -86,20 +87,21 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const isOnboarding = pathname === "/onboarding";
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
+    <div className="relative flex min-h-screen max-h-screen flex-col bg-background">
       <Navbar />
-      <main>
+      <MobileNavbar />
+      <main className="flex w-full h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
         {isOnboarding ? (
           children
         ) : (
           <ResizablePanelGroup
-            className="flex flex-1 w-full h-[calc(100vh_-_72px)]"
+            className="flex flex-1 w-full h-full min-h-full max-h-full"
             direction="horizontal"
           >
             {isLoggedIn && (
               <>
                 <ResizablePanel
-                  className="flex w-full"
+                  className="flex w-full h-full"
                   id="sidebar"
                   onCollapse={() => setIsCollapsed(true)}
                   onExpand={() => setIsCollapsed(false)}
@@ -111,10 +113,11 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                 <ResizableHandle withHandle={isCollapsed} />
               </>
             )}
-            <ResizablePanel defaultSize={75} order={2}>
-              <div className="flex flex-1 w-full h-[calc(100vh_-_72px)] min-h-[calc(100vh_-_72px)] overflow-y-scroll">
-                {children}
-              </div>
+            <ResizablePanel
+              className="flex flex-1 w-full h-full max-h-full !overflow-y-auto"
+              order={2}
+            >
+              {children}
             </ResizablePanel>
           </ResizablePanelGroup>
         )}

@@ -1,8 +1,14 @@
+from datetime import datetime
 from bs4 import BeautifulSoup
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from src.common.database import engine
 import httpx
 import random
 import json
 import asyncio
+
+from src.events.models import Article
 
 
 def get_url(category_slug: str, page: int):
@@ -22,17 +28,37 @@ CATEGORIES = {
     # Sustainability section does not have a view more button in CNA
 }
 
+with Session(engine) as session:
+    urls = set(session.scalars(select(Article.url)))
 
-async def scrape(category: str, pages: int = 10):
+
+async def scrape(category: str, pages: int = 10, start_date: datetime = None):
     slug = CATEGORIES[category]
-    data = []
+    with open(f"./src/scrapers/cna/data/{category}.json") as f:
+        data = json.load(f)
     error_count = 0
     async with httpx.AsyncClient() as client:
         for i in range(pages):
             url = get_url(slug, i)
             try:
                 resp = (await client.get(url)).json()
-                data.append(resp["result"])
+                result = resp["result"]
+                terminate = False
+                if start_date:
+                    result = [
+                        row
+                        for row in result
+                        if datetime.fromisoformat(row["date"].split("T")[0])
+                        >= start_date
+                    ]
+                    if len(result) != len(resp["result"]):
+                        terminate = True
+                    # eliminate duplicates
+                    result = [row for row in result if row["absolute_url"] not in urls]
+                data.append(result)
+                if terminate:
+                    print("Reached end of date limit", i, category)
+                    break
                 await asyncio.sleep(3 + (4 * random.random()))
                 # save every 10 pages in case something bad happens
                 error_count = 0
@@ -40,7 +66,8 @@ async def scrape(category: str, pages: int = 10):
                     print(f"{category}: {i}")
                     with open(f"./src/scrapers/cna/data/{category}.json", "w") as f:
                         json.dump(data, f)
-            except:  # noqa: E722
+            except Exception as e:  # noqa: E722
+                print(e)
                 print(
                     f"Something went wrong for {category}, {i}. Might have ran out of pages."
                 )
@@ -51,12 +78,14 @@ async def scrape(category: str, pages: int = 10):
                     print(f"Terminated - {category}")
                     return
 
-    with open(f"./src/scrapers/data/{category}.json", "w") as f:
+    with open(f"./src/scrapers/cna/data/{category}.json", "w") as f:
         json.dump(data, f)
 
 
-async def scrape_index():
-    await asyncio.gather(*[scrape(category, 200) for category in CATEGORIES])
+async def scrape_index(start_date: datetime = None):
+    await asyncio.gather(
+        *[scrape(category, 200, start_date) for category in CATEGORIES]
+    )
 
 
 async def scrape_single_page(url):
@@ -75,16 +104,17 @@ async def scrape_single_page(url):
 scraped_slugs = set()
 
 
-async def scrape_category(category: str):
+async def scrape_category(category: str, start_date: datetime = None):
     with open(f"./src/scrapers/cna/data/{category}.json") as f:
         data = json.load(f)
     skipped = 0
 
     for index, page in enumerate(data):
-        if category == "Asia" and index <= 58:
-            continue
         for item in page:
             if item["type"] != "article":
+                continue
+            date = item["date"]
+            if start_date and datetime.fromisoformat(date.split("T")[0]) < start_date:
                 continue
             try:
                 absolute_url = item["absolute_url"]
@@ -103,15 +133,16 @@ async def scrape_category(category: str):
         print(f"scraped: {category}, {index}(x10)")
 
 
-async def scrape_all_categories():
-    asyncio.gather(*[scrape_category(category) for category in CATEGORIES])
+async def scrape_all_categories(start_date: datetime = None):
+    await asyncio.gather(
+        *[scrape_category(category, start_date=start_date) for category in CATEGORIES]
+    )
+
+
+async def scrape_from_date(start_date: datetime):
+    await scrape_index(start_date=start_date)
+    await scrape_all_categories(start_date=start_date)
 
 
 if __name__ == "__main__":
-    # asyncio.run(scrape_index())
-    # asyncio.run(
-    #     scrape_single_page(
-    #         "https://www.channelnewsasia.com/experiences/world-50-best-hotels-2024-4614831"
-    #     )
-    # )
-    asyncio.run(scrape_all_categories())
+    asyncio.run(scrape_from_date(start_date=datetime(2024, 9, 20)))

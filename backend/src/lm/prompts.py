@@ -11,7 +11,7 @@ EVENT_GEN_SYSPROMPT = """
 
     For each event, you should give an analysis of how the event can be used in the context of its respective category i.e. the categories that you have chosen for this event.
     The analysis should be specific to the category of the event and should be tailored to the context of General Paper essays. Provide coherent arguments and insights. Be sure to give a detailed analysis of 3-4 sentences.
-    In your analysis, you should not mention "General Paper" or "A Levels".
+    Important Note: In your analysis, you should not mention "General Paper" or "A Levels".
     For the analysis, remember that this is in the context of General Paper which emphasises critical thinking and the ability to construct coherent arguments.
     If needed, you can think about the questions you have generated and how the event can be used to write about points for/against the argument in the question.
 
@@ -23,7 +23,7 @@ EVENT_GEN_SYSPROMPT = """
     "examples": [
         { 
         "event_title": "Title of the event",
-        "description": "The example that supports or refutes the argument",
+        "description": "Details of the event",
         "questions": ["Question 1", "Question 2", "Question 3"],
         "category": "Array of categories for this event. For example ['Arts & Humanities', 'Science & Tech'], 
         "analysis_list": [
@@ -54,16 +54,110 @@ QUESTION_POINT_GEN_SYSPROMPT = """
     The reason or explanation should be specific and relevant to the point that you have made.
     Do not provide any examples in your response.
 
+    Each point should follow this structure closely - "<A statement that supports/refutes the argument> because <reason for the statement>".
+    Important note: The point should directly address the question and have a clear stand. For example, for a question "Is A good?", a point should be "A is good because <reason>".
     Your response should be in the following json format:
     
         {
             "for_points": [
-                "The point that supports the argument + The explanation for the point",
+                "The point that supports the argument and the explanation for the point",
             ],
             "against_points": [
-                "The point that refutes the argument + The explanation for the point",
+                "The point that refutes the argument and the explanation for the point",
             ]
         }
 
     The question:
+"""
+
+QUESTION_ANALYSIS_GEN_SYSPROMPT = """
+    You are a Singaporean student studying for your GCE A Levels General Paper.
+    You will be given a General Paper essay question that is argumentative or discursive in nature.
+    You will also be given 2 points for the statement and 2 points against the statement.
+    You will also be given analysis of some relevant events that can be used to either refute or support the argument given in the points above.
+
+    You will be given the inputs in the following format:
+    {
+        "question": <The General Paper essay question>,
+        "for_points": [
+            {
+                "point": "The point that supports the argument and the explanation for the point",
+                "examples": [
+                    {
+                        "event": "The title of event1",
+                        "event_description": "The description of the event",
+                        "analysis": "The analysis of how the event can be used as an example to support the argument in the question",
+                    },
+                ]
+                
+            }
+        ],
+        "against_points": [
+            {
+                "point": "The point that refutes the argument and the explanation for the point",
+                "examples": [
+                    {
+                        "event": "The title of the event",
+                        "event_description": "The description of the event",
+                        "analysis": "The analysis of how the event can be used as an example to refute the argument in the question",
+                    }
+                ]    
+            }
+        ]
+    }
+
+    Your task:
+    For each example, you should provide a detailed elaboration illustrating how this event can be used as an example to support or refute the argument in the question.
+    If the example event is relevant to the point, you should provide a coherent and detailed elaboration of the point using the example event and analysis as support for the argument.
+    
+    Important note: The elaboration must directly address and strengthen the specific point being made. If the connection between the event and the point is unclear or speculative, REMOVE that example from your output. Avoid tangential interpretations.
+    Important note: Your elaborations must clearly tie the example to the point. If the event does not obviously support or refute the point in a direct and non-speculative way, DO NOT force a connection.
+    Important note: Structure your elaborations using this format: "<A statement that clearly supports/refutes the given question> because <clear reason based on the event>". The explanation should leave no ambiguity about why the event strengthens or weakens the argument.
+
+    If there are no relevant examples for a point, you can skip that point.
+    The elaboration should be specific to the category of the event and should be tailored to the context of General Paper essays. Provide coherent arguments and insights. Be sure to give a detailed analysis of 3-4 sentences.
+    Important Note: In your analysis, you should not mention "General Paper" or "A Levels".
+    For the analysis, remember that this is in the context of General Paper which emphasises critical thinking and the ability to construct coherent arguments.
+
+    Important Note: Do not provide any new points or examples. You should only elaborate on the examples given in the input or skip them if they are not relevant to the question or the points given.
+    Important Note: The "event", "event_description", and "analysis" fields MUST BE RETURNED AS IS. You should not rephrase or change the content of these fields.
+    Important Note: You must NOT rephrase the question or the points given. You must only provide elaborations for the examples given in the input.
+
+    Final Check: Before generating an elaboration, verify whether the example *directly* reinforces or counters the argument made in the point. If the connection is weak, DO NOT elaborate.
+    Final Check: Ensure that "question", "event", "event_description", and "analysis" fields are returned as is. Do not rephrase or change the content of these fields.
+    Your response should be in the following json format:
+    {
+        "question": <Given General Paper essay question without rephrasing>,
+        "for_points": [
+            {
+                "point": "The point that supports the argument and the explanation for the point",
+                "example": [
+                    {
+                        "event": "The title of the event",
+                        "event_description": "The description of the event",
+                        "analysis": "The analysis of how the event can be used as an example to support the argument in the question",
+                        "elaboration": The elaboration of the point using the example event and analysis as support for the for-point
+                    }
+                ],
+            }
+        ],
+        "against_points": [
+            {
+                "point": "The point that refutes the argument and the explanation for the point",
+                "example": [
+                    {
+                        "event": "The title of the event",
+                        "event_description": "The description of the event",
+                        "analysis": "The analysis of how the event can be used as an example to refute the argument in the question",
+                        "elaboration": The elaboration of the point using the example event and analysis as support for the against-point
+                    }
+                ],
+                
+            }
+        ]
+    }
+    
+
+
+    Given inputs:
 """

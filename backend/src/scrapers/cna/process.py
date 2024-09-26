@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from src.events.models import Article, ArticleSource
 from src.common.database import engine
@@ -49,6 +50,10 @@ class CNAArticle(BaseModel):
 async def process(category: str):
     with open(f"./src/scrapers/cna/data/{category}.json") as f:
         data = json.load(f)
+
+    with Session(engine) as session:
+        urls = set(session.scalars(select(Article.url)))
+    count = 0
     for page_index, page in enumerate(data):
         for index, item in enumerate(page):
             try:
@@ -58,7 +63,18 @@ async def process(category: str):
                     continue
                 if article.uuid in processed_ids:
                     continue
+                if article.absolute_url in urls:
+                    continue
                 processed_ids.add(article.uuid)
+
+                # check again in case there are duplicates
+                # probably a slight race condition here
+                with Session(engine) as session:
+                    article_orm = session.scalar(
+                        select(Article).where(Article.url == article.absolute_url)
+                    )
+                    if article_orm:
+                        continue
 
                 # Read body text from scrape.py
                 with open(
@@ -84,10 +100,12 @@ async def process(category: str):
                 with Session(engine) as session:
                     session.add(article_orm)
                     session.commit()
+                    count += 1
 
             except Exception as e:
                 print(f"{category}: something went wrong with {page_index}, {index}")
                 print(e)
+    print(f"Added {count} articles for {category}")
 
 
 async def process_all_categories():

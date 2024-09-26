@@ -6,80 +6,82 @@ import {
   type Options,
   urlSearchParamsBodySerializer,
 } from "./client";
-import { categoryIdsSerializer } from "./core/utils";
 import type {
-  AskGpQuestionUserQuestionsAskGpQuestionGetData,
-  AskGpQuestionUserQuestionsAskGpQuestionGetError,
-  AskGpQuestionUserQuestionsAskGpQuestionGetResponse,
+  SignUpAuthSignupPostData,
+  SignUpAuthSignupPostError,
+  SignUpAuthSignupPostResponse,
+  LogInAuthLoginPostData,
+  LogInAuthLoginPostError,
+  LogInAuthLoginPostResponse,
+  LoginGoogleAuthLoginGoogleGetError,
+  LoginGoogleAuthLoginGoogleGetResponse,
   AuthGoogleAuthGoogleGetData,
   AuthGoogleAuthGoogleGetError,
   AuthGoogleAuthGoogleGetResponse,
-  ChangePasswordAuthChangePasswordPutData,
-  ChangePasswordAuthChangePasswordPutError,
-  ChangePasswordAuthChangePasswordPutResponse,
+  GetUserAuthSessionGetData,
+  GetUserAuthSessionGetError,
+  GetUserAuthSessionGetResponse,
+  LogoutAuthLogoutGetError,
+  LogoutAuthLogoutGetResponse,
+  RequestPasswordResetAuthPasswordResetPostData,
+  RequestPasswordResetAuthPasswordResetPostError,
+  RequestPasswordResetAuthPasswordResetPostResponse,
   CompletePasswordResetAuthPasswordResetPutData,
   CompletePasswordResetAuthPasswordResetPutError,
   CompletePasswordResetAuthPasswordResetPutResponse,
-  CreateNoteNotesPostData,
-  CreateNoteNotesPostError,
-  CreateNoteNotesPostResponse,
-  CreateUserQuestionUserQuestionsPostData,
-  CreateUserQuestionUserQuestionsPostError,
-  CreateUserQuestionUserQuestionsPostResponse,
-  DeleteNoteNotesIdDeleteData,
-  DeleteNoteNotesIdDeleteError,
-  DeleteNoteNotesIdDeleteResponse,
-  GetAllNotesNotesGetData,
-  GetAllNotesNotesGetError,
-  GetAllNotesNotesGetResponse,
+  ChangePasswordAuthChangePasswordPutData,
+  ChangePasswordAuthChangePasswordPutError,
+  ChangePasswordAuthChangePasswordPutResponse,
   GetCategoriesCategoriesGetError,
   GetCategoriesCategoriesGetResponse,
+  UpdateProfileProfilePutData,
+  UpdateProfileProfilePutError,
+  UpdateProfileProfilePutResponse,
+  GetEventsEventsGetData,
+  GetEventsEventsGetError,
+  GetEventsEventsGetResponse,
   GetEventEventsIdGetData,
   GetEventEventsIdGetError,
   GetEventEventsIdGetResponse,
   GetEventNotesEventsIdNotesGetData,
   GetEventNotesEventsIdNotesGetError,
   GetEventNotesEventsIdNotesGetResponse,
-  GetEventsEventsGetData,
-  GetEventsEventsGetError,
-  GetEventsEventsGetResponse,
-  GetPointNotesPointsIdNotesGetData,
-  GetPointNotesPointsIdNotesGetError,
-  GetPointNotesPointsIdNotesGetResponse,
-  GetUserAuthSessionGetData,
-  GetUserAuthSessionGetError,
-  GetUserAuthSessionGetResponse,
-  GetUserQuestionsUserQuestionsGetData,
-  GetUserQuestionsUserQuestionsGetError,
-  GetUserQuestionsUserQuestionsGetResponse,
-  GetUserQuestionUserQuestionsIdGetData,
-  GetUserQuestionUserQuestionsIdGetError,
-  GetUserQuestionUserQuestionsIdGetResponse,
-  LogInAuthLoginPostData,
-  LogInAuthLoginPostError,
-  LogInAuthLoginPostResponse,
-  LoginGoogleAuthLoginGoogleGetError,
-  LoginGoogleAuthLoginGoogleGetResponse,
-  LogoutAuthLogoutGetError,
-  LogoutAuthLogoutGetResponse,
   ReadEventEventsIdReadPostData,
   ReadEventEventsIdReadPostError,
   ReadEventEventsIdReadPostResponse,
-  RequestPasswordResetAuthPasswordResetPostData,
-  RequestPasswordResetAuthPasswordResetPostError,
-  RequestPasswordResetAuthPasswordResetPostResponse,
   SearchWhateverEventsSearchGetData,
   SearchWhateverEventsSearchGetError,
   SearchWhateverEventsSearchGetResponse,
-  SignUpAuthSignupPostData,
-  SignUpAuthSignupPostError,
-  SignUpAuthSignupPostResponse,
+  GetUserQuestionsUserQuestionsGetData,
+  GetUserQuestionsUserQuestionsGetError,
+  GetUserQuestionsUserQuestionsGetResponse,
+  CreateUserQuestionUserQuestionsPostData,
+  CreateUserQuestionUserQuestionsPostError,
+  CreateUserQuestionUserQuestionsPostResponse,
+  GetUserQuestionUserQuestionsIdGetData,
+  GetUserQuestionUserQuestionsIdGetError,
+  GetUserQuestionUserQuestionsIdGetResponse,
+  AskGpQuestionUserQuestionsAskGpQuestionGetData,
+  AskGpQuestionUserQuestionsAskGpQuestionGetError,
+  AskGpQuestionUserQuestionsAskGpQuestionGetResponse,
+  GetAllNotesNotesGetData,
+  GetAllNotesNotesGetError,
+  GetAllNotesNotesGetResponse,
+  CreateNoteNotesPostData,
+  CreateNoteNotesPostError,
+  CreateNoteNotesPostResponse,
   UpdateNoteNotesIdPutData,
   UpdateNoteNotesIdPutError,
   UpdateNoteNotesIdPutResponse,
-  UpdateProfileProfilePutData,
-  UpdateProfileProfilePutError,
-  UpdateProfileProfilePutResponse,
+  DeleteNoteNotesIdDeleteData,
+  DeleteNoteNotesIdDeleteError,
+  DeleteNoteNotesIdDeleteResponse,
+  GetPointNotesPointsIdNotesGetData,
+  GetPointNotesPointsIdNotesGetError,
+  GetPointNotesPointsIdNotesGetResponse,
+  UpsertLikeLikesPostData,
+  UpsertLikeLikesPostError,
+  UpsertLikeLikesPostResponse,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
@@ -287,7 +289,6 @@ export const getEventsEventsGet = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    paramsSerializer: categoryIdsSerializer,
     url: "/events/",
   });
 };
@@ -304,7 +305,7 @@ export const getEventEventsIdGet = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/events/:id",
+    url: "/events/{id}",
   });
 };
 
@@ -322,7 +323,7 @@ export const getEventNotesEventsIdNotesGet = <
     ThrowOnError
   >({
     ...options,
-    url: "/events/:id/notes",
+    url: "/events/{id}/notes",
   });
 };
 
@@ -338,7 +339,7 @@ export const readEventEventsIdReadPost = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/events/:id/read",
+    url: "/events/{id}/read",
   });
 };
 
@@ -410,7 +411,7 @@ export const getUserQuestionUserQuestionsIdGet = <
     ThrowOnError
   >({
     ...options,
-    url: "/user-questions/:id",
+    url: "/user-questions/{id}",
   });
 };
 
@@ -479,7 +480,7 @@ export const updateNoteNotesIdPut = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/notes/:id",
+    url: "/notes/{id}",
   });
 };
 
@@ -495,7 +496,7 @@ export const deleteNoteNotesIdDelete = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...options,
-    url: "/notes/:id",
+    url: "/notes/{id}",
   });
 };
 
@@ -513,6 +514,22 @@ export const getPointNotesPointsIdNotesGet = <
     ThrowOnError
   >({
     ...options,
-    url: "/points/:id/notes",
+    url: "/points/{id}/notes",
+  });
+};
+
+/**
+ * Upsert Like
+ */
+export const upsertLikeLikesPost = <ThrowOnError extends boolean = false>(
+  options: Options<UpsertLikeLikesPostData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    UpsertLikeLikesPostResponse,
+    UpsertLikeLikesPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/likes/",
   });
 };

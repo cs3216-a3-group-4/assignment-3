@@ -35,7 +35,7 @@ const EventDetails = ({ event }: Props) => {
               Icon={categoriesToIconsMap[category]}
               key={category}
               label={categoriesToDisplayName[category]}
-              variant="greygreen" // TODO: this is ugly
+              variant="primary" // TODO: this is ugly
             />
           ))}
         </div>

@@ -1,16 +1,19 @@
-from datetime import datetime
+import asyncio
+from datetime import datetime, timedelta, time
 import httpx
+import os
 
 from src.common.constants import GUARDIAN_API_KEY
 from sqlalchemy import select
 from src.events.models import Article, ArticleSource, Event
 from src.common.database import engine
 from sqlalchemy.orm import Session
+from src.scrapers.cna.process import process_all_categories
+from src.scrapers.cna.scrape import scrape_from_date
+from src.scrapers.guardian.get_articles import get_articles
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
 
 from src.lm.generate_events import generate_events
-from src.scripts.populate import populate
-from src.embeddings.vector_store import store_documents
 
 
 def query_page(page: int, date):
@@ -35,7 +38,7 @@ def query_page(page: int, date):
 
 def get_today_articles():
     result = []
-    cur_date = datetime.now().date()
+    cur_date = datetime.now().date() - timedelta(days=1)
     for i in range(1, 11):
         new_batch = query_page(i, cur_date)
         if len(new_batch) < 50:
@@ -100,10 +103,24 @@ def add_daily_articles_to_db(article: GuardianArticle):
 
 def populate_daily_articles():
     articles = get_today_articles()
-    articles = articles[:1]
+    articles = articles[:20]
     for article in articles:
         article_obj = form_guardian_article_obj(article)
         add_daily_articles_to_db(article_obj)
+
+
+async def populate_daily_articles_cna():
+    # create articles folder if doesnt exist
+    if "articles" not in os.listdir("./src/scrapers/cna"):
+        os.mkdir("./src/scrapers/cna/articles")
+
+    yesterday = datetime.combine(datetime.now() - timedelta(days=1), time.min)
+
+    # this function doesnt care about duplicates and just destroys the json
+    await scrape_from_date(start_date=yesterday)
+    # this function already checks for articles not in db that are in json
+    # may salvage the broken json
+    await process_all_categories()
 
 
 def process_new_articles() -> list[dict]:
@@ -132,14 +149,15 @@ def process_new_articles() -> list[dict]:
 # This should not be an issue as long as we ensure the 25k articles in the database have already been processed
 
 
-def run():
+async def run(limit: int = 30):
     # Add new articles to database
-    populate_daily_articles()
+    await populate_daily_articles_cna()
+    # ADD CNA HERE.
     # Process new articles i.e. find articles that we have not generated events for
-    articles = process_new_articles()
+    articles = get_articles(limit)
     # Generate events from articles, written to lm_events_output.json
-    generate_events(articles)
-    # Populate the database with events from lm_events_output.json
-    populate()
-    # Store analyses in vector store
-    store_documents()
+    await generate_events(articles)
+
+
+if __name__ == "__main__":
+    asyncio.run(run(1000))

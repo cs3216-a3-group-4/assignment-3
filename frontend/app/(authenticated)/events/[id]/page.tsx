@@ -23,6 +23,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       </div>
     );
   }
+
   return (
     data && (
       <div className="flex flex-col mx-8 md:mx-16 xl:mx-56 py-8 w-full h-fit">

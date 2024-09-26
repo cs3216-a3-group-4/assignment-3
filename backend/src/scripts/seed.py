@@ -97,7 +97,7 @@ def test_associations():
         # session.delete(original_article)
 
 
-test_associations()
+# test_associations()
 
 
 def put_sample_events():

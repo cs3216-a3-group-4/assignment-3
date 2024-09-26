@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export enum Category {
-  SciTech = "Science & technology",
+  SciTech = "Science & tech",
   ArtsHumanities = "Arts & humanities",
   Politics = "Politics",
   Media = "Media",
@@ -31,7 +31,7 @@ export enum Category {
 
 export const getCategoryFor = (categoryName: string) => {
   const mappings: Record<string, Category> = {
-    "science & technology": Category.SciTech,
+    "science & tech": Category.SciTech,
     "arts & humanities": Category.ArtsHumanities,
     politics: Category.Politics,
     media: Category.Media,
@@ -51,7 +51,7 @@ export const getCategoryFor = (categoryName: string) => {
 };
 
 export const categoriesToDisplayName: Record<Category, string> = {
-  [Category.SciTech]: "Science & technology",
+  [Category.SciTech]: "Science & tech",
   [Category.ArtsHumanities]: "Arts & humanities",
   [Category.Politics]: "Politics",
   [Category.Media]: "Media",

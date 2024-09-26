@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
+import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
 import { useUpdateTopEventsPeriod } from "@/queries/user";
@@ -31,6 +32,13 @@ const DEFAULT_EVENT_PERIOD = Period.Week;
 
 /* This component should only be rendered to authenticated users */
 const Home = () => {
+  // TODO: handle this merge conflict
+  const eventStartDate = useMemo(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - Period.Week);
+    return date;
+  }, []);
+
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -46,6 +54,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchTopEvents = async () => {
+      // TODO: resolve this merge conflict
       setIsLoaded(false);
       const dateNow = new Date();
       const eventStartDate = new Date(dateNow);
@@ -54,6 +63,7 @@ const Home = () => {
         : DEFAULT_EVENT_PERIOD;
       setSelectedPeriod(eventPeriod);
       eventStartDate.setDate(dateNow.getDate() - eventPeriod);
+
       const formattedEventStartDate = eventStartDate
         .toISOString()
         .split("T")[0];
@@ -86,7 +96,7 @@ const Home = () => {
     };
 
     fetchTopEvents();
-  }, [user]);
+  }, [user, eventStartDate]);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -104,64 +114,96 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-col w-full py-8">
-      <div className="flex flex-col mb-8 gap-y-2 mx-8 md:mx-16 xl:mx-32">
-        <span className="text-sm text-muted-foreground">
-          {new Date().toDateString()}
-        </span>
-        <div className="flex items-center gap-x-2">
-          <h1 className="text-3xl 2xl:text-4xl font-bold">
-            What happened this
-          </h1>
-          <div className="relative">
-            <button
-              className="flex items-center space-x-2 text-3xl 2xl:text-4xl font-bold font-bold hover:underline"
-              onClick={toggleDropdown}
-            >
-              <span>{getDisplayValueFor(selectedPeriod)}</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            {showDropdown && (
-              <div className="absolute mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                <div className="py-1">
-                  <button
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleSelection(Period.Day)}
-                  >
-                    past day
-                  </button>
-                  <button
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleSelection(Period.Week)}
-                  >
-                    week
-                  </button>
-                  <button
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => handleSelection(Period.Month)}
-                  >
-                    month
-                  </button>
-                </div>
+    <div className="relative w-full h-full">
+      <div
+        className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
+        id="home-page"
+      >
+        <div className="flex flex-col w-full py-8">
+          <div className="flex flex-col mb-8 gap-y-2 mx-8 md:mx-16 xl:mx-32">
+            <span className="text-sm text-muted-foreground">
+              {new Date().toDateString()}
+            </span>
+            <div className="flex items-center gap-x-2">
+              <h1 className="text-3xl 2xl:text-4xl font-bold">
+                What happened this
+              </h1>
+              <div className="relative">
+                <button
+                  className="flex items-center space-x-2 text-3xl 2xl:text-4xl font-bold font-bold hover:underline"
+                  onClick={toggleDropdown}
+                >
+                  <span>{getDisplayValueFor(selectedPeriod)}</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                {showDropdown && (
+                  <div className="absolute mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                    <div className="py-1">
+                      <button
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => handleSelection(Period.Day)}
+                      >
+                        past day
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => handleSelection(Period.Week)}
+                      >
+                        week
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => handleSelection(Period.Month)}
+                      >
+                        month
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
+            </div>
+          </div>
+
+          {/* TODO: resolve this merge conflict */}
+          {/* <div className="relative w-full h-full">
+      <div
+        className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
+        id="home-page"
+      >
+        <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8"> */}
+          {/* TODO: x-padding here is tied to the news article */}
+          {/* <div
+            className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
+            id="homePage"
+          >
+            <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
+              What happened this week
+            </h1>
+            <span className="text-primary text-lg">
+              {parseDate(eventStartDate)} - {parseDate(new Date())}
+            </span>
+          </div> */}
+
+          <div className="flex flex-col w-full">
+            {!isLoaded ? (
+              <div className="flex flex-col w-full">
+                <ArticleLoading />
+                <ArticleLoading />
+                <ArticleLoading />
+              </div>
+            ) : (
+              topEvents.map((newsEvent: MiniEventDTO, index: number) => (
+                <NewsArticle key={index} newsEvent={newsEvent} />
+              ))
             )}
           </div>
         </div>
       </div>
-
-      <div className="flex flex-col w-auto mx-4 md:mx-8 xl:mx-24">
-        {!isLoaded ? (
-          <>
-            <ArticleLoading />
-            <ArticleLoading />
-            <ArticleLoading />
-          </>
-        ) : (
-          topEvents.map((newsEvent: MiniEventDTO, index: number) => (
-            <NewsArticle key={index} newsEvent={newsEvent} />
-          ))
-        )}
-      </div>
+      <ScrollToTopButton
+        className="absolute right-4 bottom-4"
+        minHeight={200}
+        scrollElementId="home-page"
+      />
     </div>
   );
 };

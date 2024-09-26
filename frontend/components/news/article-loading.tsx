@@ -1,6 +1,7 @@
 const ArticleLoading = () => {
+  // TODO: fix width
   return (
-    <div className="flex flex-col-reverse animate-pulse py-10 lg:py-6 xl:py-4 gap-x-16 border-y-[1px] lg:border-y-[0px] hover:bg-muted/70 lg:rounded-md px-4 md:px-8">
+    <div className="flex flex-col-reverse lg:flex-row w-full animate-pulse lg:py-6 xl:px-12 xl:py-10 gap-x-28 border-y-[1px] lg:border-y-[0px] hover:bg-muted/70 lg:rounded-md px-4 md:px-8">
       <div className="flex flex-col w-full lg:w-7/12 2xl:w-9/12 3xl:w-10/12">
         <div className="flex flex-row justify-between w-full">
           {/* Article source placeholder */}

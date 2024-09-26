@@ -1,5 +1,5 @@
 "use client";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -10,19 +10,36 @@ export default function RedirectIfNotAuthenticated({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const router = useRouter();
-  const { fetchStatus } = useQuery(getUserProfile());
 
-  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
-  const user = useUserStore((state) => state.user);
+  const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
+    (state) => state,
+  );
+  const {
+    data: userProfile,
+    isSuccess: isUserProfileSuccess,
+    isFetching,
+  } = useQuery(getUserProfile());
 
-  if (fetchStatus !== "fetching") {
-    if (!isLoggedIn) {
-      router.push("/login");
+  useEffect(() => {
+    if (!isFetching) {
+      if (!userProfile) {
+        if (!isLoggedIn) {
+          router.push("/login");
+        }
+        if (isLoggedIn && !userProfile!.categories.length) {
+          router.push("/onboarding");
+        }
+      }
     }
-    if (isLoggedIn && !user!.categories.length) {
-      router.push("/onboarding");
-    }
-  }
+  }, [
+    userProfile,
+    isUserProfileSuccess,
+    setLoggedIn,
+    setNotLoggedIn,
+    isLoggedIn,
+    router,
+    isFetching,
+  ]);
 
   return <Suspense>{children}</Suspense>;
 }
