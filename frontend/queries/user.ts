@@ -37,6 +37,22 @@ export const useUpdateProfile = () => {
   });
 };
 
+export const useUpdateTopEventsPeriod = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ timePeriod }: { timePeriod: number }) => {
+      return updateProfileProfilePut({
+        body: {
+          top_events_period: timePeriod,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.UserProfile] });
+    },
+  });
+};
+
 export const useChangePassword = () => {
   return useMutation({
     mutationFn: ({
