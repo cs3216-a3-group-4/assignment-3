@@ -91,7 +91,7 @@ const Home = () => {
       }
     };
 
-    user?.top_events_period && setSelectedPeriod(user.top_events_period);
+    if (user?.top_events_period) setSelectedPeriod(user.top_events_period);
     fetchTopEvents();
   }, [user, eventStartDate]);
 
