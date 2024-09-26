@@ -32,15 +32,27 @@ const mainBreakpointConfigMap: Record<MediaBreakpoint, number> = {
   [MediaBreakpoint.Xxxl]: 92,
 };
 
+// warning: don't read, you'll vomit. i am desperate.
 const ContentLayout = ({ isLoading, children }: ContentLayoutProps) => {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const mediaBreakpoint = useBreakpointMediaQuery();
   const pathname = usePathname();
   const isOnboarding = pathname === "/onboarding";
 
-  if (isLoading) return <>loading</>;
+  // TODO: fix all loading elements
+  if (isLoading)
+    return (
+      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto">
+        loading
+      </div>
+    );
 
-  if (isOnboarding) return children;
+  if (isOnboarding)
+    return (
+      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto">
+        {children}
+      </div>
+    );
 
   if (!isLoggedIn)
     return (
