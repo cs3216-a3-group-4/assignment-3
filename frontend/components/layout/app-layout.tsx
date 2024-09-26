@@ -4,6 +4,7 @@ import { ComponentProps, ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
+import MobileNavbar from "@/components/navigation/mobile/mobile-navbar";
 import Navbar from "@/components/navigation/navbar";
 import Sidebar from "@/components/navigation/sidebar/sidebar";
 import {
@@ -16,7 +17,6 @@ import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { MediaBreakpoint } from "@/utils/media";
-import MobileNavbar from "@/components/navigation/mobile/mobile-navbar";
 
 const breakpointConfigMap: Record<
   MediaBreakpoint,

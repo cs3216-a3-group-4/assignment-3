@@ -1,4 +1,5 @@
-import { usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,10 +7,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../ui/breadcrumb";
-import { categoriesToDisplayName } from "@/types/categories";
+} from "@/components/ui/breadcrumb";
 import { getCategories } from "@/queries/category";
-import { useQuery } from "@tanstack/react-query";
 
 interface DynamicBreadcrumbProps {
   pathname: string;
@@ -19,6 +18,7 @@ interface DynamicBreadcrumbProps {
 
 // For simplicity, don't return numbers or query string etc
 const DynamicBreadcrumb = ({ pathname }: DynamicBreadcrumbProps) => {
+  const { data: categories, isSuccess } = useQuery(getCategories());
   const segments = pathname
     .split(/[:\/?#\[\]@!$&'()*+,;=]+/)
     .filter((segment) => segment.length > 0);
@@ -38,7 +38,6 @@ const DynamicBreadcrumb = ({ pathname }: DynamicBreadcrumbProps) => {
     }
 
     if (segments[0] === "categories") {
-      const { data: categories, isSuccess } = useQuery(getCategories());
       const category = categories?.find(
         (category) => category.id.toString() === segments[1],
       );
@@ -66,7 +65,7 @@ const DynamicBreadcrumb = ({ pathname }: DynamicBreadcrumbProps) => {
 
     const numSegments = segments.length;
     const breadcrumbItems: JSX.Element[] = segments.map((segment, index) => (
-      <div key={segment} className="inline-flex items-center gap-1.5">
+      <div className="inline-flex items-center gap-1.5" key={segment}>
         <BreadcrumbItem>
           <BreadcrumbPage>
             {segment.charAt(0).toLocaleUpperCase()}
@@ -84,6 +83,7 @@ const DynamicBreadcrumb = ({ pathname }: DynamicBreadcrumbProps) => {
     );
   } catch (error) {
     // pray this doesn't happen
+    console.log(error);
     return <span>{segments?.join("/")}</span>;
   }
 };

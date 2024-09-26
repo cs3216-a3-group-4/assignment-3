@@ -1,21 +1,15 @@
 import { useEffect } from "react";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@radix-ui/react-navigation-menu";
 import { useQuery } from "@tanstack/react-query";
 
 import UserProfileButton from "@/components/auth/user-profile-button";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
-import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
+
 import MobileSidebar from "./mobile-sidebar";
 
 export const NavItems: NavItem[] = [];

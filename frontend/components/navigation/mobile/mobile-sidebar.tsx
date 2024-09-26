@@ -1,17 +1,17 @@
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { HomeIcon } from "lucide-react";
+
+import DynamicBreadcrumb from "@/components/navigation/dynamic-breadcrumb";
+import SidebarItemWithIcon from "@/components/navigation/sidebar/sidebar-item-with-icon";
+import SidebarOtherTopics from "@/components/navigation/sidebar/sidebar-other-topics";
 import {
   Select,
   SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import SidebarOtherTopics from "../sidebar/sidebar-other-topics";
-import DynamicBreadcrumb from "../dynamic-breadcrumb";
-import { HomeIcon } from "lucide-react";
-import SidebarItemWithIcon from "../sidebar/sidebar-item-with-icon";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 const MobileSidebar = () => {
   const pathname = usePathname();
@@ -24,12 +24,12 @@ const MobileSidebar = () => {
       onValueChange={() => setIsCollapsed((prevValue) => !prevValue)}
     >
       <SelectTrigger
+        aria-label="Navbar"
         className={cn(
           "border-muted-foreground/20 flex max-w-full items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
           isCollapsed &&
             "flex h-9 max-w-full shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden",
         )}
-        aria-label="Navbar"
       >
         <SelectValue>
           <DynamicBreadcrumb pathname={pathname} />
