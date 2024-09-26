@@ -126,7 +126,7 @@ const Home = () => {
           >
             <div className="flex">
               <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-                What happened this
+                What happened this&nbsp;
               </span>
               <div className="relative">
                 <button
@@ -134,7 +134,7 @@ const Home = () => {
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
                   <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-                    &nbsp;{getDisplayValueFor(selectedPeriod)}
+                    {getDisplayValueFor(selectedPeriod)}
                   </span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
