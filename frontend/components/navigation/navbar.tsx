@@ -7,6 +7,7 @@ import {
 } from "@radix-ui/react-navigation-menu";
 import { useQuery } from "@tanstack/react-query";
 
+import UserProfileButton from "@/components/auth/user-profile-button";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
@@ -34,8 +35,8 @@ function Navbar() {
   }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b-[1px]">
-      <div className="w-full min-h-[72px] flex items-center justify-between px-8 py-4">
+    <header className="sticky top-0 z-50 w-full border-border bg-primary/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 border-b-[1px]">
+      <div className="w-full min-h-[84px] flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
           <Link className="mr-6 flex items-center gap-x-2" href="/">
             <JippyLogo classname="hidden sm:flex" />
@@ -57,8 +58,10 @@ function Navbar() {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        {!isLoggedIn && (
-          <div className="flex flex-1 items-center gap-x-4 justify-end">
+        <div className="flex flex-1 items-center gap-x-4 justify-end">
+          {isLoggedIn ? (
+            <UserProfileButton />
+          ) : (
             <nav className="flex items-center gap-x-4">
               <Link href="/register">
                 <Button size="sm">Register</Button>
@@ -69,8 +72,8 @@ function Navbar() {
                 </Button>
               </Link>
             </nav>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );

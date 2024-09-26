@@ -3,5 +3,5 @@ export function getNameFromEmail(email?: string) {
 }
 
 export function getInitialFromEmail(email?: string) {
-  return email?.charAt(0);
+  return email?.charAt(0).toUpperCase();
 }

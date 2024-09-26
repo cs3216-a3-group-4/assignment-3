@@ -1,16 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
 import { useUserStore } from "@/store/user/user-store-provider";
+import { parseDate } from "@/utils/date";
 
 const NUM_TOP_EVENTS = 10;
 const DAYS_PER_WEEK = 7;
 
 /* This component should only be rendered to authenticated users */
 const Home = () => {
+  const eventStartDate = useMemo(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - DAYS_PER_WEEK);
+    return date;
+  }, []);
+
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const user = useUserStore((state) => state.user);
@@ -22,9 +29,6 @@ const Home = () => {
 
   useEffect(() => {
     const fetchTopEvents = async () => {
-      const dateNow = new Date();
-      const eventStartDate = new Date(dateNow);
-      eventStartDate.setDate(dateNow.getDate() - DAYS_PER_WEEK);
       const formattedEventStartDate = eventStartDate
         .toISOString()
         .split("T")[0];
@@ -57,31 +61,34 @@ const Home = () => {
     };
 
     fetchTopEvents();
-  }, [user]);
+  }, [user, eventStartDate]);
 
   return (
-    <div className="flex flex-col w-full py-8">
-      <div className="flex flex-col mb-8 gap-y-2 mx-8 md:mx-16 xl:mx-32">
-        <span className="text-sm text-muted-foreground">
-          {new Date().toDateString()}
-        </span>
-        <h1 className="text-3xl 2xl:text-4xl font-bold">
-          What happened this week
-        </h1>
-      </div>
+    <div className="flex w-full h-fit bg-muted py-8">
+      <div className="flex flex-col py-12 w-fit h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
+        {/* TODO: x-padding here is tied to the news article */}
+        <div className="flex flex-col mb-4 gap-y-2 xl:px-12">
+          <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
+            What happened this week
+          </h1>
+          <span className="text-primary text-lg">
+            {parseDate(eventStartDate)} - {parseDate(new Date())}
+          </span>
+        </div>
 
-      <div className="flex flex-col w-auto mx-4 md:mx-8 xl:mx-24">
-        {!isLoaded ? (
-          <>
-            <ArticleLoading />
-            <ArticleLoading />
-            <ArticleLoading />
-          </>
-        ) : (
-          topEvents.map((newsEvent: MiniEventDTO, index: number) => (
-            <NewsArticle key={index} newsEvent={newsEvent} />
-          ))
-        )}
+        <div className="flex flex-col w-auto">
+          {!isLoaded ? (
+            <>
+              <ArticleLoading />
+              <ArticleLoading />
+              <ArticleLoading />
+            </>
+          ) : (
+            topEvents.map((newsEvent: MiniEventDTO, index: number) => (
+              <NewsArticle key={index} newsEvent={newsEvent} />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
