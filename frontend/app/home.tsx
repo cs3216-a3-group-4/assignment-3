@@ -62,7 +62,7 @@ const Home = () => {
 
   return (
     <div className="flex flex-col w-full py-8">
-      <div className="flex flex-col mb-8 gap-y-2 mx-8 md:mx-16 xl:mx-32">
+      <div className="flex flex-col mb-4 gap-y-2 mx-8 md:mx-16 xl:mx-36">
         <h1 className="text-4xl 2xl:text-4xl font-bold text-primary-800">
           What happened this week
         </h1>
