@@ -55,7 +55,7 @@ class EventDetails(BaseModel):
 
 file_path = "lm_events_output.json"
 
-CONCURRENCY = 20
+CONCURRENCY = 150
 
 
 async def generate_events(articles: list[dict]) -> List[EventPublic]:
