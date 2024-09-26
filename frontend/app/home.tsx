@@ -6,33 +6,39 @@ import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
 import { useUserStore } from "@/store/user/user-store-provider";
-
-const NUM_TOP_EVENTS = 10;
+import { useUpdateTopEventsPeriod } from "@/queries/user";
 
 const enum Period {
-  Day = "day",
-  Week = "week",
-  Month = "month",
+  Day = 1,
+  Week = 7,
+  Month = 30,
+};
+
+const getDisplayValueFor = (period: Period) => {
+  switch (period) {
+    case Period.Day:
+      return "past day";
+    case Period.Month:
+      return "month";
+    case Period.Week:
+    default:
+      return "week";
+  }
 }
 
-const PeriodMap: Record<string, number> = {
-  day: 1,
-  week: 7,
-  month: 30,
-};
+const NUM_TOP_EVENTS = 10;
+const DEFAULT_EVENT_PERIOD = Period.Week;
 
 /* This component should only be rendered to authenticated users */
 const Home = () => {
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const [selectedPeriod, setSelectedPeriod] = useState<Period>(Period.Week);
-  const [periodInDays, setPeriodInDays] = useState<number>(
-    PeriodMap[selectedPeriod],
-  );
+  const [selectedPeriod, setSelectedPeriod] = useState<Period>(DEFAULT_EVENT_PERIOD);
   const user = useUserStore((state) => state.user);
-
+  const updateTopEventsMutation = useUpdateTopEventsPeriod();
   const router = useRouter();
+  
   if (!user!.categories.length) {
     router.push("/onboarding");
   }
@@ -42,7 +48,9 @@ const Home = () => {
       setIsLoaded(false);
       const dateNow = new Date();
       const eventStartDate = new Date(dateNow);
-      eventStartDate.setDate(dateNow.getDate() - periodInDays);
+      const eventPeriod = user?.top_events_period ? user.top_events_period : DEFAULT_EVENT_PERIOD;
+      setSelectedPeriod(eventPeriod);
+      eventStartDate.setDate(dateNow.getDate() - eventPeriod);
       const formattedEventStartDate = eventStartDate
         .toISOString()
         .split("T")[0];
@@ -75,7 +83,7 @@ const Home = () => {
     };
 
     fetchTopEvents();
-  }, [user, periodInDays]);
+  }, [user]);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -86,7 +94,7 @@ const Home = () => {
     if (period != selectedPeriod) {
       // Update the text
       setSelectedPeriod(period);
-      setPeriodInDays(PeriodMap[period]);
+      updateTopEventsMutation.mutate({ timePeriod: period });
     }
     // Close dropdown
     setShowDropdown(false);
@@ -107,7 +115,7 @@ const Home = () => {
               className="flex items-center space-x-2 text-3xl 2xl:text-4xl font-bold font-bold hover:underline"
               onClick={toggleDropdown}
             >
-              <span>{selectedPeriod}</span>
+              <span>{getDisplayValueFor(selectedPeriod)}</span>
               <ChevronDown className="w-4 h-4" />
             </button>
             {showDropdown && (
