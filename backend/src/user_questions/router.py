@@ -63,6 +63,16 @@ def get_user_questions(
     return user_questions
 
 
+@router.get("/ask-gp-question")
+def ask_gp_question(question: str):
+    return generate_response(question)
+
+
+@router.get("/gen-points")
+def gen_points(question: str):
+    return get_relevant_analyses(question)
+
+
 @router.get("/{id}")
 def get_user_question(
     id: int,
@@ -124,8 +134,3 @@ def create_user_question(
         .join(Analysis.category)
     )
     return same_user_question
-
-
-@router.get("/ask-gp-question")
-def ask_gp_question(question: str):
-    return generate_response(question)

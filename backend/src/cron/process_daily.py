@@ -10,7 +10,6 @@ from src.embeddings.vector_store import store_documents
 from src.events.models import Analysis
 
 from src.lm.generate_events import (
-    CONCURRENCY,
     EventPublic,
     form_event_json,
     generate_events_from_article,
@@ -18,6 +17,8 @@ from src.lm.generate_events import (
 from src.scripts.populate import populate
 
 file_path = "daily_events.json"
+
+CONCURRENCY = 150
 
 
 async def generate_daily_events(articles: list[dict]) -> List[EventPublic]:
@@ -40,14 +41,9 @@ async def generate_daily_event(article: dict, res: list, semaphore: asyncio.Sema
         await asyncio.sleep(1)
 
 
-# def store_daily_analyses(events: List[EventLLM]):
-#     for event in events:
-#         event.analysis_list.
-
-
 async def process_daily_articles(articles: list[dict]):
     await generate_daily_events(articles)
-    events_ids = populate(file_path=file_path)
+    events_ids = populate()
 
     with Session(engine) as session:
         analyses = session.scalars(

@@ -123,7 +123,7 @@ async def populate_daily_articles_cna():
     await process_all_categories()
 
 
-def process_new_articles() -> list[dict]:
+def process_new_articles():
     with Session(engine) as session:
         result = session.scalars(
             select(Article).where(
@@ -131,18 +131,9 @@ def process_new_articles() -> list[dict]:
                     list(session.scalars(select(Event.original_article_id)))
                 )
             )
-        ).all()
+        )
 
-        articles = []
-
-        for article in result:
-            data_dict = {
-                "id": article.id,
-                "bodyText": article.body,
-            }
-            articles.append(data_dict)
-
-        return articles
+        return result
 
 
 # NOTE: this method should work with no issue as long as the number of calls is less than 500 which is the rate limit by OpenAI
