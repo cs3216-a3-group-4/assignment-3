@@ -1,9 +1,9 @@
 "use client";
 
 import { createElement, useState } from "react";
-import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 
 import { getCategories } from "@/queries/category";
 import { getIconFor } from "@/types/categories";
@@ -11,6 +11,7 @@ import { getIconFor } from "@/types/categories";
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
 
 const SidebarOtherTopics = () => {
+  const router = useRouter();
   const { data: categories, isSuccess } = useQuery(getCategories());
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const numTopics = categories?.length;
@@ -31,13 +32,14 @@ const SidebarOtherTopics = () => {
       <div className={`flex flex-col ${isExpanded ? "" : "hidden"}`}>
         {categories?.map((category) => {
           const categoryIcon = getIconFor(category.name);
+          const onClick = () => router.push(`/categories/${category.id}`);
           return (
             // TODO: active category
             <SidebarItemWithIcon
               Icon={categoryIcon}
-              categoryId={category.id}
               key={category.id}
               label={category.name}
+              onClick={onClick}
             />
           );
         })}

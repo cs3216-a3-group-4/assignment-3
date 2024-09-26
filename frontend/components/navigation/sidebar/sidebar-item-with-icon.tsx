@@ -4,22 +4,20 @@ import { LucideIcon } from "lucide-react";
 interface SidebarItemWithIconProps {
   Icon: LucideIcon;
   label: string;
-  categoryId: number;
   isActive?: boolean;
+  onClick?: () => void;
 }
 
 const SidebarItemWithIcon = ({
   Icon,
   label,
-  categoryId,
   isActive = false,
+  onClick,
 }: SidebarItemWithIconProps) => {
-  const router = useRouter();
-
   return (
     <div
       className={`flex rounded px-2 py-1.5 items-center ${isActive ? "bg-primary-400/30" : "hover:bg-primary-200/20"}`}
-      onClick={() => router.push(`/categories/${categoryId}`)}
+      onClick={onClick}
     >
       <Icon
         className="mr-3 text-primary flex-shrink-0"
