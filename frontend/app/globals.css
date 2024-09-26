@@ -48,6 +48,7 @@ body {
     --foreground: 150 25% 5%;
     --primary: 157 16% 28%;
     --primary-foreground: 120 67% 99%;
+    --primary-alt: 156 44% 64%;
     --secondary: 186 82% 62%;
     --secondary-foreground: 154 92% 5%;
     --accent: 43 84% 69%;
@@ -95,6 +96,18 @@ body {
     --primary-800: 158 16% 20%;
     --primary-900: 153 18% 10%;
     --primary-950: 150 15% 5%;
+
+    --primary-alt-50: 153 44% 95%;
+    --primary-alt-100: 157 45% 90%;
+    --primary-alt-200: 155 43% 80%;
+    --primary-alt-300: 156 44% 70%;
+    --primary-alt-400: 156 44% 60%;
+    --primary-alt-500: 156 44% 50%;
+    --primary-alt-600: 156 44% 40%;
+    --primary-alt-700: 156 44% 30%;
+    --primary-alt-800: 155 43% 20%;
+    --primary-alt-900: 157 45% 10%;
+    --primary-alt-950: 158 44% 5%;
 
     --secondary-50: 186 84% 95%;
     --secondary-100: 186 80% 90%;
