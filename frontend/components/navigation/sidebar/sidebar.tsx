@@ -16,9 +16,9 @@ const Sidebar = () => {
         {/* TODO: active category */}
         <SidebarItemWithIcon
           Icon={HomeIcon}
+          isActive={pathname === "/"}
           label="Home"
           onClick={() => router.push("/")}
-          isActive={pathname === "/"}
         />
       </div>
       <SidebarOtherTopics />

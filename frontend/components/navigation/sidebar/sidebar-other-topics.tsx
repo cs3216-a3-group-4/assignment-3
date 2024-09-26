@@ -42,12 +42,12 @@ const SidebarOtherTopics = () => {
             // TODO: active category
             <SidebarItemWithIcon
               Icon={categoryIcon}
-              key={category.id}
-              label={category.name}
-              onClick={onClick}
               isActive={
                 isCategoryUrl && activeCategoryId === category.id.toString()
               }
+              key={category.id}
+              label={category.name}
+              onClick={onClick}
             />
           );
         })}
