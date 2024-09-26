@@ -29,7 +29,7 @@ class User(Base):
 
     categories: Mapped[list[Category]] = relationship(secondary=user_category_table)
     notes: Mapped[list[Note]] = relationship("Note", backref="user")
-    top_events_period: Mapped[int] = mapped_column(Integer, default = 7)
+    top_events_period: Mapped[int] = mapped_column(Integer, default=7)
 
 
 class PasswordReset(Base):
