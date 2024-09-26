@@ -139,7 +139,7 @@ async def run(limit: int = 30):
     # populate_daily_articles()
     # ADD CNA HERE.
     # Process new articles i.e. find articles that we have not generated events for
-    articles = get_articles()[:limit]
+    articles = get_articles(limit)
     # Generate events from articles, written to lm_events_output.json
     await generate_events(articles)
     # Populate the database with events from lm_events_output.json
