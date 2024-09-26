@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import {
   NavigationMenu,
@@ -59,20 +61,21 @@ function Navbar() {
           </NavigationMenu>
         </div>
         <div className="flex flex-1 items-center gap-x-4 justify-end min-h-[52px] max-h-[52px]">
-          {isLoggedIn ? (
-            <UserProfileButton />
-          ) : (
-            <nav className="flex items-center gap-x-4">
-              <Link href="/register">
-                <Button size="sm">Register</Button>
-              </Link>
-              <Link href="/login">
-                <Button size="sm" variant="outline">
-                  Log in
-                </Button>
-              </Link>
-            </nav>
-          )}
+          {isLoggedIn !== undefined &&
+            (isLoggedIn ? (
+              <UserProfileButton />
+            ) : (
+              <nav className="flex items-center gap-x-4">
+                <Link href="/register">
+                  <Button size="sm">Register</Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="sm" variant="outline">
+                    Log in
+                  </Button>
+                </Link>
+              </nav>
+            ))}
         </div>
       </div>
     </header>

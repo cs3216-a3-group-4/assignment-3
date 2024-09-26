@@ -1,3 +1,5 @@
+"use client";
+
 import NextLink, { LinkProps as InternalLinkProps } from "next/link";
 import { cva, VariantProps } from "class-variance-authority";
 import { ExternalLinkIcon } from "lucide-react";

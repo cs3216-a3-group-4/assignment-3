@@ -1,3 +1,5 @@
+"use client";
+
 import { useMediaQuery } from "usehooks-ts";
 
 import { MediaBreakpoint } from "@/utils/media";
