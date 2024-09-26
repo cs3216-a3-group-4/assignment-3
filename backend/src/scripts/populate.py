@@ -4,9 +4,9 @@ from src.events.process import EventLLM
 
 
 # Populate the db with events from lm_events_output.json
-def populate() -> list[int]:
+def populate(file_path: str) -> list[int]:
     ids = []
-    with open("backend/lm_events_output.json", "r") as f:
+    with open(file_path, "r") as f:
         events = json.load(f)
 
     for event in events:

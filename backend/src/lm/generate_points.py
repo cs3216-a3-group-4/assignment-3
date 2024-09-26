@@ -22,7 +22,7 @@ def generate_points_from_question(question: str) -> dict:
     return points
 
 
-def get_relevant_analyses(question: str, analyses_per_point: int = 3) -> List[str]:
+def get_relevant_analyses(question: str, analyses_per_point: int = 5) -> dict:
     points = generate_points_from_question(question)
 
     for_pts = points.get("for_points", [])
