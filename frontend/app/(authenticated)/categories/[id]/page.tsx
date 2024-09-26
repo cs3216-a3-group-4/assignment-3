@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
-import { CategoryDTO } from "@/client";
+import { CategoryDTO, MiniEventDTO } from "@/client";
+import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
+import ArticleLoading from "@/components/news/article-loading";
+import NewsArticle from "@/components/news/news-article";
 import {
   Pagination,
   PaginationContent,
@@ -15,8 +18,7 @@ import {
 } from "@/components/ui/pagination";
 import { getCategories } from "@/queries/category";
 import { getEventsForCategory } from "@/queries/event";
-
-import Articles from "./articles-list";
+import { parseDate } from "@/utils/date";
 
 function isNumeric(value: string | null) {
   return value !== null && /^-?\d+$/.test(value);
@@ -87,71 +89,99 @@ const Page = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="flex flex-col w-full py-8">
-      <div className="flex flex-col mb-8 gap-y-2 mx-8 md:mx-16 xl:mx-32">
-        <span className="text-sm text-muted-foreground">
-          {new Date().toDateString()}
-        </span>
-        <h1 className="text-3xl 2xl:text-4xl font-bold">
-          Top events from {categoryName}
-        </h1>
+    <div className="relative w-full h-full">
+      <div
+        className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
+        id="home-page"
+      >
+        <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
+          {/* TODO: x-padding here is tied to the news article */}
+          <div
+            className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
+            id="homePage"
+          >
+            <div className="flex">
+              <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
+                Top events from {categoryName}
+              </span>
+            </div>
+            <span className="text-primary text-lg">
+              {parseDate(new Date())}
+            </span>
+          </div>
+
+          <div className="flex flex-col w-full">
+            {!isEventsLoaded ? (
+              <div className="flex flex-col w-full">
+                <ArticleLoading />
+                <ArticleLoading />
+                <ArticleLoading />
+              </div>
+            ) : (
+              events!.data.map((newsEvent: MiniEventDTO, index: number) => (
+                <NewsArticle key={index} newsEvent={newsEvent} />
+              ))
+            )}
+          </div>
+          {isEventsLoaded && (
+            <Pagination className="py-8">
+              <PaginationContent>
+                {page !== 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious href={getPageUrl(page - 1)} />
+                  </PaginationItem>
+                )}
+                {/* Only for last page */}
+                {page == pageCount && (
+                  <PaginationItem>
+                    <PaginationLink href={getPageUrl(page - 2)}>
+                      {page - 2}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                {page !== 1 && (
+                  <PaginationItem>
+                    <PaginationLink href={getPageUrl(page - 1)}>
+                      {page - 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                <PaginationItem>
+                  <PaginationLink href="#" isActive>
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+                {page !== pageCount && (
+                  <PaginationItem>
+                    <PaginationLink href={getPageUrl(page + 1)}>
+                      {page + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                {/* Only for first page */}
+                {page === 1 && (pageCount as number) >= 3 && (
+                  <PaginationItem>
+                    <PaginationLink href={getPageUrl(page + 2)}>
+                      {page + 2}
+                    </PaginationLink>
+                  </PaginationItem>
+                )}
+                {page !== pageCount && (
+                  <PaginationItem>
+                    <PaginationNext href={getPageUrl(page + 1)} />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-col w-auto mx-4 md:mx-8 xl:mx-24">
-        <Articles eventData={events?.data} isEventsLoaded={isEventsLoaded} />
-      </div>
-
-      {isEventsLoaded && (
-        <Pagination className="py-8">
-          <PaginationContent>
-            {page !== 1 && (
-              <PaginationItem>
-                <PaginationPrevious href={getPageUrl(page - 1)} />
-              </PaginationItem>
-            )}
-            {/* Only for last page */}
-            {page == pageCount && (
-              <PaginationItem>
-                <PaginationLink href={getPageUrl(page - 2)}>
-                  {page - 2}
-                </PaginationLink>
-              </PaginationItem>
-            )}
-            {page !== 1 && (
-              <PaginationItem>
-                <PaginationLink href={getPageUrl(page - 1)}>
-                  {page - 1}
-                </PaginationLink>
-              </PaginationItem>
-            )}
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-            {page !== pageCount && (
-              <PaginationItem>
-                <PaginationLink href={getPageUrl(page + 1)}>
-                  {page + 1}
-                </PaginationLink>
-              </PaginationItem>
-            )}
-            {/* Only for first page */}
-            {page === 1 && (pageCount as number) >= 3 && (
-              <PaginationItem>
-                <PaginationLink href={getPageUrl(page + 2)}>
-                  {page + 2}
-                </PaginationLink>
-              </PaginationItem>
-            )}
-            {page !== pageCount && (
-              <PaginationItem>
-                <PaginationNext href={getPageUrl(page + 1)} />
-              </PaginationItem>
-            )}
-          </PaginationContent>
-        </Pagination>
-      )}
+      <ScrollToTopButton
+        className="absolute right-4 bottom-4"
+        minHeight={200}
+        scrollElementId="home-page"
+      />
     </div>
   );
 };
