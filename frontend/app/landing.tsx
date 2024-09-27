@@ -1,3 +1,6 @@
+import { AccordionContent } from "@radix-ui/react-accordion";
+import { Wand2 } from "lucide-react";
+
 import Chip from "@/components/display/chip";
 import {
   Accordion,
@@ -11,8 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AccordionContent } from "@radix-ui/react-accordion";
-import { Check, CheckIcon, Wand2 } from "lucide-react";
 
 const Landing = () => {
   // TODO: build landing page
@@ -42,7 +43,7 @@ const Landing = () => {
             Feeling overwhelmed with A-Level General Paper studies?
           </h2>
           <h3 className="text-3xl font-medium mt-3">
-            We've been there. Learn how Jippy can help.
+            We&apos;ve been there. Learn how Jippy can help.
           </h3>
           <div className="grid grid-cols-3 gap-x-10 max-w-7xl mt-16 mx-8">
             <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
@@ -150,9 +151,9 @@ const Landing = () => {
                 <span className="text-2xl mt-4">$1.99 / month</span>
                 <Chip
                   className="mt-3"
-                  variant="accent"
-                  size="lg"
                   label="Early bird discount"
+                  size="lg"
+                  variant="accent"
                 />
               </div>
 
@@ -185,8 +186,8 @@ const Landing = () => {
           <div className="col-span-7 p-12 gap-y-8">
             <Accordion type="multiple">
               <AccordionItem
-                value="q1"
                 className="border rounded-lg px-8 py-2 bg-background text-2xl font-medium text-text"
+                value="q1"
               >
                 <AccordionTrigger>Who is Jippy built for?</AccordionTrigger>
                 <AccordionContent>
@@ -195,8 +196,8 @@ const Landing = () => {
               </AccordionItem>
 
               <AccordionItem
-                value="q2"
                 className="border rounded-lg px-8 py-2 bg-background text-2xl font-medium text-text"
+                value="q2"
               >
                 <AccordionTrigger>Cannot just ChatGPT meh?</AccordionTrigger>
                 <AccordionContent>
