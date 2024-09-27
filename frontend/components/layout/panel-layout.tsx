@@ -49,7 +49,7 @@ const PanelLayout = ({
         <ResizableHandle withHandle={isCollapsed} />
 
         <ResizablePanel
-          className="flex flex-1 w-full h-full max-h-full !overflow-y-auto"
+          className="flex flex-1 w-screen h-full max-h-full !overflow-y-auto relative"
           defaultSize={mainContentSize}
           id="main-content"
           order={2}

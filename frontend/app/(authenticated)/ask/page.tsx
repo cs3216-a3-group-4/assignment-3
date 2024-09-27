@@ -17,7 +17,7 @@ const Page = () => {
   // fallback to ask-page just in case
   // initial => ask-page (hasSent false, isLoading false, errorMessage false)
   // validation error => ask-page (hasSent false, isLoading false, errorMessage true)
-  child = <AskPage setIsLoading={setIsLoading} />;
+  child = <AskPage isLoading={isLoading} setIsLoading={setIsLoading} />;
 
   return (
     <div className="flex flex-col bg-muted w-full h-full max-h-full px-4 md:px-8 xl:px-24 overflow-y-auto">
