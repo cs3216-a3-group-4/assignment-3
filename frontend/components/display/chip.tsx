@@ -14,6 +14,7 @@ const chipVariants = cva(
         primary:
           "bg-primary-alt/20 text-primary-alt-800/80 hover:bg-primary-alt/15",
         secondary: "bg-secondary/10 text-secondary-700",
+        accent: "bg-accent/10 text-accent-700",
       },
       size: {
         default: "h-6 px-2 py-2",
@@ -32,11 +33,22 @@ interface ChipProps extends VariantProps<typeof chipVariants> {
   label: string;
   className?: string;
   Icon?: LucideIcon;
+  onClick?: () => void;
 }
 
-const Chip = ({ label, variant, size, className, Icon }: ChipProps) => {
+const Chip = ({
+  label,
+  variant,
+  size,
+  className,
+  Icon,
+  onClick,
+}: ChipProps) => {
   return (
-    <Box className={cn(chipVariants({ variant, size }), className)}>
+    <Box
+      className={cn(chipVariants({ variant, size }), className)}
+      onClick={onClick}
+    >
       {Icon && <Icon className="mr-2" size={16} strokeWidth={1.6} />}
       {label}
     </Box>
