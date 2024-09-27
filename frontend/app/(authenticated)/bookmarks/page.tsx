@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { Bookmark } from "lucide-react";
 
 import { CategoryDTO, MiniEventDTO } from "@/client";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -17,7 +21,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { getCategories } from "@/queries/category";
-import { getEventsForCategory } from "@/queries/event";
+import { getBookmarkedEvents } from "@/queries/event";
 
 function isNumeric(value: string | null) {
   return value !== null && /^-?\d+$/.test(value);
@@ -32,11 +36,12 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const pageStr = searchParams.get("page");
 
-  const page = isNumeric(pageStr) ? parseInt(pageStr!) : 1;
+  const page = isNumeric(pageStr) && pageStr !== "0" ? parseInt(pageStr!) : 1;
 
-  const [categoryName, setCategoryName] = useState<string>("");
+  const [categoryName, setCategoryName] = useState<string>(""); // eslint-disable-line
+
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
-    getEventsForCategory(categoryId, page),
+    getBookmarkedEvents(page),
   );
   const { data: categories, isSuccess: isCategoriesLoaded } =
     useQuery(getCategories());
@@ -99,27 +104,29 @@ const Page = ({ params }: { params: { id: string } }) => {
             className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
             id="homePage"
           >
-            <div className="flex">
+            <div className="flex items-baseline gap-4">
+              <Bookmark className="w-7 h-7" />
               <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-                Top events from {categoryName}
+                Bookmarked events
               </span>
             </div>
           </div>
 
           <div className="flex flex-col w-full">
-            {!isEventsLoaded ? (
+            {!isEventsLoaded && (
               <div className="flex flex-col w-full">
                 <ArticleLoading />
                 <ArticleLoading />
                 <ArticleLoading />
               </div>
-            ) : (
+            )}
+            {isEventsLoaded &&
+              events!.data &&
               events!.data.map((newsEvent: MiniEventDTO, index: number) => (
                 <NewsArticle key={index} newsEvent={newsEvent} />
-              ))
-            )}
+              ))}
           </div>
-          {isEventsLoaded && (
+          {isEventsLoaded && events!.data.length !== 0 && (
             <Pagination className="py-8">
               <PaginationContent>
                 {page !== 1 && (
@@ -128,14 +135,14 @@ const Page = ({ params }: { params: { id: string } }) => {
                   </PaginationItem>
                 )}
                 {/* Only for last page */}
-                {page == pageCount && (
+                {page == pageCount && page - 2 >= 1 && (
                   <PaginationItem>
                     <PaginationLink href={getPageUrl(page - 2)}>
                       {page - 2}
                     </PaginationLink>
                   </PaginationItem>
                 )}
-                {page !== 1 && (
+                {page - 1 >= 1 && (
                   <PaginationItem>
                     <PaginationLink href={getPageUrl(page - 1)}>
                       {page - 1}
@@ -169,6 +176,17 @@ const Page = ({ params }: { params: { id: string } }) => {
                 )}
               </PaginationContent>
             </Pagination>
+          )}
+          {isEventsLoaded && events!.data.length === 0 && (
+            <Card className="mx-auto my-8 p-8 flex flex-col gap-8 max-w-lg">
+              <h2 className="text-xl">
+                You do not have any bookmarks. Return after you bookmark some
+                events!
+              </h2>
+              <Link href="/">
+                <Button>Go to home</Button>
+              </Link>
+            </Card>
           )}
         </div>
       </div>

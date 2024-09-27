@@ -26,6 +26,10 @@ export type Body_log_in_auth_login_post = {
   client_secret?: string | null;
 };
 
+export type BookmarkDTO = {
+  user_id: number;
+};
+
 export type CategoryDTO = {
   id: number;
   name: string;
@@ -46,12 +50,18 @@ export type EventDTO = {
   reads: Array<ReadDTO>;
   analysises: Array<src__events__schemas__AnalysisDTO>;
   gp_questions: Array<GPQuestionDTO>;
+  bookmarks: Array<BookmarkDTO>;
 };
 
 export type EventIndexResponse = {
   total_count: number;
   count: number;
   data: Array<MiniEventDTO>;
+};
+
+export type FallbackDTO = {
+  alt_approach: string;
+  general_argument: string;
 };
 
 export type FallbackDTO = {
@@ -190,6 +200,11 @@ export type ValidationError = {
   type: string;
 };
 
+export type ValidationResult = {
+  is_valid: boolean;
+  error_message: string;
+};
+
 export type src__events__schemas__AnalysisDTO = {
   id: number;
   category: CategoryDTO;
@@ -287,6 +302,7 @@ export type UpdateProfileProfilePutError = HTTPValidationError;
 
 export type GetEventsEventsGetData = {
   query?: {
+    bookmarks?: boolean;
     category_ids?: Array<number> | null;
     end_date?: string | null;
     limit?: number | null;
@@ -339,6 +355,26 @@ export type SearchWhateverEventsSearchGetResponse = unknown;
 
 export type SearchWhateverEventsSearchGetError = HTTPValidationError;
 
+export type AddBookmarkEventsIdBookmarksPostData = {
+  path: {
+    id: number;
+  };
+};
+
+export type AddBookmarkEventsIdBookmarksPostResponse = unknown;
+
+export type AddBookmarkEventsIdBookmarksPostError = HTTPValidationError;
+
+export type DeleteBookmarkEventsIdBookmarksDeleteData = {
+  path: {
+    id: number;
+  };
+};
+
+export type DeleteBookmarkEventsIdBookmarksDeleteResponse = unknown;
+
+export type DeleteBookmarkEventsIdBookmarksDeleteError = HTTPValidationError;
+
 export type GetUserQuestionsUserQuestionsGetData = unknown;
 
 export type GetUserQuestionsUserQuestionsGetResponse =
@@ -350,7 +386,9 @@ export type CreateUserQuestionUserQuestionsPostData = {
   body: CreateUserQuestion;
 };
 
-export type CreateUserQuestionUserQuestionsPostResponse = UserQuestionMiniDTO;
+export type CreateUserQuestionUserQuestionsPostResponse =
+  | UserQuestionMiniDTO
+  | ValidationResult;
 
 export type CreateUserQuestionUserQuestionsPostError = HTTPValidationError;
 
@@ -363,6 +401,37 @@ export type AskGpQuestionUserQuestionsAskGpQuestionGetData = {
 export type AskGpQuestionUserQuestionsAskGpQuestionGetResponse = unknown;
 
 export type AskGpQuestionUserQuestionsAskGpQuestionGetError =
+  HTTPValidationError;
+
+export type GenPointsUserQuestionsGenPointsGetData = {
+  query: {
+    question: string;
+  };
+};
+
+export type GenPointsUserQuestionsGenPointsGetResponse = unknown;
+
+export type GenPointsUserQuestionsGenPointsGetError = HTTPValidationError;
+
+export type GetUserQuestionUserQuestionsIdGetData = {
+  path: {
+    id: number;
+  };
+};
+
+export type GetUserQuestionUserQuestionsIdGetResponse = UserQuestionMiniDTO;
+
+export type GetUserQuestionUserQuestionsIdGetError = HTTPValidationError;
+
+export type ClassifyQuestionUserQuestionsClassifyPostData = {
+  query: {
+    question: string;
+  };
+};
+
+export type ClassifyQuestionUserQuestionsClassifyPostResponse = unknown;
+
+export type ClassifyQuestionUserQuestionsClassifyPostError =
   HTTPValidationError;
 
 export type GenPointsUserQuestionsGenPointsGetData = {

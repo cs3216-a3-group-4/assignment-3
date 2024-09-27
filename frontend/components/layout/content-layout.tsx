@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { MediaBreakpoint } from "@/utils/media";
@@ -42,14 +43,14 @@ const ContentLayout = ({ isLoading, children }: ContentLayoutProps) => {
   // TODO: fix all loading elements
   if (isLoading)
     return (
-      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto">
-        loading
+      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto justify-center items-center">
+        <LoadingSpinner className="w-24 h-24" />
       </div>
     );
 
   if (isOnboarding)
     return (
-      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto">
+      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto justify-center">
         {children}
       </div>
     );

@@ -51,10 +51,16 @@ class GPQuestionDTO(BaseModel):
     categories: list[CategoryDTO]
 
 
+class BookmarkDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    user_id: int
+
+
 class EventDTO(MiniEventDTO):
     model_config = ConfigDict(from_attributes=True)
     analysises: list[AnalysisDTO]
     gp_questions: list[GPQuestionDTO]
+    bookmarks: list[BookmarkDTO]
 
 
 class EventIndexResponse(BaseModel):

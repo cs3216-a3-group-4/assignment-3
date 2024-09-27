@@ -1,4 +1,4 @@
-import type { Config } from "./types";
+import type { Config } from './types';
 
 interface PathSerializer {
   path: Record<string, unknown>;
@@ -7,10 +7,10 @@ interface PathSerializer {
 
 const PATH_PARAM_RE = /\{[^{}]+\}/g;
 
-type ArrayStyle = "form" | "spaceDelimited" | "pipeDelimited";
-type MatrixStyle = "label" | "matrix" | "simple";
+type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
+type MatrixStyle = 'label' | 'matrix' | 'simple';
 type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
-type ObjectStyle = "form" | "deepObject";
+type ObjectStyle = 'form' | 'deepObject';
 type ObjectSeparatorStyle = ObjectStyle | MatrixStyle;
 
 export type BodySerializer = (body: any) => any;
@@ -40,12 +40,12 @@ const serializePrimitiveParam = ({
   value,
 }: SerializePrimitiveParam) => {
   if (value === undefined || value === null) {
-    return "";
+    return '';
   }
 
-  if (typeof value === "object") {
+  if (typeof value === 'object') {
     throw new Error(
-      "Deeply-nested arrays/objects aren’t supported. Provide your own `querySerializer()` to handle these.",
+      'Deeply-nested arrays/objects aren’t supported. Provide your own `querySerializer()` to handle these.',
     );
   }
 
@@ -54,40 +54,40 @@ const serializePrimitiveParam = ({
 
 const separatorArrayExplode = (style: ArraySeparatorStyle) => {
   switch (style) {
-    case "label":
-      return ".";
-    case "matrix":
-      return ";";
-    case "simple":
-      return ",";
+    case 'label':
+      return '.';
+    case 'matrix':
+      return ';';
+    case 'simple':
+      return ',';
     default:
-      return "&";
+      return '&';
   }
 };
 
 const separatorArrayNoExplode = (style: ArraySeparatorStyle) => {
   switch (style) {
-    case "form":
-      return ",";
-    case "pipeDelimited":
-      return "|";
-    case "spaceDelimited":
-      return "%20";
+    case 'form':
+      return ',';
+    case 'pipeDelimited':
+      return '|';
+    case 'spaceDelimited':
+      return '%20';
     default:
-      return ",";
+      return ',';
   }
 };
 
 const separatorObjectExplode = (style: ObjectSeparatorStyle) => {
   switch (style) {
-    case "label":
-      return ".";
-    case "matrix":
-      return ";";
-    case "simple":
-      return ",";
+    case 'label':
+      return '.';
+    case 'matrix':
+      return ';';
+    case 'simple':
+      return ',';
     default:
-      return "&";
+      return '&';
   }
 };
 
@@ -105,11 +105,11 @@ const serializeArrayParam = ({
       allowReserved ? value : value.map((v) => encodeURIComponent(v as string))
     ).join(separatorArrayNoExplode(style));
     switch (style) {
-      case "label":
+      case 'label':
         return `.${joinedValues}`;
-      case "matrix":
+      case 'matrix':
         return `;${name}=${joinedValues}`;
-      case "simple":
+      case 'simple':
         return joinedValues;
       default:
         return `${name}=${joinedValues}`;
@@ -119,7 +119,7 @@ const serializeArrayParam = ({
   const separator = separatorArrayExplode(style);
   const joinedValues = value
     .map((v) => {
-      if (style === "label" || style === "simple") {
+      if (style === 'label' || style === 'simple') {
         return allowReserved ? v : encodeURIComponent(v as string);
       }
 
@@ -130,7 +130,7 @@ const serializeArrayParam = ({
       });
     })
     .join(separator);
-  return style === "label" || style === "matrix"
+  return style === 'label' || style === 'matrix'
     ? separator + joinedValues
     : joinedValues;
 };
@@ -144,7 +144,7 @@ const serializeObjectParam = ({
 }: SerializeOptions<ObjectSeparatorStyle> & {
   value: Record<string, unknown>;
 }) => {
-  if (style !== "deepObject" && !explode) {
+  if (style !== 'deepObject' && !explode) {
     let values: string[] = [];
     Object.entries(value).forEach(([key, v]) => {
       values = [
@@ -153,13 +153,13 @@ const serializeObjectParam = ({
         allowReserved ? (v as string) : encodeURIComponent(v as string),
       ];
     });
-    const joinedValues = values.join(",");
+    const joinedValues = values.join(',');
     switch (style) {
-      case "form":
+      case 'form':
         return `${name}=${joinedValues}`;
-      case "label":
+      case 'label':
         return `.${joinedValues}`;
-      case "matrix":
+      case 'matrix':
         return `;${name}=${joinedValues}`;
       default:
         return joinedValues;
@@ -171,12 +171,12 @@ const serializeObjectParam = ({
     .map(([key, v]) =>
       serializePrimitiveParam({
         allowReserved,
-        name: style === "deepObject" ? `${name}[${key}]` : key,
+        name: style === 'deepObject' ? `${name}[${key}]` : key,
         value: v as string,
       }),
     )
     .join(separator);
-  return style === "label" || style === "matrix"
+  return style === 'label' || style === 'matrix'
     ? separator + joinedValues
     : joinedValues;
 };
@@ -188,19 +188,19 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
     for (const match of matches) {
       let explode = false;
       let name = match.substring(1, match.length - 1);
-      let style: ArraySeparatorStyle = "simple";
+      let style: ArraySeparatorStyle = 'simple';
 
-      if (name.endsWith("*")) {
+      if (name.endsWith('*')) {
         explode = true;
         name = name.substring(0, name.length - 1);
       }
 
-      if (name.startsWith(".")) {
+      if (name.startsWith('.')) {
         name = name.substring(1);
-        style = "label";
-      } else if (name.startsWith(";")) {
+        style = 'label';
+      } else if (name.startsWith(';')) {
         name = name.substring(1);
-        style = "matrix";
+        style = 'matrix';
       }
 
       const value = path[name];
@@ -217,7 +217,7 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
         continue;
       }
 
-      if (typeof value === "object") {
+      if (typeof value === 'object') {
         url = url.replace(
           match,
           serializeObjectParam({
@@ -230,7 +230,7 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
         continue;
       }
 
-      if (style === "matrix") {
+      if (style === 'matrix') {
         url = url.replace(
           match,
           `;${serializePrimitiveParam({
@@ -242,7 +242,7 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
       }
 
       const replaceValue = encodeURIComponent(
-        style === "label" ? `.${value as string}` : (value as string),
+        style === 'label' ? `.${value as string}` : (value as string),
       );
       url = url.replace(match, replaceValue);
     }
@@ -263,7 +263,7 @@ const serializeFormDataPair = (
   key: string,
   value: unknown,
 ) => {
-  if (typeof value === "string" || value instanceof Blob) {
+  if (typeof value === 'string' || value instanceof Blob) {
     formData.append(key, value);
   } else {
     formData.append(key, JSON.stringify(value));
@@ -277,11 +277,11 @@ export const mergeConfigs = (a: Config, b: Config): Config => {
 };
 
 export const mergeHeaders = (
-  ...headers: Array<Required<Config>["headers"] | undefined>
-): Required<Config>["headers"] => {
-  const mergedHeaders: Required<Config>["headers"] = {};
+  ...headers: Array<Required<Config>['headers'] | undefined>
+): Required<Config>['headers'] => {
+  const mergedHeaders: Required<Config>['headers'] = {};
   for (const header of headers) {
-    if (!header || typeof header !== "object") {
+    if (!header || typeof header !== 'object') {
       continue;
     }
 
@@ -301,7 +301,7 @@ export const mergeHeaders = (
         // content value in OpenAPI specification is 'application/json'
         // @ts-expect-error
         mergedHeaders[key] =
-          typeof value === "object" ? JSON.stringify(value) : (value as string);
+          typeof value === 'object' ? JSON.stringify(value) : (value as string);
       }
     }
   }
@@ -338,7 +338,7 @@ const serializeUrlSearchParamsPair = (
   key: string,
   value: unknown,
 ) => {
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     data.append(key, value);
   } else {
     data.append(key, JSON.stringify(value));
@@ -367,6 +367,6 @@ export const urlSearchParamsBodySerializer = {
 };
 
 export const createConfig = (override: Config = {}): Config => ({
-  baseURL: "",
+  baseURL: '',
   ...override,
 });
