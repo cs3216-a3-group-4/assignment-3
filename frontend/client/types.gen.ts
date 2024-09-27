@@ -190,6 +190,11 @@ export type ValidationError = {
     type: string;
 };
 
+export type ValidationResult = {
+    is_valid: boolean;
+    error_message: string;
+};
+
 export type src__events__schemas__AnalysisDTO = {
     id: number;
     category: CategoryDTO;
@@ -347,7 +352,7 @@ export type CreateUserQuestionUserQuestionsPostData = {
     body: CreateUserQuestion;
 };
 
-export type CreateUserQuestionUserQuestionsPostResponse = (UserQuestionMiniDTO);
+export type CreateUserQuestionUserQuestionsPostResponse = ((UserQuestionMiniDTO | ValidationResult));
 
 export type CreateUserQuestionUserQuestionsPostError = (HTTPValidationError);
 
@@ -380,6 +385,16 @@ export type GetUserQuestionUserQuestionsIdGetData = {
 export type GetUserQuestionUserQuestionsIdGetResponse = (UserQuestionMiniDTO);
 
 export type GetUserQuestionUserQuestionsIdGetError = (HTTPValidationError);
+
+export type ClassifyQuestionUserQuestionsClassifyPostData = {
+    query: {
+        question: string;
+    };
+};
+
+export type ClassifyQuestionUserQuestionsClassifyPostResponse = (unknown);
+
+export type ClassifyQuestionUserQuestionsClassifyPostError = (HTTPValidationError);
 
 export type GetAllNotesNotesGetData = unknown;
 

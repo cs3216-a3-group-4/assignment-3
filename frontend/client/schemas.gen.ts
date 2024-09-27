@@ -737,6 +737,22 @@ export const ValidationErrorSchema = {
     title: 'ValidationError'
 } as const;
 
+export const ValidationResultSchema = {
+    properties: {
+        is_valid: {
+            type: 'boolean',
+            title: 'Is Valid'
+        },
+        error_message: {
+            type: 'string',
+            title: 'Error Message'
+        }
+    },
+    type: 'object',
+    required: ['is_valid', 'error_message'],
+    title: 'ValidationResult'
+} as const;
+
 export const src__events__schemas__AnalysisDTOSchema = {
     properties: {
         id: {

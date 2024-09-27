@@ -19,7 +19,7 @@ const EventDetails = ({ event }: Props) => {
   );
 
   return (
-    <div className="flex flex-col px-6 text-muted-foreground font-[450] space-y-2 md:space-y-4">
+    <div className="flex flex-col px-6 text-muted-foreground font-[450] space-y-4 md:space-y-4">
       <div className="grid grid-cols-12 gap-x-4 gap-y-3 place-items-start">
         <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
           <LayoutDashboardIcon
@@ -33,25 +33,52 @@ const EventDetails = ({ event }: Props) => {
           {eventCategories.map((category) => (
             <Chip
               Icon={categoriesToIconsMap[category]}
+              className="mb-2 md:mb-0"
               key={category}
               label={categoriesToDisplayName[category]}
+              size={"lg"}
               variant="primary" // TODO: this is ugly
             />
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-x-4 gap-y-2 place-items-start">
+      <div className="hidden md:grid grid-cols-12 gap-x-4 gap-y-2 place-items-start">
         <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
           <ClockIcon className="inline-flex mr-2" size={16} strokeWidth={2.3} />
           Event date
         </span>
-        <span className="col-span-1  md:col-span-8 xl:col-span-9 text-black font-normal">
+        <span className="col-span-10  md:col-span-8 xl:col-span-9 text-black font-normal">
+          {parseDate(event.date)}
+        </span>
+      </div>
+      <div className="flex gap-2 md:hidden">
+        <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
+          <ClockIcon className="inline-flex mr-2" size={16} strokeWidth={2.3} />
+          Event date
+        </span>
+        <span className="col-span-10  md:col-span-8 xl:col-span-9 text-black font-normal">
           {parseDate(event.date)}
         </span>
       </div>
 
-      <div className="grid grid-cols-12 gap-x-4 gap-y-2 place-items-start">
+      <div className="hidden md:grid grid-cols-12 gap-x-4 gap-y-2 place-items-start">
+        <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
+          <NewspaperIcon
+            className="inline-flex mr-2"
+            size={16}
+            strokeWidth={2.3}
+          />
+          News source
+        </span>
+        <span className="col-span-1 md:col-span-8 xl:col-span-9 text-black font-normal">
+          <a className="underline" href={event.original_article.url}>
+            {event.original_article.source.replace("GUARDIAN", "Guardian")}
+          </a>
+        </span>
+      </div>
+
+      <div className="flex gap-2 md:hidden">
         <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
           <NewspaperIcon
             className="inline-flex mr-2"

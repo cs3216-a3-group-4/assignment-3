@@ -16,14 +16,16 @@ export const getEvent = (id: number) =>
       }).then((data) => data.data),
   });
 
-export const getEventsForCategory = (categoryId: number) =>
+export const getEventsForCategory = (categoryId: number, page: number) =>
   queryOptions({
-    queryKey: [QueryKeys.Categories, categoryId],
+    queryKey: [QueryKeys.Categories, categoryId, page],
     queryFn: () =>
       getEventsEventsGet({
         withCredentials: true,
         query: {
           category_ids: [categoryId],
+          limit: 10,
+          offset: page * 10,
         },
       }).then((data) => data.data),
   });
