@@ -36,7 +36,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const pageStr = searchParams.get("page");
 
-  const page = isNumeric(pageStr) ? parseInt(pageStr!) : 1;
+  const page = isNumeric(pageStr) && pageStr !== "0" ? parseInt(pageStr!) : 1;
 
   const [categoryName, setCategoryName] = useState<string>(""); // eslint-disable-line
 

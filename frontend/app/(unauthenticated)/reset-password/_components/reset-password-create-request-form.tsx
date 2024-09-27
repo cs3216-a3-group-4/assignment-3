@@ -103,7 +103,7 @@ export default function ResetPasswordCreateRequestForm() {
           </Box>
         </CardContent>
       </Card>
-      <div className="flex gap-x-2 w-full justify-center">
+      <div className="flex gap-x-2 w-full justify-center items-baseline">
         <p className="text-sm text-muted-foreground">Not registered yet?</p>
         <Link href="/register" size="sm">
           Create an account

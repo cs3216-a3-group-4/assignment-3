@@ -51,6 +51,7 @@ def get_events(
     if limit is not None:
         event_query = event_query.limit(limit)
     if offset is not None:
+        offset = max(0, offset)
         event_query = event_query.offset(offset)
 
     event_query = event_query.order_by(Event.rating.desc(), Event.date.desc())

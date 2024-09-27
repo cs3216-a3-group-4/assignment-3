@@ -139,7 +139,7 @@ function RegisterPage() {
           </Box>
 
           {/* Login button */}
-          <div className="flex gap-x-2 w-full justify-center">
+          <div className="flex gap-x-2 w-full justify-center items-baseline">
             <p className="text-sm text-muted-foreground">
               Already have an account?
             </p>
