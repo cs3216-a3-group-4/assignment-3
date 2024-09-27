@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LucideThumbsDown, LucideThumbsUp, SparklesIcon } from "lucide-react";
+import { SparklesIcon } from "lucide-react";
 
 import {
   EventDTO,
@@ -14,9 +14,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { cn } from "@/lib/utils";
 import { useLikeEvent } from "@/queries/like";
 import { useUserStore } from "@/store/user/user-store-provider";
 import {
