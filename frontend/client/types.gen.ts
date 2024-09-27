@@ -54,6 +54,11 @@ export type EventIndexResponse = {
   data: Array<MiniEventDTO>;
 };
 
+export type FallbackDTO = {
+  alt_approach: string;
+  general_argument: string;
+};
+
 export type GPQuestionDTO = {
   id: number;
   question: string;
@@ -131,11 +136,17 @@ export type PasswordResetRequestData = {
   email: string;
 };
 
+export type PointAnalysisDTO = {
+  analysis: src__user_questions__schemas__AnalysisDTO;
+  elaboration: string;
+};
+
 export type PointMiniDTO = {
   id: number;
   title: string;
   body: string;
-  analysises: Array<src__user_questions__schemas__AnalysisDTO>;
+  point_analysises: Array<PointAnalysisDTO>;
+  fallback?: FallbackDTO | null;
 };
 
 export type ProfileUpdate = {
@@ -342,16 +353,6 @@ export type CreateUserQuestionUserQuestionsPostResponse = UserQuestionMiniDTO;
 
 export type CreateUserQuestionUserQuestionsPostError = HTTPValidationError;
 
-export type GetUserQuestionUserQuestionsIdGetData = {
-  path: {
-    id: number;
-  };
-};
-
-export type GetUserQuestionUserQuestionsIdGetResponse = UserQuestionMiniDTO;
-
-export type GetUserQuestionUserQuestionsIdGetError = HTTPValidationError;
-
 export type AskGpQuestionUserQuestionsAskGpQuestionGetData = {
   query: {
     question: string;
@@ -362,6 +363,26 @@ export type AskGpQuestionUserQuestionsAskGpQuestionGetResponse = unknown;
 
 export type AskGpQuestionUserQuestionsAskGpQuestionGetError =
   HTTPValidationError;
+
+export type GenPointsUserQuestionsGenPointsGetData = {
+  query: {
+    question: string;
+  };
+};
+
+export type GenPointsUserQuestionsGenPointsGetResponse = unknown;
+
+export type GenPointsUserQuestionsGenPointsGetError = HTTPValidationError;
+
+export type GetUserQuestionUserQuestionsIdGetData = {
+  path: {
+    id: number;
+  };
+};
+
+export type GetUserQuestionUserQuestionsIdGetResponse = UserQuestionMiniDTO;
+
+export type GetUserQuestionUserQuestionsIdGetError = HTTPValidationError;
 
 export type GetAllNotesNotesGetData = unknown;
 

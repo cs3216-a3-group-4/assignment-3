@@ -238,6 +238,22 @@ export const EventIndexResponseSchema = {
   title: "EventIndexResponse",
 } as const;
 
+export const FallbackDTOSchema = {
+  properties: {
+    alt_approach: {
+      type: "string",
+      title: "Alt Approach",
+    },
+    general_argument: {
+      type: "string",
+      title: "General Argument",
+    },
+  },
+  type: "object",
+  required: ["alt_approach", "general_argument"],
+  title: "FallbackDTO",
+} as const;
+
 export const GPQuestionDTOSchema = {
   properties: {
     id: {
@@ -540,6 +556,21 @@ export const PasswordResetRequestDataSchema = {
   title: "PasswordResetRequestData",
 } as const;
 
+export const PointAnalysisDTOSchema = {
+  properties: {
+    analysis: {
+      $ref: "#/components/schemas/src__user_questions__schemas__AnalysisDTO",
+    },
+    elaboration: {
+      type: "string",
+      title: "Elaboration",
+    },
+  },
+  type: "object",
+  required: ["analysis", "elaboration"],
+  title: "PointAnalysisDTO",
+} as const;
+
 export const PointMiniDTOSchema = {
   properties: {
     id: {
@@ -554,16 +585,26 @@ export const PointMiniDTOSchema = {
       type: "string",
       title: "Body",
     },
-    analysises: {
+    point_analysises: {
       items: {
-        $ref: "#/components/schemas/src__user_questions__schemas__AnalysisDTO",
+        $ref: "#/components/schemas/PointAnalysisDTO",
       },
       type: "array",
-      title: "Analysises",
+      title: "Point Analysises",
+    },
+    fallback: {
+      anyOf: [
+        {
+          $ref: "#/components/schemas/FallbackDTO",
+        },
+        {
+          type: "null",
+        },
+      ],
     },
   },
   type: "object",
-  required: ["id", "title", "body", "analysises"],
+  required: ["id", "title", "body", "point_analysises"],
   title: "PointMiniDTO",
 } as const;
 
