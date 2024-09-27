@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from src.common.database import engine
 from sqlalchemy import select
 from src.events.models import Event
+import asyncio
 
 
 def get_event_by_id(event_id: int) -> Event:
@@ -35,36 +36,55 @@ def format_prompt_input(question: str, analysis: dict, point: str) -> str:
     """
 
 
-def generate_response(question: str) -> dict:
-    relevant_analyses = get_relevant_analyses(question)
-    count = 0
-    for point_dict in (
-        relevant_analyses["for_points"] + relevant_analyses["against_points"]
-    ):
-        count += 1
-        point = point_dict.get("point")
-        analyses = point_dict.get("analyses")
-        elaborated_analyses = []
-        for analysis in analyses:
-            prompt_input = format_prompt_input(question, analysis, point)
-            messages = [
-                SystemMessage(content=SYSPROMPT),
-                HumanMessage(content=prompt_input),
-            ]
+async def get_elaborated_analysis(
+    question, analysis, point, elaborated_analyses, index
+):
+    prompt_input = format_prompt_input(question, analysis, point)
+    messages = [
+        SystemMessage(content=SYSPROMPT),
+        HumanMessage(content=prompt_input),
+    ]
 
-            result = lm_model.invoke(messages)
+    result = lm_model.invoke(messages)
 
-            analysis["elaborations"] = result.content
-            if analysis["elaborations"] != "NOT RELEVANT":
-                elaborated_analyses.append(analysis)
-        point_dict["analyses"] = elaborated_analyses
+    analysis["elaborations"] = result.content
+    if analysis["elaborations"] != "NOT RELEVANT":
+        elaborated_analyses.append((analysis, index))
 
-        if len(elaborated_analyses) == 0:
-            point_dict["fall_back_response"] = generate_fallback_response(
-                question, point
+
+async def process_point_dict(point_dict, question):
+    point = point_dict.get("point")
+    analyses = point_dict.get("analyses")
+    elaborated_analyses = []
+    await asyncio.gather(
+        *[
+            get_elaborated_analysis(
+                question, analysis, point, elaborated_analyses, index
             )
+            for index, analysis in enumerate(analyses)
+        ]
+    )
+    elaborated_analyses.sort(key=lambda item: item[1])
+    elaborated_analyses = [item[0] for item in elaborated_analyses]
 
-    print(count)
+    point_dict["analyses"] = elaborated_analyses
+
+    if len(elaborated_analyses) == 0:
+        point_dict["fall_back_response"] = generate_fallback_response(question, point)
+
+
+async def generate_response(question: str) -> dict:
+    relevant_analyses = get_relevant_analyses(question)
+
+    await asyncio.gather(
+        *[
+            process_point_dict(point_dict, question)
+            for point_dict in (
+                relevant_analyses["for_points"] + relevant_analyses["against_points"]
+            )
+        ]
+    )
+
     return relevant_analyses
 
 
