@@ -1,8 +1,9 @@
-import type { AxiosError } from 'axios';
-import axios from 'axios';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import type { AxiosError } from "axios";
+import axios from "axios";
 
-import type { Client, Config, RequestOptions } from './types';
-import { createConfig, getUrl, mergeConfigs, mergeHeaders } from './utils';
+import type { Client, Config, RequestOptions } from "./types";
+import { createConfig, getUrl, mergeConfigs, mergeHeaders } from "./utils";
 
 export const createClient = (config: Config): Client => {
   let _config = mergeConfigs(createConfig(), config);
@@ -23,7 +24,7 @@ export const createClient = (config: Config): Client => {
   };
 
   // @ts-expect-error
-  const request: Client['request'] = async (options) => {
+  const request: Client["request"] = async (options) => {
     const opts: RequestOptions = {
       ..._config,
       ...options,
@@ -51,7 +52,7 @@ export const createClient = (config: Config): Client => {
 
       let { data } = response;
 
-      if (opts.responseType === 'json' && opts.responseTransformer) {
+      if (opts.responseType === "json" && opts.responseTransformer) {
         data = await opts.responseTransformer(data);
       }
 
@@ -71,15 +72,15 @@ export const createClient = (config: Config): Client => {
   };
 
   return {
-    delete: (options) => request({ ...options, method: 'delete' }),
-    get: (options) => request({ ...options, method: 'get' }),
+    delete: (options) => request({ ...options, method: "delete" }),
+    get: (options) => request({ ...options, method: "get" }),
     getConfig,
-    head: (options) => request({ ...options, method: 'head' }),
+    head: (options) => request({ ...options, method: "head" }),
     instance,
-    options: (options) => request({ ...options, method: 'options' }),
-    patch: (options) => request({ ...options, method: 'patch' }),
-    post: (options) => request({ ...options, method: 'post' }),
-    put: (options) => request({ ...options, method: 'put' }),
+    options: (options) => request({ ...options, method: "options" }),
+    patch: (options) => request({ ...options, method: "patch" }),
+    post: (options) => request({ ...options, method: "post" }),
+    put: (options) => request({ ...options, method: "put" }),
     request,
     setConfig,
   } as Client;

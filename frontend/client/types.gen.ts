@@ -64,11 +64,6 @@ export type FallbackDTO = {
   general_argument: string;
 };
 
-export type FallbackDTO = {
-  alt_approach: string;
-  general_argument: string;
-};
-
 export type GPQuestionDTO = {
   id: number;
   question: string;
@@ -433,26 +428,6 @@ export type ClassifyQuestionUserQuestionsClassifyPostResponse = unknown;
 
 export type ClassifyQuestionUserQuestionsClassifyPostError =
   HTTPValidationError;
-
-export type GenPointsUserQuestionsGenPointsGetData = {
-  query: {
-    question: string;
-  };
-};
-
-export type GenPointsUserQuestionsGenPointsGetResponse = unknown;
-
-export type GenPointsUserQuestionsGenPointsGetError = HTTPValidationError;
-
-export type GetUserQuestionUserQuestionsIdGetData = {
-  path: {
-    id: number;
-  };
-};
-
-export type GetUserQuestionUserQuestionsIdGetResponse = UserQuestionMiniDTO;
-
-export type GetUserQuestionUserQuestionsIdGetError = HTTPValidationError;
 
 export type GetAllNotesNotesGetData = unknown;
 

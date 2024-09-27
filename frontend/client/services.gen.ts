@@ -7,6 +7,9 @@ import {
   urlSearchParamsBodySerializer,
 } from "./client";
 import type {
+  AddBookmarkEventsIdBookmarksPostData,
+  AddBookmarkEventsIdBookmarksPostError,
+  AddBookmarkEventsIdBookmarksPostResponse,
   AskGpQuestionUserQuestionsAskGpQuestionGetData,
   AskGpQuestionUserQuestionsAskGpQuestionGetError,
   AskGpQuestionUserQuestionsAskGpQuestionGetResponse,
@@ -16,6 +19,9 @@ import type {
   ChangePasswordAuthChangePasswordPutData,
   ChangePasswordAuthChangePasswordPutError,
   ChangePasswordAuthChangePasswordPutResponse,
+  ClassifyQuestionUserQuestionsClassifyPostData,
+  ClassifyQuestionUserQuestionsClassifyPostError,
+  ClassifyQuestionUserQuestionsClassifyPostResponse,
   CompletePasswordResetAuthPasswordResetPutData,
   CompletePasswordResetAuthPasswordResetPutError,
   CompletePasswordResetAuthPasswordResetPutResponse,
@@ -25,6 +31,9 @@ import type {
   CreateUserQuestionUserQuestionsPostData,
   CreateUserQuestionUserQuestionsPostError,
   CreateUserQuestionUserQuestionsPostResponse,
+  DeleteBookmarkEventsIdBookmarksDeleteData,
+  DeleteBookmarkEventsIdBookmarksDeleteError,
+  DeleteBookmarkEventsIdBookmarksDeleteResponse,
   DeleteNoteNotesIdDeleteData,
   DeleteNoteNotesIdDeleteError,
   DeleteNoteNotesIdDeleteResponse,
@@ -365,6 +374,42 @@ export const searchWhateverEventsSearchGet = <
 };
 
 /**
+ * Add Bookmark
+ */
+export const addBookmarkEventsIdBookmarksPost = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<AddBookmarkEventsIdBookmarksPostData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    AddBookmarkEventsIdBookmarksPostResponse,
+    AddBookmarkEventsIdBookmarksPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/events/{id}/bookmarks",
+  });
+};
+
+/**
+ * Delete Bookmark
+ */
+export const deleteBookmarkEventsIdBookmarksDelete = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<DeleteBookmarkEventsIdBookmarksDeleteData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).delete<
+    DeleteBookmarkEventsIdBookmarksDeleteResponse,
+    DeleteBookmarkEventsIdBookmarksDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/events/{id}/bookmarks",
+  });
+};
+
+/**
  * Get User Questions
  */
 export const getUserQuestionsUserQuestionsGet = <
@@ -454,6 +499,24 @@ export const getUserQuestionUserQuestionsIdGet = <
   >({
     ...options,
     url: "/user-questions/{id}",
+  });
+};
+
+/**
+ * Classify Question
+ */
+export const classifyQuestionUserQuestionsClassifyPost = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<ClassifyQuestionUserQuestionsClassifyPostData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    ClassifyQuestionUserQuestionsClassifyPostResponse,
+    ClassifyQuestionUserQuestionsClassifyPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/user-questions/classify",
   });
 };
 
