@@ -4,8 +4,6 @@ import { ReactNode, useState } from "react";
 
 import AskPage from "./ask-page";
 
-export const MAX_GP_QUESTION_LEN: number = 120; // max character count
-
 const Page = () => {
   // Whether an active query is running
   const [isLoading, setIsLoading] = useState<boolean>(false);
