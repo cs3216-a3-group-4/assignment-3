@@ -116,6 +116,18 @@ export const Body_log_in_auth_login_postSchema = {
     title: 'Body_log_in_auth_login_post'
 } as const;
 
+export const BookmarkDTOSchema = {
+    properties: {
+        user_id: {
+            type: 'integer',
+            title: 'User Id'
+        }
+    },
+    type: 'object',
+    required: ['user_id'],
+    title: 'BookmarkDTO'
+} as const;
+
 export const CategoryDTOSchema = {
     properties: {
         id: {
@@ -197,10 +209,17 @@ export const EventDTOSchema = {
             },
             type: 'array',
             title: 'Gp Questions'
+        },
+        bookmarks: {
+            items: {
+                '$ref': '#/components/schemas/BookmarkDTO'
+            },
+            type: 'array',
+            title: 'Bookmarks'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'description', 'is_singapore', 'date', 'categories', 'original_article', 'reads', 'analysises', 'gp_questions'],
+    required: ['id', 'title', 'description', 'is_singapore', 'date', 'categories', 'original_article', 'reads', 'analysises', 'gp_questions', 'bookmarks'],
     title: 'EventDTO'
 } as const;
 

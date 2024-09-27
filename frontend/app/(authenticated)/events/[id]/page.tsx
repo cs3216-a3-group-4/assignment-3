@@ -2,9 +2,12 @@
 
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
+import { useAddBookmark, useRemoveBookmark } from "@/queries/bookmark";
 import { getEvent } from "@/queries/event";
 
 import EventAnalysis from "./event-analysis";
@@ -15,6 +18,10 @@ import EventSummary from "./event-summary";
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
   const { data, isLoading } = useQuery(getEvent(id));
+  const bookmarked = data?.bookmarks.length === 0;
+
+  const addBookmarkMutation = useAddBookmark(id);
+  const removeBookmarkMutation = useRemoveBookmark(id);
 
   if (isLoading) {
     return (
@@ -46,6 +53,25 @@ const Page = ({ params }: { params: { id: string } }) => {
               <h1 className="text-4xl font-bold px-6">{data.title}</h1>
               <EventDetails event={data} />
               <EventSummary summary={data.description} />
+              <div className="px-6">
+                {bookmarked ? (
+                  <Button
+                    className="flex gap-2"
+                    onClick={() => addBookmarkMutation.mutate()}
+                    variant={"default"}
+                  >
+                    <BookmarkCheck className="w-5 h-5" /> Bookmarked
+                  </Button>
+                ) : (
+                  <Button
+                    className="flex gap-2"
+                    onClick={() => removeBookmarkMutation.mutate()}
+                    variant={"outline"}
+                  >
+                    <Bookmark className="w-5 h-5" /> Bookmark
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
           <div className="md:px-8 flex flex-col gap-y-10 pb-8">

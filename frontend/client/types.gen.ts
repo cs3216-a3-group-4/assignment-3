@@ -26,6 +26,10 @@ export type Body_log_in_auth_login_post = {
     client_secret?: (string | null);
 };
 
+export type BookmarkDTO = {
+    user_id: number;
+};
+
 export type CategoryDTO = {
     id: number;
     name: string;
@@ -46,6 +50,7 @@ export type EventDTO = {
     reads: Array<ReadDTO>;
     analysises: Array<src__events__schemas__AnalysisDTO>;
     gp_questions: Array<GPQuestionDTO>;
+    bookmarks: Array<BookmarkDTO>;
 };
 
 export type EventIndexResponse = {
@@ -290,6 +295,7 @@ export type UpdateProfileProfilePutError = (HTTPValidationError);
 
 export type GetEventsEventsGetData = {
     query?: {
+        bookmarks?: boolean;
         category_ids?: (Array<(number)> | null);
         end_date?: (string | null);
         limit?: (number | null);
@@ -341,6 +347,26 @@ export type SearchWhateverEventsSearchGetData = {
 export type SearchWhateverEventsSearchGetResponse = (unknown);
 
 export type SearchWhateverEventsSearchGetError = (HTTPValidationError);
+
+export type AddBookmarkEventsIdBookmarksPostData = {
+    path: {
+        id: number;
+    };
+};
+
+export type AddBookmarkEventsIdBookmarksPostResponse = (unknown);
+
+export type AddBookmarkEventsIdBookmarksPostError = (HTTPValidationError);
+
+export type DeleteBookmarkEventsIdBookmarksDeleteData = {
+    path: {
+        id: number;
+    };
+};
+
+export type DeleteBookmarkEventsIdBookmarksDeleteResponse = (unknown);
+
+export type DeleteBookmarkEventsIdBookmarksDeleteError = (HTTPValidationError);
 
 export type GetUserQuestionsUserQuestionsGetData = unknown;
 
