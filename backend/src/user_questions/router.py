@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from pprint import pprint
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
@@ -120,7 +121,7 @@ def classify_question(question: str):
 
 
 @router.post("/")
-def create_user_question(
+async def create_user_question(
     data: CreateUserQuestion,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
@@ -134,7 +135,9 @@ def create_user_question(
     answer = Answer()
     user_question.answer = answer
 
-    results = generate_response(data.question)
+    results = await generate_response(data.question)
+
+    pprint(results)
 
     for row in results["for_points"]:
         point = row["point"]
