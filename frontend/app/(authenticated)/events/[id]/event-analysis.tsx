@@ -1,16 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { SparklesIcon } from "lucide-react";
+import { LucideThumbsDown, LucideThumbsUp, SparklesIcon } from "lucide-react";
 
-import { EventDTO } from "@/client";
+import {
+  EventDTO,
+  src__events__schemas__AnalysisDTO as AnalysisDTO,
+} from "@/client";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from "@/lib/utils";
+import { useLikeEvent } from "@/queries/like";
+import { useUserStore } from "@/store/user/user-store-provider";
 import {
   categoriesToDisplayName,
   categoriesToIconsMap,
@@ -23,18 +30,24 @@ interface Props {
 }
 
 const EventAnalysis = ({ event }: Props) => {
+  const user = useUserStore((state) => state.user);
+
   const eventCategories = event.categories.map((category) =>
     getCategoryFor(category.name),
   );
 
-  const [activeCategories, setActiveCategories] = useState<string[]>([]);
+  const [activeCategories, setActiveCategories] = useState<string[]>(
+    event.analysises.map((item) => getCategoryFor(item.category.name)),
+  );
 
   // @ts-expect-error deadline doesnt give me time to bother with type errors
-  const analysis: { [key in Category]: string } = {};
+  const analysis: { [key in Category]: AnalysisDTO } = {};
 
   event.analysises.forEach(
-    (item) => (analysis[getCategoryFor(item.category.name)] = item.content),
+    (item) => (analysis[getCategoryFor(item.category.name)] = item),
   );
+
+  const likeMutation = useLikeEvent(event.id);
 
   return (
     <div className="flex flex-col px-6 gap-y-8">
@@ -45,7 +58,7 @@ const EventAnalysis = ({ event }: Props) => {
         </span>
         <div className="flex w-full">
           <ToggleGroup
-            className="gap-3"
+            className="flex flex-col sm:flex-row flex-wrap md:flex-row gap-3"
             onValueChange={(value) => setActiveCategories(value)}
             size="lg"
             type="multiple"
@@ -80,6 +93,10 @@ const EventAnalysis = ({ event }: Props) => {
       >
         {Object.entries(analysis).map((item) => {
           const [category, analysis] = item;
+          const content = analysis.content;
+          const likes = analysis.likes;
+          const userLike = likes.filter((like) => like.user_id == user?.id)[0];
+          const userLikeValue = userLike ? userLike.type : 0;
           const CategoryIcon = categoriesToIconsMap[category as Category];
           return (
             <AccordionItem
@@ -98,13 +115,42 @@ const EventAnalysis = ({ event }: Props) => {
               </AccordionTrigger>
               <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
                 <div>
-                  <div>{analysis}</div>
+                  <div>{content}</div>
                   {/* Commenting out GP questions for now */}
                   {/* <Separator className="my-4" />
                   <div>
                     How does the commercialization of global sports impact
                     societal values and economies?
                   </div> */}
+                </div>
+                <div className="flex gap-4 items-center mt-4">
+                  <Button
+                    onClick={() =>
+                      likeMutation.mutate({ analysis_id: analysis.id, type: 1 })
+                    }
+                    variant={"outline"}
+                  >
+                    <LucideThumbsUp
+                      className={cn({
+                        "fill-green-400": userLikeValue === 1,
+                      })}
+                    />
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      likeMutation.mutate({
+                        analysis_id: analysis.id,
+                        type: -1,
+                      })
+                    }
+                    variant={"outline"}
+                  >
+                    <LucideThumbsDown
+                      className={cn({
+                        "fill-green-400": userLikeValue === -1,
+                      })}
+                    />
+                  </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
