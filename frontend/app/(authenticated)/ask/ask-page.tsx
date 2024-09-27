@@ -219,22 +219,36 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
                   <Accordion type="multiple">
                     <AccordionItem value="Learn more">
                       <AccordionTrigger>Learn more</AccordionTrigger>
-                      <AccordionContent>
-                        - feature, ss - how it works, why better than chatgpt -
-                        faqs - personal data
+                      <AccordionContent className="flex flex-col gap-2">
+                        <p>
+                          Jippy has been studying CNA articles daily. It uses
+                          generative AI to generate points for your essay
+                          questions and supplements them with relevant articles.
+                          Jippy is however, a newborn frog in the world events
+                          and reasoning, so we would appreciate your support and
+                          feedback!
+                        </p>
+                        <p>
+                          Jippy will also keep your personal data safe and
+                          doesn&apos;t send it to any third parties.
+                        </p>
                       </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="upcoming-features">
-                      <AccordionTrigger>Upcoming features</AccordionTrigger>
-                      <AccordionContent></AccordionContent>
                     </AccordionItem>
 
                     <AccordionItem value="help-feedback">
                       <AccordionTrigger>
                         Get help or give feedback
                       </AccordionTrigger>
-                      <AccordionContent></AccordionContent>
+                      <AccordionContent>
+                        Spot an issue? Send us an email at{" "}
+                        <a
+                          className="underline"
+                          href="mailto:jippythefrog@gmail.com"
+                        >
+                          jippythefrog@gmail.com
+                        </a>
+                        .
+                      </AccordionContent>
                     </AccordionItem>
                   </Accordion>
                 </div>
