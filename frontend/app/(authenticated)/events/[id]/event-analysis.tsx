@@ -7,6 +7,7 @@ import {
   EventDTO,
   src__events__schemas__AnalysisDTO as AnalysisDTO,
 } from "@/client";
+import LikeButtons from "@/components/likes/like-buttons";
 import {
   Accordion,
   AccordionContent,
@@ -123,35 +124,15 @@ const EventAnalysis = ({ event }: Props) => {
                     societal values and economies?
                   </div> */}
                 </div>
-                <div className="flex gap-4 items-center mt-4">
-                  <Button
-                    onClick={() =>
-                      likeMutation.mutate({ analysis_id: analysis.id, type: 1 })
-                    }
-                    variant={"outline"}
-                  >
-                    <LucideThumbsUp
-                      className={cn({
-                        "fill-green-400": userLikeValue === 1,
-                      })}
-                    />
-                  </Button>
-                  <Button
-                    onClick={() =>
-                      likeMutation.mutate({
-                        analysis_id: analysis.id,
-                        type: -1,
-                      })
-                    }
-                    variant={"outline"}
-                  >
-                    <LucideThumbsDown
-                      className={cn({
-                        "fill-green-400": userLikeValue === -1,
-                      })}
-                    />
-                  </Button>
-                </div>
+                <LikeButtons
+                  onDislike={() =>
+                    likeMutation.mutate({ analysis_id: analysis.id, type: -1 })
+                  }
+                  onLike={() =>
+                    likeMutation.mutate({ analysis_id: analysis.id, type: 1 })
+                  }
+                  userLikeValue={userLikeValue}
+                />
               </AccordionContent>
             </AccordionItem>
           );
