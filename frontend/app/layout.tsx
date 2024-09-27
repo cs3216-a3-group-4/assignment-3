@@ -14,9 +14,23 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  // TODO: change these
   title: process.env.NEXT_PUBLIC_APP_NAME,
-  description: "CS3216 Assignment 3 (Group 4) - placeholder",
+  description: "Ace Your General Paper Essays",
+  openGraph: {
+    title: "Jippy",
+    description: "Ace Your General Paper Essays with AI-Powered Insights",
+    url: "https://jippy.site",
+    siteName: "Jippy",
+    images: [
+      {
+        url: "https://jippy.site/og.png", // Must be an absolute URL
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_gb",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
