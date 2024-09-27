@@ -56,5 +56,10 @@ class UserQuestionMiniDTO(BaseModel):
     answer: AnswerDTO
 
 
+class ValidationResult(BaseModel):
+    is_valid: bool
+    error_message: str
+
+
 class CreateUserQuestion(BaseModel):
     question: str

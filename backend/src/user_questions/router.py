@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from pprint import pprint
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
@@ -15,9 +16,14 @@ from src.user_questions.models import (
     PointAnalysis,
     UserQuestion,
 )
-from src.user_questions.schemas import CreateUserQuestion, UserQuestionMiniDTO
+from src.user_questions.schemas import (
+    CreateUserQuestion,
+    UserQuestionMiniDTO,
+    ValidationResult,
+)
 from src.lm.generate_response import generate_response
 from src.lm.generate_points import get_relevant_analyses
+from src.lm.validate_question import validate_question
 
 
 router = APIRouter(prefix="/user-questions", tags=["user-questions"])
@@ -109,18 +115,29 @@ def get_user_question(
     return user_question
 
 
+@router.post("/classify")
+def classify_question(question: str):
+    return validate_question(question)
+
+
 @router.post("/")
-def create_user_question(
+async def create_user_question(
     data: CreateUserQuestion,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-) -> UserQuestionMiniDTO:
+) -> UserQuestionMiniDTO | ValidationResult:
+    validation = validate_question(data.question)
+    if not validation["is_valid"]:
+        return validation
+
     user_question = UserQuestion(question=data.question, user_id=user.id)
 
     answer = Answer()
     user_question.answer = answer
 
-    results = generate_response(data.question)
+    results = await generate_response(data.question)
+
+    pprint(results)
 
     for row in results["for_points"]:
         point = row["point"]

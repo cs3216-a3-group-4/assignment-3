@@ -77,7 +77,7 @@ def store_documents(analysis_list: List[Analysis]):
     print(f"Stored {len(documents)} documents")
 
 
-def get_similar_results(query: str, top_k: int = 5):
+def get_similar_results(query: str, top_k: int = 3):
     documents = vector_store.similarity_search_with_relevance_scores(
         query=query, k=top_k
     )
