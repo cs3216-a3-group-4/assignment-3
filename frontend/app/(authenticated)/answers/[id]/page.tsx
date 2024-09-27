@@ -7,7 +7,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { BookOpenTextIcon, SparkleIcon, ZapIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  BookOpenTextIcon,
+  FileSymlinkIcon,
+  SparkleIcon,
+  ZapIcon,
+} from "lucide-react";
 
 const AnswerPage = () => {
   const mockData: UserQuestionMiniDTO = retryResp;
@@ -76,29 +82,41 @@ const AnswerPage = () => {
                                   >
                                     {index + 1}. {event.title}
                                   </AccordionTrigger>
-                                  <AccordionContent className="flex flex-col gap-y-8 2xl:gap-y-10 text-lg 2xl:text-xl 3xl:text-2xl py-2 2xl:py-4">
-                                    <div className="flex flex-col gap-y-4">
-                                      <span className="font-medium text-lg 2xl:text-xl text-text-muted">
-                                        <ZapIcon
-                                          className="inline-flex mr-3"
-                                          size={20}
-                                        />
-                                        Event summary
-                                      </span>
-                                      <blockquote className="border-l-2 pl-6 italic text-gray-800">
+                                  <AccordionContent className="flex flex-col gap-y-8 2xl:gap-y-12 text-lg 2xl:text-xl 3xl:text-2xl py-2 2xl:py-4">
+                                    <div className="flex flex-col gap-y-4 text-text-muted/80">
+                                      <div className="flex justify-between items-baseline">
+                                        <span className="font-medium text-lg 2xl:text-xl text-text-muted/80">
+                                          <ZapIcon
+                                            className="inline-flex mr-3"
+                                            size={20}
+                                          />
+                                          Event summary
+                                        </span>
+                                        <Button
+                                          size="sm"
+                                          className="h-8 w-fit text-text-muted mt-2"
+                                          variant="outline"
+                                        >
+                                          <FileSymlinkIcon className="h-4 w-4 mr-2" />
+                                          Read more
+                                        </Button>
+                                      </div>
+                                      <blockquote className="border-l-2 pl-6 italic text-text-muted 2xl:text-2xl tracking-wide">
                                         {event.description}
                                       </blockquote>
                                     </div>
 
-                                    <div className="flex flex-col gap-y-4">
-                                      <span className="font-medium text-lg 2xl:text-xl text-text-muted">
+                                    <div className="flex flex-col gap-y-4 mb-4">
+                                      <span className="font-medium text-lg 2xl:text-xl text-text-muted/80">
                                         <SparkleIcon
                                           className="inline-flex mr-3"
                                           size={20}
                                         />
                                         Possible argument
                                       </span>
-                                      <p>{elaboration}</p>
+                                      <p className="tracking-wide">
+                                        {elaboration}
+                                      </p>
                                     </div>
                                   </AccordionContent>
                                 </AccordionItem>

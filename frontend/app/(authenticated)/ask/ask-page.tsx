@@ -83,7 +83,7 @@ const AskPage = ({ setIsLoading }: AskPageProps) => {
 
   return (
     <div className="flex flex-col bg-muted w-full h-full max-h-full px-4 md:px-8 xl:px-24">
-      <div className="flex flex-col pb-4 mb-4 py-8 xl:py-16 max-w-5xl md:mx-8 lg:mx-16 xl:mx-auto">
+      <div className="flex flex-col pb-4 mb-4 py-8 xl:py-16 max-w-6xl md:mx-8 lg:mx-16 xl:mx-auto">
         <div className="flex flex-col pb-4 mb-4 sticky pt-8 top-0 bg-muted border-b-2">
           <h1 className="font-medium mb-2 text-text-muted">
             Ask Jippy a General Paper exam question
