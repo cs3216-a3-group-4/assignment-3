@@ -2,11 +2,17 @@
 
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { Bookmark, BookmarkCheck } from "lucide-react";
+import {
+  Bookmark,
+  BookmarkCheck,
+  BookmarkCheckIcon,
+  BookmarkMinusIcon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 import { useAddBookmark, useRemoveBookmark } from "@/queries/bookmark";
 import { getEvent } from "@/queries/event";
 
@@ -18,10 +24,12 @@ import EventSummary from "./event-summary";
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
   const { data, isLoading } = useQuery(getEvent(id));
-  const bookmarked = data?.bookmarks.length === 0;
+  const bookmarked = data?.bookmarks.length === 1;
 
   const addBookmarkMutation = useAddBookmark(id);
   const removeBookmarkMutation = useRemoveBookmark(id);
+
+  const toast = useToast();
 
   if (isLoading) {
     return (
@@ -57,7 +65,14 @@ const Page = ({ params }: { params: { id: string } }) => {
                 {bookmarked ? (
                   <Button
                     className="flex gap-2"
-                    onClick={() => addBookmarkMutation.mutate()}
+                    onClick={() => {
+                      removeBookmarkMutation.mutate();
+                      toast.toast({
+                        title: "Removed bookmark",
+                        icon: <BookmarkMinusIcon />,
+                        description: `Bookmark removed for ${data.title}`,
+                      });
+                    }}
                     variant={"default"}
                   >
                     <BookmarkCheck className="w-5 h-5" /> Bookmarked
@@ -65,7 +80,14 @@ const Page = ({ params }: { params: { id: string } }) => {
                 ) : (
                   <Button
                     className="flex gap-2"
-                    onClick={() => removeBookmarkMutation.mutate()}
+                    onClick={() => {
+                      addBookmarkMutation.mutate();
+                      toast.toast({
+                        title: "Added bookmark",
+                        icon: <BookmarkCheckIcon />,
+                        description: `Bookmark added for ${data.title}`,
+                      });
+                    }}
                     variant={"outline"}
                   >
                     <Bookmark className="w-5 h-5" /> Bookmark
