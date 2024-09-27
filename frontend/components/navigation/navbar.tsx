@@ -37,7 +37,9 @@ function Navbar() {
   }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
 
   return (
-    <header className="hidden md:flex sticky top-0 z-50 w-full border-border bg-primary/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 border-b-[1px] min-h-[84px] max-h-[84px]">
+    <header
+      className={`hidden md:flex sticky top-0 z-50 w-full ${isLoggedIn ? "bg-background supports-[backdrop-filter]:bg-background/60 border-border" : "bg-muted supports-[backdrop-filter]:bg-muted/60 border-muted"} backdrop-blur-lg border-b-[1px] min-h-[84px] max-h-[84px]`}
+    >
       <div className="w-full flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
           <Link className="mr-6 flex items-center gap-x-2" href="/">
