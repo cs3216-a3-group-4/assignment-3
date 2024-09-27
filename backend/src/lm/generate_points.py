@@ -9,8 +9,8 @@ from src.lm.prompts import QUESTION_POINT_GEN_SYSPROMPT as SYSPROMPT
 
 
 class Points(BaseModel):
-    for_points: List[str]
-    against_points: List[str]
+    for_points: List[dict]
+    against_points: List[dict]
 
 
 def generate_points_from_question(question: str) -> dict:
