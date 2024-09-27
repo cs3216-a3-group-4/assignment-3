@@ -147,6 +147,7 @@ export type PointMiniDTO = {
   body: string;
   point_analysises: Array<PointAnalysisDTO>;
   fallback?: FallbackDTO | null;
+  positive: boolean;
 };
 
 export type ProfileUpdate = {

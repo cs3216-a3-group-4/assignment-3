@@ -602,9 +602,13 @@ export const PointMiniDTOSchema = {
         },
       ],
     },
+    positive: {
+      type: "boolean",
+      title: "Positive",
+    },
   },
   type: "object",
-  required: ["id", "title", "body", "point_analysises"],
+  required: ["id", "title", "body", "point_analysises", "positive"],
   title: "PointMiniDTO",
 } as const;
 
