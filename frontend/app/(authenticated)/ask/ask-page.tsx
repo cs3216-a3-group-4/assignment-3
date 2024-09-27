@@ -1,25 +1,27 @@
+import { Dispatch, SetStateAction, useState } from "react";
+import router, { useRouter } from "next/navigation";
+import { MessageCircleIcon, Wand2Icon, ZapIcon } from "lucide-react";
+
+import { createUserQuestionUserQuestionsPost } from "@/client";
 import Chip from "@/components/display/chip";
+import Link from "@/components/navigation/link";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { MessageCircleIcon, Wand2Icon, ZapIcon } from "lucide-react";
+
 import { MAX_GP_QUESTION_LEN } from "./page";
-import { Dispatch, SetStateAction, useState } from "react";
-import Link from "@/components/navigation/link";
-import { createUserQuestionUserQuestionsPost } from "@/client";
-import router, { useRouter } from "next/navigation";
 
 // TODO: fix this
 const EXAMPLE_GP_QUESTIONS: string[] = [
@@ -88,13 +90,13 @@ const AskPage = ({ setIsLoading }: AskPageProps) => {
         <div className="w-full flex items-center gap-x-4">
           <AutosizeTextarea
             className="text-lg px-4 py-4 resize-none"
-            placeholder={EXAMPLE_GP_QUESTIONS[0]}
-            maxLength={MAX_GP_QUESTION_LEN}
             maxHeight={200}
+            maxLength={MAX_GP_QUESTION_LEN}
             onChange={(event) => setQuestionInput(event.target.value)}
+            placeholder={EXAMPLE_GP_QUESTIONS[0]}
             value={questionInput}
           />
-          <Button size="lg" className="px-4" onClick={handleAskQuestion}>
+          <Button className="px-4" onClick={handleAskQuestion} size="lg">
             <Wand2Icon className="mr-3" />
             Ask
           </Button>
@@ -104,19 +106,19 @@ const AskPage = ({ setIsLoading }: AskPageProps) => {
           <div className="flex w-auto max-w-full overflow-x-auto py-4 gap-x-6">
             {EXAMPLE_GP_QUESTIONS.map((question) => (
               <Chip
+                className="rounded-full px-4 cursor-pointer"
                 key={question}
                 label={question}
+                onClick={() => setQuestionInput(question)}
                 size="lg"
                 variant="primary"
-                className="rounded-full px-4 cursor-pointer"
-                onClick={() => setQuestionInput(question)}
               />
             ))}
             <span className="w-max inline-block">
               <Link
+                className="inline-block"
                 href="/questions/repository"
                 opensInNewTab
-                className="inline-block"
               >
                 More
                 {/* TODO: change label and add functionality to open question repository */}
@@ -131,7 +133,7 @@ const AskPage = ({ setIsLoading }: AskPageProps) => {
           <span className="flex text-2xl 2xl:text-4xl font-semibold text-primary-800 items-center mb-6">
             <ZapIcon className="inline-flex mr-3 fill-primary-800" />
             Supercharge your learning with Jippy
-            <Chip label="Beta" className="ml-4" />
+            <Chip className="ml-4" label="Beta" />
           </span>
 
           <div className="flex h-full flex-col">

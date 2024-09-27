@@ -1,5 +1,10 @@
 "use client";
 
+import { ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { SparklesIcon, Wand2Icon, ZapIcon } from "lucide-react";
+import { Readable } from "stream";
+
 import {
   askGpQuestionUserQuestionsAskGpQuestionGet,
   createUserQuestionUserQuestionsPost,
@@ -23,12 +28,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { SparklesIcon, Wand2Icon, ZapIcon } from "lucide-react";
-import { ReactNode, useEffect, useState } from "react";
-import { otherMockedResp } from "./temp-mocked";
-import { Readable } from "stream";
-import { useRouter } from "next/navigation";
+
 import AskPage from "./ask-page";
+import { otherMockedResp } from "./temp-mocked";
 
 export const MAX_GP_QUESTION_LEN: number = 120; // max character count
 

@@ -35,7 +35,7 @@ export const otherMockedResp = {
                     "Thai finance ministry and central bank to discuss inflation target next week",
                   summary: "",
                   url: "https://www.channelnewsasia.com/business/thai-finance-ministry-and-central-bank-discuss-inflation-target-next-week-4627461",
-                  source: "CNA" as ArticleSource as ArticleSource,
+                  source: "CNA" as ArticleSource,
                   date: "2024-09-24T14:24:24",
                   image_url:
                     "https://onecms-res.cloudinary.com/image/upload/s--2nJaJgKN--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-09-24t062424z_1_lynxmpek8n054_rtroptp_3_thailand-politics.jpg?itok=T-SkBUTI",
@@ -70,7 +70,7 @@ export const otherMockedResp = {
                   summary:
                     "Hardcore poverty has been eliminated in two states as well as Kuala Lumpur, Malaysian Prime Minister Anwar Ibrahim recently declared. Reality isn’t as rosy, say aid workers and experts.\n",
                   url: "https://www.channelnewsasia.com/asia/malaysia-zero-hardcore-poverty-eradicated-anwar-income-doubt-scepticism-4142561",
-                  source: "CNA" as ArticleSource as ArticleSource,
+                  source: "CNA" as ArticleSource,
                   date: "2024-02-24T12:02:08",
                   image_url:
                     "https://onecms-res.cloudinary.com/image/upload/s--os1nePtM--/c_crop,h_897,w_1596,x_0,y_1/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2021-08:cna,w_0.1/f_auto,q_auto/v1/mediacorp/cna/image/2024/02/21/FDZ_9596.jpg?itok=pqAHEzCf",
@@ -732,4 +732,595 @@ export const mockedResp = {
       ],
     },
   ],
+};
+
+export const retryResp = {
+  id: 8,
+  question:
+    "How realistic is it for countries to implement a national minimum wage for all their workers?",
+  answer: {
+    id: 8,
+    points: [
+      {
+        id: 29,
+        title:
+          "Implementing a national minimum wage is realistic because it can help reduce poverty levels by ensuring that all workers receive a basic standard of income, which can improve their quality of life.",
+        body: "",
+        point_analysises: [
+          {
+            analysis: {
+              id: 45924,
+              content:
+                "From a societal perspective, the minimum wage increase can be examined in terms of its impact on income inequality and social equity. This event can support arguments about the importance of fair wages in reducing poverty and improving quality of life for low-income workers. It also raises questions about the role of government in addressing social issues through economic policy, making it a relevant example for discussions on social justice and economic responsibility.",
+              event: {
+                id: 23651,
+                title: "Minimum Wage Increase Proposal",
+                description:
+                  "The Thai government is pushing for a minimum wage increase to 400 baht, as part of its stimulus measures to boost the economy.",
+                is_singapore: false,
+                date: "2024-09-24T14:24:24",
+                categories: [
+                  { id: 10, name: "Society & Culture" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 13184,
+                  title:
+                    "Thai finance ministry and central bank to discuss inflation target next week",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/thai-finance-ministry-and-central-bank-discuss-inflation-target-next-week-4627461",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-09-24T14:24:24",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--2nJaJgKN--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-09-24t062424z_1_lynxmpek8n054_rtroptp_3_thailand-politics.jpg?itok=T-SkBUTI",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "Implementing a national minimum wage is realistic because it can help reduce poverty levels by ensuring that all workers receive a basic standard of income, which can improve their quality of life. The Thai government’s proposal to increase the minimum wage to 400 baht illustrates how such measures can be part of broader economic stimulus efforts aimed at enhancing the living standards of low-income workers. This initiative not only aims to address income inequality but also underscores the government’s role in promoting social equity through economic policy, thereby reinforcing the argument that a national minimum wage is a viable solution to improve the quality of life for many.",
+          },
+          {
+            analysis: {
+              id: 44543,
+              content:
+                "This event can be used to discuss the implications of minimum wage policies on economic growth and household income. The planned increase is aimed at alleviating household debt and stimulating local economies, which raises questions about the effectiveness of such measures in improving living standards. Analyzing the potential benefits and drawbacks of minimum wage hikes can provide insights into the broader economic context and the balance between fair wages and business sustainability.",
+              event: {
+                id: 22964,
+                title: "Thailand Postpones Minimum Wage Increase",
+                description:
+                  "Thailand has postponed a planned increase in the minimum wage to 400 baht per day due to a lack of quorum in committee meetings. This wage hike is part of the ruling party's campaign promise and aims to stimulate the economy.",
+                is_singapore: false,
+                date: "2024-09-23T15:55:39",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 12852,
+                  title:
+                    "Thailand to postpone Oct 1 minimum wage hike, official says",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/asia/thailand-postpone-oct-1-minimum-wage-hike-official-says-4625221",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-09-23T15:55:39",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--d1r2bFNB--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-09-23t072451z_1_lynxmpek8m04o_rtroptp_3_bangkok-dailylife.jpg?itok=EiFih4q-",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "Implementing a national minimum wage is realistic because it can help reduce poverty levels by ensuring that all workers receive a basic standard of income, which can improve their quality of life. The postponement of Thailand's minimum wage increase illustrates the political and economic challenges that can arise in the implementation of such policies. While the planned hike to 400 baht was intended to alleviate household debt and stimulate the economy, the delay highlights the complexities involved in enacting minimum wage laws effectively. This situation demonstrates that while the intention behind a national minimum wage is to improve living standards, the actual implementation can be hindered by political factors, thus revealing the need for careful planning and commitment to ensure that these policies achieve their intended benefits for workers and the economy.",
+          },
+          {
+            analysis: {
+              id: 34567,
+              content:
+                "This event illustrates the complex relationship between minimum wage policies and economic conditions. The increase in minimum wage is aimed at boosting household purchasing power, which can stimulate consumer spending and drive economic growth. However, it also raises concerns about the impact on small businesses, which may struggle to absorb higher labor costs. This duality can be explored in essays discussing the balance between supporting workers and ensuring business viability.",
+              event: {
+                id: 17441,
+                title: "Japan's Historic Minimum Wage Increase",
+                description:
+                  "The Japanese labour ministry has decided to raise the national average minimum wage by about 5 percent to 1,054 yen per hour, marking the largest increase ever.",
+                is_singapore: false,
+                date: "2024-08-06T07:46:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9383,
+                  title: "Japan plans record hike in minimum wage, NHK reports",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-plans-record-hike-minimum-wage-nhk-reports-4502021",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-08-06T07:46:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--4BXFHBWR--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-08-05t234610z_3_lynxmpek6n0lj_rtroptp_3_japan-economy-wages.jpg?itok=kzC_B4HZ",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "Implementing a national minimum wage is realistic because it can help reduce poverty levels by ensuring that all workers receive a basic standard of income, which can improve their quality of life. The recent decision by Japan's labour ministry to raise the national average minimum wage by about 5 percent is a prime example of this, as it aims to increase household purchasing power. This increase not only provides workers with a better income but also encourages consumer spending, which can further stimulate economic growth and potentially alleviate poverty. While concerns about the impact on small businesses exist, the overall intention of such policies is to enhance the quality of life for workers, demonstrating that a national minimum wage can indeed be a realistic and effective measure for improving societal welfare.",
+          },
+          {
+            analysis: {
+              id: 35949,
+              content:
+                "The political commitment to raise the minimum wage reflects the government's approach to tackling income inequality, making it a pertinent example for political discourse. It allows for an examination of the effectiveness of political strategies in addressing social issues and the potential backlash from various stakeholders, including businesses and workers. This can lead to discussions on the role of government in regulating labor markets and the ethical considerations of wage policies.",
+              event: {
+                id: 18171,
+                title: "Prime Minister Kishida's Minimum Wage Plan",
+                description:
+                  "Prime Minister Fumio Kishida's administration aims to raise the minimum hourly pay to ¥1,500 by the mid-2030s, addressing income disparity in Japan.",
+                is_singapore: false,
+                date: "2024-07-03T16:23:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9833,
+                  title:
+                    "Japan firms have offered 5.10% pay rise, biggest in 33 years",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-firms-have-offered-510-pay-rise-biggest-33-years-4454186",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-07-03T16:23:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--pYxkddSi--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-07-03t074218z_1_lynxmpek62082_rtroptp_3_japan-economy-wages.jpg?itok=cOi3_PMz",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "Implementing a national minimum wage is realistic because it can help reduce poverty levels by ensuring that all workers receive a basic standard of income, which can improve their quality of life. Prime Minister Fumio Kishida's plan to raise Japan's minimum hourly pay to ¥1,500 by the mid-2030s exemplifies a governmental commitment to addressing income disparity, which is crucial for enhancing the living standards of workers. This initiative not only demonstrates the feasibility of a national minimum wage policy but also illustrates its potential effectiveness in reducing poverty and fostering social equity, as it aims to provide a more sustainable income for those in lower-paying jobs. The political discourse surrounding this plan highlights the importance of government intervention in labor markets, emphasizing the ethical obligation to ensure fair wages for all workers.",
+          },
+          {
+            analysis: {
+              id: 35948,
+              content:
+                "This initiative to increase the minimum wage is significant for discussions on economic policy and its impact on the labor market. It raises questions about the potential effects on small businesses, which may struggle to absorb increased labor costs. In essays, this example can be used to explore the balance between ensuring fair wages for workers and maintaining business viability, as well as the broader implications for economic growth and consumer spending.",
+              event: {
+                id: 18171,
+                title: "Prime Minister Kishida's Minimum Wage Plan",
+                description:
+                  "Prime Minister Fumio Kishida's administration aims to raise the minimum hourly pay to ¥1,500 by the mid-2030s, addressing income disparity in Japan.",
+                is_singapore: false,
+                date: "2024-07-03T16:23:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9833,
+                  title:
+                    "Japan firms have offered 5.10% pay rise, biggest in 33 years",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-firms-have-offered-510-pay-rise-biggest-33-years-4454186",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-07-03T16:23:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--pYxkddSi--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-07-03t074218z_1_lynxmpek62082_rtroptp_3_japan-economy-wages.jpg?itok=cOi3_PMz",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "Implementing a national minimum wage is realistic because it can help reduce poverty levels by ensuring that all workers receive a basic standard of income, which can improve their quality of life. Prime Minister Fumio Kishida's administration in Japan demonstrates this practicality through its plan to raise the minimum hourly pay to ¥1,500 by the mid-2030s, aiming to address income disparity. This initiative underscores the potential for a minimum wage to enhance the standard of living for workers, as it directly correlates with increased earnings that can alleviate poverty. While the initiative also raises concerns about small businesses coping with higher labor costs, the overarching goal of improving worker welfare through a national minimum wage highlights its feasibility and importance in fostering economic equity.",
+          },
+        ],
+        fallback: null,
+        positive: true,
+      },
+      {
+        id: 30,
+        title:
+          "A national minimum wage can promote fair competition among businesses because it sets a baseline for wages, preventing companies from undercutting each other by paying lower salaries.",
+        body: "",
+        point_analysises: [
+          {
+            analysis: {
+              id: 35948,
+              content:
+                "This initiative to increase the minimum wage is significant for discussions on economic policy and its impact on the labor market. It raises questions about the potential effects on small businesses, which may struggle to absorb increased labor costs. In essays, this example can be used to explore the balance between ensuring fair wages for workers and maintaining business viability, as well as the broader implications for economic growth and consumer spending.",
+              event: {
+                id: 18171,
+                title: "Prime Minister Kishida's Minimum Wage Plan",
+                description:
+                  "Prime Minister Fumio Kishida's administration aims to raise the minimum hourly pay to ¥1,500 by the mid-2030s, addressing income disparity in Japan.",
+                is_singapore: false,
+                date: "2024-07-03T16:23:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9833,
+                  title:
+                    "Japan firms have offered 5.10% pay rise, biggest in 33 years",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-firms-have-offered-510-pay-rise-biggest-33-years-4454186",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-07-03T16:23:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--pYxkddSi--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-07-03t074218z_1_lynxmpek62082_rtroptp_3_japan-economy-wages.jpg?itok=cOi3_PMz",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "Implementing a national minimum wage can indeed promote fair competition among businesses by establishing a wage baseline that prevents companies from undercutting each other. Prime Minister Kishida's initiative to raise Japan's minimum wage to ¥1,500 highlights the intention to address income disparity, thereby ensuring that all workers receive fair compensation. However, the plan also raises concerns about small businesses' ability to absorb increased labor costs, which may lead to unintended consequences such as reduced hiring or business closures. This illustrates the delicate balance that countries must achieve between promoting fair wages and ensuring that businesses can remain competitive and viable in the market.",
+          },
+          {
+            analysis: {
+              id: 45924,
+              content:
+                "From a societal perspective, the minimum wage increase can be examined in terms of its impact on income inequality and social equity. This event can support arguments about the importance of fair wages in reducing poverty and improving quality of life for low-income workers. It also raises questions about the role of government in addressing social issues through economic policy, making it a relevant example for discussions on social justice and economic responsibility.",
+              event: {
+                id: 23651,
+                title: "Minimum Wage Increase Proposal",
+                description:
+                  "The Thai government is pushing for a minimum wage increase to 400 baht, as part of its stimulus measures to boost the economy.",
+                is_singapore: false,
+                date: "2024-09-24T14:24:24",
+                categories: [
+                  { id: 10, name: "Society & Culture" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 13184,
+                  title:
+                    "Thai finance ministry and central bank to discuss inflation target next week",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/thai-finance-ministry-and-central-bank-discuss-inflation-target-next-week-4627461",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-09-24T14:24:24",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--2nJaJgKN--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-09-24t062424z_1_lynxmpek8n054_rtroptp_3_thailand-politics.jpg?itok=T-SkBUTI",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "A national minimum wage can promote fair competition among businesses because it sets a baseline for wages, preventing companies from undercutting each other by paying lower salaries. The Thai government's proposal to increase the minimum wage to 400 baht illustrates this point, as it aims to create a more equitable wage structure that benefits low-income workers. By establishing a higher minimum wage, the government helps to ensure that businesses compete on factors beyond just salary, such as quality of service and innovation, rather than solely on their ability to pay lower wages. This approach not only addresses income inequality but also fosters a healthier economic environment by encouraging fairer competition among businesses.",
+          },
+          {
+            analysis: {
+              id: 34567,
+              content:
+                "This event illustrates the complex relationship between minimum wage policies and economic conditions. The increase in minimum wage is aimed at boosting household purchasing power, which can stimulate consumer spending and drive economic growth. However, it also raises concerns about the impact on small businesses, which may struggle to absorb higher labor costs. This duality can be explored in essays discussing the balance between supporting workers and ensuring business viability.",
+              event: {
+                id: 17441,
+                title: "Japan's Historic Minimum Wage Increase",
+                description:
+                  "The Japanese labour ministry has decided to raise the national average minimum wage by about 5 percent to 1,054 yen per hour, marking the largest increase ever.",
+                is_singapore: false,
+                date: "2024-08-06T07:46:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9383,
+                  title: "Japan plans record hike in minimum wage, NHK reports",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-plans-record-hike-minimum-wage-nhk-reports-4502021",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-08-06T07:46:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--4BXFHBWR--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-08-05t234610z_3_lynxmpek6n0lj_rtroptp_3_japan-economy-wages.jpg?itok=kzC_B4HZ",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "A national minimum wage can indeed promote fair competition among businesses by establishing a wage floor that prevents undercutting. The recent decision by Japan to raise its national average minimum wage by 5 percent demonstrates this principle in action. By increasing the minimum wage to 1,054 yen per hour, Japan aims to enhance household purchasing power, which not only supports workers but also stimulates consumer spending, driving economic growth. However, while this increase promotes fair competition by ensuring that all businesses pay a baseline wage, it also raises concerns for small businesses that may struggle with the additional labor costs. This showcases the delicate balance required in implementing minimum wage policies, highlighting how such measures can foster economic fairness while also necessitating careful consideration of their impact on business viability.",
+          },
+          {
+            analysis: {
+              id: 35949,
+              content:
+                "The political commitment to raise the minimum wage reflects the government's approach to tackling income inequality, making it a pertinent example for political discourse. It allows for an examination of the effectiveness of political strategies in addressing social issues and the potential backlash from various stakeholders, including businesses and workers. This can lead to discussions on the role of government in regulating labor markets and the ethical considerations of wage policies.",
+              event: {
+                id: 18171,
+                title: "Prime Minister Kishida's Minimum Wage Plan",
+                description:
+                  "Prime Minister Fumio Kishida's administration aims to raise the minimum hourly pay to ¥1,500 by the mid-2030s, addressing income disparity in Japan.",
+                is_singapore: false,
+                date: "2024-07-03T16:23:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9833,
+                  title:
+                    "Japan firms have offered 5.10% pay rise, biggest in 33 years",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-firms-have-offered-510-pay-rise-biggest-33-years-4454186",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-07-03T16:23:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--pYxkddSi--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-07-03t074218z_1_lynxmpek62082_rtroptp_3_japan-economy-wages.jpg?itok=cOi3_PMz",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "A national minimum wage can indeed promote fair competition among businesses, as demonstrated by Prime Minister Kishida's Minimum Wage Plan in Japan. The government's commitment to raise the minimum hourly pay to ¥1,500 aims to address income disparity, which can level the playing field for companies by establishing a wage baseline that prevents them from undercutting each other through lower salaries. This initiative reflects a political strategy to tackle social issues such as income inequality, highlighting the importance of government intervention in regulating labor markets to ensure fair competition and ethical wage practices among businesses.",
+          },
+          {
+            analysis: {
+              id: 45923,
+              content:
+                "The proposal to increase the minimum wage is a significant economic policy that can be analyzed in terms of its potential to stimulate consumer spending and improve living standards. In an essay, this example can be used to argue that higher wages can lead to increased purchasing power, which in turn can drive economic growth. However, it also opens up discussions on the potential drawbacks, such as increased costs for businesses and possible inflationary pressures.",
+              event: {
+                id: 23651,
+                title: "Minimum Wage Increase Proposal",
+                description:
+                  "The Thai government is pushing for a minimum wage increase to 400 baht, as part of its stimulus measures to boost the economy.",
+                is_singapore: false,
+                date: "2024-09-24T14:24:24",
+                categories: [
+                  { id: 10, name: "Society & Culture" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 13184,
+                  title:
+                    "Thai finance ministry and central bank to discuss inflation target next week",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/thai-finance-ministry-and-central-bank-discuss-inflation-target-next-week-4627461",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-09-24T14:24:24",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--2nJaJgKN--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-09-24t062424z_1_lynxmpek8n054_rtroptp_3_thailand-politics.jpg?itok=T-SkBUTI",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "A national minimum wage can promote fair competition among businesses because it sets a baseline for wages, preventing companies from undercutting each other by paying lower salaries. The Thai government's proposal to increase the minimum wage to 400 baht illustrates this point effectively; by establishing a higher wage floor, it not only aims to enhance the living standards of workers but also encourages businesses to compete fairly on the quality of their products and services rather than solely on labor costs. This could lead to a healthier economic environment where companies are incentivized to invest in their workforce, ultimately benefiting the economy through increased consumer spending and improved standards of living.",
+          },
+        ],
+        fallback: null,
+        positive: true,
+      },
+      {
+        id: 31,
+        title:
+          "It may be unrealistic for some countries to implement a national minimum wage due to varying economic conditions, as a one-size-fits-all wage may not be sustainable for businesses in regions with lower living costs.",
+        body: "",
+        point_analysises: [
+          {
+            analysis: {
+              id: 35948,
+              content:
+                "This initiative to increase the minimum wage is significant for discussions on economic policy and its impact on the labor market. It raises questions about the potential effects on small businesses, which may struggle to absorb increased labor costs. In essays, this example can be used to explore the balance between ensuring fair wages for workers and maintaining business viability, as well as the broader implications for economic growth and consumer spending.",
+              event: {
+                id: 18171,
+                title: "Prime Minister Kishida's Minimum Wage Plan",
+                description:
+                  "Prime Minister Fumio Kishida's administration aims to raise the minimum hourly pay to ¥1,500 by the mid-2030s, addressing income disparity in Japan.",
+                is_singapore: false,
+                date: "2024-07-03T16:23:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9833,
+                  title:
+                    "Japan firms have offered 5.10% pay rise, biggest in 33 years",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-firms-have-offered-510-pay-rise-biggest-33-years-4454186",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-07-03T16:23:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--pYxkddSi--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-07-03t074218z_1_lynxmpek62082_rtroptp_3_japan-economy-wages.jpg?itok=cOi3_PMz",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "The initiative by Prime Minister Kishida to raise Japan's minimum wage to ¥1,500 by the mid-2030s illustrates the potential challenges of implementing a national minimum wage in varying economic conditions. While the intention is to address income disparity, the significant increase poses risks for small businesses that may find it difficult to absorb higher labor costs, particularly in regions with lower living costs. This scenario supports the argument that a one-size-fits-all minimum wage may not be sustainable across different areas, as it could lead to adverse effects on local economies and employment levels, thereby questioning the realism of such policies in diverse economic contexts.",
+          },
+          {
+            analysis: {
+              id: 8248,
+              content:
+                "This event underscores the economic challenges faced by low-income families, particularly in relation to the minimum wage and cost of living. It can be used to argue that economic policies must be more responsive to the realities of inflation and living expenses. The discussion can also extend to the effectiveness of minimum wage laws and the necessity for a living wage that reflects the true cost of living.",
+              event: {
+                id: 4073,
+                title: "High Cost of Living vs. Minimum Wage",
+                description:
+                  "Social workers highlight the struggles of families living on minimum wage amidst rising living costs in Malaysia.",
+                is_singapore: false,
+                date: "2024-02-24T12:02:08",
+                categories: [
+                  { id: 10, name: "Society & Culture" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 2144,
+                  title:
+                    "‘Many are living from meal to meal’: Malaysian government’s claim of hardcore poverty eradication draws scepticism",
+                  summary:
+                    "Hardcore poverty has been eliminated in two states as well as Kuala Lumpur, Malaysian Prime Minister Anwar Ibrahim recently declared. Reality isn’t as rosy, say aid workers and experts.\n",
+                  url: "https://www.channelnewsasia.com/asia/malaysia-zero-hardcore-poverty-eradicated-anwar-income-doubt-scepticism-4142561",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-02-24T12:02:08",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--os1nePtM--/c_crop,h_897,w_1596,x_0,y_1/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2021-08:cna,w_0.1/f_auto,q_auto/v1/mediacorp/cna/image/2024/02/21/FDZ_9596.jpg?itok=pqAHEzCf",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "The implementation of a national minimum wage may be unrealistic for some countries due to varying economic conditions. The struggles of families living on minimum wage in Malaysia highlight the disconnect between wage levels and the rising cost of living, illustrating that a standardized wage can fail to meet the basic needs of workers in high-cost areas. As social workers have pointed out, the challenges faced by these families emphasize that economic policies, including minimum wage laws, need to be adaptable to local conditions rather than adopting a one-size-fits-all approach. This situation demonstrates that a national minimum wage might not be sustainable in regions where living costs are disproportionately high compared to the wage set, reinforcing the argument that economic disparities necessitate more tailored wage policies.",
+          },
+          {
+            analysis: {
+              id: 34567,
+              content:
+                "This event illustrates the complex relationship between minimum wage policies and economic conditions. The increase in minimum wage is aimed at boosting household purchasing power, which can stimulate consumer spending and drive economic growth. However, it also raises concerns about the impact on small businesses, which may struggle to absorb higher labor costs. This duality can be explored in essays discussing the balance between supporting workers and ensuring business viability.",
+              event: {
+                id: 17441,
+                title: "Japan's Historic Minimum Wage Increase",
+                description:
+                  "The Japanese labour ministry has decided to raise the national average minimum wage by about 5 percent to 1,054 yen per hour, marking the largest increase ever.",
+                is_singapore: false,
+                date: "2024-08-06T07:46:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9383,
+                  title: "Japan plans record hike in minimum wage, NHK reports",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-plans-record-hike-minimum-wage-nhk-reports-4502021",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-08-06T07:46:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--4BXFHBWR--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-08-05t234610z_3_lynxmpek6n0lj_rtroptp_3_japan-economy-wages.jpg?itok=kzC_B4HZ",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "The event of Japan's historic minimum wage increase supports the argument that implementing a national minimum wage may be unrealistic for some countries due to varying economic conditions. The decision to raise the minimum wage by about 5 percent was intended to enhance household purchasing power and stimulate consumer spending; however, it also highlights the potential strain on small businesses that may find it difficult to manage increased labor costs. This situation illustrates the challenge of adopting a one-size-fits-all wage policy, as regions with lower living costs might struggle to sustain such increases without jeopardizing business viability, thereby reinforcing the notion that economic conditions should dictate the feasibility of minimum wage implementation.",
+          },
+          {
+            analysis: {
+              id: 7419,
+              content:
+                "The issue of stagnant wage growth in Malaysia highlights the challenges faced by workers in an evolving economy. This example can be used to argue the necessity of government intervention in wage policies, especially in light of rising living costs. It also raises important questions about the role of legislation in ensuring fair wages across sectors and the potential consequences of inaction on economic inequality and consumer spending.",
+              event: {
+                id: 3656,
+                title: "Stagnant Wage Growth in Malaysia",
+                description:
+                  "Malaysia faces stagnant wage growth, with government efforts to increase civil servant salaries and pressure on the private sector to follow suit.",
+                is_singapore: false,
+                date: "2024-03-19T09:09:11",
+                categories: [{ id: 11, name: "Economics" }],
+                original_article: {
+                  id: 1949,
+                  title:
+                    "Domestic investment, wage growth: Malaysia ramps up efforts to revitalise economy after narrowly missing growth targets",
+                  summary:
+                    "In February this year, the ringgit had dropped to levels not seen since the depths of the Asian financial crisis over a quarter of a century ago.\n",
+                  url: "https://www.channelnewsasia.com/asia/domestic-investment-wage-growth-malaysia-ramps-efforts-revitalise-economy-after-missing-growth-targets-anwar-ibrahim-4202826",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-03-19T09:09:11",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--mi7teV2M--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_one-cms:core:watermark:reuters,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-02-14t000823z_1_lynxnpek1d002_rtroptp_3_malaysia-dailylife.jpg?itok=fwts7f_p",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "The stagnant wage growth in Malaysia illustrates the challenges of implementing a national minimum wage, as varying economic conditions can significantly affect its feasibility. The government's attempts to increase civil servant salaries amidst stagnant growth reflect the pressure on businesses to adjust wages, which may not be sustainable in regions with lower living costs. This situation underscores that a one-size-fits-all approach to minimum wage legislation may lead to negative consequences for businesses and the economy, as it could exacerbate economic inequalities and hinder growth in areas already struggling with low wages.",
+          },
+        ],
+        fallback: null,
+        positive: false,
+      },
+      {
+        id: 32,
+        title:
+          "The introduction of a national minimum wage could lead to increased unemployment rates because businesses may struggle to afford higher wages, leading them to reduce their workforce or automate positions.",
+        body: "",
+        point_analysises: [
+          {
+            analysis: {
+              id: 35948,
+              content:
+                "This initiative to increase the minimum wage is significant for discussions on economic policy and its impact on the labor market. It raises questions about the potential effects on small businesses, which may struggle to absorb increased labor costs. In essays, this example can be used to explore the balance between ensuring fair wages for workers and maintaining business viability, as well as the broader implications for economic growth and consumer spending.",
+              event: {
+                id: 18171,
+                title: "Prime Minister Kishida's Minimum Wage Plan",
+                description:
+                  "Prime Minister Fumio Kishida's administration aims to raise the minimum hourly pay to ¥1,500 by the mid-2030s, addressing income disparity in Japan.",
+                is_singapore: false,
+                date: "2024-07-03T16:23:10",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 9833,
+                  title:
+                    "Japan firms have offered 5.10% pay rise, biggest in 33 years",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/business/japan-firms-have-offered-510-pay-rise-biggest-33-years-4454186",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-07-03T16:23:10",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--pYxkddSi--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-07-03t074218z_1_lynxmpek62082_rtroptp_3_japan-economy-wages.jpg?itok=cOi3_PMz",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "The introduction of a national minimum wage could indeed lead to increased unemployment rates due to heightened labor costs for businesses. Prime Minister Kishida's plan to raise the minimum wage in Japan to ¥1,500 by the mid-2030s exemplifies this concern, as small businesses may struggle to afford these higher wages. The pressure of increased operational costs may force them to either downsize their workforce or turn to automation, ultimately leading to job losses. This situation highlights the delicate balance between the need for fair worker compensation and the potential negative repercussions on employment levels within the economy.",
+          },
+          {
+            analysis: {
+              id: 44543,
+              content:
+                "This event can be used to discuss the implications of minimum wage policies on economic growth and household income. The planned increase is aimed at alleviating household debt and stimulating local economies, which raises questions about the effectiveness of such measures in improving living standards. Analyzing the potential benefits and drawbacks of minimum wage hikes can provide insights into the broader economic context and the balance between fair wages and business sustainability.",
+              event: {
+                id: 22964,
+                title: "Thailand Postpones Minimum Wage Increase",
+                description:
+                  "Thailand has postponed a planned increase in the minimum wage to 400 baht per day due to a lack of quorum in committee meetings. This wage hike is part of the ruling party's campaign promise and aims to stimulate the economy.",
+                is_singapore: false,
+                date: "2024-09-23T15:55:39",
+                categories: [
+                  { id: 3, name: "Politics" },
+                  { id: 11, name: "Economics" },
+                ],
+                original_article: {
+                  id: 12852,
+                  title:
+                    "Thailand to postpone Oct 1 minimum wage hike, official says",
+                  summary: "",
+                  url: "https://www.channelnewsasia.com/asia/thailand-postpone-oct-1-minimum-wage-hike-official-says-4625221",
+                  source: "CNA" as ArticleSource,
+                  date: "2024-09-23T15:55:39",
+                  image_url:
+                    "https://onecms-res.cloudinary.com/image/upload/s--d1r2bFNB--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-09-23t072451z_1_lynxmpek8m04o_rtroptp_3_bangkok-dailylife.jpg?itok=EiFih4q-",
+                },
+                reads: [],
+              },
+              likes: [],
+            },
+            elaboration:
+              "The introduction of a national minimum wage could indeed lead to increased unemployment rates, as evidenced by Thailand's postponement of a minimum wage increase to 400 baht per day. The decision to delay this wage hike demonstrates the challenges that governments face in balancing the need for fair compensation with the economic realities that businesses encounter. As the ruling party aimed to stimulate the economy, the lack of agreement on the increase suggests that stakeholders recognized the potential strain on businesses that could lead to workforce reductions or heightened automation to manage labor costs. This situation illustrates the delicate interplay between implementing minimum wage policies and maintaining employment levels, reinforcing the argument that such policies could inadvertently contribute to higher unemployment rates.",
+          },
+        ],
+        fallback: null,
+        positive: false,
+      },
+    ],
+  },
 };
