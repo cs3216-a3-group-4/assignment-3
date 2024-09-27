@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { UserQuestionMiniDTO } from "@/client";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { getAnswers } from "@/queries/user-question";
@@ -53,6 +54,16 @@ function AllQuestions() {
                   )}
                 </div>
               )
+            )}
+            {!isLoading && data!.length === 0 && (
+              <Card className="mx-auto my-8 p-8 flex flex-col gap-8 max-w-lg">
+                <h2 className="text-xl">
+                  You don&apos;t have any past questions!
+                </h2>
+                <Link href="/ask">
+                  <Button>Ask Jippy a GP question</Button>
+                </Link>
+              </Card>
             )}
           </div>
         </div>
