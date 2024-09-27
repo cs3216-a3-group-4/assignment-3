@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import router, { useRouter } from "next/navigation";
-import { MessageCircleIcon, Wand2Icon, ZapIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Wand2Icon, ZapIcon } from "lucide-react";
 
 import { createUserQuestionUserQuestionsPost } from "@/client";
 import Chip from "@/components/display/chip";
@@ -191,7 +191,7 @@ const AskPage = ({ setIsLoading }: AskPageProps) => {
                   <AlertTitle>Jippy can make mistakes</AlertTitle>
                   <AlertDescription>
                     <p>
-                      Jippy is smart, but Jippy isn't perfect and can make
+                      Jippy is smart, but Jippy isn&apos;t perfect and can make
                       mistakes. Remember to double check any important details.
                     </p>
                     {/* TODO: */}
