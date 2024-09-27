@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.common.dependencies import get_session
-from src.events.models import Analysis, Event, GPQuestion, UserReadEvent
+from src.events.models import Analysis, Bookmark, Event, GPQuestion, UserReadEvent
 from src.likes.models import Like
 
 
@@ -12,7 +12,7 @@ def retrieve_event(
     id: int,
     user=Depends(get_current_user),
     session=Depends(get_session),
-):
+) -> Event:
     event = session.scalar(
         select(Event)
         .where(Event.id == id)
@@ -30,6 +30,7 @@ def retrieve_event(
                 Event.analysises, Analysis.likes.and_(Like.point_id.is_(None))
             ),
             selectinload(Event.original_article),
+            selectinload(Event.bookmarks.and_(Bookmark.user_id == user.id)),
         )
     )
     if not event:

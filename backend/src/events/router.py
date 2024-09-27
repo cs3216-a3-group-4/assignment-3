@@ -6,7 +6,7 @@ from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.events.dependencies import retrieve_event
-from src.events.models import Article, Category, Event, UserReadEvent
+from src.events.models import Article, Bookmark, Category, Event, UserReadEvent
 from src.common.dependencies import get_session
 from src.events.schemas import EventDTO, EventIndexResponse
 from src.notes.models import Note, NoteType
@@ -26,13 +26,15 @@ def get_events(
     category_ids: Annotated[list[int] | None, Query()] = None,
     limit: int | None = None,
     offset: int | None = None,
+    bookmarks: bool = False,
 ) -> EventIndexResponse:
     query = select(Event.id).distinct()
     if start_date is not None:
         query = query.where(Event.original_article.has(Article.date >= start_date))
     if end_date is not None:
         query = query.where(Event.original_article.has(Article.date <= end_date))
-
+    if bookmarks:
+        query = query.where(Event.bookmarks.any(Bookmark.user_id == user.id))
     if category_ids:
         query = query.join(Event.categories.and_(Category.id.in_(category_ids)))
     relevant_ids = [id for id in session.scalars(query)]
@@ -114,3 +116,39 @@ def search_whatever(query: str):
     # call your function and return the result
     results = get_similar_results(query)
     return results
+
+
+@router.post("/{id}/bookmarks")
+def add_bookmark(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    event=Depends(retrieve_event),
+    session=Depends(get_session),
+):
+    bookmark = session.scalar(
+        select(Bookmark)
+        .where(Bookmark.user_id == user.id)
+        .where(Bookmark.event_id == id)
+    )
+    if bookmark:
+        return
+    event.bookmarks.append(Bookmark(user_id=user.id))
+    session.add(event)
+    session.commit()
+
+
+@router.delete("/{id}/bookmarks")
+def delete_bookmark(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    _=Depends(retrieve_event),
+    session=Depends(get_session),
+):
+    bookmark = session.scalar(
+        select(Bookmark)
+        .where(Bookmark.user_id == user.id)
+        .where(Bookmark.event_id == id)
+    )
+    if bookmark:
+        session.delete(bookmark)
+        session.commit()
