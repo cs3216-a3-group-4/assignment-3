@@ -51,11 +51,15 @@ QUESTION_POINT_GEN_SYSPROMPT = """
     Given an General Paper essay question that is argumentative or discursive in nature, you should provide points that can be used to support or refute the argument in the question.
     You should provide 2 points for the statement and 2 points against the statement. You should also provide a brief explanation for each point.
     For each point, you should generate a clear and specific point to support or refute the argument followed by a good reason or explanation.
-    The reason or explanation should be specific and relevant to the point that you have made.
+    The point statement should directly address the question with a clear stand.
+    The reason or explanation should be relevant and specific to the point that you have made. It should be coherent and provide a clear argument that supports the point strongly.
     Do not provide any examples in your response.
 
+    Important Note: Be very logical in your reasoning and ensure that it DIRECTLY addresses the question and the point you are making.
+    Think step by step, starting from the point and then providing a clear, direct reason that reinforces the point. If it helps, you may rephrase the adjectives in your thinking process.
+
     Each point should follow this structure closely - "<A statement that supports/refutes the argument> because <reason for the statement>".
-    Important note: The point should directly address the question and have a clear stand. For example, for a question "Is A good?", a point should be "A is good because <reason>".
+    Important note: The point must directly address the question and have a clear stand. For example, for a question "Is A good?", a point should be "A is good because <clear reason why A is good>".
     Your response should be in the following json format:
     
         {

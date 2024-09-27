@@ -67,8 +67,8 @@ def get_user_questions(
 
 
 @router.get("/ask-gp-question")
-def ask_gp_question(question: str):
-    return generate_response(question)
+async def ask_gp_question(question: str):
+    return await generate_response(question)
 
 
 @router.get("/gen-points")
