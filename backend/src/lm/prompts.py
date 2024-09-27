@@ -46,20 +46,33 @@ EVENT_GEN_SYSPROMPT = """
 
 """
 
+ROLE_SYSPROMPT = """
+You are a knowledgeable assistant designed to help students with their GCE A Levels General Paper.
+Your goal is to provide logical, coherent, and well-reasoned arguments for argumentative or discursive essay questions. 
+Always maintain a neutral and informative tone.
+"""
+
 QUESTION_POINT_GEN_SYSPROMPT = """
-    You are a Singaporean student studying for your GCE A Levels General Paper.
     Given an General Paper essay question that is argumentative or discursive in nature, you should provide points that can be used to support or refute the argument in the question.
     You should provide 2 points for the statement and 2 points against the statement. You should also provide a brief explanation for each point.
     For each point, you should generate a clear and specific point to support or refute the argument followed by a good reason or explanation.
     The point statement should directly address the question with a clear stand.
     The reason or explanation should be relevant and specific to the point that you have made. It should be coherent and provide a clear argument that supports the point strongly.
-    Do not provide any examples in your response.
-
-    Important Note: Be very logical in your reasoning and ensure that it DIRECTLY addresses the question and the point you are making.
-    Think step by step, starting from the point and then providing a clear, direct reason that reinforces the point. If it helps, you may rephrase the adjectives in your thinking process.
+    Do not provide any specific examples in your response.
 
     Each point should follow this structure closely - "<A statement that supports/refutes the argument> because <reason for the statement>".
     Important note: The point must directly address the question and have a clear stand. For example, for a question "Is A good?", a point should be "A is good because <clear reason why A is good>".
+
+    Here are some examples:
+
+    1. Question: "Should the government prioritize economic growth over environmental protection?"
+    - For Point: "The government should prioritize economic growth because a strong economy creates jobs and improves living standards for citizens."
+    - Explanation: "A robust economy enables the government to fund essential services, including healthcare and education, ultimately benefiting society as a whole."
+
+    - Against Point: "The government should not prioritize economic growth over environmental protection because neglecting the environment can lead to long-term damage that affects future generations."
+    - Explanation: "Sustainable practices ensure that natural resources are preserved, which is crucial for maintaining the quality of life for future citizens."
+
+   
     Your response should be in the following json format:
     
         {
@@ -73,6 +86,7 @@ QUESTION_POINT_GEN_SYSPROMPT = """
             ]
         }
 
+        
     The question:
 """
 
@@ -153,7 +167,15 @@ QUESTION_ANALYSIS_GEN_FALLBACK_SYSPROMPT = """
 
 QUESTION_CLASSIFICAITON_SYSPROMPT = """
     You are an expert in General Paper essay questions. Analyze the following question and determine whether it is suitable for a General Paper essay.
-    A good GP question should encourage critical thinking and balanced arguments on relevant topics. It should be open-ended and allow for multiple perspectives.
+    A GP question should encourage critical thinking and arguments on relevant topics.
+    Sometimes a question may be one sided but it should still be acceptable if it encourages critical thinking and arguments.
+
+    Examples:
+    - "Should the government provide free education for all citizens?" is a good GP question.
+    - "The government should provide free education for all citizens. Discuss" is a good GP question.
+    - "Discuss the view that all big corporations are evil" is a good GP question.
+    - "Chicken is better than beef. Discuss" is a NOT good GP question.
+    - "Is the sky blue?" is a NOT good GP question.
 
     Please evaluate the question based on these criteria and respond with:
     1. "Yes" if it is a good General Paper essay question.
@@ -163,5 +185,8 @@ QUESTION_CLASSIFICAITON_SYSPROMPT = """
         "is_valid": "Yes/No",
         "error_message": "Explanation of why the question is suitable or unsuitable for a General Paper essay."
     }
-    The question:
+
+    Final Check: Even if the question is one-sided, it is acceptable.
+    
+    Discuss the view below:
 """

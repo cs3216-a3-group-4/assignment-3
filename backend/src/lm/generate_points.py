@@ -5,7 +5,8 @@ from pydantic import BaseModel
 from src.lm.generate_events import lm_model_essay as lm_model
 from src.embeddings.vector_store import get_similar_results
 
-from src.lm.prompts import QUESTION_POINT_GEN_SYSPROMPT as SYSPROMPT
+from src.lm.prompts import ROLE_SYSPROMPT as SYSPROMPT
+from src.lm.prompts import QUESTION_POINT_GEN_SYSPROMPT as HUMAN_PROMPT
 
 
 class Points(BaseModel):
@@ -14,7 +15,8 @@ class Points(BaseModel):
 
 
 def generate_points_from_question(question: str) -> dict:
-    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=question)]
+    human_message = HUMAN_PROMPT + question
+    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
 
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=Points)
