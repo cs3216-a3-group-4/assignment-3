@@ -1,5 +1,5 @@
 from src.lm.generate_points import get_relevant_analyses
-from src.lm.generate_events import lm_model
+from src.lm.generate_events import lm_model_essay as lm_model
 from langchain_core.messages import HumanMessage, SystemMessage
 from src.lm.prompts import QUESTION_ANALYSIS_GEN_SYSPROMPT_2 as SYSPROMPT
 from src.lm.prompts import (

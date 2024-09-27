@@ -6,19 +6,21 @@ import openai
 from src.scrapers.guardian.get_articles import get_articles
 from typing import List
 from pydantic import BaseModel
-from src.common.constants import LANGCHAIN_API_KEY
-from src.common.constants import LANGCHAIN_TRACING_V2
-from src.common.constants import OPENAI_API_KEY
+from src.common.constants import LANGCHAIN_API_KEY, OPENAI_API_KEY
 from src.lm.prompts import EVENT_GEN_SYSPROMPT as SYSPROMPT
 import asyncio
 
 import os
 
 os.environ["LANGCHAIN_API_KEY"] = LANGCHAIN_API_KEY
-os.environ["LANGCHAIN_TRACING_V2"] = LANGCHAIN_TRACING_V2
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
-lm_model = ChatOpenAI(model="gpt-4o-mini", temperature=0.7, max_retries=5)
+lm_model = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, max_retries=5)
+
+
+lm_model_essay = ChatOpenAI(
+    model="gpt-4o-mini", temperature=0.7, frequency_penalty=0.5, max_retries=5
+)
 
 
 class CategoryAnalysis(BaseModel):
