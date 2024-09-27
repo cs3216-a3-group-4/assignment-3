@@ -14,7 +14,7 @@ const AnswerPage = () => {
   return (
     <div className="flex flex-col bg-muted w-full h-full max-h-full px-4 md:px-8 xl:px-24 overflow-y-auto">
       <div className="flex flex-col pb-4 mb-4 py-8 xl:py-16 max-w-5xl md:mx-8 lg:mx-16 xl:mx-auto">
-        <h1 className="text-2xl lg:text-3x xl:text-4xl font-semibold text-text mb-8 2xl:mb-12">
+        <h1 className="px-8 md:px-0 text-2xl lg:text-3x xl:text-4xl font-semibold text-text mb-10 2xl:mb-12">
           {mockData.question}
         </h1>
         <div className="flex flex-col">
@@ -30,7 +30,7 @@ const AnswerPage = () => {
                 >
                   <AccordionTrigger
                     chevronClassName="h-6 w-6 stroke-[2.5] ml-4"
-                    className="text-lg lg:text-xl 2xl:text-2xl text-primary font-medium text-start hover:no-underline"
+                    className="text-lg lg:text-xl 2xl:text-2xl text-primary font-medium text-start hover:no-underline pt-4 pb-6"
                   >
                     <div className="flex flex-col">
                       <Chip
@@ -47,33 +47,29 @@ const AnswerPage = () => {
                   </AccordionTrigger>
                   <AccordionContent>
                     <div className="border-t-[0.5px] border-primary-600 mt-2 pt-4 2xl:pt-8">
-                      <h2 className="text-lg 2xl:text-2xl font-medium">
+                      <h2 className="text-lg 2xl:text-2xl px-6 2xl:px-10 pb-4 2xl:pb-0 pt-2">
                         Examples
                       </h2>
 
                       {pointHasAnalysis ? (
-                        <Accordion
-                          className=""
-                          type="multiple"
-                          defaultValue={point.point_analysises.map(
-                            (point_analysis) =>
-                              point_analysis.analysis.id.toString(),
-                          )}
-                        >
+                        <Accordion className="" type="multiple">
                           {/* TODO: get confidence score, sort and bucket */}
                           {point.point_analysises.map((point_analysis) => {
                             const { analysis, elaboration } = point_analysis;
                             const { id: analysisId, event } = analysis;
                             return (
                               <AccordionItem
-                                className="py-4"
+                                className="py-2 2xl:py-4 px-6 2xl:px-10"
                                 value={analysisId.toString()}
                                 key={analysisId}
                               >
-                                <AccordionTrigger className="xl:text-lg 2xl:text-xl 3xl:text-2xl font-medium">
+                                <AccordionTrigger
+                                  className="text-start text-lg xl:text-xl 3xl:text-2xl text-primary-alt-800 font-medium"
+                                  chevronClassName="ml-4"
+                                >
                                   {event.title}
                                 </AccordionTrigger>
-                                <AccordionContent className="xl:text-base 2xl:text-lg 3xl:text-xl">
+                                <AccordionContent className="text-lg 2xl:text-xl 3xl:text-2xl">
                                   <div>{elaboration}</div>
                                 </AccordionContent>
                               </AccordionItem>
