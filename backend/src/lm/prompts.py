@@ -146,3 +146,18 @@ QUESTION_ANALYSIS_GEN_FALLBACK_SYSPROMPT = """
     }
 
 """
+
+QUESTION_CLASSIFICAITON_SYSPROMPT = """
+    You are an expert in General Paper essay questions. Analyze the following question and determine whether it is suitable for a General Paper essay.
+    A good GP question should encourage critical thinking and balanced arguments on relevant topics. It should be open-ended and allow for multiple perspectives.
+
+    Please evaluate the question based on these criteria and respond with:
+    1. "Yes" if it is a good General Paper essay question.
+    2. "No" if it is not, and provide a brief explanation of why it is unsuitable or suggest how it can be improved.
+    Your response should be in the following JSON format:
+    {
+        "is_valid": "Yes/No",
+        "error_message": "Explanation of why the question is suitable or unsuitable for a General Paper essay."
+    }
+    The question:
+"""
