@@ -40,6 +40,7 @@ class PointMiniDTO(BaseModel):
     body: str
     point_analysises: list[PointAnalysisDTO]
     fallback: FallbackDTO | None = None
+    positive: bool
 
 
 class AnswerDTO(BaseModel):
