@@ -3,4 +3,5 @@ export enum QueryKeys {
   Categories = "categories",
   Events = "events",
   Bookmarks = "bookmarks",
+  Answers = "answers",
 }
