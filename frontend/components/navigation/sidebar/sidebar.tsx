@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { HomeIcon } from "lucide-react";
+import { BookmarkIcon, HomeIcon } from "lucide-react";
 
 import SidebarOtherTopics from "@/components/navigation/sidebar/sidebar-other-topics";
 
@@ -21,6 +21,12 @@ const Sidebar = () => {
           isActive={pathname === "/"}
           label="Home"
           onClick={() => router.push("/")}
+        />
+        <SidebarItemWithIcon
+          Icon={BookmarkIcon}
+          isActive={pathname === "/bookmarks"}
+          label="Bookmarks"
+          onClick={() => router.push("/bookmarks")}
         />
       </div>
       <SidebarOtherTopics />

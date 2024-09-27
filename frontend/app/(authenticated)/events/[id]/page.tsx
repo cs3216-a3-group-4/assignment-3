@@ -2,9 +2,18 @@
 
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
+import {
+  Bookmark,
+  BookmarkCheck,
+  BookmarkCheckIcon,
+  BookmarkMinusIcon,
+} from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { useAddBookmark, useRemoveBookmark } from "@/queries/bookmark";
 import { getEvent } from "@/queries/event";
 
 import EventAnalysis from "./event-analysis";
@@ -15,6 +24,12 @@ import EventSummary from "./event-summary";
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
   const { data, isLoading } = useQuery(getEvent(id));
+  const bookmarked = data?.bookmarks.length === 1;
+
+  const addBookmarkMutation = useAddBookmark(id);
+  const removeBookmarkMutation = useRemoveBookmark(id);
+
+  const toast = useToast();
 
   if (isLoading) {
     return (
@@ -46,6 +61,39 @@ const Page = ({ params }: { params: { id: string } }) => {
               <h1 className="text-4xl font-bold px-6">{data.title}</h1>
               <EventDetails event={data} />
               <EventSummary summary={data.description} />
+              <div className="px-6">
+                {bookmarked ? (
+                  <Button
+                    className="flex gap-2"
+                    onClick={() => {
+                      removeBookmarkMutation.mutate();
+                      toast.toast({
+                        title: "Removed bookmark",
+                        icon: <BookmarkMinusIcon />,
+                        description: `Bookmark removed for ${data.title}`,
+                      });
+                    }}
+                    variant={"default"}
+                  >
+                    <BookmarkCheck className="w-5 h-5" /> Bookmarked
+                  </Button>
+                ) : (
+                  <Button
+                    className="flex gap-2"
+                    onClick={() => {
+                      addBookmarkMutation.mutate();
+                      toast.toast({
+                        title: "Added bookmark",
+                        icon: <BookmarkCheckIcon />,
+                        description: `Bookmark added for ${data.title}`,
+                      });
+                    }}
+                    variant={"outline"}
+                  >
+                    <Bookmark className="w-5 h-5" /> Bookmark
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
           <div className="md:px-8 flex flex-col gap-y-10 pb-8">

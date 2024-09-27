@@ -25,7 +25,21 @@ export const getEventsForCategory = (categoryId: number, page: number) =>
         query: {
           category_ids: [categoryId],
           limit: 10,
-          offset: page * 10,
+          offset: (page - 1) * 10,
+        },
+      }).then((data) => data.data),
+  });
+
+export const getBookmarkedEvents = (page: number) =>
+  queryOptions({
+    queryKey: [QueryKeys.Events, QueryKeys.Bookmarks],
+    queryFn: () =>
+      getEventsEventsGet({
+        withCredentials: true,
+        query: {
+          limit: 10,
+          offset: (page - 1) * 10,
+          bookmarks: true,
         },
       }).then((data) => data.data),
   });
