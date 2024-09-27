@@ -2,7 +2,7 @@ from typing import List
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel
-from src.lm.generate_events import lm_model
+from src.lm.generate_events import lm_model_essay as lm_model
 from src.embeddings.vector_store import get_similar_results
 
 from src.lm.prompts import QUESTION_POINT_GEN_SYSPROMPT as SYSPROMPT
@@ -23,6 +23,7 @@ def generate_points_from_question(question: str) -> dict:
 
 
 def get_relevant_analyses(question: str, analyses_per_point: int = 5) -> dict:
+    print(f"Freq penalty: {lm_model.frequency_penalty}")
     points = generate_points_from_question(question)
 
     for_pts = points.get("for_points", [])
