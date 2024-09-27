@@ -77,6 +77,7 @@ class Event(Base):
     )
 
     reads: Mapped[list["UserReadEvent"]] = relationship(backref="user")
+    bookmarks: Mapped[list["Bookmark"]] = relationship(back_populates="event")
 
 
 class UserReadEvent(Base):
@@ -139,3 +140,13 @@ class GPQuestionCategories(Base):
     category_id: Mapped[int] = mapped_column(
         ForeignKey("category.id"), primary_key=True
     )
+
+
+class Bookmark(Base):
+    __tablename__ = "bookmark"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+
+    event: Mapped[Event] = relationship(back_populates="bookmarks")
