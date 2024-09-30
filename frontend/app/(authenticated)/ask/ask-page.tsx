@@ -155,7 +155,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
                   </span>
                 </span>
                 <span className="inline-block mt-2">
-                  <Chip label="Beta" className="sm:ml-3" />
+                  <Chip className="sm:ml-3" label="Beta" />
                 </span>
               </span>
 
