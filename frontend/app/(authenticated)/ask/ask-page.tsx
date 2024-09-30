@@ -71,17 +71,18 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
         throw new Error(errMsg ?? "Error fetching response");
       }
       setErrorMsg(null);
-
       if (response.data) {
-        // @ts-expect-error dont care, deadline in 2 hours
-        if (response.data.is_valid === false) {
-          // @ts-expect-error dont care, deadline in 2 hours
+        if ("is_valid" in response.data && response.data.is_valid === false) {
           setErrorMsg(response.data.error_message);
           setIsLoading(false);
-
           return;
         } else {
-          // @ts-expect-error dont care, deadline in 2 hours
+          if (!("id" in response.data)) {
+            console.log("Answer ID is undefined", response.data);
+            setErrorMsg("Uh-oh, this shouldn't be happening. Try again?");
+            setIsLoading(false);
+            return;
+          }
           router.push(`../answers/${response.data.id}`);
         }
       }
