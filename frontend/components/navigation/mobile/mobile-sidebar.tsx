@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { HomeIcon } from "lucide-react";
+import {
+  BookmarkIcon,
+  HistoryIcon,
+  HomeIcon,
+  MessageCircleQuestionIcon,
+} from "lucide-react";
 
 import DynamicBreadcrumb from "@/components/navigation/dynamic-breadcrumb";
 import SidebarItemWithIcon from "@/components/navigation/sidebar/sidebar-item-with-icon";
@@ -39,12 +44,32 @@ const MobileSidebar = () => {
       </SelectTrigger>
       <SelectContent>
         <div className="flex flex-col bg-primary-100/20 space-y-6 py-4 px-8">
-          <SidebarItemWithIcon
-            Icon={HomeIcon}
-            isActive={pathname === "/"}
-            label="Home"
-            onClick={() => router.push("/")}
-          />
+          <div className="flex flex-col space-y-2">
+            <SidebarItemWithIcon
+              Icon={HomeIcon}
+              isActive={pathname === "/"}
+              label="Home"
+              onClick={() => router.push("/")}
+            />
+            <SidebarItemWithIcon
+              Icon={BookmarkIcon}
+              isActive={pathname === "/bookmarks"}
+              label="Bookmarks"
+              onClick={() => router.push("/bookmarks")}
+            />
+            <SidebarItemWithIcon
+              Icon={MessageCircleQuestionIcon}
+              isActive={pathname === "/ask"}
+              label="Ask a question"
+              onClick={() => router.push("/ask")}
+            />
+            <SidebarItemWithIcon
+              Icon={HistoryIcon}
+              isActive={pathname === "/questions"}
+              label="Past questions"
+              onClick={() => router.push("/questions")}
+            />
+          </div>
           <SidebarOtherTopics />
         </div>
       </SelectContent>
