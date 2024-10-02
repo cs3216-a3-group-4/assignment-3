@@ -13,6 +13,7 @@ import Pagination from "@/components/navigation/pagination";
 import { getHomeEvents } from "@/queries/event";
 import { useQuery } from "@tanstack/react-query";
 import DateRangeSelector, { Period } from "@/app/_home/date-range-selector";
+import EventsList from "./events-list";
 
 const DEFAULT_EVENT_PERIOD = Period.Week;
 
@@ -93,19 +94,8 @@ const Home = () => {
             </span>
           </div>
 
-          <div className="flex flex-col w-full">
-            {!isEventsLoaded ? (
-              <div className="flex flex-col w-full">
-                <ArticleLoading />
-                <ArticleLoading />
-                <ArticleLoading />
-              </div>
-            ) : (
-              events?.data.map((newsEvent, index) => (
-                <NewsArticle key={index} newsEvent={newsEvent} />
-              ))
-            )}
-          </div>
+          <EventsList isEventsLoaded={isEventsLoaded} events={events} />
+
           {isEventsLoaded && (
             <Pagination
               page={page}
