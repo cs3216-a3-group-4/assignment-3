@@ -36,6 +36,12 @@ function usePagination({ totalCount }: usePaginationProps) {
   const changePage = (page: number) => router.push(getPageUrl(page));
 
   useEffect(() => {
+    if (totalCount === 0) {
+      changePage(1);
+    }
+  }, [totalCount]);
+
+  useEffect(() => {
     if (!pageStr) {
       changePage(1);
     }
