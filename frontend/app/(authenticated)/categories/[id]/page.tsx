@@ -1,45 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { CategoryDTO, MiniEventDTO } from "@/client";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { getCategories } from "@/queries/category";
 import { getEventsForCategory } from "@/queries/event";
-
-function isNumeric(value: string | null) {
-  return value !== null && /^-?\d+$/.test(value);
-}
+import usePagination from "@/hooks/use-pagination";
+import Pagination from "@/components/navigation/pagination";
 
 const Page = ({ params }: { params: { id: string } }) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
   const categoryId = parseInt(params.id);
-
-  const pageStr = searchParams.get("page");
-
-  const page = isNumeric(pageStr) ? parseInt(pageStr!) : 1;
-
   const [categoryName, setCategoryName] = useState<string>("");
+  const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
+
+  const { page, pageCount, getPageUrl } = usePagination({ totalCount });
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
     getEventsForCategory(categoryId, page),
   );
   const { data: categories, isSuccess: isCategoriesLoaded } =
     useQuery(getCategories());
+
+  useEffect(() => {
+    setTotalCount(events?.total_count);
+  }, [events?.total_count]);
 
   // Very inefficient, but is there a better way to do this? New StoreProvider for CategoryDTO[]?
   useEffect(() => {
@@ -51,41 +38,6 @@ const Page = ({ params }: { params: { id: string } }) => {
       });
     }
   }, [categories, isCategoriesLoaded, categoryId]);
-
-  const getPageUrl = (page: number) => {
-    // now you got a read/write object
-    const current = new URLSearchParams(Array.from(searchParams.entries())); // -> has to use this form
-
-    // update as necessary
-    current.set("page", page.toString());
-
-    // cast to string
-    const search = current.toString();
-    // or const query = `${'?'.repeat(search.length && 1)}${search}`;
-    const query = search ? `?${search}` : "";
-
-    return `${pathname}${query}`;
-  };
-
-  const changePage = (page: number) => {
-    router.push(getPageUrl(page));
-  };
-
-  if (!pageStr) {
-    changePage(1);
-    return;
-  }
-
-  const items = events?.total_count;
-  const pageCount = items !== undefined && Math.ceil(items / 10);
-  if (pageCount !== false) {
-    if (page <= 0) {
-      changePage(1);
-    }
-    if (page > pageCount) {
-      changePage(pageCount);
-    }
-  }
 
   return (
     <div className="relative w-full h-full">
@@ -114,61 +66,17 @@ const Page = ({ params }: { params: { id: string } }) => {
                 <ArticleLoading />
               </div>
             ) : (
-              events!.data.map((newsEvent: MiniEventDTO, index: number) => (
+              events?.data.map((newsEvent: MiniEventDTO, index: number) => (
                 <NewsArticle key={index} newsEvent={newsEvent} />
               ))
             )}
           </div>
           {isEventsLoaded && (
-            <Pagination className="py-8">
-              <PaginationContent>
-                {page !== 1 && (
-                  <PaginationItem>
-                    <PaginationPrevious href={getPageUrl(page - 1)} />
-                  </PaginationItem>
-                )}
-                {/* Only for last page */}
-                {page == pageCount && (
-                  <PaginationItem>
-                    <PaginationLink href={getPageUrl(page - 2)}>
-                      {page - 2}
-                    </PaginationLink>
-                  </PaginationItem>
-                )}
-                {page !== 1 && (
-                  <PaginationItem>
-                    <PaginationLink href={getPageUrl(page - 1)}>
-                      {page - 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                )}
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-                {page !== pageCount && (
-                  <PaginationItem>
-                    <PaginationLink href={getPageUrl(page + 1)}>
-                      {page + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                )}
-                {/* Only for first page */}
-                {page === 1 && (pageCount as number) >= 3 && (
-                  <PaginationItem>
-                    <PaginationLink href={getPageUrl(page + 2)}>
-                      {page + 2}
-                    </PaginationLink>
-                  </PaginationItem>
-                )}
-                {page !== pageCount && (
-                  <PaginationItem>
-                    <PaginationNext href={getPageUrl(page + 1)} />
-                  </PaginationItem>
-                )}
-              </PaginationContent>
-            </Pagination>
+            <Pagination
+              page={page}
+              pageCount={pageCount}
+              getPageUrl={getPageUrl}
+            />
           )}
         </div>
       </div>
