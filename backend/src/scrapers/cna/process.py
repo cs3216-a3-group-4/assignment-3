@@ -47,7 +47,7 @@ class CNAArticle(BaseModel):
     image_url: str
 
 
-async def process(category: str):
+async def process(category: str, folder_path: str):
     with open(f"./src/scrapers/cna/data/{category}.json") as f:
         data = json.load(f)
 
@@ -108,9 +108,10 @@ async def process(category: str):
     print(f"Added {count} articles for {category}")
 
 
-async def process_all_categories():
-    asyncio.gather(*[process(category) for category in CATEGORIES])
+async def process_all_categories(filepath: str):
+    asyncio.gather(*[process(category, filepath) for category in CATEGORIES])
 
 
 if __name__ == "__main__":
     asyncio.run(process_all_categories())
+

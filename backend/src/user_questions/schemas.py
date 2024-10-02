@@ -16,12 +16,13 @@ class PointAnalysisDTO(BaseModel):
 
     analysis: AnalysisDTO
     elaboration: str
+    point_id: int
 
     @model_validator(mode="after")
     def filter(self):
         # i gave up on using the orm to filter the ones relevant to the point
         self.analysis.likes = [
-            like for like in self.analysis.likes if like.point_id == self.id
+            like for like in self.analysis.likes if like.point_id == self.point_id
         ]
         return self
 

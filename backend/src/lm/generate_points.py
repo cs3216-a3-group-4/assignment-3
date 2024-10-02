@@ -24,7 +24,7 @@ def generate_points_from_question(question: str) -> dict:
     return points
 
 
-def get_relevant_analyses(question: str, analyses_per_point: int = 3) -> dict:
+def get_relevant_analyses(question: str, analyses_per_point: int = 5) -> dict:
     print(f"Freq penalty: {lm_model.frequency_penalty}")
     points = generate_points_from_question(question)
 

@@ -5,15 +5,18 @@ import os
 
 from src.common.constants import GUARDIAN_API_KEY
 from sqlalchemy import select
+from src.embeddings.vector_store import store_documents
 from src.events.models import Article, ArticleSource, Event
 from src.common.database import engine
 from sqlalchemy.orm import Session
 from src.scrapers.cna.process import process_all_categories
 from src.scrapers.cna.scrape import scrape_from_date
+from src.scrapers.guardian.get_analyses import get_analyses
 from src.scrapers.guardian.get_articles import get_articles
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
 
 from src.lm.generate_events import generate_events
+from src.scripts.populate import populate
 
 
 def query_page(page: int, date):
@@ -120,7 +123,7 @@ async def populate_daily_articles_cna():
     await scrape_from_date(start_date=yesterday)
     # this function already checks for articles not in db that are in json
     # may salvage the broken json
-    await process_all_categories()
+    await process_all_categories("./src/scrapers/cna/articles")
 
 
 def process_new_articles():
@@ -131,9 +134,18 @@ def process_new_articles():
                     list(session.scalars(select(Event.original_article_id)))
                 )
             )
-        )
+        ).all()
 
-        return result
+        articles = []
+        # Iterate over the result and print each article
+        for article in result:
+            data_dict = {
+                "id": article.id,
+                "bodyText": article.body,
+            }
+            articles.append(data_dict)
+
+        return articles
 
 
 # NOTE: this method should work with no issue as long as the number of calls is less than 500 which is the rate limit by OpenAI
@@ -145,10 +157,17 @@ async def run(limit: int = 30):
     await populate_daily_articles_cna()
     # ADD CNA HERE.
     # Process new articles i.e. find articles that we have not generated events for
-    articles = get_articles(limit)
-    # Generate events from articles, written to lm_events_output.json
+    articles = process_new_articles()
+    # # Generate events from articles, written to lm_events_output.json
     await generate_events(articles)
+
+    event_ids = populate("lm_events_output.json")
+    analyses = get_analyses(event_ids)
+
+    store_documents(analyses)
+    print(analyses)
 
 
 if __name__ == "__main__":
     asyncio.run(run(1000))
+
