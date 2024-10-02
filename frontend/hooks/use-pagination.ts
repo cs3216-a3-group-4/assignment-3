@@ -1,4 +1,5 @@
-import { isNumeric } from "@/utils/string";
+import { NUM_EVENTS_PER_PAGE } from "@/queries/event";
+import { isNumeric, isPositiveNumeric } from "@/utils/string";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -11,9 +12,11 @@ function usePagination({ totalCount }: usePaginationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const pageStr = searchParams.get("page");
-  const page = isNumeric(pageStr) ? parseInt(pageStr!) : 1;
+  const page = isPositiveNumeric(pageStr) ? parseInt(pageStr!) : 1;
   const pageCount =
-    totalCount !== undefined ? Math.ceil(totalCount / 10) : undefined;
+    totalCount !== undefined
+      ? Math.max(Math.ceil(totalCount / NUM_EVENTS_PER_PAGE), 1)
+      : undefined;
 
   const getPageUrl = (page: number) => {
     // now you got a read/write object
