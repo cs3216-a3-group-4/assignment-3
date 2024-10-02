@@ -90,10 +90,10 @@ const EventAnalysis = ({ event }: Props) => {
         type="multiple"
         value={activeCategories}
       >
-        {Object.entries(analysis).map((item) => {
-          const [category, analysis] = item;
-          const content = analysis.content;
-          const likes = analysis.likes;
+        {eventCategories.map((category) => {
+          const eventAnalysis = analysis[category];
+          const content = eventAnalysis.content;
+          const likes = eventAnalysis.likes;
           const userLike = likes.filter((like) => like.user_id == user?.id)[0];
           const userLikeValue = userLike ? userLike.type : 0;
           const CategoryIcon = categoriesToIconsMap[category as Category];
@@ -124,10 +124,16 @@ const EventAnalysis = ({ event }: Props) => {
                 </div>
                 <LikeButtons
                   onDislike={() =>
-                    likeMutation.mutate({ analysis_id: analysis.id, type: -1 })
+                    likeMutation.mutate({
+                      analysis_id: eventAnalysis.id,
+                      type: -1,
+                    })
                   }
                   onLike={() =>
-                    likeMutation.mutate({ analysis_id: analysis.id, type: 1 })
+                    likeMutation.mutate({
+                      analysis_id: eventAnalysis.id,
+                      type: 1,
+                    })
                   }
                   userLikeValue={userLikeValue}
                 />
