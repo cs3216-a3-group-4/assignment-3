@@ -23,7 +23,7 @@ const Pagination = ({ page, getPageUrl, pageCount }: PaginationProps) => {
           </PaginationItem>
         )}
         {/* Only for last page */}
-        {page == pageCount && (
+        {page == pageCount && pageCount > 2 && (
           <PaginationItem>
             <PaginationLink href={getPageUrl(page - 2)}>
               {page - 2}
