@@ -6,6 +6,7 @@ import {
   BookmarkIcon,
   HistoryIcon,
   HomeIcon,
+  LucideIcon,
   MessageCircleQuestionIcon,
 } from "lucide-react";
 
@@ -19,6 +20,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+
+type SidebarOption = {
+  icon: LucideIcon;
+  label: string;
+  path: string;
+};
+
+const OPTIONS: SidebarOption[] = [
+  {
+    icon: HomeIcon,
+    label: "Home",
+    path: "/",
+  },
+  {
+    icon: BookmarkIcon,
+    label: "Bookmarks",
+    path: "/bookmarks",
+  },
+  { icon: MessageCircleQuestionIcon, label: "Ask a question", path: "/ask" },
+  { icon: HistoryIcon, label: "Past questions", path: "/questions" },
+];
 
 const MobileSidebar = () => {
   const pathname = usePathname();
@@ -45,30 +67,15 @@ const MobileSidebar = () => {
       <SelectContent>
         <div className="flex flex-col bg-primary-100/20 space-y-6 py-4 px-8">
           <div className="flex flex-col space-y-2">
-            <SidebarItemWithIcon
-              Icon={HomeIcon}
-              isActive={pathname === "/"}
-              label="Home"
-              onClick={() => router.push("/")}
-            />
-            <SidebarItemWithIcon
-              Icon={BookmarkIcon}
-              isActive={pathname === "/bookmarks"}
-              label="Bookmarks"
-              onClick={() => router.push("/bookmarks")}
-            />
-            <SidebarItemWithIcon
-              Icon={MessageCircleQuestionIcon}
-              isActive={pathname === "/ask"}
-              label="Ask a question"
-              onClick={() => router.push("/ask")}
-            />
-            <SidebarItemWithIcon
-              Icon={HistoryIcon}
-              isActive={pathname === "/questions"}
-              label="Past questions"
-              onClick={() => router.push("/questions")}
-            />
+            {OPTIONS.map(({ icon, label, path }, index) => (
+              <SidebarItemWithIcon
+                Icon={icon}
+                isActive={pathname === path}
+                key={index}
+                label={label}
+                onClick={() => router.push(path)}
+              />
+            ))}
           </div>
           <SidebarOtherTopics />
         </div>

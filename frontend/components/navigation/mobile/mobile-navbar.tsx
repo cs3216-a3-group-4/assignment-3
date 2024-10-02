@@ -41,7 +41,7 @@ function MobileNavbar() {
           </Link>
         </div>
         <div className="flex flex-1 justify-center">
-          <MobileSidebar />
+          {isLoggedIn && <MobileSidebar />}
         </div>
         <div className="flex items-center gap-x-4 justify-end min-h-[52px] max-h-[52px] min-w-fit ml-8">
           {isLoggedIn !== undefined &&
