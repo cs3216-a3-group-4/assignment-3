@@ -114,4 +114,3 @@ async def process_all_categories(filepath: str):
 
 if __name__ == "__main__":
     asyncio.run(process_all_categories())
-
