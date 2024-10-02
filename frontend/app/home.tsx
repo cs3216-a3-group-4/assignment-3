@@ -11,6 +11,8 @@ import NewsArticle from "@/components/news/news-article";
 import { useUpdateTopEventsPeriod } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { parseDate } from "@/utils/date";
+import usePagination from "@/hooks/use-pagination";
+import Pagination from "@/components/navigation/pagination";
 
 const enum Period {
   Day = 1,
@@ -30,17 +32,23 @@ const getDisplayValueFor = (period: Period) => {
   }
 };
 
-const NUM_TOP_EVENTS = 10;
+const NUM_TOP_EVENTS_PER_PAGE = 10;
 const DEFAULT_EVENT_PERIOD = Period.Week;
 
 /* This component should only be rendered to authenticated users */
 const Home = () => {
   const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
+  const [totalEventCount, setTotalEventCount] = useState<number | undefined>(
+    undefined,
+  );
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [selectedPeriod, setSelectedPeriod] =
     useState<Period>(DEFAULT_EVENT_PERIOD);
 
+  const { page, pageCount, getPageUrl } = usePagination({
+    totalCount: totalEventCount,
+  });
   const user = useUserStore((state) => state.user);
   const updateTopEventsMutation = useUpdateTopEventsPeriod();
   const router = useRouter();
@@ -71,15 +79,17 @@ const Home = () => {
         eventQuery = {
           query: {
             start_date: formattedEventStartDate,
-            limit: NUM_TOP_EVENTS,
+            limit: NUM_TOP_EVENTS_PER_PAGE,
             category_ids: user.categories.map((category) => category.id),
+            offset: (page - 1) * 10,
           },
         };
       } else {
         eventQuery = {
           query: {
             start_date: formattedEventStartDate,
-            limit: NUM_TOP_EVENTS,
+            limit: NUM_TOP_EVENTS_PER_PAGE,
+            offset: (page - 1) * 10,
           },
         };
       }
@@ -88,6 +98,7 @@ const Home = () => {
       if (response.error) {
         console.log(response.error);
       } else {
+        setTotalEventCount(response.data.total_count);
         setTopEvents(response.data.data);
         setIsLoaded(true);
       }
@@ -95,7 +106,7 @@ const Home = () => {
 
     if (user?.top_events_period) setSelectedPeriod(user.top_events_period);
     fetchTopEvents();
-  }, [user, eventStartDate]);
+  }, [user, eventStartDate, page]);
 
   // Handle the option selection and close dropdown
   const handleSelection = (period: Period) => {
@@ -182,6 +193,13 @@ const Home = () => {
               ))
             )}
           </div>
+          {isLoaded && (
+            <Pagination
+              page={page}
+              pageCount={pageCount}
+              getPageUrl={getPageUrl}
+            />
+          )}
         </div>
       </div>
       <ScrollToTopButton
