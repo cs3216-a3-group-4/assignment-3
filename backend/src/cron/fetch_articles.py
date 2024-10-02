@@ -12,7 +12,6 @@ from sqlalchemy.orm import Session
 from src.scrapers.cna.process import process_all_categories
 from src.scrapers.cna.scrape import scrape_from_date
 from src.scrapers.guardian.get_analyses import get_analyses
-from src.scrapers.guardian.get_articles import get_articles
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
 
 from src.lm.generate_events import generate_events
@@ -170,4 +169,3 @@ async def run(limit: int = 30):
 
 if __name__ == "__main__":
     asyncio.run(run(1000))
-

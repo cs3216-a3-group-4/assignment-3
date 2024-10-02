@@ -15,4 +15,3 @@ def get_analyses(event_ids: list[int]):
 
 if __name__ == "__main__":
     print(get_analyses([0, 1, 2, 3])[0].content)
-
