@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { getCategories } from "@/queries/category";
 import { useUpdateProfile } from "@/queries/user";
+import { useUserStore } from "@/store/user/user-store-provider";
 import { getCategoryFor } from "@/types/categories";
 
 interface Props {
@@ -17,6 +18,7 @@ interface Props {
 export default function CategoryForm({ initialCategoryIds }: Props) {
   const { data: categories, isLoading } = useQuery(getCategories());
   const [categoryIds, setCategoryIds] = useState<number[]>(initialCategoryIds);
+  const setLoggedIn = useUserStore((state) => state.setLoggedIn);
 
   const toggleCategory = (id: number) => {
     if (!categoryIds.includes(id)) {
@@ -29,7 +31,10 @@ export default function CategoryForm({ initialCategoryIds }: Props) {
   const updateProfileMutation = useUpdateProfile();
 
   const handleSubmit = () => {
-    updateProfileMutation.mutate({ categoryIds });
+    updateProfileMutation.mutate(
+      { categoryIds },
+      { onSuccess: (response) => response.data && setLoggedIn(response.data) },
+    );
   };
 
   if (isLoading) {
