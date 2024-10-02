@@ -1,6 +1,6 @@
 "use client";
 
-import Home from "@/app/home";
+import Home from "@/app/_home/home";
 import Landing from "@/app/landing";
 import { useUserStore } from "@/store/user/user-store-provider";
 
