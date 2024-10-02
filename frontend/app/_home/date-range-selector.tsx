@@ -1,6 +1,7 @@
-import { useUpdateTopEventsPeriod } from "@/queries/user";
-import { ChevronDown } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
+import { ChevronDown } from "lucide-react";
+
+import { useUpdateTopEventsPeriod } from "@/queries/user";
 
 export const enum Period {
   Day = 1,

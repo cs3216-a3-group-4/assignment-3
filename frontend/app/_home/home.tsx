@@ -2,18 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
+import DateRangeSelector, { Period } from "@/app/_home/date-range-selector";
+import EventsList from "@/app/_home/events-list";
+import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
-import ArticleLoading from "@/components/news/article-loading";
-import NewsArticle from "@/components/news/news-article";
+import usePagination from "@/hooks/use-pagination";
+import { getHomeEvents } from "@/queries/event";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { parseDate, toQueryDate } from "@/utils/date";
-import usePagination from "@/hooks/use-pagination";
-import Pagination from "@/components/navigation/pagination";
-import { getHomeEvents } from "@/queries/event";
-import { useQuery } from "@tanstack/react-query";
-import DateRangeSelector, { Period } from "@/app/_home/date-range-selector";
-import EventsList from "./events-list";
 
 const DEFAULT_EVENT_PERIOD = Period.Week;
 
@@ -94,13 +92,13 @@ const Home = () => {
             </span>
           </div>
 
-          <EventsList isEventsLoaded={isEventsLoaded} events={events} />
+          <EventsList events={events} isEventsLoaded={isEventsLoaded} />
 
           {isEventsLoaded && (
             <Pagination
+              getPageUrl={getPageUrl}
               page={page}
               pageCount={pageCount}
-              getPageUrl={getPageUrl}
             />
           )}
         </div>

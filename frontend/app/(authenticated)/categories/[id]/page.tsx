@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { CategoryDTO, MiniEventDTO } from "@/client";
+import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
+import usePagination from "@/hooks/use-pagination";
 import { getCategories } from "@/queries/category";
 import { getEventsForCategory } from "@/queries/event";
-import usePagination from "@/hooks/use-pagination";
-import Pagination from "@/components/navigation/pagination";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const categoryId = parseInt(params.id);
@@ -73,9 +73,9 @@ const Page = ({ params }: { params: { id: string } }) => {
           </div>
           {isEventsLoaded && (
             <Pagination
+              getPageUrl={getPageUrl}
               page={page}
               pageCount={pageCount}
-              getPageUrl={getPageUrl}
             />
           )}
         </div>

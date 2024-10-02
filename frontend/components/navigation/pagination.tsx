@@ -2,10 +2,10 @@ import {
   Pagination as PaginationPrimitive,
   PaginationContent,
   PaginationItem,
-  PaginationPrevious,
   PaginationLink,
   PaginationNext,
-} from "../ui/pagination";
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface PaginationProps {
   page: number;

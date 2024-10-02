@@ -24,11 +24,11 @@ const EventsList = ({ isEventsLoaded, events }: EventsListProps) => {
       <div className="flex flex-col w-full px-4 md:px-8 xl:px-12 mt-4">
         <Alert className="bg-gray-200/40 text-gray-700 border-none px-8 py-4">
           <AlertTitle className="text-xl font-semibold">
-            Uh oh... Jippy couldn't find any events
+            Uh oh... Jippy couldn&apos;t find any events
           </AlertTitle>
           <AlertDescription className="text-base">
-            Jippy's probably busy reading newspapers to find more events. Maybe
-            check back soon?
+            Jippy&apos;s probably busy reading newspapers to find more events.
+            Maybe check back soon?
           </AlertDescription>
         </Alert>
       </div>
