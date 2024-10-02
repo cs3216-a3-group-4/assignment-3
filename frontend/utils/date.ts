@@ -8,3 +8,7 @@ export const parseDate = (date: string | Date | number): string => {
     return PLACEHOLDER_DATE;
   }
 };
+
+export const toQueryDate = (date: Date): string => {
+  return format(date, "yyyy-MM-dd");
+};

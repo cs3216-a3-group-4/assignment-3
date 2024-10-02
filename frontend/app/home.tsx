@@ -4,15 +4,16 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
-import { getEventsEventsGet, MiniEventDTO } from "@/client";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
 import { useUpdateTopEventsPeriod } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
-import { parseDate } from "@/utils/date";
+import { parseDate, toQueryDate } from "@/utils/date";
 import usePagination from "@/hooks/use-pagination";
 import Pagination from "@/components/navigation/pagination";
+import { getHomeEvents } from "@/queries/event";
+import { useQuery } from "@tanstack/react-query";
 
 const enum Period {
   Day = 1,
@@ -32,16 +33,13 @@ const getDisplayValueFor = (period: Period) => {
   }
 };
 
-const NUM_TOP_EVENTS_PER_PAGE = 10;
 const DEFAULT_EVENT_PERIOD = Period.Week;
 
 /* This component should only be rendered to authenticated users */
 const Home = () => {
-  const [topEvents, setTopEvents] = useState<MiniEventDTO[]>([]);
   const [totalEventCount, setTotalEventCount] = useState<number | undefined>(
     undefined,
   );
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [selectedPeriod, setSelectedPeriod] =
     useState<Period>(DEFAULT_EVENT_PERIOD);
@@ -65,48 +63,24 @@ const Home = () => {
     return eventStartDate;
   }, [eventPeriod]);
 
+  const { data: events, isSuccess: isEventsLoaded } = useQuery(
+    getHomeEvents(
+      toQueryDate(eventStartDate),
+      page,
+      user?.categories.map((category) => category.id),
+    ),
+  );
+
   useEffect(() => setSelectedPeriod(eventPeriod), [eventPeriod]);
 
   useEffect(() => {
-    const fetchTopEvents = async () => {
-      setIsLoaded(false);
-      const formattedEventStartDate = eventStartDate
-        .toISOString()
-        .split("T")[0];
-
-      let eventQuery;
-      if (user?.categories && user.categories.length > 0) {
-        eventQuery = {
-          query: {
-            start_date: formattedEventStartDate,
-            limit: NUM_TOP_EVENTS_PER_PAGE,
-            category_ids: user.categories.map((category) => category.id),
-            offset: (page - 1) * 10,
-          },
-        };
-      } else {
-        eventQuery = {
-          query: {
-            start_date: formattedEventStartDate,
-            limit: NUM_TOP_EVENTS_PER_PAGE,
-            offset: (page - 1) * 10,
-          },
-        };
-      }
-
-      const response = await getEventsEventsGet(eventQuery);
-      if (response.error) {
-        console.log(response.error);
-      } else {
-        setTotalEventCount(response.data.total_count);
-        setTopEvents(response.data.data);
-        setIsLoaded(true);
-      }
-    };
-
     if (user?.top_events_period) setSelectedPeriod(user.top_events_period);
-    fetchTopEvents();
-  }, [user, eventStartDate, page]);
+  }, [user]);
+
+  useEffect(
+    () => setTotalEventCount(events?.total_count),
+    [events?.total_count],
+  );
 
   // Handle the option selection and close dropdown
   const handleSelection = (period: Period) => {
@@ -181,19 +155,19 @@ const Home = () => {
           </div>
 
           <div className="flex flex-col w-full">
-            {!isLoaded ? (
+            {!isEventsLoaded ? (
               <div className="flex flex-col w-full">
                 <ArticleLoading />
                 <ArticleLoading />
                 <ArticleLoading />
               </div>
             ) : (
-              topEvents.map((newsEvent: MiniEventDTO, index: number) => (
+              events?.data.map((newsEvent, index) => (
                 <NewsArticle key={index} newsEvent={newsEvent} />
               ))
             )}
           </div>
-          {isLoaded && (
+          {isEventsLoaded && (
             <Pagination
               page={page}
               pageCount={pageCount}
