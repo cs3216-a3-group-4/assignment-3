@@ -72,7 +72,7 @@ class Event(Base):
 
     notes = relationship(
         "Note",
-        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "note"),
+        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "event"),
         backref="event",
     )
 
@@ -114,6 +114,12 @@ class Analysis(Base):
 
     event: Mapped[Event] = relationship(back_populates="analysises")
     category: Mapped[Category] = relationship(back_populates="analysises")
+
+    notes = relationship(
+        "Note",
+        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "analysis"),
+        backref="analysis",
+    )
 
 
 class GPQuestion(Base):
