@@ -30,6 +30,6 @@ class NoteCreate(BaseModel):
 
 class NoteUpdate(BaseModel):
     content: str
-    start_index: int
-    end_index: int
+    start_index: int | None = None
+    end_index: int | None = None
     category_id: int

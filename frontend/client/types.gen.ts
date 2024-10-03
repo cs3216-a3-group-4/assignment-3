@@ -56,6 +56,7 @@ export type EventDTO = {
     analysises: Array<src__events__schemas__AnalysisDTO>;
     gp_questions: Array<GPQuestionDTO>;
     bookmarks: Array<BookmarkDTO>;
+    notes: Array<NoteDTO>;
 };
 
 export type EventIndexResponse = {
@@ -108,27 +109,30 @@ export type MiniEventDTO = {
 
 export type NoteCreate = {
     content: string;
-    start_index: number;
-    end_index: number;
+    start_index?: (number | null);
+    end_index?: (number | null);
     parent_id: number;
     parent_type: NoteType;
+    category_id: number;
 };
 
 export type NoteDTO = {
     id: number;
     content: string;
-    start_index: number;
-    end_index: number;
+    start_index?: (number | null);
+    end_index?: (number | null);
     parent_id: number;
     parent_type: NoteType;
+    category: CategoryDTO;
 };
 
-export type NoteType = 'event' | 'article' | 'point';
+export type NoteType = 'event' | 'article' | 'point' | 'analysis';
 
 export type NoteUpdate = {
     content: string;
-    start_index: number;
-    end_index: number;
+    start_index?: (number | null);
+    end_index?: (number | null);
+    category_id: number;
 };
 
 export type PasswordResetCompleteData = {
@@ -224,6 +228,7 @@ export type src__events__schemas__AnalysisDTO = {
     category: CategoryDTO;
     content: string;
     likes: Array<LikeDTO>;
+    notes: Array<NoteDTO>;
 };
 
 export type src__user_questions__schemas__AnalysisDTO = {

@@ -18,6 +18,7 @@ import { getEvent } from "@/queries/event";
 
 import EventAnalysis from "./event-analysis";
 import EventDetails from "./event-details";
+import EventNotes from "./event-notes";
 import EventSource from "./event-source";
 import EventSummary from "./event-summary";
 
@@ -101,6 +102,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             <EventAnalysis event={data} />
             <Separator className="my-10" />
             <EventSource originalSource={data.original_article} />
+            <EventNotes event={data} />
           </div>
         </div>
       </div>
