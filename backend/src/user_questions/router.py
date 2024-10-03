@@ -18,6 +18,7 @@ from src.user_questions.models import (
 )
 from src.user_questions.schemas import (
     CreateUserQuestion,
+    UserQuestionDTO,
     UserQuestionMiniDTO,
     ValidationResult,
 )
@@ -36,32 +37,10 @@ def get_user_questions(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
 ) -> list[UserQuestionMiniDTO]:
-    # Create an alias for the Point table to use for the Like condition
     user_questions = session.scalars(
         select(UserQuestion)
         .where(UserQuestion.user_id == user.id)
-        .options(
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.point_analysises,
-                PointAnalysis.analysis,
-                Analysis.event,
-                Event.original_article,
-            ),
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.fallback,
-            ),
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.point_analysises,
-                PointAnalysis.analysis,
-                Analysis.category,
-            ),
-        )
+        .options(selectinload(UserQuestion.answer).selectinload(Answer.points))
     )
     return user_questions
 
@@ -81,7 +60,7 @@ def get_user_question(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-) -> UserQuestionMiniDTO:
+) -> UserQuestionDTO:
     user_question = session.scalar(
         select(UserQuestion)
         .where(UserQuestion.id == id)
@@ -125,7 +104,7 @@ async def create_user_question(
     data: CreateUserQuestion,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-) -> UserQuestionMiniDTO | ValidationResult:
+) -> UserQuestionDTO | ValidationResult:
     validation = validate_question(data.question)
     if not validation["is_valid"]:
         return validation
