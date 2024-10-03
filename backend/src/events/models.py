@@ -115,6 +115,12 @@ class Analysis(Base):
     event: Mapped[Event] = relationship(back_populates="analysises")
     category: Mapped[Category] = relationship(back_populates="analysises")
 
+    notes = relationship(
+        "Note",
+        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "note"),
+        backref="analysis",
+    )
+
 
 class GPQuestion(Base):
     __tablename__ = "gp_question"
