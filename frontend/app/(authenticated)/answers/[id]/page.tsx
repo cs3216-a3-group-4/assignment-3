@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import Chip from "@/components/display/chip";
+import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import {
   Accordion,
   AccordionContent,
@@ -33,9 +34,11 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
     );
   }
   return (
-    // TODO: @seeleng scroll to top
     data && (
-      <div className="flex flex-col bg-muted w-full h-full max-h-full px-4 md:px-8 xl:px-24 overflow-y-auto">
+      <div
+        className="flex flex-col bg-muted w-full h-full max-h-full px-4 md:px-8 xl:px-24 overflow-y-auto"
+        id="answer"
+      >
         <div className="flex flex-col pb-4 mb-4 py-8 xl:py-16 max-w-6xl md:mx-8 lg:mx-16 xl:mx-auto">
           <h1 className="px-8 md:px-0 text-2xl lg:text-3x xl:text-4xl font-semibold text-text mb-10 2xl:mb-12">
             {data.question}
@@ -171,6 +174,11 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
             </Accordion>
           </div>
         </div>
+        <ScrollToTopButton
+          className="absolute right-4 bottom-4"
+          minHeight={200}
+          scrollElementId="answer"
+        />
       </div>
     )
   );
