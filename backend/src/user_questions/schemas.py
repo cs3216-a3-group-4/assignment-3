@@ -39,22 +39,37 @@ class PointMiniDTO(BaseModel):
     id: int
     title: str
     body: str
+    positive: bool
+
+
+class PointDTO(PointMiniDTO):
     point_analysises: list[PointAnalysisDTO]
     fallback: FallbackDTO | None = None
-    positive: bool
 
 
 class AnswerDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
+    points: list[PointDTO]
+
+
+class AnswerMiniDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
     points: list[PointMiniDTO]
 
 
-class UserQuestionMiniDTO(BaseModel):
+class UserQuestionDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     question: str
     answer: AnswerDTO
+
+
+class UserQuestionMiniDTO(BaseModel):
+    id: int
+    question: str
+    answer: AnswerMiniDTO
 
 
 class ValidationResult(BaseModel):
