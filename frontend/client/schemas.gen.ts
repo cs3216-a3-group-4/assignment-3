@@ -235,10 +235,17 @@ export const EventDTOSchema = {
             },
             type: 'array',
             title: 'Bookmarks'
+        },
+        notes: {
+            items: {
+                '$ref': '#/components/schemas/NoteDTO'
+            },
+            type: 'array',
+            title: 'Notes'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'description', 'is_singapore', 'date', 'categories', 'original_article', 'reads', 'analysises', 'gp_questions', 'bookmarks'],
+    required: ['id', 'title', 'description', 'is_singapore', 'date', 'categories', 'original_article', 'reads', 'analysises', 'gp_questions', 'bookmarks', 'notes'],
     title: 'EventDTO'
 } as const;
 
@@ -437,11 +444,25 @@ export const NoteCreateSchema = {
             title: 'Content'
         },
         start_index: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Start Index'
         },
         end_index: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'End Index'
         },
         parent_id: {
@@ -450,10 +471,14 @@ export const NoteCreateSchema = {
         },
         parent_type: {
             '$ref': '#/components/schemas/NoteType'
+        },
+        category_id: {
+            type: 'integer',
+            title: 'Category Id'
         }
     },
     type: 'object',
-    required: ['content', 'start_index', 'end_index', 'parent_id', 'parent_type'],
+    required: ['content', 'parent_id', 'parent_type', 'category_id'],
     title: 'NoteCreate'
 } as const;
 
@@ -468,11 +493,25 @@ export const NoteDTOSchema = {
             title: 'Content'
         },
         start_index: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Start Index'
         },
         end_index: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'End Index'
         },
         parent_id: {
@@ -481,16 +520,19 @@ export const NoteDTOSchema = {
         },
         parent_type: {
             '$ref': '#/components/schemas/NoteType'
+        },
+        category: {
+            '$ref': '#/components/schemas/CategoryDTO'
         }
     },
     type: 'object',
-    required: ['id', 'content', 'start_index', 'end_index', 'parent_id', 'parent_type'],
+    required: ['id', 'content', 'parent_id', 'parent_type', 'category'],
     title: 'NoteDTO'
 } as const;
 
 export const NoteTypeSchema = {
     type: 'string',
-    enum: ['event', 'article', 'point'],
+    enum: ['event', 'article', 'point', 'analysis'],
     title: 'NoteType'
 } as const;
 
@@ -501,16 +543,34 @@ export const NoteUpdateSchema = {
             title: 'Content'
         },
         start_index: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Start Index'
         },
         end_index: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'End Index'
+        },
+        category_id: {
+            type: 'integer',
+            title: 'Category Id'
         }
     },
     type: 'object',
-    required: ['content', 'start_index', 'end_index'],
+    required: ['content', 'category_id'],
     title: 'NoteUpdate'
 } as const;
 
@@ -857,10 +917,17 @@ export const src__events__schemas__AnalysisDTOSchema = {
             },
             type: 'array',
             title: 'Likes'
+        },
+        notes: {
+            items: {
+                '$ref': '#/components/schemas/NoteDTO'
+            },
+            type: 'array',
+            title: 'Notes'
         }
     },
     type: 'object',
-    required: ['id', 'category', 'content', 'likes'],
+    required: ['id', 'category', 'content', 'likes', 'notes'],
     title: 'AnalysisDTO'
 } as const;
 
