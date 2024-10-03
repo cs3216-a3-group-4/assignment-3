@@ -1,0 +1,19 @@
+name: deploy-prod
+on:
+  push:
+    branches:
+      - production
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            export PATH="$PATH:/home/ci/.cargo/bin:/home/ci/.nvm/versions/node/v20.13.1/bin"
+            ./deploy-jippy-prod.sh
