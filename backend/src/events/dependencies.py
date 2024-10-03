@@ -6,6 +6,7 @@ from src.auth.dependencies import get_current_user
 from src.common.dependencies import get_session
 from src.events.models import Analysis, Bookmark, Event, GPQuestion, UserReadEvent
 from src.likes.models import Like
+from src.notes.models import Note
 
 
 def retrieve_event(
@@ -26,6 +27,10 @@ def retrieve_event(
                 Event.categories,
             ),
             selectinload(Event.analysises, Analysis.category),
+            selectinload(
+                Event.analysises, Analysis.notes.and_(Note.user_id == user.id)
+            ),
+            selectinload(Event.notes.and_(Note.user_id == user.id)),
             selectinload(
                 Event.analysises, Analysis.likes.and_(Like.point_id.is_(None))
             ),

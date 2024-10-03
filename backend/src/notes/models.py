@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.common.base import Base
 from enum import Enum
 
@@ -8,7 +8,7 @@ class NoteType(str, Enum):
     EVENT = "event"
     ARTICLE = "article"
     POINT = "point"
-    NOTE = "note"
+    ANALYSIS = "analysis"
 
 
 class Note(Base):
@@ -25,6 +25,8 @@ class Note(Base):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     category_id: Mapped[int] = mapped_column(ForeignKey("category.id"), nullable=True)
+
+    category = relationship("Category", backref="notes")
 
     __mapper_args__ = {"polymorphic_on": "parent_type", "polymorphic_identity": "note"}
 
@@ -53,5 +55,5 @@ class PointNote(Note):
 class AnalysisNote(Note):
     __mapper_args__ = {
         "polymorphic_on": "parent_type",
-        "polymorphic_identity": "note",
+        "polymorphic_identity": "analysis",
     }

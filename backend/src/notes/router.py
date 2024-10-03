@@ -2,10 +2,11 @@ from http import HTTPStatus
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
-from src.events.models import Article, Event
+from src.events.models import Analysis, Article, Category, Event
 from src.notes.dependencies import retrieve_note
 from src.notes.models import Note, NoteType
 from src.notes.schemas import NoteCreate, NoteDTO, NoteUpdate
@@ -18,6 +19,7 @@ NOTE_PARENT_CLASSES = {
     NoteType.ARTICLE: Article,
     NoteType.EVENT: Event,
     NoteType.POINT: Point,
+    NoteType.ANALYSIS: Analysis,
 }
 
 
@@ -25,7 +27,9 @@ NOTE_PARENT_CLASSES = {
 def get_all_notes(
     user: Annotated[User, Depends(get_current_user)], session=Depends(get_session)
 ) -> list[NoteDTO]:
-    notes = session.scalars(select(Note).where(Note.user_id == user.id))
+    notes = session.scalars(
+        select(Note).where(Note.user_id == user.id).options(selectinload(Note.category))
+    )
     return notes
 
 
@@ -38,6 +42,10 @@ def create_note(
     parent_class = NOTE_PARENT_CLASSES[data.parent_type]
     parent_model = session.get(parent_class, data.parent_id)
     if not parent_model:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+
+    category = session.get(Category, data.category_id)
+    if not category:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
     # TODO: test if this works
