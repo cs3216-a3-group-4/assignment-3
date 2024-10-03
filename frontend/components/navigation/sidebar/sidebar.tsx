@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
   HistoryIcon,
@@ -8,7 +9,9 @@ import {
   MessageCircleQuestionIcon,
 } from "lucide-react";
 
-import SidebarOtherTopics from "@/components/navigation/sidebar/sidebar-other-topics";
+import SidebarTopics from "@/components/navigation/sidebar/sidebar-topics";
+import { getCategories } from "@/queries/category";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
 
@@ -16,6 +19,13 @@ import SidebarItemWithIcon from "./sidebar-item-with-icon";
 const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
+
+  const { data: categories, isSuccess } = useQuery(getCategories());
+  const user = useUserStore((state) => state.user);
+  const userCategoryIds = user?.categories.map((category) => category.id) || [];
+  const otherCategories = categories?.filter(
+    (category) => !userCategoryIds.includes(category.id),
+  );
 
   return (
     <div className="sticky flex flex-col h-[calc(100vh_-_72px)] w-full px-4 py-6 bg-primary-100/20 space-y-6">
@@ -46,7 +56,12 @@ const Sidebar = () => {
           onClick={() => router.push("/questions")}
         />
       </div>
-      <SidebarOtherTopics />
+      {isSuccess && (
+        <>
+          <SidebarTopics categories={user!.categories} label={"Your topics"} />
+          <SidebarTopics categories={otherCategories!} label={"Other topics"} />
+        </>
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
   HistoryIcon,
@@ -12,7 +13,7 @@ import {
 
 import DynamicBreadcrumb from "@/components/navigation/dynamic-breadcrumb";
 import SidebarItemWithIcon from "@/components/navigation/sidebar/sidebar-item-with-icon";
-import SidebarOtherTopics from "@/components/navigation/sidebar/sidebar-other-topics";
+import SidebarTopics from "@/components/navigation/sidebar/sidebar-topics";
 import {
   Select,
   SelectContent,
@@ -20,6 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { getCategories } from "@/queries/category";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 type SidebarOption = {
   icon: LucideIcon;
@@ -46,6 +49,13 @@ const MobileSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+
+  const { data: categories, isSuccess } = useQuery(getCategories());
+  const user = useUserStore((state) => state.user);
+  const userCategoryIds = user?.categories.map((category) => category.id) || [];
+  const otherCategories = categories?.filter(
+    (category) => !userCategoryIds.includes(category.id),
+  );
 
   return (
     <Select
@@ -77,7 +87,18 @@ const MobileSidebar = () => {
               />
             ))}
           </div>
-          <SidebarOtherTopics />
+          {isSuccess && (
+            <>
+              <SidebarTopics
+                categories={user!.categories}
+                label={"Your topics"}
+              />
+              <SidebarTopics
+                categories={otherCategories!}
+                label={"Other topics"}
+              />
+            </>
+          )}
         </div>
       </SelectContent>
     </Select>
