@@ -92,15 +92,20 @@ const EventAnalysis = ({ event }: Props) => {
         return;
       }
       const analysisId = parseInt(id.split("event-analysis-")[1]);
-      const spanStart = parseInt(
+      const startSpanStart = parseInt(
         selection?.anchorNode?.parentElement?.id.split(
+          "-",
+        )[1] as unknown as string,
+      );
+      const endSpanStart = parseInt(
+        selection?.focusNode?.parentElement?.id.split(
           "-",
         )[1] as unknown as string,
       );
       setHighlightSelection({
         analysisId,
-        startIndex: spanStart + selection!.anchorOffset,
-        endIndex: spanStart + selection!.focusOffset,
+        startIndex: startSpanStart + selection!.anchorOffset,
+        endIndex: endSpanStart + selection!.focusOffset,
       });
     });
   }, []);
@@ -163,10 +168,8 @@ const EventAnalysis = ({ event }: Props) => {
             }))
             .sort((a, b) => a.startIndex - b.startIndex);
 
-          console.log(highlightStartEnd.length);
           const highlightStartEndNormalised = highlightStartEnd.reduce(
             (prev, curr) => {
-              console.log({ prev, curr });
               if (prev.length === 0) {
                 return [curr];
               }
