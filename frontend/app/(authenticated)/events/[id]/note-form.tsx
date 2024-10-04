@@ -32,21 +32,22 @@ import {
 
 const noteFormSchema = z.object({
   content: z.string(),
-  category_id: z.string(),
+  category_id: z.string().optional(),
 });
 
 export type NoteFormType = z.infer<typeof noteFormSchema>;
 
 const noteFormDefault = {
   content: "",
-  category_id: "",
+  category_id: undefined,
 };
 
 type Props = {
   onSubmit: SubmitHandler<NoteFormType>;
+  hideCategory?: boolean;
 };
 
-const NoteForm = ({ onSubmit }: Props) => {
+const NoteForm = ({ onSubmit, hideCategory }: Props) => {
   const form = useForm<NoteFormType>({
     resolver: zodResolver(noteFormSchema),
     defaultValues: noteFormDefault,
@@ -73,7 +74,7 @@ const NoteForm = ({ onSubmit }: Props) => {
               )}
             />
           </Box>
-          {categories && (
+          {!hideCategory && categories && (
             <Box className="flex flex-col space-y-2.5">
               <FormField
                 control={form.control}

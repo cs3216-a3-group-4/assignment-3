@@ -15,7 +15,7 @@ class NoteDTO(BaseModel):
     parent_id: int
     parent_type: NoteType
 
-    category: CategoryDTO
+    category: CategoryDTO | None = None
 
 
 class NoteCreate(BaseModel):
@@ -25,7 +25,7 @@ class NoteCreate(BaseModel):
 
     parent_id: int
     parent_type: NoteType
-    category_id: int
+    category_id: int | None = None
 
 
 class NoteUpdate(BaseModel):
