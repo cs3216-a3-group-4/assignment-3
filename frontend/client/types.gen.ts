@@ -113,7 +113,7 @@ export type NoteCreate = {
     end_index?: (number | null);
     parent_id: number;
     parent_type: NoteType;
-    category_id: number;
+    category_id?: (number | null);
 };
 
 export type NoteDTO = {

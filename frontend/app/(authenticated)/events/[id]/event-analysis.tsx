@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { LegacyRef, useEffect, useRef, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { SparklesIcon } from "lucide-react";
 
@@ -36,15 +36,108 @@ interface HighlightSelection {
   endIndex: number;
 }
 
+enum HighlightType {
+  None,
+  Annotation,
+  Selected,
+}
+
 interface Region {
   startIndex: number;
   endIndex: number;
-  highlighted: boolean;
+  highlighted: HighlightType;
 }
 
 interface Props {
   event: EventDTO;
 }
+
+const addNotHighlightedRegion = (regions: Region[], length: number) => {
+  const result = regions.reduce(
+    (prev: Region[], curr: Region) => {
+      if (prev.length === 0) {
+        return [curr];
+      }
+      if (
+        curr.startIndex <= prev[prev.length - 1].endIndex + 1 &&
+        prev[prev.length - 1].highlighted === curr.highlighted
+      ) {
+        prev[prev.length - 1].endIndex = curr.endIndex;
+        return prev;
+      }
+      return [
+        ...prev,
+        {
+          startIndex: prev[prev.length - 1].endIndex + 1,
+          endIndex: curr.startIndex - 1,
+          highlighted: HighlightType.None,
+        },
+        curr,
+      ];
+    },
+    (regions.length === 0
+      ? ([
+          {
+            startIndex: 0,
+            endIndex: length - 1,
+            highlighted: HighlightType.None,
+          },
+        ] as Region[])
+      : regions[0].startIndex === 0
+        ? []
+        : [
+            {
+              startIndex: 0,
+              endIndex: regions[0].startIndex - 1,
+              highlighted: HighlightType.None,
+            },
+          ]) as Region[],
+  );
+  if (result[result.length - 1].endIndex != length - 1) {
+    result.push({
+      startIndex: result[result.length - 1].endIndex + 1,
+      endIndex: length - 1,
+      highlighted: HighlightType.None,
+    });
+  }
+  return result;
+};
+
+const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
+  const result = [] as Region[];
+  let added = false;
+  for (const region of regions) {
+    // no intersection
+    if (region.startIndex > end || region.endIndex < start) {
+      result.push(region);
+      continue;
+    }
+    // four cases of collision
+    if (region.startIndex < start) {
+      result.push({
+        startIndex: region.startIndex,
+        endIndex: start - 1,
+        highlighted: region.highlighted,
+      });
+    }
+    if (!added) {
+      result.push({
+        startIndex: start,
+        endIndex: end,
+        highlighted: HighlightType.Selected,
+      });
+      added = true;
+    }
+    if (end < region.endIndex) {
+      result.push({
+        startIndex: end + 1,
+        endIndex: region.endIndex,
+        highlighted: region.highlighted,
+      });
+    }
+  }
+  return result.filter((region) => region.startIndex <= region.endIndex);
+};
 
 const EventAnalysis = ({ event }: Props) => {
   const user = useUserStore((state) => state.user);
@@ -56,6 +149,9 @@ const EventAnalysis = ({ event }: Props) => {
   const [activeCategories, setActiveCategories] = useState<string[]>(
     event.analysises.map((item) => getCategoryFor(item.category.name)),
   );
+
+  // todo: this should be for each analysis but without knowing what the ui wants, i can't really refactor it
+  const [showAnnotationForm, setShowAnnotationForm] = useState(false);
 
   // @ts-expect-error deadline doesnt give me time to bother with type errors
   const analysis: { [key in Category]: AnalysisDTO } = {};
@@ -74,41 +170,78 @@ const EventAnalysis = ({ event }: Props) => {
   const handleAddNote: (analysis_id: number) => SubmitHandler<NoteFormType> =
     (analysis_id: number) =>
     ({ content, category_id }) => {
-      addNoteMutation.mutate({
-        category_id: parseInt(category_id),
-        content,
-        analysis_id,
-        start_index: highlightSelection!.startIndex,
-        end_index: highlightSelection!.endIndex,
-      });
+      addNoteMutation.mutate(
+        {
+          category_id: parseInt(category_id!),
+          content,
+          analysis_id,
+          start_index: highlightSelection!.startIndex,
+          end_index: highlightSelection!.endIndex,
+        },
+        {
+          onSuccess: () => {
+            setShowAnnotationForm(false);
+            setHighlightSelection(null);
+          },
+        },
+      );
     };
 
-  useEffect(() => {
-    document.addEventListener("selectionchange", () => {
-      const selection = document.getSelection();
-      console.log(selection?.anchorNode?.parentElement?.id);
-      const id = selection?.anchorNode?.parentElement?.parentElement?.id;
-      if (!id?.startsWith("event-analysis-")) {
-        return;
-      }
-      const analysisId = parseInt(id.split("event-analysis-")[1]);
-      const startSpanStart = parseInt(
-        selection?.anchorNode?.parentElement?.id.split(
-          "-",
-        )[1] as unknown as string,
-      );
-      const endSpanStart = parseInt(
-        selection?.focusNode?.parentElement?.id.split(
-          "-",
-        )[1] as unknown as string,
-      );
-      setHighlightSelection({
-        analysisId,
-        startIndex: startSpanStart + selection!.anchorOffset,
-        endIndex: endSpanStart + selection!.focusOffset,
-      });
+  const onSelectEnd = () => {
+    const selection = document.getSelection();
+    const id = selection?.anchorNode?.parentElement?.parentElement?.id;
+    if (!id?.startsWith("event-analysis-")) {
+      return;
+    }
+    if (selection?.type === "Caret") {
+      return;
+    }
+
+    const analysisId = parseInt(id.split("event-analysis-")[1]);
+    const spanStart = parseInt(
+      selection?.anchorNode?.parentElement?.id.split(
+        "-",
+      )[1] as unknown as string,
+    );
+
+    setHighlightSelection({
+      analysisId,
+      startIndex: Math.min(
+        spanStart + selection!.anchorOffset,
+        spanStart + selection!.focusOffset,
+      ),
+      endIndex: Math.max(
+        spanStart + selection!.anchorOffset,
+        spanStart + selection!.focusOffset,
+      ),
     });
+  };
+
+  useEffect(() => {
+    document.addEventListener("mouseup", onSelectEnd);
+    return () => {
+      document.removeEventListener("mouseup", onSelectEnd);
+    };
   }, []);
+
+  const node = useRef<HTMLDivElement>();
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      node &&
+      node.current &&
+      // @ts-expect-error not going to bother fixing type errors for code that could be deleted
+      !node.current.contains(event.target)
+    ) {
+      setShowAnnotationForm(false);
+      setHighlightSelection(null);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [handleOutsideClick]);
 
   return (
     <div className="flex flex-col px-6 gap-y-8">
@@ -164,69 +297,35 @@ const EventAnalysis = ({ event }: Props) => {
             .map((notes) => ({
               startIndex: notes.start_index!,
               endIndex: notes.end_index!,
-              highlighted: true,
+              highlighted: HighlightType.Annotation,
             }))
             .sort((a, b) => a.startIndex - b.startIndex);
 
-          const highlightStartEndNormalised = highlightStartEnd.reduce(
-            (prev, curr) => {
-              if (prev.length === 0) {
-                return [curr];
-              }
-              if (
-                curr.startIndex <= prev[prev.length - 1].endIndex + 1 &&
-                prev[prev.length - 1].highlighted
-              ) {
-                prev[prev.length - 1].endIndex = curr.endIndex;
-                return prev;
-              }
-              return [
-                ...prev,
-                {
-                  startIndex: prev[prev.length - 1].endIndex + 1,
-                  endIndex: curr.startIndex - 1,
-                  highlighted: false,
-                },
-                curr,
-              ];
-            },
-            (highlightStartEnd.length === 0
-              ? [
-                  {
-                    startIndex: 0,
-                    endIndex: content.length - 1,
-                    highlighted: false,
-                  },
-                ]
-              : highlightStartEnd[0].startIndex === 0
-                ? []
-                : [
-                    {
-                      startIndex: 0,
-                      endIndex: highlightStartEnd[0].startIndex - 1,
-                      highlighted: false,
-                    },
-                  ]) as Region[],
+          let highlightStartEndNormalised = addNotHighlightedRegion(
+            highlightStartEnd,
+            content.length,
           );
+
           if (
-            highlightStartEndNormalised[highlightStartEndNormalised.length - 1]
-              .endIndex !=
-            content.length - 1
+            highlightSelection &&
+            highlightSelection.analysisId == eventAnalysis.id
           ) {
-            highlightStartEndNormalised.push({
-              startIndex:
-                highlightStartEndNormalised[
-                  highlightStartEndNormalised.length - 1
-                ].endIndex + 1,
-              endIndex: content.length - 1,
-              highlighted: false,
-            });
+            highlightStartEndNormalised = addSelectedRegion(
+              highlightSelection.startIndex,
+              highlightSelection.endIndex,
+              highlightStartEndNormalised,
+            );
           }
 
           return (
             <AccordionItem
               className="border rounded-lg px-8 py-2 border-cyan-600/60 bg-cyan-50/30"
               key={category}
+              ref={
+                eventAnalysis.id === highlightSelection?.analysisId
+                  ? (node as LegacyRef<HTMLDivElement>)
+                  : undefined
+              }
               value={category}
             >
               <AccordionTrigger
@@ -244,20 +343,36 @@ const EventAnalysis = ({ event }: Props) => {
                     {highlightStartEndNormalised.map(
                       ({ startIndex, endIndex, highlighted }) => (
                         <span
-                          className={cn({ "bg-yellow-100": highlighted })}
+                          className={cn({
+                            "bg-yellow-100":
+                              highlighted === HighlightType.Annotation,
+                            "bg-green-100 relative":
+                              highlighted === HighlightType.Selected,
+                          })}
                           id={`analysis${eventAnalysis.id}-${startIndex}`}
                           key={`analysis${eventAnalysis.id}-${startIndex}`}
                         >
-                          {content[startIndex] === " " && " "}
-                          {content.slice(startIndex, endIndex)}
-                          {content[endIndex] === " " && " "}
+                          {content.slice(startIndex, endIndex + 1)}
+                          {highlighted === HighlightType.Selected && (
+                            <Button
+                              className="absolute bottom-6 left-0 z-[100000] whitespace-nowrap"
+                              id="add-annotation"
+                              onClick={() => setShowAnnotationForm(true)}
+                            >
+                              Add annotation
+                            </Button>
+                          )}
                         </span>
                       ),
                     )}
                   </div>
                   {highlightSelection &&
+                    showAnnotationForm &&
                     highlightSelection.analysisId === eventAnalysis.id && (
-                      <NoteForm onSubmit={handleAddNote(eventAnalysis.id)} />
+                      <NoteForm
+                        hideCategory
+                        onSubmit={handleAddNote(eventAnalysis.id)}
+                      />
                     )}
                   {eventAnalysis.notes.map((note) => (
                     <div key={note.id}>

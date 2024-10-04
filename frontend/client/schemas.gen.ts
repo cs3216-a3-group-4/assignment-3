@@ -473,12 +473,19 @@ export const NoteCreateSchema = {
             '$ref': '#/components/schemas/NoteType'
         },
         category_id: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Category Id'
         }
     },
     type: 'object',
-    required: ['content', 'parent_id', 'parent_type', 'category_id'],
+    required: ['content', 'parent_id', 'parent_type'],
     title: 'NoteCreate'
 } as const;
 
