@@ -26,7 +26,7 @@ const EventNotes = ({ event }: Props) => {
     content,
     category_id,
   }) => {
-    addNoteMutation.mutate({ category_id: parseInt(category_id), content });
+    addNoteMutation.mutate({ category_id: parseInt(category_id!), content });
   };
 
   const handleEditNote: (id: number) => SubmitHandler<NoteFormType> =
@@ -34,7 +34,7 @@ const EventNotes = ({ event }: Props) => {
     ({ content, category_id }) => {
       editNoteMutation.mutate({
         id,
-        category_id: parseInt(category_id),
+        category_id: parseInt(category_id!),
         content,
       });
     };
