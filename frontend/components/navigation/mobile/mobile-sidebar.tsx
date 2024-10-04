@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
@@ -47,7 +47,6 @@ const OPTIONS: SidebarOption[] = [
 
 const MobileSidebar = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
   const { data: categories, isSuccess } = useQuery(getCategories());
@@ -83,7 +82,7 @@ const MobileSidebar = () => {
                 isActive={pathname === path}
                 key={index}
                 label={label}
-                onClick={() => router.push(path)}
+                path={path}
               />
             ))}
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
@@ -17,7 +17,6 @@ import SidebarItemWithIcon from "./sidebar-item-with-icon";
 
 /* Assumption: This component is only rendered if the user is logged in */
 const Sidebar = () => {
-  const router = useRouter();
   const pathname = usePathname();
 
   const { data: categories, isSuccess } = useQuery(getCategories());
@@ -35,25 +34,25 @@ const Sidebar = () => {
           Icon={HomeIcon}
           isActive={pathname === "/"}
           label="Home"
-          onClick={() => router.push("/")}
+          path="/"
         />
         <SidebarItemWithIcon
           Icon={BookmarkIcon}
           isActive={pathname === "/bookmarks"}
           label="Bookmarks"
-          onClick={() => router.push("/bookmarks")}
+          path="/bookmarks"
         />
         <SidebarItemWithIcon
           Icon={MessageCircleQuestionIcon}
           isActive={pathname === "/ask"}
           label="Ask a question"
-          onClick={() => router.push("/ask")}
+          path="/ask"
         />
         <SidebarItemWithIcon
           Icon={HistoryIcon}
           isActive={pathname === "/questions"}
           label="Past questions"
-          onClick={() => router.push("/questions")}
+          path="/questions"
         />
       </div>
       {isSuccess && (
