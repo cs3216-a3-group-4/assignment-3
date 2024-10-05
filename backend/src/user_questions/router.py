@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from pprint import pprint
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
@@ -115,8 +114,6 @@ async def create_user_question(
     user_question.answer = answer
 
     results = await generate_response(data.question)
-
-    pprint(results)
 
     for row in results["for_points"]:
         point = row["point"]
