@@ -41,7 +41,6 @@ export const useAddAnalysisNote = (event_id: number) => {
       analysis_id,
       start_index,
       end_index,
-      category_id,
     }: {
       content: string;
       analysis_id: number;

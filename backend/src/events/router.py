@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, aliased
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.events.dependencies import retrieve_event
@@ -13,6 +13,7 @@ from src.notes.models import Note, NoteType
 from src.notes.schemas import NoteDTO
 from src.embeddings.vector_store import get_similar_results
 
+UserReadAlias = aliased(UserReadEvent)
 
 router = APIRouter(prefix="/events", tags=["events"])
 
@@ -40,6 +41,7 @@ def get_events(
     relevant_ids = [id for id in session.scalars(query)]
 
     total_count = len(relevant_ids)
+
     event_query = (
         select(Event)
         .options(selectinload(Event.categories))
@@ -56,7 +58,7 @@ def get_events(
 
     event_query = event_query.order_by(Event.rating.desc(), Event.date.desc())
 
-    events = list(session.scalars(event_query))
+    events = session.scalars(event_query).all()
     return EventIndexResponse(total_count=total_count, count=len(events), data=events)
 
 
