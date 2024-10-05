@@ -1,8 +1,11 @@
+import { SetStateAction, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { Input } from "@/components/ui/input";
 import {
   Pagination as PaginationPrimitive,
   PaginationContent,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
@@ -14,6 +17,28 @@ interface PaginationProps {
 }
 
 const Pagination = ({ page, getPageUrl, pageCount }: PaginationProps) => {
+  const router = useRouter();
+
+  const [inputPage, setInputPage] = useState(page.toString());
+  const [debouncedPage, setDebouncedPage] = useState(inputPage);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (/^\d+$/.test(debouncedPage)) {
+        router.push(getPageUrl(parseInt(debouncedPage)));
+      }
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [debouncedPage, router, getPageUrl]);
+
+  const handleChange = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setInputPage(event.target.value);
+    setDebouncedPage(event.target.value);
+  };
+
   return (
     <PaginationPrimitive className="py-8">
       <PaginationContent>
@@ -22,41 +47,15 @@ const Pagination = ({ page, getPageUrl, pageCount }: PaginationProps) => {
             <PaginationPrevious href={getPageUrl(page - 1)} />
           </PaginationItem>
         )}
-        {/* Only for last page */}
-        {page == pageCount && pageCount > 2 && (
-          <PaginationItem>
-            <PaginationLink href={getPageUrl(page - 2)}>
-              {page - 2}
-            </PaginationLink>
-          </PaginationItem>
-        )}
-        {page !== 1 && (
-          <PaginationItem>
-            <PaginationLink href={getPageUrl(page - 1)}>
-              {page - 1}
-            </PaginationLink>
-          </PaginationItem>
-        )}
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            {page}
-          </PaginationLink>
+        <PaginationItem className="flex align-center">
+          <Input
+            className="text-center"
+            onChange={handleChange}
+            size={1}
+            value={inputPage}
+          ></Input>{" "}
+          <div className="whitespace-nowrap my-auto pl-2">of {pageCount}</div>
         </PaginationItem>
-        {page !== pageCount && (
-          <PaginationItem>
-            <PaginationLink href={getPageUrl(page + 1)}>
-              {page + 1}
-            </PaginationLink>
-          </PaginationItem>
-        )}
-        {/* Only for first page */}
-        {page === 1 && (pageCount as number) >= 3 && (
-          <PaginationItem>
-            <PaginationLink href={getPageUrl(page + 2)}>
-              {page + 2}
-            </PaginationLink>
-          </PaginationItem>
-        )}
         {page !== pageCount && (
           <PaginationItem>
             <PaginationNext href={getPageUrl(page + 1)} />
