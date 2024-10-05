@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -14,7 +15,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useAddBookmark, useRemoveBookmark } from "@/queries/bookmark";
-import { getEvent } from "@/queries/event";
+import { getEvent, useReadEvent } from "@/queries/event";
 
 import EventAnalysis from "./event-analysis";
 import EventDetails from "./event-details";
@@ -24,13 +25,22 @@ import EventSummary from "./event-summary";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
+  const readEventMutation = useReadEvent(id);
   const { data, isLoading } = useQuery(getEvent(id));
   const bookmarked = data?.bookmarks.length === 1;
 
   const addBookmarkMutation = useAddBookmark(id);
   const removeBookmarkMutation = useRemoveBookmark(id);
 
+  const [sentRead, setSentRead] = useState(false);
+
   const toast = useToast();
+  useEffect(() => {
+    if (!isLoading && !sentRead) {
+      readEventMutation.mutate();
+      setSentRead(true);
+    }
+  }, [isLoading, readEventMutation, sentRead]);
 
   if (isLoading) {
     return (
