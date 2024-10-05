@@ -20,11 +20,11 @@ const Pagination = ({ page, getPageUrl, pageCount }: PaginationProps) => {
   const router = useRouter();
 
   const [inputPage, setInputPage] = useState(page.toString());
-  const [debouncedPage, setDebouncedPage] = useState(inputPage);
+  const [debouncedPage, setDebouncedPage] = useState("");
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (/^\d+$/.test(debouncedPage)) {
+      if (debouncedPage && /^\d+$/.test(debouncedPage)) {
         router.push(getPageUrl(parseInt(debouncedPage)));
       }
     }, 500);
