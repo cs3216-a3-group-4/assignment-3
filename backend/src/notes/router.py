@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from http import HTTPStatus
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
@@ -26,11 +26,14 @@ NOTE_PARENT_CLASSES = {
 
 @router.get("/")
 def get_all_notes(
-    user: Annotated[User, Depends(get_current_user)], session=Depends(get_session)
+    user: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
+    category_id: Annotated[int | None, Query()] = None,
 ) -> list[NoteDTO]:
-    notes = session.scalars(
-        select(Note).where(Note.user_id == user.id).options(selectinload(Note.category))
-    )
+    notes_query = select(Note).where(Note.user_id == user.id).options(selectinload(Note.category))
+    if category_id:
+        notes_query = notes_query.where(Note.category_id == category_id)
+    notes = session.scalars(notes_query).all()
     return notes
 
 
