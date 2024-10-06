@@ -193,13 +193,28 @@ const EventAnalysis = ({ event }: Props) => {
     if (!id?.startsWith("event-analysis-")) {
       return;
     }
+
+    // Check if focus node (where the cursor ends) is also within the analysis
+    if (
+      !selection?.focusNode?.parentElement?.parentElement?.id?.startsWith(
+        "event-analysis-",
+      )
+    ) {
+      return;
+    }
     if (selection?.type === "Caret") {
       return;
     }
 
     const analysisId = parseInt(id.split("event-analysis-")[1]);
-    const spanStart = parseInt(
+    const anchorStart = parseInt(
       selection?.anchorNode?.parentElement?.id.split(
+        "-",
+      )[1] as unknown as string,
+    );
+
+    const focusStart = parseInt(
+      selection?.focusNode?.parentElement?.id.split(
         "-",
       )[1] as unknown as string,
     );
@@ -207,41 +222,43 @@ const EventAnalysis = ({ event }: Props) => {
     setHighlightSelection({
       analysisId,
       startIndex: Math.min(
-        spanStart + selection!.anchorOffset,
-        spanStart + selection!.focusOffset,
+        anchorStart + selection!.anchorOffset,
+        focusStart + selection!.focusOffset,
       ),
       endIndex: Math.max(
-        spanStart + selection!.anchorOffset,
-        spanStart + selection!.focusOffset,
+        anchorStart + selection!.anchorOffset,
+        focusStart + selection!.focusOffset,
       ),
     });
   };
 
   useEffect(() => {
     document.addEventListener("mouseup", onSelectEnd);
+    document.addEventListener("touchend", onSelectEnd);
     return () => {
       document.removeEventListener("mouseup", onSelectEnd);
+      document.removeEventListener("touchend", onSelectEnd);
     };
   }, []);
 
   const node = useRef<HTMLDivElement>();
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (
-      node &&
-      node.current &&
-      // @ts-expect-error not going to bother fixing type errors for code that could be deleted
-      !node.current.contains(event.target)
-    ) {
-      setShowAnnotationForm(false);
-      setHighlightSelection(null);
-    }
-  };
-
   useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        node &&
+        node.current &&
+        // @ts-expect-error not going to bother fixing type errors for code that could be deleted
+        !node.current.contains(event.target)
+      ) {
+        setShowAnnotationForm(false);
+        setHighlightSelection(null);
+      }
+    };
+
     document.addEventListener("click", handleOutsideClick);
     return () => document.removeEventListener("click", handleOutsideClick);
-  }, [handleOutsideClick]);
+  }, []);
 
   return (
     <div className="flex flex-col px-6 gap-y-8">
