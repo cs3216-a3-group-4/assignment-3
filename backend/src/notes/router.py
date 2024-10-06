@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from http import HTTPStatus
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
@@ -56,7 +57,8 @@ def create_note(
     ):
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
-    new_note = Note(**data.model_dump(exclude_unset=True), user_id=user.id)
+    datetime_now = datetime.now(timezone.utc).isoformat()
+    new_note = Note(**data.model_dump(exclude_unset = True), user_id = user.id, date_created = datetime_now)
     session.add(new_note)
     session.commit()
     session.refresh(new_note)
