@@ -58,7 +58,7 @@ const NoteForm = ({ onSubmit, hideCategory }: Props) => {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
           <Box className="flex flex-col space-y-2.5">
             <FormField
               control={form.control}
