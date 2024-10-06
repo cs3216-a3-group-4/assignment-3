@@ -24,6 +24,7 @@ const EventNotes = ({ event }: Props) => {
   const deleteNoteMutation = useDeleteNote(event.id);
   const editNoteMutation = useEditEventNote(event.id);
   const [ showNotes, setShowNotes ] = useState<boolean>(false);
+  const numNotes = event?.notes ? event.notes.length : 0;
 
   const handleAddNote: SubmitHandler<NoteFormType> = ({
     content,
@@ -59,7 +60,7 @@ const EventNotes = ({ event }: Props) => {
         <div className={`flex flex-col gap-y-4 ${showNotes ? "" : "hidden"}`}>
           <Tabs defaultValue="saved">
             <TabsList>
-              <TabsTrigger value="saved">Saved</TabsTrigger>
+              <TabsTrigger value="saved">Saved {`(${numNotes})`}</TabsTrigger>
               <TabsTrigger value="new">New</TabsTrigger>
             </TabsList>
             <TabsContent value="saved"> 
