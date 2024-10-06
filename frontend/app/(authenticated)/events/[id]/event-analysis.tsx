@@ -62,7 +62,10 @@ const addNotHighlightedRegion = (regions: Region[], length: number) => {
         curr.startIndex <= prev[prev.length - 1].endIndex + 1 &&
         prev[prev.length - 1].highlighted === curr.highlighted
       ) {
-        prev[prev.length - 1].endIndex = curr.endIndex;
+        prev[prev.length - 1].endIndex = Math.max(
+          curr.endIndex,
+          prev[prev.length - 1].endIndex,
+        );
         return prev;
       }
       return [
@@ -100,6 +103,7 @@ const addNotHighlightedRegion = (regions: Region[], length: number) => {
       highlighted: HighlightType.None,
     });
   }
+  console.log({ regions, result });
   return result;
 };
 
@@ -136,6 +140,7 @@ const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
       });
     }
   }
+  console.log({ regions, result });
   return result.filter((region) => region.startIndex <= region.endIndex);
 };
 
