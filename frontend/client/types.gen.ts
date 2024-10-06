@@ -119,6 +119,7 @@ export type NoteCreate = {
 export type NoteDTO = {
     id: number;
     content: string;
+    date_created: string;
     start_index?: (number | null);
     end_index?: (number | null);
     parent_id: number;
@@ -446,7 +447,11 @@ export type ClassifyQuestionUserQuestionsClassifyPostResponse = (unknown);
 
 export type ClassifyQuestionUserQuestionsClassifyPostError = (HTTPValidationError);
 
-export type GetAllNotesNotesGetData = unknown;
+export type GetAllNotesNotesGetData = {
+    query?: {
+        category_id?: (number | null);
+    };
+};
 
 export type GetAllNotesNotesGetResponse = (Array<NoteDTO>);
 
