@@ -8,6 +8,7 @@ class NoteDTO(BaseModel):
 
     id: int
     content: str
+    date_created: str
 
     start_index: int | None = None
     end_index: int | None = None
