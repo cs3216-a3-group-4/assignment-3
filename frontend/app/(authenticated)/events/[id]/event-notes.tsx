@@ -13,6 +13,7 @@ import {
 
 import NoteForm, { NoteFormType } from "./note-form";
 import { createElement, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
   event: EventDTO;
@@ -56,17 +57,26 @@ const EventNotes = ({ event }: Props) => {
           })}
         </div>
         <div className={`flex flex-col gap-y-4 ${showNotes ? "" : "hidden"}`}>
-          <NoteForm onSubmit={handleAddNote} />
-          <hr />
-          {event.notes.map((note) => (
-            <div key={note.id}>
-              {note.content}, {note.category.name}
-              <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
-                delete
-              </Button>
-              <NoteForm onSubmit={handleEditNote(note.id)} />
-            </div>
-          ))}
+          <Tabs defaultValue="saved">
+            <TabsList>
+              <TabsTrigger value="saved">Saved</TabsTrigger>
+              <TabsTrigger value="new">New</TabsTrigger>
+            </TabsList>
+            <TabsContent value="saved"> 
+              {event.notes.map((note) => (
+                <div key={note.id}>
+                  {note.content}, {note.category.name}
+                  <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
+                    delete
+                  </Button>
+                  <NoteForm onSubmit={handleEditNote(note.id)} />
+                </div>
+              ))}      
+            </TabsContent>
+            <TabsContent value="new">
+              <NoteForm onSubmit={handleAddNote} />   
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
