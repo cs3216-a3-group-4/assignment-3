@@ -343,7 +343,14 @@ export const LikeDTOSchema = {
             title: 'Point Id'
         },
         analysis_id: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Analysis Id'
         },
         type: {
@@ -355,7 +362,7 @@ export const LikeDTOSchema = {
         }
     },
     type: 'object',
-    required: ['analysis_id', 'type', 'user_id'],
+    required: ['type', 'user_id'],
     title: 'LikeDTO'
 } as const;
 
@@ -373,7 +380,14 @@ export const LikeDataSchema = {
             title: 'Point Id'
         },
         analysis_id: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Analysis Id'
         },
         type: {
@@ -381,7 +395,7 @@ export const LikeDataSchema = {
         }
     },
     type: 'object',
-    required: ['analysis_id', 'type'],
+    required: ['type'],
     title: 'LikeData'
 } as const;
 
@@ -529,11 +543,18 @@ export const NoteDTOSchema = {
             '$ref': '#/components/schemas/NoteType'
         },
         category: {
-            '$ref': '#/components/schemas/CategoryDTO'
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/CategoryDTO'
+                },
+                {
+                    type: 'null'
+                }
+            ]
         }
     },
     type: 'object',
-    required: ['id', 'content', 'parent_id', 'parent_type', 'category'],
+    required: ['id', 'content', 'parent_id', 'parent_type'],
     title: 'NoteDTO'
 } as const;
 
@@ -687,10 +708,17 @@ export const PointDTOSchema = {
                     type: 'null'
                 }
             ]
+        },
+        likes: {
+            items: {
+                '$ref': '#/components/schemas/LikeDTO'
+            },
+            type: 'array',
+            title: 'Likes'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'body', 'positive', 'point_analysises'],
+    required: ['id', 'title', 'body', 'positive', 'point_analysises', 'likes'],
     title: 'PointDTO'
 } as const;
 

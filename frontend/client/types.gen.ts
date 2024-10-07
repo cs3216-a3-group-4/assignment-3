@@ -83,14 +83,14 @@ export type HTTPValidationError = {
 
 export type LikeDTO = {
     point_id?: (number | null);
-    analysis_id: number;
+    analysis_id?: (number | null);
     type: LikeType;
     user_id: number;
 };
 
 export type LikeData = {
     point_id?: (number | null);
-    analysis_id: number;
+    analysis_id?: (number | null);
     type: LikeType;
 };
 
@@ -123,7 +123,7 @@ export type NoteDTO = {
     end_index?: (number | null);
     parent_id: number;
     parent_type: NoteType;
-    category: CategoryDTO;
+    category?: (CategoryDTO | null);
 };
 
 export type NoteType = 'event' | 'article' | 'point' | 'analysis';
@@ -163,6 +163,7 @@ export type PointDTO = {
     positive: boolean;
     point_analysises: Array<PointAnalysisDTO>;
     fallback?: (FallbackDTO | null);
+    likes: Array<LikeDTO>;
 };
 
 export type PointMiniDTO = {
