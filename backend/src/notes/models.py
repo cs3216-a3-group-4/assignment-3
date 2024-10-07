@@ -16,7 +16,6 @@ class Note(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     content: Mapped[str]
-    date_created: Mapped[str]
 
     start_index: Mapped[int] = mapped_column(nullable=True)
     end_index: Mapped[int] = mapped_column(nullable=True)
