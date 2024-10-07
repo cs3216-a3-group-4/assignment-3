@@ -119,7 +119,6 @@ export type NoteCreate = {
 export type NoteDTO = {
     id: number;
     content: string;
-    date_created: string;
     start_index?: (number | null);
     end_index?: (number | null);
     parent_id: number;
