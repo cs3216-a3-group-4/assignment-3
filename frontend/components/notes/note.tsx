@@ -1,5 +1,7 @@
 import { NoteDTO } from "@/client";
-import { getIconFor } from "@/types/categories";
+import { categoriesToDisplayName, categoriesToIconsMap, Category, getCategoryFor, getIconFor } from "@/types/categories";
+import Chip from "@/components/display/chip";
+import { parseDate } from "@/utils/date";
 
 type Props = {
     data: NoteDTO;
@@ -7,6 +9,8 @@ type Props = {
 
 const Note = ({data}: Props) => {
     const Icon = getIconFor(data.category.name);
+    const category = getCategoryFor(data.category.name);
+    const dateCreated = new Date(data.created_at);
     const onClickNote = () => {
     };
 
@@ -21,9 +25,15 @@ const Note = ({data}: Props) => {
                     strokeWidth={1.7}/>
                 <div className="flex flex-col space-y-2.5">
                     <div className="flex w-full justify-between">
-                        <span>Note for '{data.category.name}'</span>
+                        <span className="text-text-muted/90">{parseDate(dateCreated)}</span>
                     </div>
-                    <p className="text-text-muted/90">{data.content}</p>
+                    <p className="">{data.content}</p>
+                    <Chip
+                        className="w-fit"
+                        label={categoriesToDisplayName[category]}
+                        size="lg"
+                        variant="primary"
+                    />
                 </div>
         </div>
     );
