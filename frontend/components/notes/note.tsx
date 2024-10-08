@@ -2,6 +2,8 @@ import { NoteDTO } from "@/client";
 import { categoriesToDisplayName, categoriesToIconsMap, Category, getCategoryFor, getIconFor } from "@/types/categories";
 import Chip from "@/components/display/chip";
 import { parseDate } from "@/utils/date";
+import { useState } from "react";
+import NoteDetailsDialog from "./note-details-dialog";
 
 type Props = {
     data: NoteDTO;
@@ -11,7 +13,9 @@ const Note = ({data}: Props) => {
     const Icon = getIconFor(data.category.name);
     const category = getCategoryFor(data.category.name);
     const dateCreated = new Date(data.created_at);
+    const [noteOpen, setNoteOpen] = useState<boolean>(false);
     const onClickNote = () => {
+        setNoteOpen(true);
     };
 
     return (
@@ -35,6 +39,12 @@ const Note = ({data}: Props) => {
                         variant="primary"
                     />
                 </div>
+                <NoteDetailsDialog
+                  categoryData={data.category}
+                  noteData={data}
+                  open={noteOpen}
+                  setOpen={setNoteOpen}
+                />
         </div>
     );
 };
