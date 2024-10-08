@@ -103,7 +103,8 @@ const NoteDetailsDialog = ({categoryData, noteContent, setNoteContent, noteData,
                         />
                 )}
                 <DialogFooter>
-                <Button type="button" onClick={handleSave}>Save</Button>
+                    <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>Edit</Button>
+                    <Button type="button" onClick={handleSave}>Save</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
