@@ -1,3 +1,5 @@
+"use client";
+
 import { NoteDTO } from "@/client";
 import { categoriesToDisplayName, categoriesToIconsMap, Category, getCategoryFor, getIconFor } from "@/types/categories";
 import Chip from "@/components/display/chip";
@@ -14,6 +16,7 @@ const Note = ({data}: Props) => {
     const category = getCategoryFor(data.category.name);
     const dateCreated = new Date(data.created_at);
     const [noteOpen, setNoteOpen] = useState<boolean>(false);
+    const [noteContent, setNoteContent] = useState(data.content);
     const onClickNote = () => {
         setNoteOpen(true);
     };
@@ -31,7 +34,7 @@ const Note = ({data}: Props) => {
                     <div className="flex w-full justify-between">
                         <span className="text-text-muted/90">{parseDate(dateCreated)}</span>
                     </div>
-                    <p className="">{data.content}</p>
+                    <p className="">{noteContent}</p>
                     <Chip
                         className="w-fit"
                         label={categoriesToDisplayName[category]}
@@ -41,6 +44,8 @@ const Note = ({data}: Props) => {
                 </div>
                 <NoteDetailsDialog
                   categoryData={data.category}
+                  noteContent={noteContent}
+                  setNoteContent={setNoteContent}
                   noteData={data}
                   open={noteOpen}
                   setOpen={setNoteOpen}
