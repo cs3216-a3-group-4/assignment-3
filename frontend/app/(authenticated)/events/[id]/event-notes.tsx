@@ -50,7 +50,7 @@ const EventNotes = ({ event }: Props) => {
         <hr />
         {event.notes.map((note) => (
           <div key={note.id}>
-            {note.content}, {note.category.name}
+            {note.content}, {note.category!.name}
             <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
               delete
             </Button>
