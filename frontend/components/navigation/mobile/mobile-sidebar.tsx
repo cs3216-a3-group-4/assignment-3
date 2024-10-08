@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -51,25 +51,32 @@ const MobileSidebar = () => {
     (category) => !userCategoryIds.includes(category.id),
   );
 
+  useEffect(() => {
+    if (!isCollapsed) {
+      setIsCollapsed(true);
+    }
+  }, [pathname]);
+
   return (
-    <div className="sm:hidden">
+    <div className="sm:hidden" key={pathname}>
       <Button onClick={() => setIsCollapsed(false)} variant={"ghost"}>
         <MenuIcon />
       </Button>
       {
-        <div
-          className={cn(
-            "left-0 top-0 absolute w-screen min-h-screen z-[100001]",
-            {
-              "bg-black/20": !isCollapsed,
-              hidden: isCollapsed,
-            },
-          )}
-          onClick={() => setIsCollapsed(true)}
-        >
+        <>
           <div
             className={cn(
-              "absolute flex flex-col bg-primary-100 space-y-6 w-[calc(100vw-6rem)] mr-24 min-h-screen transition-all duration-100",
+              "left-0 top-0 absolute w-screen min-h-screen z-[100001]",
+              {
+                "bg-black/20": !isCollapsed,
+                hidden: isCollapsed,
+              },
+            )}
+            onClick={() => setIsCollapsed(true)}
+          ></div>
+          <div
+            className={cn(
+              "absolute top-0 flex flex-col bg-primary-100 space-y-6 w-[calc(100vw-6rem)] mr-24 min-h-screen transition-all duration-100 z-[100002]",
               {
                 "animate-slide-right": !isCollapsed,
                 "animate-slide-left": isCollapsed,
@@ -107,7 +114,7 @@ const MobileSidebar = () => {
               )}
             </div>
           </div>
-        </div>
+        </>
       }
     </div>
   );
