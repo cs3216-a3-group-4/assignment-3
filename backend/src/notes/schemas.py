@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 from src.categories.schemas import CategoryDTO
 from src.notes.models import NoteType
@@ -16,6 +17,9 @@ class NoteDTO(BaseModel):
     parent_type: NoteType
 
     category: CategoryDTO | None = None
+
+    created_at: datetime
+    updated_at: datetime
 
 
 class NoteCreate(BaseModel):
