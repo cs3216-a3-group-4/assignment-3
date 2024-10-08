@@ -24,7 +24,7 @@ const Page = () => {
                         id="notes-page-content"
                     >
                         <div className="flex items-baseline gap-4" id="note-page-title">
-                            <Notebook className="w-7 h-7 grow-0" />
+                            <Notebook className="w-8 h-8 grow-0 self-center" />
                             <span className="text-4xl 2xl:text-4xl font-bold text-primary-800 grow">
                                 My Notes 
                             </span>

@@ -21,8 +21,8 @@ const Notes = ({ notes, isNotesLoaded, filter }: Props) => {
   
     if (notes!.length == 0) {
       return (
-        <div className="flex w-full justify-center items-center">
-          <p className="text-sm text-offblack">
+        <div className="flex w-full justify-center items-center py-5">
+          <p className="text-l text-offblack">
             No notes yet. Add one to see it here!
           </p>
         </div>
@@ -30,7 +30,7 @@ const Notes = ({ notes, isNotesLoaded, filter }: Props) => {
     }
   
     return (
-        <div>
+        <div className="flex flex-col">
             {
             filter == Filter.DATE && notes.map((note) => (
                 <Note key={note.id} data={note} />
