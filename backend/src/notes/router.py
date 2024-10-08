@@ -32,6 +32,7 @@ def get_all_notes(
     notes_query = select(Note).where(Note.user_id == user.id).options(selectinload(Note.category))
     if category_id:
         notes_query = notes_query.where(Note.category_id == category_id)
+    notes_query = notes_query.order_by(Note.created_at.desc())
     notes = session.scalars(notes_query).all()
     return notes
 
