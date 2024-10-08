@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import MobileNavbar from "@/components/navigation/mobile/mobile-navbar";
 import Navbar from "@/components/navigation/navbar";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Toaster } from "@/components/ui/toaster";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -32,7 +33,13 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
       <Navbar />
       <MobileNavbar />
       <main className="flex w-full h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
-        <Suspense fallback={<>Is loading</>}>
+        <Suspense
+          fallback={
+            <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto justify-center items-center">
+              <LoadingSpinner className="w-24 h-24" />
+            </div>
+          }
+        >
           <ContentLayout isLoading={isUserProfileLoading}>
             {children}
           </ContentLayout>
