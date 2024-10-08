@@ -359,7 +359,7 @@ const EventAnalysis = ({ event }: Props) => {
                   {categoriesToDisplayName[category as Category]}
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
+              <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450] overflow-visible">
                 <div>
                   <div id={`event-analysis-${eventAnalysis.id}`}>
                     {highlightStartEndNormalised.map(
@@ -377,7 +377,7 @@ const EventAnalysis = ({ event }: Props) => {
                           {content.slice(startIndex, endIndex + 1)}
                           {highlighted === HighlightType.Selected && (
                             <Button
-                              className="absolute bottom-6 left-0 z-[100000] whitespace-nowrap"
+                              className="absolute bottom-6 left-0 whitespace-nowrap"
                               id="add-annotation"
                               onClick={() => setShowAnnotationForm(true)}
                             >
@@ -412,12 +412,6 @@ const EventAnalysis = ({ event }: Props) => {
                       </Button>
                     </div>
                   ))}
-                  {/* Commenting out GP questions for now */}
-                  {/* <Separator className="my-4" />
-                  <div>
-                    How does the commercialization of global sports impact
-                    societal values and economies?
-                  </div> */}
                 </div>
                 <LikeButtons
                   onDislike={() =>
