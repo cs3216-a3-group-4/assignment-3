@@ -10,7 +10,11 @@ const NotesCategories = () => {
     return (
         <div className="flex flex-col w-full">
             {isSuccess && categories!.map((category) => 
-                <NotesCategoryItem key={category.id} title={category.name} />
+                <NotesCategoryItem
+                  key={category.id}
+                  title={category.name} 
+                  categoryId={category.id} 
+                />
             )}
         </div>
     );
