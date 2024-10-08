@@ -40,7 +40,7 @@ export const useLikePoint = (answer_id: number) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Points, answer_id],
+        queryKey: [QueryKeys.Answers, answer_id],
       });
     },
   });

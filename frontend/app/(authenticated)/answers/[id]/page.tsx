@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import Chip from "@/components/display/chip";
+import LikeButtons from "@/components/likes/like-buttons";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import {
   Accordion,
@@ -20,18 +21,17 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { getAnswer } from "@/queries/user-question";
-import LikeButtons from "@/components/likes/like-buttons";
 import { useLikePoint } from "@/queries/like";
-import { use } from "react";
+import { getAnswer } from "@/queries/user-question";
 import { useUserStore } from "@/store/user/user-store-provider";
 
 const AnswerPage = ({ params }: { params: { id: string } }) => {
   const user = useUserStore((state) => state.user);
   const id = parseInt(params.id);
-  const { data, isFetching } = useQuery(getAnswer(id));
+  const { data, isPending } = useQuery(getAnswer(id));
   const likeMutation = useLikePoint(id);
-  if (isFetching) {
+
+  if (isPending) {
     return (
       <div className="flex justify-center items-center w-full">
         <LoadingSpinner className="w-24 h-24" />
@@ -89,23 +89,21 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                             size={20}
                             strokeWidth={1.6}
                           />
-                          <div>
-                            <LikeButtons
-                              onDislike={() =>
-                                likeMutation.mutate({
-                                  point_id: point.id,
-                                  type: -1,
-                                })
-                              }
-                              onLike={() =>
-                                likeMutation.mutate({
-                                  point_id: point.id,
-                                  type: 1,
-                                })
-                              }
-                              userLikeValue={userLikeValue}
-                            />
-                          </div>
+                          <LikeButtons
+                            onDislike={() =>
+                              likeMutation.mutate({
+                                point_id: point.id,
+                                type: -1,
+                              })
+                            }
+                            onLike={() =>
+                              likeMutation.mutate({
+                                point_id: point.id,
+                                type: 1,
+                              })
+                            }
+                            userLikeValue={userLikeValue}
+                          />
                           <h2>Jippy Examples</h2>
                         </span>
 
