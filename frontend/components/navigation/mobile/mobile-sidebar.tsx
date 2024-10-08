@@ -8,18 +8,13 @@ import {
   HistoryIcon,
   HomeIcon,
   LucideIcon,
+  MenuIcon,
   MessageCircleQuestionIcon,
 } from "lucide-react";
 
-import DynamicBreadcrumb from "@/components/navigation/dynamic-breadcrumb";
 import SidebarItemWithIcon from "@/components/navigation/sidebar/sidebar-item-with-icon";
 import SidebarTopics from "@/components/navigation/sidebar/sidebar-topics";
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getCategories } from "@/queries/category";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -57,50 +52,64 @@ const MobileSidebar = () => {
   );
 
   return (
-    <Select
-      defaultValue={pathname}
-      onValueChange={() => setIsCollapsed((prevValue) => !prevValue)}
-    >
-      <SelectTrigger
-        aria-label="Navbar"
-        className={cn(
-          "border-muted-foreground/20 flex max-w-full items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
-          isCollapsed &&
-            "flex h-9 max-w-full shrink-0 items-center justify-center p-0 [&>span]:w-auto [&>svg]:hidden",
-        )}
-      >
-        <SelectValue>
-          <DynamicBreadcrumb pathname={pathname} />
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        <div className="flex flex-col bg-primary-100/20 space-y-6 py-4 px-8">
-          <div className="flex flex-col space-y-2">
-            {OPTIONS.map(({ icon, label, path }, index) => (
-              <SidebarItemWithIcon
-                Icon={icon}
-                isActive={pathname === path}
-                key={index}
-                label={label}
-                path={path}
-              />
-            ))}
-          </div>
-          {isSuccess && (
-            <>
-              <SidebarTopics
-                categories={user!.categories}
-                label={"Your topics"}
-              />
-              <SidebarTopics
-                categories={otherCategories!}
-                label={"Other topics"}
-              />
-            </>
+    <div className="sm:hidden">
+      <Button onClick={() => setIsCollapsed(false)} variant={"ghost"}>
+        <MenuIcon />
+      </Button>
+      {
+        <div
+          className={cn(
+            "left-0 top-0 absolute w-screen min-h-screen z-[100001]",
+            {
+              "bg-black/20": !isCollapsed,
+              hidden: isCollapsed,
+            },
           )}
+          onClick={() => setIsCollapsed(true)}
+        >
+          <div
+            className={cn(
+              "absolute flex flex-col bg-primary-100 space-y-6 w-[calc(100vw-6rem)] mr-24 min-h-screen transition-all duration-100",
+              {
+                "animate-slide-right": !isCollapsed,
+                "animate-slide-left": isCollapsed,
+              },
+            )}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col bg-primary-100/20 space-y-6 py-4 px-8 h-screen overflow-y-auto">
+              <div className="border-b-2 border-primary-500/20 py-4 flex flex-col gap-1">
+                <h1 className="text-medium">Jippy</h1>
+                <p className="text-slate-500">{user?.email}</p>
+              </div>
+              <div className="flex flex-col space-y-2">
+                {OPTIONS.map(({ icon, label, path }, index) => (
+                  <SidebarItemWithIcon
+                    Icon={icon}
+                    isActive={pathname === path}
+                    key={index}
+                    label={label}
+                    path={path}
+                  />
+                ))}
+              </div>
+              {isSuccess && (
+                <>
+                  <SidebarTopics
+                    categories={user!.categories}
+                    label={"Your topics"}
+                  />
+                  <SidebarTopics
+                    categories={otherCategories!}
+                    label={"Other topics"}
+                  />
+                </>
+              )}
+            </div>
+          </div>
         </div>
-      </SelectContent>
-    </Select>
+      }
+    </div>
   );
 };
 

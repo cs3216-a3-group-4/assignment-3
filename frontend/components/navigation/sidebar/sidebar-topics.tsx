@@ -36,7 +36,9 @@ const SidebarTopics = ({ label, categories }: Props) => {
           className: "text-muted-foreground",
         })}
       </div>
-      <div className={`flex flex-col ${isExpanded ? "" : "hidden"}`}>
+      <div
+        className={`flex flex-col space-y-2 sm:space-y-1 ${isExpanded ? "" : "hidden"}`}
+      >
         {categories?.map((category) => {
           const categoryIcon = getIconFor(category.name);
           return (
