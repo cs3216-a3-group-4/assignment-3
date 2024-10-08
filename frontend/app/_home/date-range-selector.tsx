@@ -47,7 +47,7 @@ const DateRangeSelector = ({ selectedPeriod }: DateRangeSelectorProps) => {
   };
 
   return (
-    <div className="relative z-20">
+    <div className="relative z-20 inline-block">
       <button
         className="flex items-center space-x-2 text-3xl 2xl:text-4xl font-bold hover:underline"
         onClick={() => setShowDropdown(!showDropdown)}

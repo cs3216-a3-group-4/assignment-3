@@ -65,7 +65,7 @@ const Home = () => {
             className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
             id="homePage"
           >
-            <div className="flex">
+            <div>
               <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
                 What happened this&nbsp;
               </span>
