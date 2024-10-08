@@ -100,7 +100,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
     <>
       <div className="flex flex-col bg-muted w-full h-full max-h-full px-4 md:px-8 xl:px-4 2xl:px-24">
         <div className="flex flex-col py-4 mb-4 xl:py-10 2xl:py-16 w-full max-w-6xl md:mx-8 lg:mx-8 xl:mx-auto">
-          <div className="flex flex-col pb-4 mb-4 sticky top-0 bg-muted border-b-2 z-50">
+          <div className="flex flex-col pb-4 mb-4 sticky top-0 bg-muted border-b-2 z-40">
             <h1 className="font-medium mb-2 text-text-muted">
               Ask Jippy a General Paper exam question
             </h1>
@@ -271,7 +271,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
       </div>
 
       {isLoading && (
-        <div className="absolute w-full h-full bg-slate-600/80 z-10 bottom-0 right-0 flex justify-center items-center">
+        <div className="absolute w-full h-full bg-slate-600/80 z-50 bottom-0 right-0 flex justify-center items-center">
           <Card className="p-8 flex flex-col justify-center items-center gap-8">
             <h1 className="text-lg">
               Jippy is finding points and examples! Please wait...

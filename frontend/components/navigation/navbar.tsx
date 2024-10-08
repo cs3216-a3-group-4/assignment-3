@@ -13,7 +13,6 @@ import UserProfileButton from "@/components/auth/user-profile-button";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -44,7 +43,6 @@ function Navbar() {
         <div className="flex items-center">
           <Link className="mr-6 flex items-center gap-x-2" href="/">
             <JippyLogo classname="hidden sm:flex" />
-            <JippyIcon classname="sm:hidden" />
           </Link>
           <NavigationMenu>
             <NavigationMenuList>

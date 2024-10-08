@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 
 import { CategoryDTO } from "@/client";
@@ -15,7 +15,6 @@ type Props = {
 };
 
 const SidebarTopics = ({ label, categories }: Props) => {
-  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const numTopics = categories?.length;
 
@@ -37,10 +36,11 @@ const SidebarTopics = ({ label, categories }: Props) => {
           className: "text-muted-foreground",
         })}
       </div>
-      <div className={`flex flex-col ${isExpanded ? "" : "hidden"}`}>
+      <div
+        className={`flex flex-col space-y-2 sm:space-y-1 ${isExpanded ? "" : "hidden"}`}
+      >
         {categories?.map((category) => {
           const categoryIcon = getIconFor(category.name);
-          const onClick = () => router.push(`/categories/${category.id}`);
           return (
             // TODO: active category
             <SidebarItemWithIcon
@@ -50,7 +50,7 @@ const SidebarTopics = ({ label, categories }: Props) => {
               }
               key={category.id}
               label={category.name}
-              onClick={onClick}
+              path={`/categories/${category.id}`}
             />
           );
         })}

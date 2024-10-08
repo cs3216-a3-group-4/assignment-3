@@ -12,14 +12,15 @@ import {
 
 import { QueryKeys } from "./utils/query-keys";
 
-export const getUserProfile = () =>
-  queryOptions({
+export const getUserProfile = () => {
+  return queryOptions({
     queryKey: [QueryKeys.UserProfile],
     queryFn: () =>
       getUserAuthSessionGet({ withCredentials: true }).then(
         (data) => data.data,
       ),
   });
+};
 
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();

@@ -20,9 +20,11 @@ def get_event_by_id(event_id: int) -> Event:
         return result
 
 
-def format_prompt_input(question: str, analysis: dict, point: str) -> str:
+def format_prompt_input(
+    question: str, analysis: dict, point: str, events_map: dict[int, Event]
+) -> str:
     event_id = analysis.get("event_id")
-    event = get_event_by_id(event_id)
+    event = events_map[int(event_id)]
     event_title = event.title
     event_description = event.description
     analysis_content = analysis.get("content")
@@ -37,15 +39,15 @@ def format_prompt_input(question: str, analysis: dict, point: str) -> str:
 
 
 async def get_elaborated_analysis(
-    question, analysis, point, elaborated_analyses, index
+    question, analysis, point, elaborated_analyses, index, events_map
 ):
-    prompt_input = format_prompt_input(question, analysis, point)
+    prompt_input = format_prompt_input(question, analysis, point, events_map)
     messages = [
         SystemMessage(content=SYSPROMPT),
         HumanMessage(content=prompt_input),
     ]
 
-    result = lm_model.invoke(messages)
+    result = await lm_model.ainvoke(messages)
 
     analysis["elaborations"] = result.content
     if analysis["elaborations"] != "NOT RELEVANT":
@@ -55,11 +57,18 @@ async def get_elaborated_analysis(
 async def process_point_dict(point_dict, question):
     point = point_dict.get("point")
     analyses = point_dict.get("analyses")
+    with Session(engine) as session:
+        events = session.scalars(
+            select(Event).where(
+                Event.id.in_([int(analysis.get("event_id")) for analysis in analyses])
+            )
+        ).all()
+        events_map = {event.id: event for event in events}
     elaborated_analyses = []
     await asyncio.gather(
         *[
             get_elaborated_analysis(
-                question, analysis, point, elaborated_analyses, index
+                question, analysis, point, elaborated_analyses, index, events_map
             )
             for index, analysis in enumerate(analyses)
         ]
@@ -74,7 +83,7 @@ async def process_point_dict(point_dict, question):
 
 
 async def generate_response(question: str) -> dict:
-    relevant_analyses = get_relevant_analyses(question)
+    relevant_analyses = await get_relevant_analyses(question)
 
     await asyncio.gather(
         *[

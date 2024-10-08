@@ -26,7 +26,7 @@ const EventNotes = ({ event }: Props) => {
     content,
     category_id,
   }) => {
-    addNoteMutation.mutate({ category_id: parseInt(category_id), content });
+    addNoteMutation.mutate({ category_id: parseInt(category_id!), content });
   };
 
   const handleEditNote: (id: number) => SubmitHandler<NoteFormType> =
@@ -34,7 +34,7 @@ const EventNotes = ({ event }: Props) => {
     ({ content, category_id }) => {
       editNoteMutation.mutate({
         id,
-        category_id: parseInt(category_id),
+        category_id: parseInt(category_id!),
         content,
       });
     };
@@ -50,7 +50,7 @@ const EventNotes = ({ event }: Props) => {
         <hr />
         {event.notes.map((note) => (
           <div key={note.id}>
-            {note.content}, {note.category.name}
+            {note.content}, {note.category!.name}
             <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
               delete
             </Button>

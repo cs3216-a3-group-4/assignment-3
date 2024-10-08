@@ -37,24 +37,22 @@ export const useAddAnalysisNote = (event_id: number) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
-      category_id,
       content,
       analysis_id,
       start_index,
       end_index,
     }: {
-      category_id: number;
       content: string;
       analysis_id: number;
       start_index: number;
       end_index: number;
+      category_id?: number;
     }) => {
       return createNoteNotesPost({
         body: {
           content,
           parent_id: analysis_id,
           parent_type: "analysis",
-          category_id,
           start_index,
           end_index,
         },

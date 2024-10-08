@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
+import { RotateCwIcon } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
-import { getEvent } from "@/queries/event";
+import { getEvent, useReadEvent } from "@/queries/event";
 
 import EventAnalysis from "./event-analysis";
 import EventAnnotations from "./event-annotations";
@@ -15,14 +17,22 @@ import EventDetails from "./event-details";
 import EventNotes from "./event-notes";
 import EventSource from "./event-source";
 import EventSummary from "./event-summary";
-import { Button } from "@/components/ui/button";
-import { RotateCwIcon } from "lucide-react";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
   const [isViewAnnotation, setIsViewAnnotation] = useState<boolean>(true);
   const { data, isLoading } = useQuery(getEvent(id));
   const bookmarked = data?.bookmarks.length === 1;
+
+  const readEventMutation = useReadEvent(id);
+  const [sentRead, setSentRead] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && !sentRead) {
+      readEventMutation.mutate();
+      setSentRead(true);
+    }
+  }, [isLoading, readEventMutation, sentRead]);
 
   if (isLoading) {
     return (
@@ -90,8 +100,8 @@ const Page = ({ params }: { params: { id: string } }) => {
                 isBookmarked={bookmarked}
               />
               <Button
-                variant={isViewAnnotation ? "outline" : "default"}
                 onClick={() => setIsViewAnnotation((prev) => !prev)}
+                variant={isViewAnnotation ? "outline" : "default"}
               >
                 {isViewAnnotation ? "Hide" : "Show"} annotations
               </Button>

@@ -45,6 +45,7 @@ class PointMiniDTO(BaseModel):
 class PointDTO(PointMiniDTO):
     point_analysises: list[PointAnalysisDTO]
     fallback: FallbackDTO | None = None
+    likes: list[LikeDTO]
 
 
 class AnswerDTO(BaseModel):

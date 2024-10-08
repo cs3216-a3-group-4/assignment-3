@@ -44,9 +44,10 @@ def create_note(
     if not parent_model:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
-    category = session.get(Category, data.category_id)
-    if not category:
-        raise HTTPException(HTTPStatus.NOT_FOUND)
+    if data.category_id:
+        category = session.get(Category, data.category_id)
+        if not category:
+            raise HTTPException(HTTPStatus.NOT_FOUND)
 
     # TODO: test if this works
     if (
@@ -55,7 +56,7 @@ def create_note(
     ):
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
-    new_note = Note(**data.model_dump(), user_id=user.id)
+    new_note = Note(**data.model_dump(exclude_unset=True), user_id=user.id)
     session.add(new_note)
     session.commit()
     session.refresh(new_note)

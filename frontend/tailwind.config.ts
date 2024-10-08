@@ -154,10 +154,28 @@ const config: Config = {
             height: "0",
           },
         },
+        "slide-right": {
+          from: {
+            left: "-100vw",
+          },
+          to: {
+            left: "0",
+          },
+        },
+        "slide-left": {
+          from: {
+            left: "0",
+          },
+          to: {
+            left: "-100vw",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "slide-right": "slide-right 0.2s ease-out forwards",
+        "slide-left": "slide-left 0.2s ease-out forwards",
       },
     },
   },

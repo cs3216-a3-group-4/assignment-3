@@ -1,9 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
-import { QueryKeys } from "./utils/query-keys";
+
 import {
   getUserQuestionsUserQuestionsGet,
   getUserQuestionUserQuestionsIdGet,
 } from "@/client";
+
+import { QueryKeys } from "./utils/query-keys";
 
 export const getAnswer = (id: number) =>
   queryOptions({
