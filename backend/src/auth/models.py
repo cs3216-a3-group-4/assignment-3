@@ -33,6 +33,8 @@ class User(Base):
 
     bookmarks: Mapped[list[Bookmark]] = relationship(backref="user")
 
+    tier_id: Mapped[int] = mapped_column(ForeignKey("tier.id"))
+
 
 class PasswordReset(Base):
     __tablename__ = "password-reset"
