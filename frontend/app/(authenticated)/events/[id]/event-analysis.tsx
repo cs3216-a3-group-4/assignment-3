@@ -11,9 +11,9 @@ import {
 import LikeButtons from "@/components/likes/like-buttons";
 import {
   Accordion,
-  AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  ScrewedUpAccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -237,10 +237,8 @@ const EventAnalysis = ({ event }: Props) => {
     const rect = selection.getRangeAt(0).getBoundingClientRect();
 
     setPosition({
-      // 80 represents the width of the share button, this may differ for you
-      x: rect.left + rect.width / 2 - 80 / 2,
-      // 30 represents the height of the share button, this may differ for you
-      y: rect.top + window.scrollY - 30,
+      x: rect.left + rect.width / 2 - 80 / 2, // 80 represents the width
+      y: rect.top + window.scrollY - 30, // 30 represents the height
       width: rect.width,
       height: rect.height,
     });
@@ -366,76 +364,78 @@ const EventAnalysis = ({ event }: Props) => {
                   {categoriesToDisplayName[category as Category]}
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450] overflow-visible">
-                <div>
-                  <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
-                    {highlightStartEndNormalised.map(
-                      ({ startIndex, endIndex, highlighted }) => (
-                        <span
-                          className={cn({
-                            "bg-yellow-100":
-                              highlighted === HighlightType.Annotation,
-                            "bg-green-100 relative":
-                              highlighted === HighlightType.Selected,
-                          })}
-                          id={`analysis${eventAnalysis.id}-${startIndex}`}
-                          key={`analysis${eventAnalysis.id}-${startIndex}`}
-                        >
-                          {highlighted === HighlightType.Selected && (
-                            <Button
-                              className="absolute whitespace-nowrap bottom-6 left-0"
-                              id="add-annotation"
-                              onClick={() => setShowAnnotationForm(true)}
-                            >
-                              Add annotation
-                            </Button>
-                          )}
-                          {content.slice(startIndex, endIndex + 1)}
-                        </span>
-                      ),
-                    )}
-                  </div>
-                  {highlightSelection &&
-                    showAnnotationForm &&
-                    highlightSelection.analysisId === eventAnalysis.id && (
-                      <NoteForm
-                        hideCategory
-                        onSubmit={handleAddNote(eventAnalysis.id)}
-                      />
-                    )}
-                  {eventAnalysis.notes.map((note) => (
-                    <div key={note.id}>
-                      {eventAnalysis.content.slice(
-                        note.start_index!,
-                        note.end_index!,
+              <div className="relative">
+                <ScrewedUpAccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
+                  <div>
+                    <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
+                      {highlightStartEndNormalised.map(
+                        ({ startIndex, endIndex, highlighted }) => (
+                          <span
+                            className={cn({
+                              "bg-yellow-100":
+                                highlighted === HighlightType.Annotation,
+                              "bg-green-100 relative":
+                                highlighted === HighlightType.Selected,
+                            })}
+                            id={`analysis${eventAnalysis.id}-${startIndex}`}
+                            key={`analysis${eventAnalysis.id}-${startIndex}`}
+                          >
+                            {highlighted === HighlightType.Selected && (
+                              <Button
+                                className="absolute whitespace-nowrap bottom-6 left-0 z-[1000]"
+                                id="add-annotation"
+                                onClick={() => setShowAnnotationForm(true)}
+                              >
+                                Add annotation
+                              </Button>
+                            )}
+                            {content.slice(startIndex, endIndex + 1)}
+                          </span>
+                        ),
                       )}
-                      <br />
-                      {note.content}
-                      <hr />
-                      <Button
-                        onClick={() => deleteNoteMutation.mutate(note.id)}
-                      >
-                        Delete
-                      </Button>
                     </div>
-                  ))}
-                </div>
-                <LikeButtons
-                  onDislike={() =>
-                    likeMutation.mutate({
-                      analysis_id: eventAnalysis.id,
-                      type: -1,
-                    })
-                  }
-                  onLike={() =>
-                    likeMutation.mutate({
-                      analysis_id: eventAnalysis.id,
-                      type: 1,
-                    })
-                  }
-                  userLikeValue={userLikeValue}
-                />
-              </AccordionContent>
+                    {highlightSelection &&
+                      showAnnotationForm &&
+                      highlightSelection.analysisId === eventAnalysis.id && (
+                        <NoteForm
+                          hideCategory
+                          onSubmit={handleAddNote(eventAnalysis.id)}
+                        />
+                      )}
+                    {eventAnalysis.notes.map((note) => (
+                      <div key={note.id}>
+                        {eventAnalysis.content.slice(
+                          note.start_index!,
+                          note.end_index!,
+                        )}
+                        <br />
+                        {note.content}
+                        <hr />
+                        <Button
+                          onClick={() => deleteNoteMutation.mutate(note.id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                  <LikeButtons
+                    onDislike={() =>
+                      likeMutation.mutate({
+                        analysis_id: eventAnalysis.id,
+                        type: -1,
+                      })
+                    }
+                    onLike={() =>
+                      likeMutation.mutate({
+                        analysis_id: eventAnalysis.id,
+                        type: 1,
+                      })
+                    }
+                    userLikeValue={userLikeValue}
+                  />
+                </ScrewedUpAccordionContent>
+              </div>
             </AccordionItem>
           );
         })}
