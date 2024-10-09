@@ -7,6 +7,8 @@ from src.events.router import router as events_router
 from src.user_questions.router import router as user_questions_router
 from src.notes.router import router as notes_router, points_router
 from src.likes.router import router as likes_router
+from src.essays.router import router as essays_router
+
 from contextlib import asynccontextmanager
 
 import logging
@@ -43,3 +45,4 @@ server.include_router(user_questions_router)
 server.include_router(notes_router)
 server.include_router(points_router)
 server.include_router(likes_router)
+server.include_router(essays_router)
