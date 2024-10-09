@@ -124,6 +124,8 @@ export type NoteDTO = {
   parent_id: number;
   parent_type: NoteType;
   category?: CategoryDTO | null;
+  created_at: string;
+  updated_at: string;
 };
 
 export type NoteType = "event" | "article" | "point" | "analysis";
@@ -454,7 +456,11 @@ export type ClassifyQuestionUserQuestionsClassifyPostResponse = unknown;
 export type ClassifyQuestionUserQuestionsClassifyPostError =
   HTTPValidationError;
 
-export type GetAllNotesNotesGetData = unknown;
+export type GetAllNotesNotesGetData = {
+    query?: {
+        category_id?: (number | null);
+    };
+};
 
 export type GetAllNotesNotesGetResponse = Array<NoteDTO>;
 

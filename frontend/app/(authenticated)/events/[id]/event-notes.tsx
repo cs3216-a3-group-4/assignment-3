@@ -1,10 +1,16 @@
 "use client";
 
+import { createElement, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { NotebookIcon } from "lucide-react";
+import {
+  ChevronsDownUpIcon,
+  ChevronsUpDownIcon,
+  NotebookIcon,
+} from "lucide-react";
 
 import { EventDTO } from "@/client";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   useAddEventNote,
   useDeleteNote,
@@ -21,6 +27,8 @@ const EventNotes = ({ event }: Props) => {
   const addNoteMutation = useAddEventNote(event.id);
   const deleteNoteMutation = useDeleteNote(event.id);
   const editNoteMutation = useEditEventNote(event.id);
+  const [showNotes, setShowNotes] = useState<boolean>(false);
+  const numNotes = event?.notes ? event.notes.length : 0;
 
   const handleAddNote: SubmitHandler<NoteFormType> = ({
     content,
@@ -44,19 +52,37 @@ const EventNotes = ({ event }: Props) => {
       <div className="flex flex-col gap-y-1">
         <span className="flex items-center font-medium text-3xl mb-6">
           <NotebookIcon className="inline-flex mr-3 stroke-offblack fill-muted" />
-          Notes
+          <h1 className="flex items-center font-medium text-3xl px-2">
+            My Notes
+          </h1>
+          {createElement(showNotes ? ChevronsUpDownIcon : ChevronsDownUpIcon, {
+            onClick: () => setShowNotes((prevState) => !prevState),
+            size: 20,
+            strokeWidth: 2.4,
+          })}
         </span>
-        <NoteForm onSubmit={handleAddNote} />
-        <hr />
-        {event.notes.map((note) => (
-          <div key={note.id}>
-            {note.content}, {note.category!.name}
-            <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
-              delete
-            </Button>
-            <NoteForm onSubmit={handleEditNote(note.id)} />
-          </div>
-        ))}
+        <div className={`flex flex-col gap-y-4 ${showNotes ? "" : "hidden"}`}>
+          <Tabs defaultValue="saved">
+            <TabsList>
+              <TabsTrigger value="saved">Saved {`(${numNotes})`}</TabsTrigger>
+              <TabsTrigger value="new">New</TabsTrigger>
+            </TabsList>
+            <TabsContent value="saved">
+              {event.notes.map((note) => (
+                <div key={note.id}>
+                  {note.content}, {note.category!.name}
+                  <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
+                    delete
+                  </Button>
+                  <NoteForm onSubmit={handleEditNote(note.id)} />
+                </div>
+              ))}
+            </TabsContent>
+            <TabsContent value="new">
+              <NoteForm onSubmit={handleAddNote} />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

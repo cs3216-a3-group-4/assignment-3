@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
   createNoteNotesPost,
   deleteNoteNotesIdDelete,
+  getAllNotesNotesGet,
   updateNoteNotesIdPut,
 } from "@/client";
 
@@ -105,3 +106,17 @@ export const useDeleteNote = (event_id: number) => {
     },
   });
 };
+
+export const getAllNotes = (
+    categoryId?: number,
+  ) =>
+  queryOptions({
+    queryKey: [QueryKeys.Categories, categoryId],
+    queryFn: () =>
+      getAllNotesNotesGet({
+        query: {
+          category_id: categoryId,
+        },
+      }).then((response) => response.data),
+    staleTime: Infinity,
+  });

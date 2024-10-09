@@ -5,4 +5,5 @@ export enum QueryKeys {
   Bookmarks = "bookmarks",
   Answers = "answers",
   Points = "points",
+  Notes = "notes",
 }
