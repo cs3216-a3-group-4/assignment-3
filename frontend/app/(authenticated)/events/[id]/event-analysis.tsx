@@ -139,7 +139,6 @@ const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
       });
     }
   }
-  console.log({ regions, result });
   return result.filter((region) => region.startIndex <= region.endIndex);
 };
 
