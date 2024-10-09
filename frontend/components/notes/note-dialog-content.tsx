@@ -2,7 +2,6 @@
 import { CategoryDTO, NoteDTO } from "@/client";
 import { Button } from "@/components/ui/button";
 import {
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,

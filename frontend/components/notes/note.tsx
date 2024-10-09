@@ -1,7 +1,7 @@
 "use client";
 
 import { NoteDTO } from "@/client";
-import { categoriesToDisplayName, categoriesToIconsMap, Category, getCategoryFor, getIconFor } from "@/types/categories";
+import { categoriesToDisplayName, getCategoryFor, getIconFor } from "@/types/categories";
 import Chip from "@/components/display/chip";
 import { parseDate } from "@/utils/date";
 import { useState } from "react";
