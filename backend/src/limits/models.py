@@ -1,6 +1,13 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, Enum
+from sqlalchemy import ForeignKey
+from enum import Enum
 from src.common.base import Base
+
+
+class TierNames(str, Enum):
+    FREE = "FREE"
+    ADMIN = "ADMIN"
+    PREMIUM = "PREMIUM"
 
 
 class Usage(Base):
@@ -16,6 +23,6 @@ class Tier(Base):
     __tablename__ = "tier"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    tier_name: Mapped[str] = Enum("TierName", ["FREE", "ADMIN", "PREMIUM"])
+    tier_name: Mapped[TierNames]
     label: Mapped[str]
     gp_question_limit: Mapped[int]

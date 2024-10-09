@@ -104,6 +104,8 @@ async def create_user_question(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
 ) -> UserQuestionDTO | ValidationResult:
+    # NOTE: add limit checking for the number of questions a user can ask here [marcus]
+
     validation = validate_question(data.question)
     if not validation["is_valid"]:
         return validation
