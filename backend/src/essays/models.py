@@ -24,6 +24,7 @@ class Comment(Base):
     parent_type: Mapped[CommentParentType]
     lack_example: Mapped[bool] = mapped_column(default=False)
     inclination: Mapped[Inclination]
+    content: Mapped[str]
 
     comment_analysises: Mapped[list["CommentAnalysis"]] = relationship(
         back_populates="comment"
