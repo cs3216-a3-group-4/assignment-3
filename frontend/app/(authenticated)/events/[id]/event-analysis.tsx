@@ -208,6 +208,17 @@ const EventAnalysis = ({ event }: Props) => {
     let anchorNode = selection?.anchorNode;
     let focusNode = selection?.focusNode;
 
+    // CHECK IF ITS BACKWARDS HERE, IF YES, SWAP THE TWO.
+    console.log("direction", selection.direction);
+    if (selection.direction === "backwards") {
+      const temp = anchorNode;
+      anchorNode = focusNode;
+      focusNode = temp;
+    }
+
+    console.log("focusNode", focusNode);
+    console.log("anchorNode", anchorNode);
+
     // let anchorNode = selection?.anchorNode;
 
     // console.log("CLEAN", { selection });
@@ -272,22 +283,26 @@ const EventAnalysis = ({ event }: Props) => {
       focusNode.parentElement?.id.split("-")[1] as unknown as string,
     );
 
+    console.log("anchorStart", anchorStart);
+    console.log("focusStart", focusStart);
+
     // if (!range) return;
 
+    console.log({ anchorNode, focusNode });
     let anchorIndex = anchorStart + startRange?.startOffset;
     let focusIndex = focusStart + endRange?.endOffset;
 
-    if (anchorNode?.nodeType == 1) {
-      anchorIndex = anchorStart + selection.anchorOffset;
-      //   // hacky fix, if element node, get actual text
-      //   anchorNode = selection?.anchorNode?.firstChild;
-    }
+    // if (anchorNode?.nodeType == 1) {
+    //   anchorIndex = anchorStart + selection.anchorOffset;
+    //   //   // hacky fix, if element node, get actual text
+    //   //   anchorNode = selection?.anchorNode?.firstChild;
+    // }
 
-    // let focusNode = selection?.focusNode;
-    if (focusNode?.nodeType == 1) {
-      // focusNode = selection?.focusNode?.firstChild;
-      focusIndex = focusStart + selection.focusOffset;
-    }
+    // // let focusNode = selection?.focusNode;
+    // if (focusNode?.nodeType == 1) {
+    //   // focusNode = selection?.focusNode?.firstChild;
+    //   focusIndex = focusStart + selection.focusOffset;
+    // }
 
     console.log("anchorIndex", anchorIndex);
     console.log("focusIndex", focusIndex);
