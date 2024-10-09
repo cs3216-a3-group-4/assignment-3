@@ -29,7 +29,9 @@ def get_all_notes(
     session=Depends(get_session),
     category_id: Annotated[int | None, Query()] = None,
 ) -> list[NoteDTO]:
-    notes_query = select(Note).where(Note.user_id == user.id).options(selectinload(Note.category))
+    notes_query = (
+        select(Note).where(Note.user_id == user.id).options(selectinload(Note.category))
+    )
     if category_id:
         notes_query = notes_query.where(Note.category_id == category_id)
     notes_query = notes_query.order_by(Note.created_at.desc())
