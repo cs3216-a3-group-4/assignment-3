@@ -20,7 +20,7 @@ const Notes = ({ notes, setNotes, isNotesLoaded, filter }: Props) => {
     };
   };
 
-  if (!isNotesLoaded) {
+  if (filter == Filter.DATE && !isNotesLoaded) {
     return (
       <div className="flex justify-center items-center w-full">
         <LoadingSpinner className="w-24 h-24" />
@@ -28,7 +28,7 @@ const Notes = ({ notes, setNotes, isNotesLoaded, filter }: Props) => {
     );
   }
 
-  if (notes!.length == 0) {
+  if (filter == Filter.DATE && notes!.length == 0) {
     return (
       <div className="flex w-full justify-center items-center py-5">
         <p className="text-l text-offblack">
