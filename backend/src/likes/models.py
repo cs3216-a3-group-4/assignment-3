@@ -13,7 +13,7 @@ class Like(Base):
     __tablename__ = "like"
     id: Mapped[int] = mapped_column(primary_key=True)
     point_id: Mapped[int] = mapped_column(ForeignKey("point.id"), nullable=True)
-    analysis_id: Mapped[int] = mapped_column(ForeignKey("analysis.id"))
+    analysis_id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), nullable=True)
     type: Mapped[LikeType]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 

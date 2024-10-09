@@ -50,7 +50,7 @@ const EventNotes = ({ event }: Props) => {
   return (
     <div className="flex flex-col px-6 gap-y-8">
       <div className="flex flex-col gap-y-1">
-        <div className="flex items-center mb-6">
+        <span className="flex items-center font-medium text-3xl mb-6">
           <NotebookIcon className="inline-flex mr-3 stroke-offblack fill-muted" />
           <h1 className="flex items-center font-medium text-3xl px-2">
             My Notes
@@ -60,7 +60,7 @@ const EventNotes = ({ event }: Props) => {
             size: 20,
             strokeWidth: 2.4,
           })}
-        </div>
+        </span>
         <div className={`flex flex-col gap-y-4 ${showNotes ? "" : "hidden"}`}>
           <Tabs defaultValue="saved">
             <TabsList>
@@ -70,7 +70,7 @@ const EventNotes = ({ event }: Props) => {
             <TabsContent value="saved">
               {event.notes.map((note) => (
                 <div key={note.id}>
-                  {note.content}, {note.category.name}
+                  {note.content}, {note.category!.name}
                   <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
                     delete
                   </Button>

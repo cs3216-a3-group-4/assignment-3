@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import Chip from "@/components/display/chip";
+import LikeButtons from "@/components/likes/like-buttons";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import {
   Accordion,
@@ -20,13 +21,17 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useLikePoint } from "@/queries/like";
 import { getAnswer } from "@/queries/user-question";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const AnswerPage = ({ params }: { params: { id: string } }) => {
+  const user = useUserStore((state) => state.user);
   const id = parseInt(params.id);
-  const { data, isFetching } = useQuery(getAnswer(id));
+  const { data, isPending } = useQuery(getAnswer(id));
+  const likeMutation = useLikePoint(id);
 
-  if (isFetching) {
+  if (isPending) {
     return (
       <div className="flex justify-center items-center w-full">
         <LoadingSpinner className="w-24 h-24" />
@@ -47,6 +52,11 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
             <Accordion className="flex flex-col gap-y-4" type="multiple">
               {/* TODO @seeleng: sort by position? for arguments first? */}
               {data.answer.points.map((point) => {
+                const likes = point.likes;
+                const userLike = likes.filter(
+                  (like) => like.user_id === user?.id,
+                )[0];
+                const userLikeValue = userLike ? userLike.type : 0;
                 const pointHasAnalysis = point.point_analysises.length > 0;
                 return (
                   <AccordionItem
@@ -78,6 +88,21 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                             className="inline-flex mr-3"
                             size={20}
                             strokeWidth={1.6}
+                          />
+                          <LikeButtons
+                            onDislike={() =>
+                              likeMutation.mutate({
+                                point_id: point.id,
+                                type: -1,
+                              })
+                            }
+                            onLike={() =>
+                              likeMutation.mutate({
+                                point_id: point.id,
+                                type: 1,
+                              })
+                            }
+                            userLikeValue={userLikeValue}
                           />
                           <h2>Jippy Examples</h2>
                         </span>

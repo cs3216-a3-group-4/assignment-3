@@ -1,7 +1,8 @@
+import { useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import { NUM_EVENTS_PER_PAGE } from "@/queries/event";
 import { isNumeric, isPositiveNumeric } from "@/utils/string";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 
 interface usePaginationProps {
   totalCount?: number;
