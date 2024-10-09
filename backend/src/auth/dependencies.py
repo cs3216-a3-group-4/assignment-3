@@ -79,7 +79,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 ###################
 
 
-async def get_current_user(
+async def add_current_user(
+    request: Request,
     token: Annotated[str | None, Depends(oauth2_scheme)],
     session: Annotated[str | None, Cookie()] = None,
 ):
@@ -100,7 +101,13 @@ async def get_current_user(
         if not user:
             raise InvalidTokenError()
 
-        return user
+        request.state.user = user
 
     except InvalidTokenError:
         raise credentials_exception
+
+
+async def get_current_user(
+    request: Request,
+):
+    return request.state.user
