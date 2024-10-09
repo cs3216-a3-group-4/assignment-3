@@ -20,42 +20,24 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getCategories } from "@/queries/category";
 import { getBookmarkedEvents } from "@/queries/event";
 
 function isNumeric(value: string | null) {
   return value !== null && /^-?\d+$/.test(value);
 }
 
-const Page = ({ params }: { params: { id: string } }) => {
+const Page = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  const categoryId = parseInt(params.id);
 
   const pageStr = searchParams.get("page");
 
   const page = isNumeric(pageStr) && pageStr !== "0" ? parseInt(pageStr!) : 1;
 
-  const [categoryName, setCategoryName] = useState<string>(""); // eslint-disable-line
-
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
     getBookmarkedEvents(page),
   );
-  const { data: categories, isSuccess: isCategoriesLoaded } =
-    useQuery(getCategories());
-
-  // Very inefficient, but is there a better way to do this? New StoreProvider for CategoryDTO[]?
-  useEffect(() => {
-    if (isCategoriesLoaded && categories!.length > 0) {
-      categories!.forEach((category: CategoryDTO) => {
-        if (category.id == categoryId) {
-          setCategoryName(category.name);
-        }
-      });
-    }
-  }, [categories, isCategoriesLoaded, categoryId]);
 
   const getPageUrl = (page: number) => {
     // now you got a read/write object
