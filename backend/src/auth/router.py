@@ -25,6 +25,7 @@ from .schemas import (
 )
 
 from src.auth.dependencies import (
+    add_current_user,
     authenticate_user,
     get_current_user,
     get_password_hash,
@@ -134,18 +135,23 @@ def auth_google(
     return token
 
 
-@router.get("/session")
+routerWithAuth = APIRouter(
+    prefix="/auth", tags=["auth"], dependencies=[Depends(add_current_user)]
+)
+
+
+@routerWithAuth.get("/session")
 def get_user(user: Annotated[User, Depends(get_current_user)]) -> UserPublic:
     return user
 
 
-@router.get("/logout")
+@routerWithAuth.get("/logout")
 def logout(response: Response):
     response.delete_cookie(key="session")
     return ""
 
 
-@router.post("/password-reset")
+@routerWithAuth.post("/password-reset")
 def request_password_reset(
     data: PasswordResetRequestData,
     background_task: BackgroundTasks,
@@ -167,7 +173,7 @@ def request_password_reset(
     background_task.add_task(send_reset_password_email, email, code)
 
 
-@router.put("/password-reset")
+@routerWithAuth.put("/password-reset")
 def complete_password_reset(
     code: str,
     data: PasswordResetCompleteData,
@@ -188,7 +194,7 @@ def complete_password_reset(
     session.commit()
 
 
-@router.put("/change-password")
+@routerWithAuth.put("/change-password")
 def change_password(
     user: Annotated[User, Depends(get_current_user)],
     data: PasswordResetMoreCompleteData,
