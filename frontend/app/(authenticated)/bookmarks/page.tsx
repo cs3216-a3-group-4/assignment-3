@@ -34,10 +34,26 @@ const Page = () => {
   const pageStr = searchParams.get("page");
 
   const page = isNumeric(pageStr) && pageStr !== "0" ? parseInt(pageStr!) : 1;
+  const [pageCount, setPageCount] = useState<number>(0);
 
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
     getBookmarkedEvents(page),
   );
+
+  useEffect(() => {
+    if (page < 0) {
+      changePage(1);
+    } else {
+      const items = events?.total_count;
+      const mPageCount = items !== undefined ? Math.ceil(items / 10) : -1;
+      if (mPageCount !== -1) {
+        setPageCount(mPageCount);
+        if (page > mPageCount) {
+          changePage(mPageCount);
+        }
+      }
+    }
+  }, [page, isEventsLoaded]);
 
   const getPageUrl = (page: number) => {
     // now you got a read/write object
@@ -57,22 +73,6 @@ const Page = () => {
   const changePage = (page: number) => {
     router.push(getPageUrl(page));
   };
-
-  if (!pageStr) {
-    changePage(1);
-    return;
-  }
-
-  const items = events?.total_count;
-  const pageCount = items !== undefined && Math.ceil(items / 10);
-  if (pageCount !== false) {
-    if (page <= 0) {
-      changePage(1);
-    }
-    if (page > pageCount) {
-      changePage(pageCount);
-    }
-  }
 
   return (
     <div className="relative w-full h-full">
