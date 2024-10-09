@@ -9,15 +9,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { useDeleteNote, useEditEventNote } from "@/queries/note";
 import { categoriesToDisplayName, getCategoryFor, getIconFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Chip from "@/components/display/chip";
 import { z } from "zod";
 import { SubmitHandler } from "react-hook-form";
 import { Trash2Icon } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
     categoryData: CategoryDTO;
@@ -42,6 +42,7 @@ const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData,
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const deleteNoteMutation = useDeleteNote(noteData.parent_id);
     const editNoteMutation = useEditEventNote(noteData.parent_id);
+    const [pendingNoteContent, setPendingNoteContent] = useState<string>(noteContent);
 
     const onClickDelete = () => {
         setOpen(false);
@@ -64,11 +65,16 @@ const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData,
 
     const handleSave = () => {
         setIsEditing(false);
+        setNoteContent(pendingNoteContent);
         handleEditNote(noteData.id)({
-            content: noteContent, 
+            content: pendingNoteContent, 
             category_id: categoryData.id.toString()
         });
     };
+
+    useEffect(() => {
+        setPendingNoteContent(noteContent);
+    }, [open]);
 
     return (
         <DialogContent className="sm:max-w-[425px]">
@@ -99,9 +105,11 @@ const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData,
                         </p>
                     </div>
                 ) : (
-                    <Input
-                        value={noteContent}
-                        onChange={(event) => setNoteContent(event.target.value)}
+                    <Textarea
+                        className="w-full"
+                        placeholder="Write your notes here..."
+                        value={pendingNoteContent}
+                        onChange={(event) => setPendingNoteContent(event.target.value)}
                         autoFocus
                     />
             )}
