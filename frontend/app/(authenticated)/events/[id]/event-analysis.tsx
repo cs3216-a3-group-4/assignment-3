@@ -169,9 +169,12 @@ const EventAnalysis = ({ event }: Props) => {
   const addNoteMutation = useAddAnalysisNote(event.id);
   const deleteNoteMutation = useDeleteNote(event.id);
 
-  const handleAddNote: (analysis_id: number, category_id_num: number) => SubmitHandler<NoteFormType> =
+  const handleAddNote: (
+    analysis_id: number,
+    category_id_num: number,
+  ) => SubmitHandler<NoteFormType> =
     (analysis_id: number, category_id_num: number) =>
-    ({ content}) => {
+    ({ content }) => {
       addNoteMutation.mutate(
         {
           content,

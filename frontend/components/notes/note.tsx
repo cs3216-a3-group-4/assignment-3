@@ -5,10 +5,7 @@ import { useState } from "react";
 import { NoteDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import {
-  Category,
-  getIconFor,
-} from "@/types/categories";
+import { Category, getIconFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
 
 import NoteDialogContent from "./note-dialog-content";
@@ -24,7 +21,7 @@ const Note = ({ data, handleDelete }: Props) => {
   const dateCreated = new Date(data.created_at);
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
   const [noteContent, setNoteContent] = useState(data.content);
-  const invalidCategory = {id: -1, name: Category.Others};
+  const invalidCategory = { id: -1, name: Category.Others };
 
   return (
     <Dialog onOpenChange={setNoteOpen} open={noteOpen}>

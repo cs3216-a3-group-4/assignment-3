@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Bookmark } from "lucide-react";
 
-import { CategoryDTO, MiniEventDTO } from "@/client";
+import { MiniEventDTO } from "@/client";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
