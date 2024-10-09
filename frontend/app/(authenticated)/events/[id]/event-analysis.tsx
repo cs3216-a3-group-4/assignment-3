@@ -103,7 +103,6 @@ const addNotHighlightedRegion = (regions: Region[], length: number) => {
       highlighted: HighlightType.None,
     });
   }
-  console.log("notselected", { regions, result });
   return result;
 };
 
@@ -140,7 +139,6 @@ const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
       });
     }
   }
-  console.log("selected", { regions, result });
   return result.filter((region) => region.startIndex <= region.endIndex);
 };
 
@@ -200,176 +198,52 @@ const EventAnalysis = ({ event }: Props) => {
     const selection = document.getSelection();
 
     if (!selection) return;
+    if (!selection.rangeCount) return;
 
-    {
-      const startRange = selection.getRangeAt(0);
-      const endRange = selection.getRangeAt(selection.rangeCount - 1);
+    const startRange = selection.getRangeAt(0);
+    const endRange = selection.getRangeAt(selection.rangeCount - 1);
 
-      const startNode = startRange.startContainer;
-      const endNode = endRange.endContainer;
+    const startNode = startRange.startContainer;
+    const endNode = endRange.endContainer;
 
-      console.log("startNode", startNode);
-      console.log("endNode", endNode);
+    const startParent = startNode?.parentElement;
+    const endParent = endNode?.parentElement;
 
-      const startParent = startNode?.parentElement;
-      const endParent = endNode?.parentElement;
+    if (!startParent || !endParent) return;
 
-      if (!startParent || !endParent) return;
+    const parentStartIndexStr = startParent.id.split("-")[1];
+    const parentEndIndexStr = endParent.id.split("-")[1];
 
-      const parentStartIndexStr = startParent.id.split("-")[1];
-      const parentEndIndexStr = endParent.id.split("-")[1];
+    if (!parentStartIndexStr || !parentEndIndexStr) return;
 
-      console.log("startParent", startParent);
-      console.log("endParent", endParent);
-      if (!parentStartIndexStr || !parentEndIndexStr) return;
+    const startParentStartIndex = parseInt(parentStartIndexStr);
+    const endParentStartIndex = parseInt(parentEndIndexStr);
 
-      const startParentStartIndex = parseInt(parentStartIndexStr);
-      const endParentStartIndex = parseInt(parentEndIndexStr);
+    const startIndex = startParentStartIndex + startRange.startOffset;
+    const endIndex = endParentStartIndex + endRange.endOffset;
 
-      const startIndex = startParentStartIndex + startRange.startOffset;
-      const endIndex = endParentStartIndex + endRange.endOffset;
+    const analysisIdStr = startParent?.parentElement?.id.split(
+      EVENT_ANALYSIS_ID_PREFIX,
+    )[1];
+    if (!analysisIdStr) return;
+    const analysisId = parseInt(analysisIdStr);
 
-      console.log("startIndex", startIndex);
-      console.log("endIndex", endIndex);
+    setHighlightSelection({
+      analysisId,
+      startIndex: startIndex,
+      endIndex: endIndex - 1,
+    });
 
-      const analysisIdStr = startParent?.parentElement?.id.split(
-        EVENT_ANALYSIS_ID_PREFIX,
-      )[1];
-      if (!analysisIdStr) return;
-      const analysisId = parseInt(analysisIdStr);
+    const rect = selection.getRangeAt(0).getBoundingClientRect();
 
-      setHighlightSelection({
-        analysisId,
-        startIndex: startIndex,
-        endIndex: endIndex - 1,
-      });
-    }
-
-    // if (selection?.rangeCount === 0) return;
-
-    // console.log(selection);
-    // console.log(selection?.rangeCount);
-    // const startRange = selection?.getRangeAt(0);
-    // const endRange = selection?.getRangeAt(selection.rangeCount - 1);
-    // let anchorNode = selection?.anchorNode;
-    // let focusNode = selection?.focusNode;
-
-    // // CHECK IF ITS BACKWARDS HERE, IF YES, SWAP THE TWO.
-    // console.log("direction", selection.direction);
-    // if (selection.direction === "backwards") {
-    //   const temp = anchorNode;
-    //   anchorNode = focusNode;
-    //   focusNode = temp;
-    // }
-
-    // console.log("focusNode", focusNode);
-    // console.log("anchorNode", anchorNode);
-
-    // // let anchorNode = selection?.anchorNode;
-
-    // // console.log("CLEAN", { selection });
-
-    // // // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-    // if (anchorNode?.nodeType == 1) {
-    //   // anchorNode = selection?.anchorNode; // @ts-expect-error whatever
-    //   anchorNode = startRange?.startContainer;
-    //   //   // hacky fix, if element node, get actual text
-    //   //   anchorNode = selection?.anchorNode?.firstChild;
-    // }
-
-    // // let focusNode = selection?.focusNode;
-    // if (focusNode?.nodeType == 1) {
-    //   // focusNode = selection?.focusNode?.firstChild;
-    //   focusNode = endRange?.endContainer; // @ts-expect-error whatever
-    // }
-
-    // if (!selection || !anchorNode || !focusNode) return;
-
-    // const selectStartElement = anchorNode.parentElement?.parentElement;
-    // if (!selectStartElement?.id?.startsWith(EVENT_ANALYSIS_ID_PREFIX)) {
-    //   console.log(selectStartElement);
-    //   console.log("wth 1");
-    //   return;
-    // }
-
-    // // Check if focus node (where the cursor ends) is also within the analysis
-    // const selectEndElement = focusNode.parentElement?.parentElement;
-    // if (!selectEndElement?.id?.startsWith(EVENT_ANALYSIS_ID_PREFIX)) {
-    //   console.log(focusNode);
-    //   console.log(selectEndElement);
-    //   // console.log("range", range);
-    //   console.log("wth 2");
-    //   return;
-    // }
-
-    // // https://developer.mozilla.org/en-US/docs/Web/API/Selection/type
-    // // console.log(selection.type, selection.type === "Caret");
-    // for (let i = 0; i < selection.rangeCount; i++) {
-    //   console.log("ranges " + i, selection.getRangeAt(i));
-    // }
-
-    // if (selection.type === "Caret") {
-    //   console.log("did this run?");
-    //   return; // return if nothing selected
-    // }
-
-    // if (selection.type === "None") {
-    //   console.log("none");
-    //   return;
-    // }
-
-    // const analysisId = parseInt(
-    //   selectStartElement.id.split(EVENT_ANALYSIS_ID_PREFIX)[1],
-    // );
-
-    // const anchorStart = parseInt(
-    //   anchorNode.parentElement?.id.split("-")[1] as unknown as string,
-    // );
-    // const focusStart = parseInt(
-    //   focusNode.parentElement?.id.split("-")[1] as unknown as string,
-    // );
-
-    // console.log("anchorStart", anchorStart);
-    // console.log("focusStart", focusStart);
-
-    // // if (!range) return;
-
-    // console.log({ anchorNode, focusNode });
-    // let anchorIndex = anchorStart + startRange?.startOffset;
-    // let focusIndex = focusStart + endRange?.endOffset;
-
-    // // if (anchorNode?.nodeType == 1) {
-    // //   anchorIndex = anchorStart + selection.anchorOffset;
-    // //   //   // hacky fix, if element node, get actual text
-    // //   //   anchorNode = selection?.anchorNode?.firstChild;
-    // // }
-
-    // // // let focusNode = selection?.focusNode;
-    // // if (focusNode?.nodeType == 1) {
-    // //   // focusNode = selection?.focusNode?.firstChild;
-    // //   focusIndex = focusStart + selection.focusOffset;
-    // // }
-
-    // console.log("anchorIndex", anchorIndex);
-    // console.log("focusIndex", focusIndex);
-    // console.log("selection", selection);
-
-    // const rect = selection.getRangeAt(0).getBoundingClientRect();
-
-    // setPosition({
-    //   // 80 represents the width of the share button, this may differ for you
-    //   x: rect.left + rect.width / 2 - 80 / 2,
-    //   // 30 represents the height of the share button, this may differ for you
-    //   y: rect.top + window.scrollY - 30,
-    //   width: rect.width,
-    //   height: rect.height,
-    // });
-
-    // setHighlightSelection({
-    //   analysisId,
-    //   startIndex: Math.min(anchorIndex, focusIndex),
-    //   endIndex: Math.max(anchorIndex, focusIndex) - 1,
-    // });
+    setPosition({
+      // 80 represents the width of the share button, this may differ for you
+      x: rect.left + rect.width / 2 - 80 / 2,
+      // 30 represents the height of the share button, this may differ for you
+      y: rect.top + window.scrollY - 30,
+      width: rect.width,
+      height: rect.height,
+    });
 
     selection.empty();
   };
@@ -497,32 +371,27 @@ const EventAnalysis = ({ event }: Props) => {
                   <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
                     {highlightStartEndNormalised.map(
                       ({ startIndex, endIndex, highlighted }) => (
-                        <>
-                          {/* {highlighted === HighlightType.Selected && (
+                        <span
+                          className={cn({
+                            "bg-yellow-100":
+                              highlighted === HighlightType.Annotation,
+                            "bg-green-100 relative":
+                              highlighted === HighlightType.Selected,
+                          })}
+                          id={`analysis${eventAnalysis.id}-${startIndex}`}
+                          key={`analysis${eventAnalysis.id}-${startIndex}`}
+                        >
+                          {highlighted === HighlightType.Selected && (
                             <Button
-                              className="absolute whitespace-nowrap"
+                              className="absolute whitespace-nowrap bottom-6 left-0"
                               id="add-annotation"
                               onClick={() => setShowAnnotationForm(true)}
-                              style={{
-                                transform: `translate3d(${position?.x}px, ${position?.y}px, 0)`,
-                              }}
                             >
                               Add annotation
                             </Button>
-                          )} */}
-                          <span
-                            className={cn({
-                              "bg-yellow-100":
-                                highlighted === HighlightType.Annotation,
-                              "bg-red-100":
-                                highlighted === HighlightType.Selected,
-                            })}
-                            id={`analysis${eventAnalysis.id}-${startIndex}`}
-                            key={`analysis${eventAnalysis.id}-${startIndex}`}
-                          >
-                            {content.slice(startIndex, endIndex + 1)}
-                          </span>
-                        </>
+                          )}
+                          {content.slice(startIndex, endIndex + 1)}
+                        </span>
                       ),
                     )}
                   </div>
