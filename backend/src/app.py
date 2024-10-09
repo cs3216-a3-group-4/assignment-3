@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import APIRouter, Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.auth.dependencies import add_current_user
 from src.auth.router import router as auth_router
 from src.categories.router import router as category_router
 from src.profile.router import router as profile_router
@@ -38,11 +39,15 @@ server.add_middleware(
 )
 
 server.include_router(auth_router)
-server.include_router(category_router)
-server.include_router(profile_router)
-server.include_router(events_router)
-server.include_router(user_questions_router)
-server.include_router(notes_router)
-server.include_router(points_router)
-server.include_router(likes_router)
-server.include_router(essays_router)
+
+authenticated_router = APIRouter(prefix="", dependencies=[Depends(add_current_user)])
+authenticated_router.include_router(category_router)
+authenticated_router.include_router(profile_router)
+authenticated_router.include_router(events_router)
+authenticated_router.include_router(user_questions_router)
+authenticated_router.include_router(notes_router)
+authenticated_router.include_router(points_router)
+authenticated_router.include_router(likes_router)
+authenticated_router.include_router(essays_router)
+
+server.include_router(authenticated_router)
