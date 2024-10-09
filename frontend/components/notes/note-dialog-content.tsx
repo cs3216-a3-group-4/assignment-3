@@ -1,25 +1,22 @@
 "use client";
-
 import { CategoryDTO, NoteDTO } from "@/client";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
-  Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useEditEventNote } from "@/queries/note";
 import { categoriesToDisplayName, getCategoryFor, getIconFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
 import { Dispatch, SetStateAction, useState } from "react";
 import Chip from "@/components/display/chip";
 import { z } from "zod";
 import { SubmitHandler } from "react-hook-form";
-import { useEditEventNote } from "@/queries/note";
 
 interface Props {
     categoryData: CategoryDTO;
@@ -37,7 +34,7 @@ const noteSchema = z.object({
 
 type NoteType = z.infer<typeof noteSchema>;
 
-const NoteDetailsDialog = ({categoryData, noteContent, setNoteContent, noteData, open, setOpen}: Props) => {
+const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData, open, setOpen}: Props) => {
     const Icon = getIconFor(categoryData.name);
     const category = getCategoryFor(categoryData.name);
     const dateCreated = new Date(noteData.created_at);
@@ -67,15 +64,14 @@ const NoteDetailsDialog = ({categoryData, noteContent, setNoteContent, noteData,
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
+        <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
                 <DialogTitle>
                     <div className="flex items-center">
                         <Icon 
-                          className="mr-3 flex-shrink-0"
-                          size={25}
-                          strokeWidth={1.7}
+                            className="mr-3 flex-shrink-0"
+                            size={25}
+                            strokeWidth={1.7}
                         />
                         <Chip
                             className="w-fit"
@@ -88,27 +84,26 @@ const NoteDetailsDialog = ({categoryData, noteContent, setNoteContent, noteData,
                 <DialogDescription>
                     {parseDate(dateCreated)}
                 </DialogDescription>
-                </DialogHeader>
-                {!isEditing ? (
-                        <div className="flex flex-col gap-4 align-center" onDoubleClick={handleDoubleClick}>
-                            <p className="text-text-muted/90">
-                                {noteContent}
-                            </p>
-                        </div>
-                    ) : (
-                        <Input
-                            value={noteContent}
-                            onChange={(event) => setNoteContent(event.target.value)}
-                            autoFocus
-                        />
-                )}
-                <DialogFooter>
-                    <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>Edit</Button>
-                    <Button type="button" onClick={handleSave}>Save</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+            </DialogHeader>
+            {!isEditing ? (
+                    <div className="flex flex-col gap-4 align-center" onDoubleClick={handleDoubleClick}>
+                        <p className="text-text-muted/90">
+                            {noteContent}
+                        </p>
+                    </div>
+                ) : (
+                    <Input
+                        value={noteContent}
+                        onChange={(event) => setNoteContent(event.target.value)}
+                        autoFocus
+                    />
+            )}
+            <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>Edit</Button>
+                <Button type="button" onClick={handleSave}>Save</Button>
+            </DialogFooter>
+        </DialogContent>
     );
-}
+};
 
-export default NoteDetailsDialog;
+export default NoteDialogContent;
