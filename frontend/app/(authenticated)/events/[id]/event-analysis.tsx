@@ -29,6 +29,14 @@ import {
 } from "@/types/categories";
 
 import NoteForm, { NoteFormType } from "./note-form";
+import AnalysisFragment, {
+  ANNOTATION_ACTIONS_BUTTON_ID,
+} from "./event-analysis/analysis-fragment";
+import { HighlightType, Region } from "@/types/annotations";
+import {
+  addNotHighlightedRegion,
+  addSelectedRegion,
+} from "@/utils/annotations";
 
 interface HighlightSelection {
   analysisId: number;
@@ -36,113 +44,10 @@ interface HighlightSelection {
   endIndex: number;
 }
 
-enum HighlightType {
-  None,
-  Annotation,
-  Selected,
-}
-
-interface Region {
-  startIndex: number;
-  endIndex: number;
-  highlighted: HighlightType;
-}
-
 interface Props {
   event: EventDTO;
 }
 
-const addNotHighlightedRegion = (regions: Region[], length: number) => {
-  const result = regions.reduce(
-    (prev: Region[], curr: Region) => {
-      if (prev.length === 0) {
-        return [curr];
-      }
-      if (
-        curr.startIndex <= prev[prev.length - 1].endIndex + 1 &&
-        prev[prev.length - 1].highlighted === curr.highlighted
-      ) {
-        prev[prev.length - 1].endIndex = Math.max(
-          curr.endIndex,
-          prev[prev.length - 1].endIndex,
-        );
-        return prev;
-      }
-      return [
-        ...prev,
-        {
-          startIndex: prev[prev.length - 1].endIndex + 1,
-          endIndex: curr.startIndex - 1,
-          highlighted: HighlightType.None,
-        },
-        curr,
-      ];
-    },
-    (regions.length === 0
-      ? ([
-          {
-            startIndex: 0,
-            endIndex: length - 1,
-            highlighted: HighlightType.None,
-          },
-        ] as Region[])
-      : regions[0].startIndex === 0
-        ? []
-        : [
-            {
-              startIndex: 0,
-              endIndex: regions[0].startIndex - 1,
-              highlighted: HighlightType.None,
-            },
-          ]) as Region[],
-  );
-  if (result[result.length - 1].endIndex != length - 1) {
-    result.push({
-      startIndex: result[result.length - 1].endIndex + 1,
-      endIndex: length - 1,
-      highlighted: HighlightType.None,
-    });
-  }
-  return result;
-};
-
-const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
-  const result = [] as Region[];
-  let added = false;
-  for (const region of regions) {
-    // no intersection
-    if (region.startIndex > end || region.endIndex < start) {
-      result.push(region);
-      continue;
-    }
-    // four cases of collision
-    if (region.startIndex < start) {
-      result.push({
-        startIndex: region.startIndex,
-        endIndex: start - 1,
-        highlighted: region.highlighted,
-      });
-    }
-    if (!added) {
-      result.push({
-        startIndex: start,
-        endIndex: end,
-        highlighted: HighlightType.Selected,
-      });
-      added = true;
-    }
-    if (end < region.endIndex) {
-      result.push({
-        startIndex: end + 1,
-        endIndex: region.endIndex,
-        highlighted: region.highlighted,
-      });
-    }
-  }
-  return result.filter((region) => region.startIndex <= region.endIndex);
-};
-
-const ANNOTATION_ACTIONS_BUTTON_ID = "annotation-actions";
 const EVENT_ANALYSIS_ID_PREFIX = "event-analysis-";
 
 const EventAnalysis = ({ event }: Props) => {
@@ -172,6 +77,11 @@ const EventAnalysis = ({ event }: Props) => {
   const likeMutation = useLikeEvent(event.id);
   const addNoteMutation = useAddAnalysisNote(event.id);
   const deleteNoteMutation = useDeleteNote(event.id);
+
+  const clearHighlight = () => {
+    setShowAnnotationForm(false);
+    setHighlightSelection(null);
+  };
 
   const handleAddNote: (analysis_id: number) => SubmitHandler<NoteFormType> =
     (analysis_id: number) =>
@@ -246,11 +156,6 @@ const EventAnalysis = ({ event }: Props) => {
     });
 
     selection.empty();
-  };
-
-  const clearHighlight = () => {
-    setShowAnnotationForm(false);
-    setHighlightSelection(null);
   };
 
   useEffect(() => {
@@ -374,50 +279,13 @@ const EventAnalysis = ({ event }: Props) => {
                     <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
                       {highlightStartEndNormalised.map(
                         ({ startIndex, endIndex, highlighted }) => (
-                          <span
-                            className={cn({
-                              "bg-yellow-100":
-                                highlighted === HighlightType.Annotation,
-                              "bg-blue-200 relative":
-                                highlighted === HighlightType.Selected,
-                            })}
+                          <AnalysisFragment
+                            content={content.slice(startIndex, endIndex + 1)}
+                            highlighted={highlighted}
                             id={`analysis${eventAnalysis.id}-${startIndex}`}
-                            key={`analysis${eventAnalysis.id}-${startIndex}`}
-                          >
-                            {highlighted === HighlightType.Selected && (
-                              <div
-                                className="absolute flex gap-x-4 whitespace-nowrap bottom-6 left-0 z-[1000] bg-card px-3 py-2 mb-2 border border-border-2 rounded cursor-pointer transition-all animate-duration-150 animate-jump-in"
-                                id={ANNOTATION_ACTIONS_BUTTON_ID}
-                              >
-                                <div
-                                  className="content-center flex flex-col items-center hover:bg-card-foreground/5 p-0.5 rounded-sm"
-                                  id="add-annotation"
-                                  onClick={() => setShowAnnotationForm(true)}
-                                >
-                                  <HighlighterIcon className="inline-block" />
-                                  <span className="inline-block ml-2 transition-all font-medium text-sm">
-                                    Highlight
-                                  </span>
-                                </div>
-
-                                <div
-                                  className="content-center flex flex-col items-center hover:bg-card-foreground/5 p-0.5 rounded-sm"
-                                  onClick={() => {
-                                    navigator.clipboard.writeText(
-                                      content.slice(startIndex, endIndex + 1),
-                                    );
-                                    clearHighlight();
-                                  }}
-                                >
-                                  <CopyIcon className="inline-block" />
-                                  <span className="inline-block ml-2 transition-all font-medium text-sm">
-                                    Copy
-                                  </span>
-                                </div>
-                              </div>
-                            )}
-                            {content.slice(startIndex, endIndex + 1)}
-                          </span>
+                            setShowAnnotationForm={setShowAnnotationForm}
+                            clearHighlight={clearHighlight}
+                          />
                         ),
                       )}
                     </div>
