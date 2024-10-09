@@ -50,7 +50,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             id="notes-page-content"
           >
             <div className="flex items-baseline gap-4" id="note-page-title">
-              <Notebook className="w-7 h-7" />
+              <Notebook className="w-7 h-7 self-center" />
               <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
                 {category ? `Notes for ${category.name}` : "My Notes"}
               </span>

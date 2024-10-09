@@ -1,6 +1,7 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Trash2Icon } from "lucide-react";
 import { z } from "zod";
 
@@ -16,53 +17,54 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useDeleteNote, useEditEventNote } from "@/queries/note";
-import {
-  categoriesToDisplayName,
-  getCategoryFor,
-  getIconFor,
-} from "@/types/categories";
+import { Category, getIconFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
 
 interface Props {
-  categoryData: CategoryDTO;
   noteContent: string;
   setNoteContent: Dispatch<SetStateAction<string>>;
   noteData: NoteDTO;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   handleDelete: () => void;
+  categoryData?: CategoryDTO | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const noteSchema = z.object({
   content: z.string(),
-  category_id: z.string().optional(),
+  category_id: z.number().optional(),
 });
 
 type NoteType = z.infer<typeof noteSchema>;
 
 const NoteDialogContent = ({
-  categoryData,
   noteContent,
   setNoteContent,
   noteData,
   open,
   setOpen,
   handleDelete,
+  categoryData,
 }: Props) => {
-  const Icon = getIconFor(categoryData.name);
-  const category = getCategoryFor(categoryData.name);
+  const categoryName = categoryData ? categoryData.name : Category.Others;
+  const Icon = getIconFor(categoryName);
   const dateCreated = new Date(noteData.created_at);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const deleteNoteMutation = useDeleteNote(noteData.parent_id);
   const editNoteMutation = useEditEventNote(noteData.parent_id);
   const [pendingNoteContent, setPendingNoteContent] =
     useState<string>(noteContent);
+  const router = useRouter();
 
   const onClickDelete = () => {
     deleteNoteMutation.mutate(noteData.id);
     setOpen(false);
     handleDelete();
+  };
+
+  const onClickNoteSource = () => {
+    router.push(`/${noteData.parent_type}s/${noteData.parent_id}`);
   };
 
   const handleDoubleClick = () => {
@@ -74,8 +76,8 @@ const NoteDialogContent = ({
     ({ content, category_id }) => {
       editNoteMutation.mutate({
         id,
-        category_id: parseInt(category_id!),
         content,
+        category_id: category_id,
       });
     };
 
@@ -84,8 +86,15 @@ const NoteDialogContent = ({
     setNoteContent(pendingNoteContent);
     handleEditNote(noteData.id)({
       content: pendingNoteContent,
-      category_id: categoryData.id.toString(),
+      category_id: categoryData?.id,
     });
+  };
+
+  const getWordFor = (parentType: string) => {
+    if (parentType === "point") {
+      return "a";
+    }
+    return "an";
   };
 
   useEffect(() => {
@@ -101,7 +110,7 @@ const NoteDialogContent = ({
             <Icon className="mr-3 flex-shrink-0" size={25} strokeWidth={1.7} />
             <Chip
               className="w-fit"
-              label={categoriesToDisplayName[category]}
+              label={categoryName}
               size="lg"
               variant="primary"
             />
@@ -125,6 +134,18 @@ const NoteDialogContent = ({
           value={pendingNoteContent}
         />
       )}
+      <div className="flex w-full">
+        <span className="text-text-muted/90">Note is for&nbsp;</span>
+        {noteData.parent_type === "event" ? (
+          <button className="hover:underline" onClick={onClickNoteSource}>
+            this {noteData.parent_type}
+          </button>
+        ) : (
+          <span className="text-text-muted/90">
+            {getWordFor(noteData.parent_type)} {noteData.parent_type}
+          </span>
+        )}
+      </div>
       <DialogFooter>
         <div className="flex justify-between w-full">
           <Button onClick={onClickDelete} type="button" variant="outline">

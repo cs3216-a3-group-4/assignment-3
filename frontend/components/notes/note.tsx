@@ -5,11 +5,7 @@ import { useState } from "react";
 import { NoteDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import {
-  categoriesToDisplayName,
-  getCategoryFor,
-  getIconFor,
-} from "@/types/categories";
+import { Category, getIconFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
 
 import NoteDialogContent from "./note-dialog-content";
@@ -20,11 +16,12 @@ type Props = {
 };
 
 const Note = ({ data, handleDelete }: Props) => {
-  const Icon = getIconFor(data.category!.name);
-  const category = getCategoryFor(data.category!.name);
+  const categoryName = data.category ? data.category.name : Category.Others;
+  const Icon = getIconFor(categoryName);
   const dateCreated = new Date(data.created_at);
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
   const [noteContent, setNoteContent] = useState(data.content);
+  const invalidCategory = { id: -1, name: Category.Others };
 
   return (
     <Dialog onOpenChange={setNoteOpen} open={noteOpen}>
@@ -37,10 +34,10 @@ const Note = ({ data, handleDelete }: Props) => {
                 {parseDate(dateCreated)}
               </span>
             </div>
-            <p className="">{noteContent}</p>
+            <p>{noteContent}</p>
             <Chip
               className="w-fit"
-              label={categoriesToDisplayName[category]}
+              label={categoryName}
               size="lg"
               variant="primary"
             />
@@ -48,7 +45,7 @@ const Note = ({ data, handleDelete }: Props) => {
         </div>
       </DialogTrigger>
       <NoteDialogContent
-        categoryData={data.category!}
+        categoryData={data.category || invalidCategory}
         handleDelete={handleDelete}
         noteContent={noteContent}
         noteData={data}

@@ -24,11 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getCategories } from "@/queries/category";
-import {
-  categoriesToDisplayName,
-  Category,
-  getCategoryFor,
-} from "@/types/categories";
 
 const noteFormSchema = z.object({
   content: z.string(),
@@ -100,11 +95,7 @@ const NoteForm = ({ onSubmit, hideCategory }: Props) => {
                             key={category.id}
                             value={category.id.toString()}
                           >
-                            {
-                              categoriesToDisplayName[
-                                getCategoryFor(category.name) as Category
-                              ]
-                            }
+                            {category.name}
                           </SelectItem>
                         ))}
                       </SelectContent>

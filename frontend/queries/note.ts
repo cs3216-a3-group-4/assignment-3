@@ -42,6 +42,7 @@ export const useAddAnalysisNote = (event_id: number) => {
       analysis_id,
       start_index,
       end_index,
+      category_id,
     }: {
       content: string;
       analysis_id: number;
@@ -56,6 +57,7 @@ export const useAddAnalysisNote = (event_id: number) => {
           parent_type: "analysis",
           start_index,
           end_index,
+          category_id,
         },
       });
     },
@@ -70,12 +72,12 @@ export const useEditEventNote = (event_id: number) => {
   return useMutation({
     mutationFn: ({
       id,
-      category_id,
       content,
+      category_id,
     }: {
       id: number;
-      category_id: number;
       content: string;
+      category_id?: number;
     }) => {
       return updateNoteNotesIdPut({
         body: {
