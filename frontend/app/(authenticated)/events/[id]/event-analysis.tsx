@@ -103,7 +103,6 @@ const addNotHighlightedRegion = (regions: Region[], length: number) => {
       highlighted: HighlightType.None,
     });
   }
-  console.log({ regions, result });
   return result;
 };
 
