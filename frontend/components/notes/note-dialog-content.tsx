@@ -26,6 +26,7 @@ interface Props {
     noteData: NoteDTO;
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
+    handleDelete: () => void;
 }
 
 const noteSchema = z.object({
@@ -35,7 +36,7 @@ const noteSchema = z.object({
 
 type NoteType = z.infer<typeof noteSchema>;
 
-const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData, open, setOpen}: Props) => {
+const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData, open, setOpen, handleDelete}: Props) => {
     const Icon = getIconFor(categoryData.name);
     const category = getCategoryFor(categoryData.name);
     const dateCreated = new Date(noteData.created_at);
@@ -45,8 +46,9 @@ const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData,
     const [pendingNoteContent, setPendingNoteContent] = useState<string>(noteContent);
 
     const onClickDelete = () => {
-        setOpen(false);
         deleteNoteMutation.mutate(noteData.id);
+        setOpen(false);
+        handleDelete();
     };
 
     const handleDoubleClick = () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { CategoryDTO } from "@/client";
+import { CategoryDTO, NoteDTO } from "@/client";
 import Notes from "@/components/notes/notes-list";
 import { Filter } from "@/components/notes/notes-selector";
 import { getCategories } from "@/queries/category";
@@ -12,9 +12,16 @@ import { useEffect, useState } from "react";
 const Page = ({ params }: { params: { id: string } }) => {
     const categoryId = parseInt(params.id);
     const [category, setCategory] = useState<CategoryDTO | null>(null);
+    const [notes, setNotes] = useState<NoteDTO[]>([]);
     const { data: categories, isSuccess: isCategoriesLoaded } =
     useQuery(getCategories());
-    const { data: notes, isSuccess: isNotesLoaded } = useQuery(getAllNotes(categoryId));
+    const { data: fetchedNotes, isSuccess: isNotesLoaded } = useQuery(getAllNotes(categoryId));
+
+    useEffect(() => {
+        if (isNotesLoaded) {
+            setNotes(fetchedNotes!);
+        }
+    }, [isNotesLoaded]);
 
     // Very inefficient, but is there a better way to do this? New StoreProvider for CategoryDTO[]?
     useEffect(() => {
@@ -45,7 +52,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                                 {category ? `Notes for ${category.name}` : "My Notes"}
                             </span>
                         </div>
-                        <Notes notes={notes || []} isNotesLoaded={isNotesLoaded} filter={Filter.DATE} />
+                        <Notes notes={notes || []} setNotes={setNotes} isNotesLoaded={isNotesLoaded} filter={Filter.DATE} />
                     </div>
                 </div>
             </div>

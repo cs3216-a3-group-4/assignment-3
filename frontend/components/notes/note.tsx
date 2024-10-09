@@ -13,9 +13,10 @@ import NoteDialogContent from "./note-dialog-content";
 
 type Props = {
     data: NoteDTO;
+    handleDelete: () => void;
 };
 
-const Note = ({data}: Props) => {
+const Note = ({data, handleDelete}: Props) => {
     const Icon = getIconFor(data.category.name);
     const category = getCategoryFor(data.category.name);
     const dateCreated = new Date(data.created_at);
@@ -53,6 +54,7 @@ const Note = ({data}: Props) => {
               noteData={data}
               open={noteOpen}
               setOpen={setNoteOpen}
+              handleDelete={handleDelete}
             />
             
         </Dialog>

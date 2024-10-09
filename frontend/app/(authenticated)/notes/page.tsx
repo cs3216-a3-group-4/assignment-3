@@ -4,12 +4,20 @@ import { getAllNotes } from "@/queries/note";
 import { useQuery } from "@tanstack/react-query";
 import { Notebook } from "lucide-react"
 import Notes from "@/components/notes/notes-list";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NotesSelector, { Filter } from "@/components/notes/notes-selector";
+import { NoteDTO } from "@/client";
 
 const Page = () => {
-    const { data: notes, isSuccess: isNotesLoaded } = useQuery(getAllNotes());
+    const { data: fetchedNotes, isSuccess: isNotesLoaded } = useQuery(getAllNotes());
+    const [notes, setNotes] = useState<NoteDTO[]>([]);
     const [filter, setFilter] = useState<string>(Filter.CATEGORY);
+
+    useEffect(() => {
+        if (isNotesLoaded) {
+            setNotes(fetchedNotes!);
+        }
+    }, [isNotesLoaded]);
 
     return (
         <div className="relative w-full h-full">
@@ -30,7 +38,7 @@ const Page = () => {
                             </span>
                             <NotesSelector filter={filter} setFilter={setFilter} />
                         </div>
-                        <Notes notes={notes || []} isNotesLoaded={isNotesLoaded} filter={filter} />
+                        <Notes notes={notes || []} setNotes={setNotes} isNotesLoaded={isNotesLoaded} filter={filter} />
                     </div>
                 </div>
             </div>

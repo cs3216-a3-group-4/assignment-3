@@ -3,14 +3,23 @@ import Note from "@/components/notes/note";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Filter } from "@/components/notes/notes-selector";
 import NotesCategories from "@/components/notes/notes-categories";
+import { Dispatch, SetStateAction } from "react";
 
 type Props = {
   notes: NoteDTO[];
+  setNotes: Dispatch<SetStateAction<NoteDTO[]>>;
   isNotesLoaded: boolean;
   filter: string;
 };
 
-const Notes = ({ notes, isNotesLoaded, filter }: Props) => {
+const Notes = ({ notes, setNotes, isNotesLoaded, filter }: Props) => {
+  
+  const handleDeleteNote = (note: NoteDTO) => {
+    return () => {
+      setNotes((prevNotes) => prevNotes.filter((mNote) => mNote !== note));
+    };
+  };
+
     if (!isNotesLoaded) {
       return (
         <div className="flex justify-center items-center w-full">
@@ -33,7 +42,7 @@ const Notes = ({ notes, isNotesLoaded, filter }: Props) => {
         <div className="flex flex-col">
             {
             filter == Filter.DATE && notes.map((note) => (
-                <Note key={note.id} data={note} />
+                <Note key={note.id} data={note} handleDelete={handleDeleteNote(note)} />
             ))
             }
             {
