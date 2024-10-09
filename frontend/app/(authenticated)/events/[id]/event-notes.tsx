@@ -1,10 +1,16 @@
 "use client";
 
+import { createElement, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { ChevronsDownUpIcon, ChevronsUpDownIcon, NotebookIcon } from "lucide-react";
+import {
+  ChevronsDownUpIcon,
+  ChevronsUpDownIcon,
+  NotebookIcon,
+} from "lucide-react";
 
 import { EventDTO } from "@/client";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   useAddEventNote,
   useDeleteNote,
@@ -12,8 +18,6 @@ import {
 } from "@/queries/note";
 
 import NoteForm, { NoteFormType } from "./note-form";
-import { createElement, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
   event: EventDTO;
@@ -23,7 +27,7 @@ const EventNotes = ({ event }: Props) => {
   const addNoteMutation = useAddEventNote(event.id);
   const deleteNoteMutation = useDeleteNote(event.id);
   const editNoteMutation = useEditEventNote(event.id);
-  const [ showNotes, setShowNotes ] = useState<boolean>(false);
+  const [showNotes, setShowNotes] = useState<boolean>(false);
   const numNotes = event?.notes ? event.notes.length : 0;
 
   const handleAddNote: SubmitHandler<NoteFormType> = ({
@@ -51,7 +55,7 @@ const EventNotes = ({ event }: Props) => {
           <h1 className="flex items-center font-medium text-3xl px-2">
             My Notes
           </h1>
-          {createElement( showNotes ? ChevronsUpDownIcon : ChevronsDownUpIcon, {
+          {createElement(showNotes ? ChevronsUpDownIcon : ChevronsDownUpIcon, {
             onClick: () => setShowNotes((prevState) => !prevState),
             size: 20,
             strokeWidth: 2.4,
@@ -63,7 +67,7 @@ const EventNotes = ({ event }: Props) => {
               <TabsTrigger value="saved">Saved {`(${numNotes})`}</TabsTrigger>
               <TabsTrigger value="new">New</TabsTrigger>
             </TabsList>
-            <TabsContent value="saved"> 
+            <TabsContent value="saved">
               {event.notes.map((note) => (
                 <div key={note.id}>
                   {note.content}, {note.category.name}
@@ -72,10 +76,10 @@ const EventNotes = ({ event }: Props) => {
                   </Button>
                   <NoteForm onSubmit={handleEditNote(note.id)} />
                 </div>
-              ))}      
+              ))}
             </TabsContent>
             <TabsContent value="new">
-              <NoteForm onSubmit={handleAddNote} />   
+              <NoteForm onSubmit={handleAddNote} />
             </TabsContent>
           </Tabs>
         </div>
