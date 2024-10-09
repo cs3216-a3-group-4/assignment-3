@@ -194,46 +194,48 @@ const EventAnalysis = ({ event }: Props) => {
 
   const onSelectEnd = () => {
     const selection = document.getSelection();
-    const id = selection?.anchorNode?.parentElement?.parentElement?.id;
-    if (!id?.startsWith("event-analysis-")) {
-      return;
+    let anchorNode = selection?.anchorNode;
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+    if (anchorNode?.nodeType == 1) {
+      // hacky fix, if element node, get actual text
+      anchorNode = selection?.anchorNode?.firstChild;
     }
+
+    let focusNode = selection?.focusNode;
+    if (focusNode?.nodeType == 1) {
+      focusNode = selection?.focusNode?.firstChild;
+    }
+
+    if (!selection || !anchorNode || !focusNode) return;
+
+    const selectStartElement = anchorNode.parentElement?.parentElement;
+    if (!selectStartElement?.id?.startsWith("event-analysis-")) return;
 
     // Check if focus node (where the cursor ends) is also within the analysis
-    if (
-      !selection?.focusNode?.parentElement?.parentElement?.id?.startsWith(
-        "event-analysis-",
-      )
-    ) {
-      return;
-    }
-    if (selection?.type === "Caret") {
-      return;
-    }
+    const selectEndElement = focusNode.parentElement?.parentElement;
+    if (!selectEndElement?.id?.startsWith("event-analysis-")) return;
 
-    const analysisId = parseInt(id.split("event-analysis-")[1]);
+    // https://developer.mozilla.org/en-US/docs/Web/API/Selection/type
+    if (selection.type === "Caret") return; // return if nothing selected
+
+    const analysisId = parseInt(
+      selectStartElement.id.split("event-analysis-")[1],
+    );
+
     const anchorStart = parseInt(
-      selection?.anchorNode?.parentElement?.id.split(
-        "-",
-      )[1] as unknown as string,
+      anchorNode.parentElement?.id.split("-")[1] as unknown as string,
     );
-
     const focusStart = parseInt(
-      selection?.focusNode?.parentElement?.id.split(
-        "-",
-      )[1] as unknown as string,
+      focusNode.parentElement?.id.split("-")[1] as unknown as string,
     );
 
+    const anchorIndex = anchorStart + selection.anchorOffset;
+    const focusIndex = focusStart + selection.focusOffset;
     setHighlightSelection({
       analysisId,
-      startIndex: Math.min(
-        anchorStart + selection!.anchorOffset,
-        focusStart + selection!.focusOffset,
-      ),
-      endIndex: Math.max(
-        anchorStart + selection!.anchorOffset,
-        focusStart + selection!.focusOffset,
-      ),
+      startIndex: Math.min(anchorIndex, focusIndex),
+      endIndex: Math.max(anchorIndex, focusIndex),
     });
   };
 
