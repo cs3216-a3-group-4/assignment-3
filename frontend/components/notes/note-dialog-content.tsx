@@ -74,6 +74,7 @@ const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData,
 
     useEffect(() => {
         setPendingNoteContent(noteContent);
+        setIsEditing(false);
     }, [open]);
 
     return (
