@@ -37,7 +37,7 @@ const Note = ({ data, handleDelete }: Props) => {
                 {parseDate(dateCreated)}
               </span>
             </div>
-            <p className="">{noteContent}</p>
+            <p>{noteContent}</p>
             <Chip
               className="w-fit"
               label={categoryName}
