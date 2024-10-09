@@ -103,7 +103,7 @@ const addNotHighlightedRegion = (regions: Region[], length: number) => {
       highlighted: HighlightType.None,
     });
   }
-  console.log({ regions, result });
+  console.log("notselected", { regions, result });
   return result;
 };
 
@@ -140,9 +140,11 @@ const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
       });
     }
   }
-  console.log({ regions, result });
+  console.log("selected", { regions, result });
   return result.filter((region) => region.startIndex <= region.endIndex);
 };
+
+const EVENT_ANALYSIS_ID_PREFIX = "event-analysis-";
 
 const EventAnalysis = ({ event }: Props) => {
   const user = useUserStore((state) => state.user);
@@ -192,35 +194,75 @@ const EventAnalysis = ({ event }: Props) => {
       );
     };
 
+  const [position, setPosition] = useState<Record<string, number>>();
+
   const onSelectEnd = () => {
     const selection = document.getSelection();
-    let anchorNode = selection?.anchorNode;
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+    // if (selection?.rangeCount === 0) return;
+
+    console.log(selection);
+    console.log(selection?.rangeCount);
+    const startRange = selection?.getRangeAt(0);
+    const endRange = selection?.getRangeAt(selection.rangeCount - 1);
+    let anchorNode = selection?.anchorNode;
+    let focusNode = selection?.focusNode;
+
+    // let anchorNode = selection?.anchorNode;
+
+    // console.log("CLEAN", { selection });
+
+    // // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
     if (anchorNode?.nodeType == 1) {
-      // hacky fix, if element node, get actual text
-      anchorNode = selection?.anchorNode?.firstChild;
+      // anchorNode = selection?.anchorNode; // @ts-expect-error whatever
+      anchorNode = startRange?.startContainer;
+      //   // hacky fix, if element node, get actual text
+      //   anchorNode = selection?.anchorNode?.firstChild;
     }
 
-    let focusNode = selection?.focusNode;
+    // let focusNode = selection?.focusNode;
     if (focusNode?.nodeType == 1) {
-      focusNode = selection?.focusNode?.firstChild;
+      // focusNode = selection?.focusNode?.firstChild;
+      focusNode = endRange?.endContainer; // @ts-expect-error whatever
     }
 
     if (!selection || !anchorNode || !focusNode) return;
 
     const selectStartElement = anchorNode.parentElement?.parentElement;
-    if (!selectStartElement?.id?.startsWith("event-analysis-")) return;
+    if (!selectStartElement?.id?.startsWith(EVENT_ANALYSIS_ID_PREFIX)) {
+      console.log(selectStartElement);
+      console.log("wth 1");
+      return;
+    }
 
     // Check if focus node (where the cursor ends) is also within the analysis
     const selectEndElement = focusNode.parentElement?.parentElement;
-    if (!selectEndElement?.id?.startsWith("event-analysis-")) return;
+    if (!selectEndElement?.id?.startsWith(EVENT_ANALYSIS_ID_PREFIX)) {
+      console.log(focusNode);
+      console.log(selectEndElement);
+      // console.log("range", range);
+      console.log("wth 2");
+      return;
+    }
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Selection/type
-    if (selection.type === "Caret") return; // return if nothing selected
+    // console.log(selection.type, selection.type === "Caret");
+    for (let i = 0; i < selection.rangeCount; i++) {
+      console.log("ranges " + i, selection.getRangeAt(i));
+    }
+
+    if (selection.type === "Caret") {
+      console.log("did this run?");
+      return; // return if nothing selected
+    }
+
+    if (selection.type === "None") {
+      console.log("none");
+      return;
+    }
 
     const analysisId = parseInt(
-      selectStartElement.id.split("event-analysis-")[1],
+      selectStartElement.id.split(EVENT_ANALYSIS_ID_PREFIX)[1],
     );
 
     const anchorStart = parseInt(
@@ -230,13 +272,45 @@ const EventAnalysis = ({ event }: Props) => {
       focusNode.parentElement?.id.split("-")[1] as unknown as string,
     );
 
-    const anchorIndex = anchorStart + selection.anchorOffset;
-    const focusIndex = focusStart + selection.focusOffset;
+    // if (!range) return;
+
+    let anchorIndex = anchorStart + startRange?.startOffset;
+    let focusIndex = focusStart + endRange?.endOffset;
+
+    if (anchorNode?.nodeType == 1) {
+      anchorIndex = anchorStart + selection.anchorOffset;
+      //   // hacky fix, if element node, get actual text
+      //   anchorNode = selection?.anchorNode?.firstChild;
+    }
+
+    // let focusNode = selection?.focusNode;
+    if (focusNode?.nodeType == 1) {
+      // focusNode = selection?.focusNode?.firstChild;
+      focusIndex = focusStart + selection.focusOffset;
+    }
+
+    console.log("anchorIndex", anchorIndex);
+    console.log("focusIndex", focusIndex);
+    console.log("selection", selection);
+
+    const rect = selection.getRangeAt(0).getBoundingClientRect();
+
+    setPosition({
+      // 80 represents the width of the share button, this may differ for you
+      x: rect.left + rect.width / 2 - 80 / 2,
+      // 30 represents the height of the share button, this may differ for you
+      y: rect.top + window.scrollY - 30,
+      width: rect.width,
+      height: rect.height,
+    });
+
     setHighlightSelection({
       analysisId,
       startIndex: Math.min(anchorIndex, focusIndex),
-      endIndex: Math.max(anchorIndex, focusIndex),
+      endIndex: Math.max(anchorIndex, focusIndex) - 1,
     });
+
+    selection.empty();
   };
 
   useEffect(() => {
@@ -258,6 +332,7 @@ const EventAnalysis = ({ event }: Props) => {
         // @ts-expect-error not going to bother fixing type errors for code that could be deleted
         !node.current.contains(event.target)
       ) {
+        console.log("u running?");
         setShowAnnotationForm(false);
         setHighlightSelection(null);
       }
@@ -345,11 +420,6 @@ const EventAnalysis = ({ event }: Props) => {
             <AccordionItem
               className="border rounded-lg px-8 py-2 border-cyan-600/60 bg-cyan-50/30"
               key={category}
-              ref={
-                eventAnalysis.id === highlightSelection?.analysisId
-                  ? (node as LegacyRef<HTMLDivElement>)
-                  : undefined
-              }
               value={category}
             >
               <AccordionTrigger
@@ -363,30 +433,35 @@ const EventAnalysis = ({ event }: Props) => {
               </AccordionTrigger>
               <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450] overflow-visible">
                 <div>
-                  <div id={`event-analysis-${eventAnalysis.id}`}>
+                  <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
                     {highlightStartEndNormalised.map(
                       ({ startIndex, endIndex, highlighted }) => (
-                        <span
-                          className={cn({
-                            "bg-yellow-100":
-                              highlighted === HighlightType.Annotation,
-                            "bg-green-100 relative":
-                              highlighted === HighlightType.Selected,
-                          })}
-                          id={`analysis${eventAnalysis.id}-${startIndex}`}
-                          key={`analysis${eventAnalysis.id}-${startIndex}`}
-                        >
-                          {content.slice(startIndex, endIndex + 1)}
+                        <>
                           {highlighted === HighlightType.Selected && (
                             <Button
-                              className="absolute bottom-6 left-0 whitespace-nowrap"
+                              className="absolute whitespace-nowrap"
                               id="add-annotation"
                               onClick={() => setShowAnnotationForm(true)}
+                              style={{
+                                transform: `translate3d(${position?.x}px, ${position?.y}px, 0)`,
+                              }}
                             >
                               Add annotation
                             </Button>
                           )}
-                        </span>
+                          <span
+                            className={cn({
+                              "bg-yellow-100":
+                                highlighted === HighlightType.Annotation,
+                              "bg-red-100":
+                                highlighted === HighlightType.Selected,
+                            })}
+                            id={`analysis${eventAnalysis.id}-${startIndex}`}
+                            key={`analysis${eventAnalysis.id}-${startIndex}`}
+                          >
+                            {content.slice(startIndex, endIndex + 1)}
+                          </span>
+                        </>
                       ),
                     )}
                   </div>
