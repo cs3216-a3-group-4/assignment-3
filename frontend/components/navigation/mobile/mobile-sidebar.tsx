@@ -10,6 +10,7 @@ import {
   LucideIcon,
   MenuIcon,
   MessageCircleQuestionIcon,
+  NotebookIcon,
 } from "lucide-react";
 
 import SidebarItemWithIcon from "@/components/navigation/sidebar/sidebar-item-with-icon";
@@ -35,6 +36,11 @@ const OPTIONS: SidebarOption[] = [
     icon: BookmarkIcon,
     label: "Bookmarks",
     path: "/bookmarks",
+  },
+  {
+    icon: NotebookIcon,
+    label: "Notes",
+    path: "/notes",
   },
   { icon: MessageCircleQuestionIcon, label: "Ask a question", path: "/ask" },
   { icon: HistoryIcon, label: "Past questions", path: "/questions" },
