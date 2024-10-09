@@ -24,11 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getCategories } from "@/queries/category";
-import {
-  categoriesToDisplayName,
-  Category,
-  getCategoryFor,
-} from "@/types/categories";
 
 const noteFormSchema = z.object({
   content: z.string(),
