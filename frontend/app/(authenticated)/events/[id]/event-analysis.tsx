@@ -26,6 +26,7 @@ import {
   categoriesToIconsMap,
   Category,
   getCategoryFor,
+  getIconFor,
 } from "@/types/categories";
 
 import NoteForm, { NoteFormType } from "./note-form";
@@ -145,9 +146,7 @@ const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
 const EventAnalysis = ({ event }: Props) => {
   const user = useUserStore((state) => state.user);
 
-  const eventCategories = event.categories.map((category) =>
-    getCategoryFor(category.name),
-  );
+  const eventCategories = event.categories;
 
   const [activeCategories, setActiveCategories] = useState<string[]>(
     event.analysises.map((item) => getCategoryFor(item.category.name)),
@@ -170,16 +169,16 @@ const EventAnalysis = ({ event }: Props) => {
   const addNoteMutation = useAddAnalysisNote(event.id);
   const deleteNoteMutation = useDeleteNote(event.id);
 
-  const handleAddNote: (analysis_id: number) => SubmitHandler<NoteFormType> =
-    (analysis_id: number) =>
-    ({ content, category_id }) => {
+  const handleAddNote: (analysis_id: number, category_id_num: number) => SubmitHandler<NoteFormType> =
+    (analysis_id: number, category_id_num: number) =>
+    ({ content}) => {
       addNoteMutation.mutate(
         {
-          category_id: parseInt(category_id!),
           content,
           analysis_id,
           start_index: highlightSelection!.startIndex,
           end_index: highlightSelection!.endIndex,
+          category_id: category_id_num,
         },
         {
           onSuccess: () => {
@@ -280,14 +279,14 @@ const EventAnalysis = ({ event }: Props) => {
             variant="outline"
           >
             {eventCategories.map((category) => {
-              const categoryName = categoriesToDisplayName[category];
-              const CategoryIcon = categoriesToIconsMap[category];
+              const categoryName = category.name;
+              const CategoryIcon = getIconFor(categoryName);
               return (
                 <ToggleGroupItem
                   aria-label={`Toggle ${categoryName}`}
                   className="border-none bg-muted text-muted-foreground data-[state=on]:bg-cyan-400/30 data-[state=on]:text-cyan-600 rounded-xl hover:bg-cyan-200/30 hover:text-cyan-500"
-                  key={category}
-                  value={category}
+                  key={category.id}
+                  value={category.name}
                 >
                   <span className="flex items-center">
                     <CategoryIcon className="inline-flex mr-2" size={18} />
@@ -306,12 +305,12 @@ const EventAnalysis = ({ event }: Props) => {
         value={activeCategories}
       >
         {eventCategories.map((category) => {
-          const eventAnalysis = analysis[category];
+          const eventAnalysis = analysis[getCategoryFor(category.name)];
           const content = eventAnalysis.content;
           const likes = eventAnalysis.likes;
           const userLike = likes.filter((like) => like.user_id == user?.id)[0];
           const userLikeValue = userLike ? userLike.type : 0;
-          const CategoryIcon = categoriesToIconsMap[category as Category];
+          const CategoryIcon = getIconFor(category.name);
 
           const highlightStartEnd = eventAnalysis.notes
             .map((notes) => ({
@@ -340,13 +339,13 @@ const EventAnalysis = ({ event }: Props) => {
           return (
             <AccordionItem
               className="border rounded-lg px-8 py-2 border-cyan-600/60 bg-cyan-50/30"
-              key={category}
+              key={category.id}
               ref={
                 eventAnalysis.id === highlightSelection?.analysisId
                   ? (node as LegacyRef<HTMLDivElement>)
                   : undefined
               }
-              value={category}
+              value={category.name}
             >
               <AccordionTrigger
                 chevronClassName="h-6 w-6 stroke-[2.5]"
@@ -354,7 +353,7 @@ const EventAnalysis = ({ event }: Props) => {
               >
                 <span className="flex items-center">
                   <CategoryIcon className="inline-flex mr-4" />
-                  {categoriesToDisplayName[category as Category]}
+                  {category.name}
                 </span>
               </AccordionTrigger>
               <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
@@ -391,7 +390,7 @@ const EventAnalysis = ({ event }: Props) => {
                     highlightSelection.analysisId === eventAnalysis.id && (
                       <NoteForm
                         hideCategory
-                        onSubmit={handleAddNote(eventAnalysis.id)}
+                        onSubmit={handleAddNote(eventAnalysis.id, category.id)}
                       />
                     )}
                   {eventAnalysis.notes.map((note) => (
