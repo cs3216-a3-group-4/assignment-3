@@ -8,6 +8,7 @@ from src.auth.models import User
 from src.common.dependencies import get_session
 from src.events.models import Analysis, Event
 from src.notes.models import Note
+from src.limits.check_usage import within_usage_limit
 from src.user_questions.models import (
     Answer,
     Fallback,
@@ -107,6 +108,10 @@ async def create_user_question(
     validation = validate_question(data.question)
     if not validation["is_valid"]:
         return validation
+    else:
+        within_use_limit, validation_result = within_usage_limit(user, session)
+        if not within_use_limit:
+            return validation_result
 
     user_question = UserQuestion(question=data.question, user_id=user.id)
 
