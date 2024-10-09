@@ -10,13 +10,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useEditEventNote } from "@/queries/note";
+import { useDeleteNote, useEditEventNote } from "@/queries/note";
 import { categoriesToDisplayName, getCategoryFor, getIconFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
 import { Dispatch, SetStateAction, useState } from "react";
 import Chip from "@/components/display/chip";
 import { z } from "zod";
 import { SubmitHandler } from "react-hook-form";
+import { Trash2Icon } from "lucide-react";
 
 interface Props {
     categoryData: CategoryDTO;
@@ -39,7 +40,13 @@ const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData,
     const category = getCategoryFor(categoryData.name);
     const dateCreated = new Date(noteData.created_at);
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const deleteNoteMutation = useDeleteNote(noteData.parent_id);
     const editNoteMutation = useEditEventNote(noteData.parent_id);
+
+    const onClickDelete = () => {
+        setOpen(false);
+        deleteNoteMutation.mutate(noteData.id);
+    };
 
     const handleDoubleClick = () => {
         setIsEditing(true);
@@ -99,8 +106,15 @@ const NoteDialogContent = ({categoryData, noteContent, setNoteContent, noteData,
                     />
             )}
             <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>Edit</Button>
-                <Button type="button" onClick={handleSave}>Save</Button>
+                <div className="flex justify-between w-full">
+                    <Button type="button" variant="outline" onClick={onClickDelete}>
+                        <Trash2Icon size={20} strokeWidth={1.7} />
+                    </Button>
+                    <div className="flex gap-2">
+                        <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>Edit</Button>
+                        <Button type="button" onClick={handleSave}>Save</Button>
+                    </div>
+                </div>
             </DialogFooter>
         </DialogContent>
     );
