@@ -42,8 +42,8 @@ const EventNotes = ({ event }: Props) => {
     ({ content, category_id }) => {
       editNoteMutation.mutate({
         id,
-        category_id: parseInt(category_id!),
         content,
+        category_id: category_id ? parseInt(category_id) : undefined,
       });
     };
 
