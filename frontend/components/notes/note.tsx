@@ -20,8 +20,8 @@ type Props = {
 };
 
 const Note = ({ data, handleDelete }: Props) => {
-  const Icon = getIconFor(data.category.name);
-  const category = getCategoryFor(data.category.name);
+  const Icon = getIconFor(data.category!.name);
+  const category = getCategoryFor(data.category!.name);
   const dateCreated = new Date(data.created_at);
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
   const [noteContent, setNoteContent] = useState(data.content);
@@ -48,7 +48,7 @@ const Note = ({ data, handleDelete }: Props) => {
         </div>
       </DialogTrigger>
       <NoteDialogContent
-        categoryData={data.category}
+        categoryData={data.category!}
         handleDelete={handleDelete}
         noteContent={noteContent}
         noteData={data}
