@@ -23,7 +23,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "main-index-1"  # change to create a new index
+    index_name = "cna-primary-index"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
