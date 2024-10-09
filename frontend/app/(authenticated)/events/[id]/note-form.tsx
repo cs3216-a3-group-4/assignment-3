@@ -100,11 +100,7 @@ const NoteForm = ({ onSubmit, hideCategory }: Props) => {
                             key={category.id}
                             value={category.id.toString()}
                           >
-                            {
-                              categoriesToDisplayName[
-                                getCategoryFor(category.name) as Category
-                              ]
-                            }
+                            {category.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
