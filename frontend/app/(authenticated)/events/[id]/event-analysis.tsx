@@ -192,12 +192,11 @@ const EventAnalysis = ({ event }: Props) => {
       );
     };
 
-  const [position, setPosition] = useState<Record<string, number>>();
-
   const onSelectEnd = () => {
     const selection = document.getSelection();
 
     if (!selection) return;
+    if (selection.type != "Range") return;
     if (!selection.rangeCount) return;
 
     const startRange = selection.getRangeAt(0);
@@ -234,15 +233,6 @@ const EventAnalysis = ({ event }: Props) => {
       endIndex: endIndex - 1,
     });
 
-    const rect = selection.getRangeAt(0).getBoundingClientRect();
-
-    setPosition({
-      x: rect.left + rect.width / 2 - 80 / 2, // 80 represents the width
-      y: rect.top + window.scrollY - 30, // 30 represents the height
-      width: rect.width,
-      height: rect.height,
-    });
-
     selection.empty();
   };
 
@@ -265,7 +255,6 @@ const EventAnalysis = ({ event }: Props) => {
         // @ts-expect-error not going to bother fixing type errors for code that could be deleted
         !node.current.contains(event.target)
       ) {
-        console.log("u running?");
         setShowAnnotationForm(false);
         setHighlightSelection(null);
       }
@@ -381,13 +370,13 @@ const EventAnalysis = ({ event }: Props) => {
                             key={`analysis${eventAnalysis.id}-${startIndex}`}
                           >
                             {highlighted === HighlightType.Selected && (
-                              <Button
-                                className="absolute whitespace-nowrap bottom-6 left-0 z-[1000]"
+                              <div
+                                className="absolute whitespace-nowrap bottom-6 left-0 z-[1000] bg-card px-4 py-2 mb-2 border border-border-2 rounded-sm"
                                 id="add-annotation"
                                 onClick={() => setShowAnnotationForm(true)}
                               >
                                 Add annotation
-                              </Button>
+                              </div>
                             )}
                             {content.slice(startIndex, endIndex + 1)}
                           </span>
