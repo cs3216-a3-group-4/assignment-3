@@ -21,13 +21,7 @@ import { cn } from "@/lib/utils";
 import { useLikeEvent } from "@/queries/like";
 import { useAddAnalysisNote, useDeleteNote } from "@/queries/note";
 import { useUserStore } from "@/store/user/user-store-provider";
-import {
-  categoriesToDisplayName,
-  categoriesToIconsMap,
-  Category,
-  getCategoryFor,
-  getIconFor,
-} from "@/types/categories";
+import { Category, getCategoryFor, getIconFor } from "@/types/categories";
 
 import NoteForm, { NoteFormType } from "./note-form";
 
