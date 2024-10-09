@@ -102,7 +102,6 @@ const EventAnalysis = ({ event }: Props) => {
 
   const onSelectEnd = () => {
     const selection = document.getSelection();
-
     if (!selection) return;
 
     if (
@@ -115,7 +114,7 @@ const EventAnalysis = ({ event }: Props) => {
     }
 
     if (selection.type != "Range") {
-      clearHighlight();
+      if (!showAnnotationForm) clearHighlight();
       return;
     }
 
@@ -165,24 +164,7 @@ const EventAnalysis = ({ event }: Props) => {
       document.removeEventListener("mouseup", onSelectEnd);
       document.removeEventListener("touchend", onSelectEnd);
     };
-  }, []);
-
-  const node = useRef<HTMLDivElement>();
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        node &&
-        node.current &&
-        // @ts-expect-error not going to bother fixing type errors for code that could be deleted
-        !node.current.contains(event.target)
-      )
-        clearHighlight();
-    };
-
-    document.addEventListener("click", handleOutsideClick);
-    return () => document.removeEventListener("click", handleOutsideClick);
-  }, []);
+  }, [showAnnotationForm]);
 
   return (
     <div className="flex flex-col px-6 gap-y-8">
