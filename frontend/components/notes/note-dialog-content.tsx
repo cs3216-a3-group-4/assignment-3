@@ -17,8 +17,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useDeleteNote, useEditEventNote } from "@/queries/note";
 import {
-  categoriesToDisplayName,
-  getCategoryFor,
   getIconFor,
 } from "@/types/categories";
 import { parseDate } from "@/utils/date";
@@ -51,7 +49,6 @@ const NoteDialogContent = ({
   handleDelete,
 }: Props) => {
   const Icon = getIconFor(categoryData.name);
-  const category = getCategoryFor(categoryData.name);
   const dateCreated = new Date(noteData.created_at);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const deleteNoteMutation = useDeleteNote(noteData.parent_id);
@@ -74,7 +71,7 @@ const NoteDialogContent = ({
     ({ content, category_id }) => {
       editNoteMutation.mutate({
         id,
-        category_id: parseInt(category_id!),
+        category_id: parseInt(category_id || "-1"),
         content,
       });
     };
@@ -101,7 +98,7 @@ const NoteDialogContent = ({
             <Icon className="mr-3 flex-shrink-0" size={25} strokeWidth={1.7} />
             <Chip
               className="w-fit"
-              label={categoriesToDisplayName[category]}
+              label={categoryData.name}
               size="lg"
               variant="primary"
             />
