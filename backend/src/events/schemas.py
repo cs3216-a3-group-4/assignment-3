@@ -42,6 +42,7 @@ class AnalysisMiniDTO(BaseModel):
     category: CategoryDTO
     content: str
     likes: list[LikeDTO]
+    event_id: int
 
 
 class AnalysisDTO(AnalysisMiniDTO):
