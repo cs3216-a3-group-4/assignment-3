@@ -21,6 +21,7 @@ import {
   getIconFor,
 } from "@/types/categories";
 import { parseDate } from "@/utils/date";
+import { useRouter } from "next/navigation";
 
 interface Props {
   noteContent: string;
@@ -57,12 +58,17 @@ const NoteDialogContent = ({
   const editNoteMutation = useEditEventNote(noteData.parent_id);
   const [pendingNoteContent, setPendingNoteContent] =
     useState<string>(noteContent);
+  const router = useRouter();
 
   const onClickDelete = () => {
     deleteNoteMutation.mutate(noteData.id);
     setOpen(false);
     handleDelete();
   };
+
+  const onClickNoteSource = () => {
+    router.push(`/${noteData.parent_type}s/${noteData.parent_id}`);
+  }
 
   const handleDoubleClick = () => {
     setIsEditing(true);
@@ -86,6 +92,13 @@ const NoteDialogContent = ({
       category_id: categoryData?.id,
     });
   };
+
+  const getWordFor = (parentType: string) => {
+    if (parentType === "point") {
+      return "a";
+    }
+    return "an";
+  }
 
   useEffect(() => {
     setPendingNoteContent(noteContent);
@@ -124,6 +137,14 @@ const NoteDialogContent = ({
           value={pendingNoteContent}
         />
       )}
+      <div className="flex w-full">
+        <span className="text-text-muted/90">Note is for&nbsp;</span>
+        {noteData.parent_type === "event" ?
+          <button className="hover:underline" onClick={onClickNoteSource}>this {noteData.parent_type}</button>
+        :
+          <span className="text-text-muted/90">{getWordFor(noteData.parent_type)} {noteData.parent_type}</span>
+        }
+      </div>
       <DialogFooter>
         <div className="flex justify-between w-full">
           <Button onClick={onClickDelete} type="button" variant="outline">
