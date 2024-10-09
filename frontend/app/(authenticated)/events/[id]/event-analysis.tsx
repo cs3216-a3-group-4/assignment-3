@@ -2,7 +2,7 @@
 
 import { LegacyRef, useEffect, useRef, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { SparklesIcon } from "lucide-react";
+import { CopyIcon, HighlighterIcon, SparklesIcon } from "lucide-react";
 
 import {
   EventDTO,
@@ -142,6 +142,7 @@ const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
   return result.filter((region) => region.startIndex <= region.endIndex);
 };
 
+const ANNOTATION_ACTIONS_BUTTON_ID = "annotation-actions";
 const EVENT_ANALYSIS_ID_PREFIX = "event-analysis-";
 
 const EventAnalysis = ({ event }: Props) => {
@@ -184,10 +185,7 @@ const EventAnalysis = ({ event }: Props) => {
           end_index: highlightSelection!.endIndex,
         },
         {
-          onSuccess: () => {
-            setShowAnnotationForm(false);
-            setHighlightSelection(null);
-          },
+          onSuccess: clearHighlight,
         },
       );
     };
@@ -196,7 +194,21 @@ const EventAnalysis = ({ event }: Props) => {
     const selection = document.getSelection();
 
     if (!selection) return;
-    if (selection.type != "Range") return;
+
+    if (
+      selection.type == "Caret" &&
+      document
+        .getElementById(ANNOTATION_ACTIONS_BUTTON_ID)
+        ?.contains(selection.anchorNode)
+    ) {
+      return; // don't clear highlight if add-annotation button is being clicked
+    }
+
+    if (selection.type != "Range") {
+      clearHighlight();
+      return;
+    }
+
     if (!selection.rangeCount) return;
 
     const startRange = selection.getRangeAt(0);
@@ -236,6 +248,11 @@ const EventAnalysis = ({ event }: Props) => {
     selection.empty();
   };
 
+  const clearHighlight = () => {
+    setShowAnnotationForm(false);
+    setHighlightSelection(null);
+  };
+
   useEffect(() => {
     document.addEventListener("mouseup", onSelectEnd);
     document.addEventListener("touchend", onSelectEnd);
@@ -254,10 +271,8 @@ const EventAnalysis = ({ event }: Props) => {
         node.current &&
         // @ts-expect-error not going to bother fixing type errors for code that could be deleted
         !node.current.contains(event.target)
-      ) {
-        setShowAnnotationForm(false);
-        setHighlightSelection(null);
-      }
+      )
+        clearHighlight();
     };
 
     document.addEventListener("click", handleOutsideClick);
@@ -363,7 +378,7 @@ const EventAnalysis = ({ event }: Props) => {
                             className={cn({
                               "bg-yellow-100":
                                 highlighted === HighlightType.Annotation,
-                              "bg-green-100 relative":
+                              "bg-blue-200 relative":
                                 highlighted === HighlightType.Selected,
                             })}
                             id={`analysis${eventAnalysis.id}-${startIndex}`}
@@ -371,11 +386,34 @@ const EventAnalysis = ({ event }: Props) => {
                           >
                             {highlighted === HighlightType.Selected && (
                               <div
-                                className="absolute whitespace-nowrap bottom-6 left-0 z-[1000] bg-card px-4 py-2 mb-2 border border-border-2 rounded-sm"
-                                id="add-annotation"
-                                onClick={() => setShowAnnotationForm(true)}
+                                className="absolute flex gap-x-4 whitespace-nowrap bottom-6 left-0 z-[1000] bg-card px-3 py-2 mb-2 border border-border-2 rounded cursor-pointer transition-all animate-duration-150 animate-jump-in"
+                                id={ANNOTATION_ACTIONS_BUTTON_ID}
                               >
-                                Add annotation
+                                <div
+                                  className="content-center flex flex-col items-center hover:bg-card-foreground/5 p-0.5 rounded-sm"
+                                  id="add-annotation"
+                                  onClick={() => setShowAnnotationForm(true)}
+                                >
+                                  <HighlighterIcon className="inline-block" />
+                                  <span className="inline-block ml-2 transition-all font-medium text-sm">
+                                    Highlight
+                                  </span>
+                                </div>
+
+                                <div
+                                  className="content-center flex flex-col items-center hover:bg-card-foreground/5 p-0.5 rounded-sm"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(
+                                      content.slice(startIndex, endIndex + 1),
+                                    );
+                                    clearHighlight();
+                                  }}
+                                >
+                                  <CopyIcon className="inline-block" />
+                                  <span className="inline-block ml-2 transition-all font-medium text-sm">
+                                    Copy
+                                  </span>
+                                </div>
                               </div>
                             )}
                             {content.slice(startIndex, endIndex + 1)}
