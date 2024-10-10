@@ -119,7 +119,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       </div>
       {isViewAnnotation && (
         <div className="sticky top-0 flex w-4/12 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)] bg-red-200">
-          <EventAnnotations />
+          <EventAnnotations event={data} />
         </div>
       )}
     </div>
