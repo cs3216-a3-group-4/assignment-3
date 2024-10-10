@@ -28,6 +28,7 @@ const NoteItem = ({ note, eventId, handleEditNote }: NoteItemProps) => {
         <NoteForm
           onSubmit={handleEditNote(note.id)}
           onCancel={() => setIsEditing(false)}
+          defaultValue={note}
         />
       ) : (
         <div>

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { getCategories } from "@/queries/category";
 import { Textarea } from "@/components/ui/textarea";
+import { NoteDTO } from "@/client";
 
 const noteFormSchema = z.object({
   content: z.string(),
@@ -33,17 +34,13 @@ const noteFormSchema = z.object({
 
 export type NoteFormType = z.infer<typeof noteFormSchema>;
 
-const noteFormDefault = {
-  content: "",
-  category_id: undefined,
-};
-
 type Props = {
   onSubmit: SubmitHandler<NoteFormType>;
   hideCategory?: boolean;
   onCancel?: () => void;
   isHighlight?: boolean;
   highlightSelection?: string;
+  defaultValue?: NoteDTO;
 };
 
 const NoteForm = ({
@@ -52,7 +49,13 @@ const NoteForm = ({
   onCancel,
   isHighlight = false,
   highlightSelection,
+  defaultValue,
 }: Props) => {
+  const noteFormDefault = {
+    content: defaultValue?.content || "",
+    category_id: defaultValue?.category?.id.toString() || undefined,
+  };
+
   const form = useForm<NoteFormType>({
     resolver: zodResolver(noteFormSchema),
     defaultValues: noteFormDefault,
