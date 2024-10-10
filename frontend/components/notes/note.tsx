@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { NoteDTO } from "@/client";
+import { AnalysisNoteDTO, EventNoteDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Category, getIconFor } from "@/types/categories";
@@ -11,7 +11,7 @@ import { parseDate } from "@/utils/date";
 import NoteDialogContent from "./note-dialog-content";
 
 type Props = {
-  data: NoteDTO;
+  data: EventNoteDTO | AnalysisNoteDTO;
   handleDelete: () => void;
 };
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Notebook } from "lucide-react";
 
-import { CategoryDTO, NoteDTO } from "@/client";
+import { AnalysisNoteDTO, CategoryDTO, EventNoteDTO } from "@/client";
 import Notes from "@/components/notes/notes-list";
 import { Filter } from "@/components/notes/notes-selector";
 import { getCategories } from "@/queries/category";
@@ -13,7 +13,7 @@ import { getAllNotes } from "@/queries/note";
 const Page = ({ params }: { params: { id: string } }) => {
   const categoryId = parseInt(params.id);
   const [category, setCategory] = useState<CategoryDTO | null>(null);
-  const [notes, setNotes] = useState<NoteDTO[]>([]);
+  const [notes, setNotes] = useState<(EventNoteDTO | AnalysisNoteDTO)[]>([]);
   const { data: categories, isSuccess: isCategoriesLoaded } =
     useQuery(getCategories());
   const { data: fetchedNotes, isSuccess: isNotesLoaded } = useQuery(
