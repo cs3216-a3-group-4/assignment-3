@@ -126,7 +126,7 @@ def add_bookmark(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
     event=Depends(retrieve_event),
-    session=Annotated[Session, Depends(get_session)],
+    session=Depends(get_session),
 ):
     bookmark = session.scalar(
         select(Bookmark)
