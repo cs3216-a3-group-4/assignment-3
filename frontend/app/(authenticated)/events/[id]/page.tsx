@@ -70,13 +70,13 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <div
-      className={`w-full h-fit min-h-full bg-muted ${isViewAnnotation ? "relative flex" : "px-8 md:px-16 xl:px-56 py-8"}`}
+      className={`w-full h-fit min-h-full bg-muted ${isViewAnnotation ? "relative flex" : "px-8 md:px-16 xl:px-56"}`}
     >
       <div
         className={`flex flex-col bg-background ${isViewAnnotation ? "w-8/12 h-full mx-16" : ""}`}
       >
         <div className="flex flex-col gap-y-10">
-          <div className="flex w-full max-h-52 overflow-y-clip items-center rounded-t-2xl rounded-b-sm border">
+          <div className="flex w-full max-h-52 overflow-y-clip items-center rounded-b-sm border">
             <Image
               alt={data?.title}
               height={154}

@@ -32,6 +32,7 @@ import {
   addNotHighlightedRegion,
   addSelectedRegion,
 } from "@/utils/annotations";
+import AnalysisNotes from "./event-annotations/analysis-notes";
 
 interface HighlightSelection {
   analysisId: number;
@@ -280,22 +281,6 @@ const EventAnalysis = ({ event }: Props) => {
                           onCancel={clearHighlight}
                         />
                       )}
-                    {eventAnalysis.notes.map((note) => (
-                      <div key={note.id}>
-                        {eventAnalysis.content.slice(
-                          note.start_index!,
-                          note.end_index!,
-                        )}
-                        <br />
-                        {note.content}
-                        <hr />
-                        <Button
-                          onClick={() => deleteNoteMutation.mutate(note.id)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    ))}
                   </div>
                   <LikeButtons
                     onDislike={() =>
@@ -311,6 +296,13 @@ const EventAnalysis = ({ event }: Props) => {
                       })
                     }
                     userLikeValue={userLikeValue}
+                  />
+                  <AnalysisNotes
+                    notes={eventAnalysis.notes}
+                    eventAnalysisContent={eventAnalysis.content}
+                    onDelete={(noteId: number) =>
+                      deleteNoteMutation.mutate(noteId)
+                    }
                   />
                 </ScrewedUpAccordionContent>
               </div>
