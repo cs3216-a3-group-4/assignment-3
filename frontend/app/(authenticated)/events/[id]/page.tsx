@@ -126,12 +126,14 @@ const Page = ({ params }: { params: { id: string } }) => {
           <EventSource originalSource={data.original_article} />
         </div>
       </div>
-      <div className="sticky top-0 flex w-4/12 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
-        <EventAnnotations
-          event={data}
-          hideAnnotationsPanel={() => setIsViewAnnotation(false)}
-        />
-      </div>
+      {isViewAnnotation && (
+        <div className="sticky top-0 flex w-4/12 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
+          <EventAnnotations
+            event={data}
+            hideAnnotationsPanel={() => setIsViewAnnotation(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -68,6 +68,7 @@ const AnalysisNotes = ({
         <div className="flex flex-col gap-y-2 mt-4 px-4">
           {notes.map((note) => (
             <div
+              id={"annotation-" + note.id}
               key={note.id}
               className="flex flex-col gap-y-3 py-4 border-b-2 border-border last:border-none"
             >
