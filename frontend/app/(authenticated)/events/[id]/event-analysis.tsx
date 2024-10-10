@@ -269,18 +269,6 @@ const EventAnalysis = ({ event }: Props) => {
                         ),
                       )}
                     </div>
-                    {highlightSelection &&
-                      showAnnotationForm &&
-                      highlightSelection.analysisId === eventAnalysis.id && (
-                        <NoteForm
-                          hideCategory
-                          onSubmit={handleAddNote(
-                            eventAnalysis.id,
-                            category.id,
-                          )}
-                          onCancel={clearHighlight}
-                        />
-                      )}
                   </div>
                   <LikeButtons
                     onDislike={() =>
@@ -298,11 +286,28 @@ const EventAnalysis = ({ event }: Props) => {
                     userLikeValue={userLikeValue}
                   />
                   <AnalysisNotes
+                    highlightSelection={
+                      (highlightSelection &&
+                        highlightSelection.analysisId === eventAnalysis.id &&
+                        eventAnalysis.content.slice(
+                          highlightSelection.startIndex,
+                          highlightSelection.endIndex + 1,
+                        )) ||
+                      undefined
+                    }
                     notes={eventAnalysis.notes}
                     eventAnalysisContent={eventAnalysis.content}
+                    showNoteForm={
+                      (highlightSelection &&
+                        showAnnotationForm &&
+                        highlightSelection.analysisId === eventAnalysis.id) ??
+                      false
+                    }
                     onDelete={(noteId: number) =>
                       deleteNoteMutation.mutate(noteId)
                     }
+                    onCancel={clearHighlight}
+                    onSubmitNote={handleAddNote(eventAnalysis.id, category.id)}
                   />
                 </ScrewedUpAccordionContent>
               </div>

@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getCategories } from "@/queries/category";
+import { Textarea } from "@/components/ui/textarea";
 
 const noteFormSchema = z.object({
   content: z.string(),
@@ -41,9 +42,17 @@ type Props = {
   onSubmit: SubmitHandler<NoteFormType>;
   hideCategory?: boolean;
   onCancel?: () => void;
+  isHighlight?: boolean;
+  highlightSelection?: string;
 };
 
-const NoteForm = ({ onSubmit, hideCategory, onCancel }: Props) => {
+const NoteForm = ({
+  onSubmit,
+  hideCategory,
+  onCancel,
+  isHighlight = false,
+  highlightSelection,
+}: Props) => {
   const form = useForm<NoteFormType>({
     resolver: zodResolver(noteFormSchema),
     defaultValues: noteFormDefault,
@@ -58,15 +67,22 @@ const NoteForm = ({ onSubmit, hideCategory, onCancel }: Props) => {
           className="flex flex-col space-y-4"
           onSubmit={form.handleSubmit(onSubmit)}
         >
+          {isHighlight && (
+            <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700">
+              {highlightSelection}
+            </span>
+          )}
           <Box className="flex flex-col space-y-2.5">
             <FormField
               control={form.control}
-              name={"content"}
+              name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="!text-current">Content</FormLabel>
+                  <FormLabel className="!text-current text-base">
+                    Annotation
+                  </FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Textarea {...field} className="bg-white text-lg" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,8 +123,20 @@ const NoteForm = ({ onSubmit, hideCategory, onCancel }: Props) => {
               />
             </Box>
           )}
-          <Button type="submit">Submit</Button>
-          {onCancel && <Button onClick={onCancel}>Cancel</Button>}
+          <div className="flex gap-x-6 w-full">
+            <Button type="submit" className="w-full">
+              Submit
+            </Button>
+            {onCancel && (
+              <Button
+                onClick={onCancel}
+                variant="outline"
+                className="bg-transparent w-full"
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
         </form>
       </Form>
     </div>

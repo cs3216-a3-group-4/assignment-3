@@ -11,25 +11,41 @@ import {
   ChevronsUpDownIcon,
   DeleteIcon,
   EllipsisVerticalIcon,
+  FilePlus2Icon,
   HighlighterIcon,
   TrashIcon,
 } from "lucide-react";
-import { createElement, useState } from "react";
+import { createElement, useEffect, useState } from "react";
+import { SubmitHandler } from "react-hook-form";
+import eventAnalysis from "../event-analysis";
+import NoteForm, { NoteFormType } from "./note-form";
 
 interface AnalysisNoteProps {
   notes: NoteDTO[];
   eventAnalysisContent: string;
+  showNoteForm: boolean;
+  onSubmitNote: SubmitHandler<NoteFormType>;
   onDelete: (noteId: number) => void;
+  onCancel: () => void;
+  highlightSelection?: string;
 }
 
 const AnalysisNotes = ({
   notes,
   eventAnalysisContent,
+  showNoteForm,
+  highlightSelection,
+  onSubmitNote,
   onDelete,
+  onCancel,
 }: AnalysisNoteProps) => {
   const numNotes = notes.length;
   const [showHighlights, setShowHighlights] = useState<boolean>(true);
-  if (numNotes === 0) return;
+
+  useEffect(() => {
+    if (showNoteForm) setShowHighlights(true);
+  }, [showNoteForm]);
+
   return (
     <div>
       <Separator className="my-4" />
@@ -51,15 +67,29 @@ const AnalysisNotes = ({
           )}
         </span>
       </div>
+      {showNoteForm && (
+        <div className="p-6 mt-4 border border-primary-500/30 rounded-md">
+          <div className="flex items-center mb-3 text-primary-800">
+            <h1 className="font-medium">Add new highlight</h1>
+          </div>
+          <NoteForm
+            hideCategory
+            isHighlight
+            onSubmit={onSubmitNote}
+            onCancel={onCancel}
+            highlightSelection={highlightSelection}
+          />
+        </div>
+      )}
       {showHighlights && (
         <div className="flex flex-col gap-y-2 mt-4 px-4">
           {notes.map((note) => (
             <div
               key={note.id}
-              className="flex flex-col gap-y-2 py-4 border-b-2 border-border last:border-none"
+              className="flex flex-col gap-y-3 py-4 border-b-2 border-border last:border-none"
             >
               <div className="flex gap-x-2 justify-between pb-1">
-                <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700">
+                <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700 italic text-base">
                   {eventAnalysisContent.slice(
                     note.start_index!,
                     note.end_index!,
@@ -82,7 +112,7 @@ const AnalysisNotes = ({
                   </PopoverContent>
                 </Popover>
               </div>
-              <p>{note.content}</p>
+              <p className="text-primary-800">{note.content}</p>
             </div>
           ))}
         </div>
