@@ -92,7 +92,7 @@ const AnalysisNotes = ({
                 <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700 italic text-base">
                   {eventAnalysisContent.slice(
                     note.start_index!,
-                    note.end_index!,
+                    note.end_index! + 1,
                   )}
                 </span>
                 <Popover>
