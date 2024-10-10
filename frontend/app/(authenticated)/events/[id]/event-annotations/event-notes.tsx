@@ -33,6 +33,7 @@ const EventNotes = ({ event }: Props) => {
   const deleteNoteMutation = useDeleteNote(event.id);
   const editNoteMutation = useEditEventNote(event.id);
   const [showNotes, setShowNotes] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<string>("saved");
   const numNotes = event?.notes ? event.notes.length : 0;
 
   const handleAddNote: SubmitHandler<NoteFormType> = ({
@@ -62,12 +63,20 @@ const EventNotes = ({ event }: Props) => {
           </h1>
         </span>
         <div className={`flex flex-col gap-y-4 ${showNotes ? "" : "hidden"}`}>
-          <Tabs defaultValue="saved">
+          <Tabs value={activeTab}>
             <TabsList className="mb-2 h-12">
-              <TabsTrigger value="saved" className="text-lg">
+              <TabsTrigger
+                value="saved"
+                className="text-lg"
+                onClick={() => setActiveTab("saved")}
+              >
                 Saved {`(${numNotes})`}
               </TabsTrigger>
-              <TabsTrigger value="new" className="text-lg">
+              <TabsTrigger
+                value="new"
+                className="text-lg"
+                onClick={() => setActiveTab("new")}
+              >
                 New
               </TabsTrigger>
             </TabsList>
@@ -79,6 +88,19 @@ const EventNotes = ({ event }: Props) => {
                   handleEditNote={handleEditNote}
                 />
               ))}
+              {event.notes.length === 0 && (
+                <div className="bg-gray-200/40 text-gray-700 px-8 py-4 text-lg rounded">
+                  No notes yet.{" "}
+                  <Button
+                    variant="link"
+                    size="lg"
+                    className="px-0"
+                    onClick={() => setActiveTab("new")}
+                  >
+                    Create one?
+                  </Button>
+                </div>
+              )}
             </TabsContent>
             <TabsContent value="new">
               <NoteForm onSubmit={handleAddNote} />

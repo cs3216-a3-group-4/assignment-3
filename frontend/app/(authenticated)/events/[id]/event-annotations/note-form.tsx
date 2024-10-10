@@ -96,10 +96,12 @@ const NoteForm = ({
             <Box className="flex flex-col space-y-2.5">
               <FormField
                 control={form.control}
-                name={"category_id"}
+                name="category_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="!text-current">Category</FormLabel>
+                    <FormLabel className="!text-current text-base">
+                      Category
+                    </FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}

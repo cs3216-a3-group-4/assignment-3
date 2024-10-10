@@ -49,6 +49,11 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
                   eventId={event.id}
                 />
               ))}
+              {allNotes.length === 0 && (
+                <div className="bg-gray-200/40 text-gray-700 px-8 py-4 text-lg rounded">
+                  No notes or highlights yet.
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="highlights">
@@ -60,6 +65,11 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
                   eventId={event.id}
                 />
               ))}
+              {analysisAnnotations.length === 0 && (
+                <div className="bg-gray-200/40 text-gray-700 px-8 py-4 text-lg rounded">
+                  No highlights yet.
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="notes">
@@ -71,6 +81,11 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
                   eventId={event.id}
                 />
               ))}
+              {eventNotes.length === 0 && (
+                <div className="bg-gray-200/40 text-gray-700 px-8 py-4 text-lg rounded">
+                  No notes yet.
+                </div>
+              )}
             </TabsContent>
           </div>
         </Tabs>
