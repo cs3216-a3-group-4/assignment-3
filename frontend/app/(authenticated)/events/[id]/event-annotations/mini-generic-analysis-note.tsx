@@ -30,14 +30,29 @@ const MiniGenericAnalysisNote = ({
 
   const onClick = () => {
     if (analysis) {
-      document.getElementById("analysis-" + analysis.id)?.scrollIntoView();
+      document
+        .getElementById("analysis-" + analysis.id)
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
+        });
     } else if (note.parent_type === "event") {
-      document.getElementById(`event-note-${note.id}`)?.scrollIntoView();
+      document
+        .getElementById(`event-note-${note.id}`)
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
+        });
     }
   };
 
   return (
-    <div className="flex flex-col border-y py-6 first:pt-2 first:border-t-transparent last:border-b-transparent">
+    <div
+      className="flex flex-col border-y py-6 first:pt-2 first:border-t-transparent last:border-b-transparent"
+      id={`annotation-${note.id}`}
+    >
       <div onClick={onClick} className="flex flex-col cursor-pointer">
         {quote && (
           <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700 italic text-base mb-4">

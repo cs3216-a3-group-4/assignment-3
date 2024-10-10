@@ -219,6 +219,7 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
               startIndex: notes.start_index!,
               endIndex: notes.end_index!,
               highlighted: HighlightType.Annotation,
+              highlightedNoteId: notes.id,
             }))
             .sort((a, b) => a.startIndex - b.startIndex);
 
@@ -259,7 +260,12 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                   <div>
                     <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
                       {highlightStartEndNormalised.map(
-                        ({ startIndex, endIndex, highlighted }) => (
+                        ({
+                          startIndex,
+                          endIndex,
+                          highlighted,
+                          highlightedNoteId,
+                        }) => (
                           <AnalysisFragment
                             content={content.slice(startIndex, endIndex + 1)}
                             highlighted={highlighted}
@@ -267,6 +273,7 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                             key={`analysis${eventAnalysis.id}-${startIndex}`}
                             setShowAnnotationForm={setShowAnnotationForm}
                             clearHighlight={clearHighlight}
+                            highlightedNoteId={highlightedNoteId}
                           />
                         ),
                       )}

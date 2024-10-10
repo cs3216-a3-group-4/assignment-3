@@ -10,6 +10,7 @@ interface AnalysisFragmentProps {
   highlighted: HighlightType;
   setShowAnnotationForm: (showAnnotationForm: boolean) => void;
   clearHighlight: () => void;
+  highlightedNoteId?: number;
 }
 
 const AnalysisFragment = ({
@@ -18,11 +19,26 @@ const AnalysisFragment = ({
   highlighted,
   setShowAnnotationForm,
   clearHighlight,
+  highlightedNoteId,
 }: AnalysisFragmentProps) => {
   const onHighlight = () => setShowAnnotationForm(true);
   const onCopy = () => {
     navigator.clipboard.writeText(content);
     clearHighlight();
+  };
+
+  const onClick = () => {
+    if (
+      highlighted === HighlightType.Annotation &&
+      highlightedNoteId !== undefined
+    )
+      document
+        .getElementById("annotation-" + highlightedNoteId)
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
+        });
   };
 
   return (
@@ -33,6 +49,7 @@ const AnalysisFragment = ({
       })}
       id={id}
       key={id}
+      onClick={onClick}
     >
       {highlighted === HighlightType.Selected && (
         <div

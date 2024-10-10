@@ -8,4 +8,5 @@ export interface Region {
   startIndex: number;
   endIndex: number;
   highlighted: HighlightType;
+  highlightedNoteId?: number;
 }
