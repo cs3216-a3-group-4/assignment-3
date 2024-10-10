@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { formatDate } from "date-fns";
 
-import { NoteDTO } from "@/client";
+import { AnalysisNoteDTO, EventNoteDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Category, getIconFor } from "@/types/categories";
@@ -11,8 +13,21 @@ import { parseDate } from "@/utils/date";
 import NoteDialogContent from "./note-dialog-content";
 
 type Props = {
-  data: NoteDTO;
+  data: EventNoteDTO | AnalysisNoteDTO;
   handleDelete: () => void;
+};
+
+const extractUrl = (note: EventNoteDTO | AnalysisNoteDTO) => {
+  if (note.parent_type === "event") {
+    const eventNote = note as EventNoteDTO;
+    return { event: eventNote.event, url: `/events/${eventNote.event.id}` };
+  } else {
+    const analysisNote = note as AnalysisNoteDTO;
+    return {
+      event: analysisNote.analysis.event,
+      url: `/events/${analysisNote.analysis.event.id}#analysis-${analysisNote.analysis.id}`,
+    };
+  }
 };
 
 const Note = ({ data, handleDelete }: Props) => {
@@ -22,6 +37,9 @@ const Note = ({ data, handleDelete }: Props) => {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
   const [noteContent, setNoteContent] = useState(data.content);
   const invalidCategory = { id: -1, name: Category.Others };
+
+  const { event, url: source } = extractUrl(data);
+  const router = useRouter();
 
   return (
     <Dialog onOpenChange={setNoteOpen} open={noteOpen}>
@@ -34,13 +52,28 @@ const Note = ({ data, handleDelete }: Props) => {
                 {parseDate(dateCreated)}
               </span>
             </div>
-            <p>{noteContent}</p>
             <Chip
               className="w-fit"
               label={categoryName}
-              size="lg"
+              size="sm"
               variant="primary"
             />
+            {data.parent_type === "analysis" && (
+              <div className="border-l-primary-500/50 border-l-4 pl-4">
+                {(data as AnalysisNoteDTO).analysis.content.slice(
+                  data.start_index!,
+                  data.end_index! + 1,
+                )}
+              </div>
+            )}
+            <p>{noteContent}</p>
+            <p>
+              From{" "}
+              <span className="underline" onClick={() => router.push(source)}>
+                {event.title}{" "}
+                {formatDate(event.original_article.date, "(dd MMM yyyy)")}
+              </span>
+            </p>
           </div>
         </div>
       </DialogTrigger>

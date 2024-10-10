@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Trash2Icon } from "lucide-react";
 import { z } from "zod";
 
-import { CategoryDTO, NoteDTO } from "@/client";
+import { AnalysisNoteDTO, CategoryDTO, EventNoteDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +23,7 @@ import { parseDate } from "@/utils/date";
 interface Props {
   noteContent: string;
   setNoteContent: Dispatch<SetStateAction<string>>;
-  noteData: NoteDTO;
+  noteData: EventNoteDTO | AnalysisNoteDTO;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   handleDelete: () => void;

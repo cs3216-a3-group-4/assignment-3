@@ -1,4 +1,8 @@
-import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   createNoteNotesPost,
@@ -109,16 +113,13 @@ export const useDeleteNote = (event_id: number) => {
   });
 };
 
-export const getAllNotes = (
-    categoryId?: number,
-  ) =>
+export const getAllNotes = (categoryId?: number) =>
   queryOptions({
-    queryKey: [QueryKeys.Categories, categoryId],
+    queryKey: [QueryKeys.Notes, { categoryId }],
     queryFn: () =>
       getAllNotesNotesGet({
         query: {
           category_id: categoryId,
         },
       }).then((response) => response.data),
-    staleTime: Infinity,
   });
