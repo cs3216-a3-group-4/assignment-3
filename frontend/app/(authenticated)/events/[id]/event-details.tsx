@@ -32,7 +32,7 @@ const EventDetails = ({ event }: Props) => {
         </span>
         <div className="flex flex-wrap gap-x-3 gap-y-2 col-span-12 md:col-span-8 xl:col-span-9">
           {eventCategories.map((category) => (
-            <CategoryChip category={category} />
+            <CategoryChip category={category} key={category} />
           ))}
         </div>
       </div>

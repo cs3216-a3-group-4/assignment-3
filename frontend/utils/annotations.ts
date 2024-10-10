@@ -53,7 +53,7 @@ export const addNotHighlightedRegion = (regions: Region[], length: number) => {
       highlighted: HighlightType.None,
     });
   }
-  return result;
+  return result.filter((region) => region.startIndex <= region.endIndex);
 };
 
 export const addSelectedRegion = (

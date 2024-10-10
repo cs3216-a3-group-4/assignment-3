@@ -264,6 +264,7 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                             content={content.slice(startIndex, endIndex + 1)}
                             highlighted={highlighted}
                             id={`analysis${eventAnalysis.id}-${startIndex}`}
+                            key={`analysis${eventAnalysis.id}-${startIndex}`}
                             setShowAnnotationForm={setShowAnnotationForm}
                             clearHighlight={clearHighlight}
                           />
