@@ -1,6 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 from src.categories.schemas import CategoryDTO
+
 from src.notes.models import NoteType
 
 
