@@ -17,7 +17,7 @@ import {
   useEditEventNote,
 } from "@/queries/note";
 
-import NoteForm, { NoteFormType } from "./event-analysis/note-form";
+import NoteForm, { NoteFormType } from "./note-form";
 
 interface Props {
   event: EventDTO;

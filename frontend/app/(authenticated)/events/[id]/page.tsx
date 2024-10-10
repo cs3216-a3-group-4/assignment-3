@@ -11,10 +11,10 @@ import { Separator } from "@/components/ui/separator";
 import { getEvent, useReadEvent } from "@/queries/event";
 
 import EventAnalysis from "./event-analysis";
-import EventAnnotations from "./event-annotations";
+import EventAnnotations from "./event-annotations/event-annotations";
 import EventBookmarkButton from "./event-bookmark-button";
 import EventDetails from "./event-details";
-import EventNotes from "./event-notes";
+import EventNotes from "./event-annotations/event-notes";
 import EventSource from "./event-source";
 import EventSummary from "./event-summary";
 
@@ -112,8 +112,9 @@ const Page = ({ params }: { params: { id: string } }) => {
           <Separator className="my-10" />
           <EventAnalysis event={data} />
           <Separator className="my-10" />
-          <EventSource originalSource={data.original_article} />
           <EventNotes event={data} />
+          <Separator className="my-10" />
+          <EventSource originalSource={data.original_article} />
         </div>
       </div>
       {isViewAnnotation && (

@@ -23,10 +23,10 @@ import { useAddAnalysisNote, useDeleteNote } from "@/queries/note";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { Category, getCategoryFor, getIconFor } from "@/types/categories";
 
-import NoteForm, { NoteFormType } from "./event-analysis/note-form";
+import NoteForm, { NoteFormType } from "./event-annotations/note-form";
 import AnalysisFragment, {
   ANNOTATION_ACTIONS_BUTTON_ID,
-} from "./event-analysis/analysis-fragment";
+} from "./event-annotations/analysis-fragment";
 import { HighlightType, Region } from "@/types/annotations";
 import {
   addNotHighlightedRegion,
