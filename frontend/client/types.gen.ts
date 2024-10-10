@@ -219,7 +219,7 @@ export type NoteUpdate = {
     content: string;
     start_index?: (number | null);
     end_index?: (number | null);
-    category_id: number;
+    category_id?: (number | null);
 };
 
 export type ParagraphDTO = {

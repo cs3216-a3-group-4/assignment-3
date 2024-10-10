@@ -958,12 +958,19 @@ export const NoteUpdateSchema = {
             title: 'End Index'
         },
         category_id: {
-            type: 'integer',
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
             title: 'Category Id'
         }
     },
     type: 'object',
-    required: ['content', 'category_id'],
+    required: ['content'],
     title: 'NoteUpdate'
 } as const;
 

@@ -87,14 +87,16 @@ def update_note(
     note: Note = Depends(retrieve_note),
     session=Depends(get_session),
 ) -> NoteDTO:
-    category = session.get(Category, data.category_id)
-    if not category:
-        raise HTTPException(HTTPStatus.NOT_FOUND)
-
     note.content = data.content
     note.start_index = data.start_index
     note.end_index = data.end_index
-    note.category_id = data.category_id
+
+    if note.category_id:
+        category = session.get(Category, data.category_id)
+        if not category:
+            raise HTTPException(HTTPStatus.NOT_FOUND)
+        note.category_id = data.category_id
+
     session.add(note)
     session.commit()
     session.refresh(note)

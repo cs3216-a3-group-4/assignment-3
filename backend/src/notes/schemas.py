@@ -37,4 +37,4 @@ class NoteUpdate(BaseModel):
     content: str
     start_index: int | None = None
     end_index: int | None = None
-    category_id: int
+    category_id: int | None = None
