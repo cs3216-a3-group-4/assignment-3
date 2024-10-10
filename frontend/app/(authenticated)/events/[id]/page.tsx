@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { RotateCwIcon } from "lucide-react";
+import {
+  PanelRightClose,
+  PanelRightOpenIcon,
+  RotateCwIcon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -101,8 +105,14 @@ const Page = ({ params }: { params: { id: string } }) => {
               <Button
                 onClick={() => setIsViewAnnotation((prev) => !prev)}
                 variant={isViewAnnotation ? "outline" : "default"}
+                size="lg"
+                className="px-4 flex gap-x-2"
               >
-                {isViewAnnotation ? "Hide" : "Show"} annotations
+                {isViewAnnotation && <PanelRightClose />}
+                {!isViewAnnotation && <PanelRightOpenIcon />}
+                {isViewAnnotation
+                  ? "View annotations on page"
+                  : "View annotations on side"}
               </Button>
             </div>
           </div>
@@ -118,7 +128,10 @@ const Page = ({ params }: { params: { id: string } }) => {
       </div>
       {isViewAnnotation && (
         <div className="sticky top-0 flex w-4/12 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)] bg-red-200">
-          <EventAnnotations event={data} />
+          <EventAnnotations
+            event={data}
+            hideAnnotationsPanel={() => setIsViewAnnotation(false)}
+          />
         </div>
       )}
     </div>

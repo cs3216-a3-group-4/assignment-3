@@ -27,7 +27,7 @@ const EventNotes = ({ event }: Props) => {
   const addNoteMutation = useAddEventNote(event.id);
   const deleteNoteMutation = useDeleteNote(event.id);
   const editNoteMutation = useEditEventNote(event.id);
-  const [showNotes, setShowNotes] = useState<boolean>(false);
+  const [showNotes, setShowNotes] = useState<boolean>(true);
   const numNotes = event?.notes ? event.notes.length : 0;
 
   const handleAddNote: SubmitHandler<NoteFormType> = ({
@@ -55,11 +55,6 @@ const EventNotes = ({ event }: Props) => {
           <h1 className="flex items-center font-medium text-3xl px-2">
             My Notes
           </h1>
-          {createElement(showNotes ? ChevronsUpDownIcon : ChevronsDownUpIcon, {
-            onClick: () => setShowNotes((prevState) => !prevState),
-            size: 20,
-            strokeWidth: 2.4,
-          })}
         </span>
         <div className={`flex flex-col gap-y-4 ${showNotes ? "" : "hidden"}`}>
           <Tabs defaultValue="saved">
@@ -70,7 +65,7 @@ const EventNotes = ({ event }: Props) => {
             <TabsContent value="saved">
               {event.notes.map((note) => (
                 <div key={note.id} id={`event-note-${note.id}`}>
-                  {note.content}, {note.category!.name}
+                  {note.content}, {note.category?.name}
                   <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
                     delete
                   </Button>

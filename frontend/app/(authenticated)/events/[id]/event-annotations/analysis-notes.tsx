@@ -40,7 +40,7 @@ const AnalysisNotes = ({
   onCancel,
 }: AnalysisNoteProps) => {
   const numNotes = notes.length;
-  const [showHighlights, setShowHighlights] = useState<boolean>(true);
+  const [showHighlights, setShowHighlights] = useState<boolean>(false);
 
   useEffect(() => {
     if (showNoteForm) setShowHighlights(true);

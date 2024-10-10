@@ -37,7 +37,7 @@ const MiniGenericAnalysisNote = ({
   };
 
   return (
-    <div className="flex flex-col border-y py-6 first:border-t-transparent last:border-b-transparent">
+    <div className="flex flex-col border-y py-6 first:pt-2 first:border-t-transparent last:border-b-transparent">
       <div onClick={onClick} className="flex flex-col cursor-pointer">
         {quote && (
           <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700 italic text-base mb-4">

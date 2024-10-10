@@ -2,12 +2,15 @@ import { EventDTO } from "@/client";
 import Note from "@/components/notes/note";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MiniGenericAnalysisNote from "./mini-generic-analysis-note";
+import { Button } from "@/components/ui/button";
+import { PanelRightClose, PanelRightCloseIcon } from "lucide-react";
 
 interface Props {
   event: EventDTO;
+  hideAnnotationsPanel: () => void;
 }
 
-const EventAnnotations = ({ event }: Props) => {
+const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
   const analysisAnnotations = event.analysises
     .map((analysis) => analysis.notes)
     .flat();
@@ -18,6 +21,13 @@ const EventAnnotations = ({ event }: Props) => {
 
   return (
     <div className="flex flex-col w-full h-full min-h-full max-h-full p-8 bg-background border-l border-l-border">
+      <span
+        className="flex items-center mb-2 cursor-pointer text-muted-foreground/80 hover:text-muted-foreground"
+        onClick={hideAnnotationsPanel}
+      >
+        <PanelRightCloseIcon className="h-4 w-4 mr-2" />
+        View annotations on page
+      </span>
       <h1 className="text-xl font-semibold">Your highlights and notes</h1>
       <div className="flex flex-col flex-1 max-h-[calc(100%_-_28px)]">
         <Tabs defaultValue="all" className="mt-2 h-full max-h-full">
