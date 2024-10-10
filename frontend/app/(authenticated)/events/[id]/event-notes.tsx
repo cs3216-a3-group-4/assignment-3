@@ -11,7 +11,7 @@ import {
   useEditEventNote,
 } from "@/queries/note";
 
-import NoteForm, { NoteFormType } from "./note-form";
+import NoteForm, { NoteFormType } from "./event-analysis/note-form";
 
 interface Props {
   event: EventDTO;
@@ -46,15 +46,15 @@ const EventNotes = ({ event }: Props) => {
           <NotebookIcon className="inline-flex mr-3 stroke-offblack fill-muted" />
           Notes
         </span>
-        <NoteForm onSubmit={handleAddNote} />
+        <NoteForm onSubmit={handleAddNote} onCancel={() => {}} />
         <hr />
         {event.notes.map((note) => (
           <div key={note.id}>
-            {note.content}, {note.category!.name}
+            {note.content}, {note.category?.name}
             <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
               delete
             </Button>
-            <NoteForm onSubmit={handleEditNote(note.id)} />
+            <NoteForm onSubmit={handleEditNote(note.id)} onCancel={() => {}} />
           </div>
         ))}
       </div>

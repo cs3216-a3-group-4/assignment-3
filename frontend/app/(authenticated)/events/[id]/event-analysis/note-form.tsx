@@ -44,10 +44,11 @@ const noteFormDefault = {
 
 type Props = {
   onSubmit: SubmitHandler<NoteFormType>;
+  onCancel: () => void;
   hideCategory?: boolean;
 };
 
-const NoteForm = ({ onSubmit, hideCategory }: Props) => {
+const NoteForm = ({ onSubmit, onCancel, hideCategory }: Props) => {
   const form = useForm<NoteFormType>({
     resolver: zodResolver(noteFormSchema),
     defaultValues: noteFormDefault,
@@ -113,6 +114,7 @@ const NoteForm = ({ onSubmit, hideCategory }: Props) => {
             </Box>
           )}
           <Button type="submit">Submit</Button>
+          <Button onClick={onCancel}>Cancel</Button>
         </form>
       </Form>
     </div>

@@ -28,7 +28,7 @@ import {
   getCategoryFor,
 } from "@/types/categories";
 
-import NoteForm, { NoteFormType } from "./note-form";
+import NoteForm, { NoteFormType } from "./event-analysis/note-form";
 import AnalysisFragment, {
   ANNOTATION_ACTIONS_BUTTON_ID,
 } from "./event-analysis/analysis-fragment";
@@ -277,6 +277,7 @@ const EventAnalysis = ({ event }: Props) => {
                         <NoteForm
                           hideCategory
                           onSubmit={handleAddNote(eventAnalysis.id)}
+                          onCancel={clearHighlight}
                         />
                       )}
                     {eventAnalysis.notes.map((note) => (
