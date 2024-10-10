@@ -110,7 +110,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         </div>
         <div className="md:px-8 flex flex-col gap-y-10 pb-8">
           <Separator className="my-10" />
-          <EventAnalysis event={data} />
+          <EventAnalysis event={data} showAnnotations={!isViewAnnotation} />
           <Separator className="my-10" />
           <EventNotes event={data} />
           <Separator className="my-10" />

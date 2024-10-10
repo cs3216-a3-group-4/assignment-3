@@ -57,15 +57,17 @@ const AnalysisNotes = ({
           <HighlighterIcon />
           <h2 className="font-medium">Your highlights ({numNotes})</h2>
         </span>
-        <span>
-          {createElement(
-            showHighlights ? ChevronsUpDownIcon : ChevronsDownUpIcon,
-            {
-              size: 20,
-              strokeWidth: 2.4,
-            },
-          )}
-        </span>
+        {numNotes > 0 && (
+          <span>
+            {createElement(
+              showHighlights ? ChevronsUpDownIcon : ChevronsDownUpIcon,
+              {
+                size: 20,
+                strokeWidth: 2.4,
+              },
+            )}
+          </span>
+        )}
       </div>
       {showNoteForm && (
         <div className="p-6 mt-4 border border-primary-500/30 rounded-md">
@@ -81,7 +83,7 @@ const AnalysisNotes = ({
           />
         </div>
       )}
-      {showHighlights && (
+      {showHighlights && numNotes > 0 && (
         <div className="flex flex-col gap-y-2 mt-4 px-4">
           {notes.map((note) => (
             <div

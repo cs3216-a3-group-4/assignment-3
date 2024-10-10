@@ -42,11 +42,12 @@ interface HighlightSelection {
 
 interface Props {
   event: EventDTO;
+  showAnnotations: boolean;
 }
 
 const EVENT_ANALYSIS_ID_PREFIX = "event-analysis-";
 
-const EventAnalysis = ({ event }: Props) => {
+const EventAnalysis = ({ event, showAnnotations }: Props) => {
   const user = useUserStore((state) => state.user);
 
   const eventCategories = event.categories;
@@ -285,30 +286,35 @@ const EventAnalysis = ({ event }: Props) => {
                     }
                     userLikeValue={userLikeValue}
                   />
-                  <AnalysisNotes
-                    highlightSelection={
-                      (highlightSelection &&
-                        highlightSelection.analysisId === eventAnalysis.id &&
-                        eventAnalysis.content.slice(
-                          highlightSelection.startIndex,
-                          highlightSelection.endIndex + 1,
-                        )) ||
-                      undefined
-                    }
-                    notes={eventAnalysis.notes}
-                    eventAnalysisContent={eventAnalysis.content}
-                    showNoteForm={
-                      (highlightSelection &&
-                        showAnnotationForm &&
-                        highlightSelection.analysisId === eventAnalysis.id) ??
-                      false
-                    }
-                    onDelete={(noteId: number) =>
-                      deleteNoteMutation.mutate(noteId)
-                    }
-                    onCancel={clearHighlight}
-                    onSubmitNote={handleAddNote(eventAnalysis.id, category.id)}
-                  />
+                  {showAnnotations && (
+                    <AnalysisNotes
+                      highlightSelection={
+                        (highlightSelection &&
+                          highlightSelection.analysisId === eventAnalysis.id &&
+                          eventAnalysis.content.slice(
+                            highlightSelection.startIndex,
+                            highlightSelection.endIndex + 1,
+                          )) ||
+                        undefined
+                      }
+                      notes={eventAnalysis.notes}
+                      eventAnalysisContent={eventAnalysis.content}
+                      showNoteForm={
+                        (highlightSelection &&
+                          showAnnotationForm &&
+                          highlightSelection.analysisId === eventAnalysis.id) ??
+                        false
+                      }
+                      onDelete={(noteId: number) =>
+                        deleteNoteMutation.mutate(noteId)
+                      }
+                      onCancel={clearHighlight}
+                      onSubmitNote={handleAddNote(
+                        eventAnalysis.id,
+                        category.id,
+                      )}
+                    />
+                  )}
                 </ScrewedUpAccordionContent>
               </div>
             </AccordionItem>
