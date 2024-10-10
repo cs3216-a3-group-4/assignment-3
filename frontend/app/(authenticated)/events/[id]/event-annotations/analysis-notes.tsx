@@ -24,20 +24,14 @@ interface AnalysisNoteProps {
   notes: NoteDTO[];
   eventAnalysisContent: string;
   showNoteForm: boolean;
-  onSubmitNote: SubmitHandler<NoteFormType>;
   onDelete: (noteId: number) => void;
-  onCancel: () => void;
-  highlightSelection?: string;
 }
 
 const AnalysisNotes = ({
   notes,
   eventAnalysisContent,
   showNoteForm,
-  highlightSelection,
-  onSubmitNote,
   onDelete,
-  onCancel,
 }: AnalysisNoteProps) => {
   const numNotes = notes.length;
   const [showHighlights, setShowHighlights] = useState<boolean>(false);
@@ -69,20 +63,7 @@ const AnalysisNotes = ({
           </span>
         )}
       </div>
-      {showNoteForm && (
-        <div className="p-6 mt-4 border border-primary-500/30 rounded-md">
-          <div className="flex items-center mb-3 text-primary-800">
-            <h1 className="font-medium">Add new highlight</h1>
-          </div>
-          <NoteForm
-            hideCategory
-            isHighlight
-            onSubmit={onSubmitNote}
-            onCancel={onCancel}
-            highlightSelection={highlightSelection}
-          />
-        </div>
-      )}
+
       {showHighlights && numNotes > 0 && (
         <div className="flex flex-col gap-y-2 mt-4 px-4">
           {notes.map((note) => (

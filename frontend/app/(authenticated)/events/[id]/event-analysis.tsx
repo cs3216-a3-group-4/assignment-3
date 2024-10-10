@@ -287,17 +287,36 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                     }
                     userLikeValue={userLikeValue}
                   />
+                  {highlightSelection &&
+                    showAnnotationForm &&
+                    highlightSelection.analysisId === eventAnalysis.id && (
+                      <div className="p-6 mt-4 border border-primary-500/30 rounded-md">
+                        <div className="flex items-center mb-3 text-primary-800">
+                          <h1 className="font-medium">Add new highlight</h1>
+                        </div>
+                        <NoteForm
+                          hideCategory
+                          isHighlight
+                          onSubmit={handleAddNote(
+                            eventAnalysis.id,
+                            category.id,
+                          )}
+                          onCancel={clearHighlight}
+                          highlightSelection={
+                            (highlightSelection &&
+                              highlightSelection.analysisId ===
+                                eventAnalysis.id &&
+                              eventAnalysis.content.slice(
+                                highlightSelection.startIndex,
+                                highlightSelection.endIndex + 1,
+                              )) ||
+                            undefined
+                          }
+                        />
+                      </div>
+                    )}
                   {showAnnotations && (
                     <AnalysisNotes
-                      highlightSelection={
-                        (highlightSelection &&
-                          highlightSelection.analysisId === eventAnalysis.id &&
-                          eventAnalysis.content.slice(
-                            highlightSelection.startIndex,
-                            highlightSelection.endIndex + 1,
-                          )) ||
-                        undefined
-                      }
                       notes={eventAnalysis.notes}
                       eventAnalysisContent={eventAnalysis.content}
                       showNoteForm={
@@ -309,11 +328,6 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                       onDelete={(noteId: number) =>
                         deleteNoteMutation.mutate(noteId)
                       }
-                      onCancel={clearHighlight}
-                      onSubmitNote={handleAddNote(
-                        eventAnalysis.id,
-                        category.id,
-                      )}
                     />
                   )}
                 </ScrewedUpAccordionContent>
