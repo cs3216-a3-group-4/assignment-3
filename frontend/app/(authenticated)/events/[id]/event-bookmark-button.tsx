@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAddBookmark, useRemoveBookmark } from "@/queries/bookmark";
 
 interface EventBookmarkButtonProps {
-  isBookmarked: boolean;
+  isBookmarked: number;
   eventId: number;
   eventTitle: string;
 }
@@ -27,7 +27,7 @@ const EventBookmarkButton = ({
   if (isBookmarked) {
     return (
       <Button
-        className="flex gap-2"
+        className="flex gap-2 px-4"
         onClick={() => {
           removeBookmarkMutation.mutate();
           toast.toast({
@@ -36,7 +36,8 @@ const EventBookmarkButton = ({
             description: `Bookmark removed for ${eventTitle}`,
           });
         }}
-        variant={"default"}
+        variant="default"
+        size="lg"
       >
         <BookmarkCheck className="w-5 h-5" /> Bookmarked
       </Button>
@@ -45,16 +46,17 @@ const EventBookmarkButton = ({
 
   return (
     <Button
-      className="flex gap-2"
+      className="flex gap-2 px-4"
       onClick={() => {
         addBookmarkMutation.mutate();
         toast.toast({
           title: "Added bookmark",
           icon: <BookmarkCheckIcon />,
-          description: `Bookmark added for ${eventTitle}`,
+          description: `Bookmark added for ${eventTitle} ${isBookmarked}`,
         });
       }}
-      variant={"outline"}
+      variant="outline"
+      size="lg"
     >
       <Bookmark className="w-5 h-5" /> Bookmark
     </Button>

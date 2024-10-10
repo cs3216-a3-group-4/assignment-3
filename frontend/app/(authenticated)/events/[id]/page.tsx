@@ -22,7 +22,6 @@ const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
   const [isViewAnnotation, setIsViewAnnotation] = useState<boolean>(true);
   const { data, isLoading } = useQuery(getEvent(id));
-  const bookmarked = data?.bookmarks.length === 1;
 
   const readEventMutation = useReadEvent(id);
   const [sentRead, setSentRead] = useState(false);
@@ -97,7 +96,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               <EventBookmarkButton
                 eventId={id}
                 eventTitle={data.title}
-                isBookmarked={bookmarked}
+                isBookmarked={data?.bookmarks.length}
               />
               <Button
                 onClick={() => setIsViewAnnotation((prev) => !prev)}

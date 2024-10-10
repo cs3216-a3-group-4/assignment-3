@@ -21,7 +21,7 @@ const EventAnnotations = ({ event }: Props) => {
       <h1 className="text-xl font-semibold">Your highlights and notes</h1>
       <div className="flex flex-col flex-1 max-h-[calc(100%_-_28px)]">
         <Tabs defaultValue="all" className="mt-2 h-full max-h-full">
-          <TabsList>
+          <TabsList className="mb-1">
             <TabsTrigger value="all">All ({allNotes.length})</TabsTrigger>
             <TabsTrigger value="highlights">
               Highlights ({analysisAnnotations.length})
@@ -29,7 +29,7 @@ const EventAnnotations = ({ event }: Props) => {
             <TabsTrigger value="notes">Notes ({eventNotes.length})</TabsTrigger>
           </TabsList>
 
-          <div className="flex flex-col max-h-[calc(100%_-_40px)] overflow-y-auto">
+          <div className="flex flex-col max-h-[calc(100%_-_44px)] overflow-y-auto">
             <TabsContent value="all">
               {allNotes.map((note) => (
                 <MiniGenericAnalysisNote
