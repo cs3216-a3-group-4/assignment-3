@@ -24,11 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getCategories } from "@/queries/category";
-import {
-  categoriesToDisplayName,
-  Category,
-  getCategoryFor,
-} from "@/types/categories";
 
 const noteFormSchema = z.object({
   content: z.string(),
@@ -44,11 +39,11 @@ const noteFormDefault = {
 
 type Props = {
   onSubmit: SubmitHandler<NoteFormType>;
-  onCancel: () => void;
   hideCategory?: boolean;
+  onCancel?: () => void;
 };
 
-const NoteForm = ({ onSubmit, onCancel, hideCategory }: Props) => {
+const NoteForm = ({ onSubmit, hideCategory, onCancel }: Props) => {
   const form = useForm<NoteFormType>({
     resolver: zodResolver(noteFormSchema),
     defaultValues: noteFormDefault,
@@ -59,7 +54,10 @@ const NoteForm = ({ onSubmit, onCancel, hideCategory }: Props) => {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="flex flex-col space-y-4"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <Box className="flex flex-col space-y-2.5">
             <FormField
               control={form.control}
@@ -98,11 +96,7 @@ const NoteForm = ({ onSubmit, onCancel, hideCategory }: Props) => {
                             key={category.id}
                             value={category.id.toString()}
                           >
-                            {
-                              categoriesToDisplayName[
-                                getCategoryFor(category.name) as Category
-                              ]
-                            }
+                            {category.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -114,7 +108,7 @@ const NoteForm = ({ onSubmit, onCancel, hideCategory }: Props) => {
             </Box>
           )}
           <Button type="submit">Submit</Button>
-          <Button onClick={onCancel}>Cancel</Button>
+          {onCancel && <Button onClick={onCancel}>Cancel</Button>}
         </form>
       </Form>
     </div>

@@ -1,15 +1,20 @@
 from http import HTTPStatus
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.events.models import Analysis, Article, Category, Event
+from src.events.schemas import AnalysisNoteDTO, EventNoteDTO
 from src.notes.dependencies import retrieve_note
 from src.notes.models import Note, NoteType
-from src.notes.schemas import NoteCreate, NoteDTO, NoteUpdate
+from src.notes.schemas import (
+    NoteCreate,
+    NoteDTO,
+    NoteUpdate,
+)
 from src.user_questions.models import Point
 
 
@@ -25,11 +30,23 @@ NOTE_PARENT_CLASSES = {
 
 @router.get("/")
 def get_all_notes(
-    user: Annotated[User, Depends(get_current_user)], session=Depends(get_session)
-) -> list[NoteDTO]:
-    notes = session.scalars(
-        select(Note).where(Note.user_id == user.id).options(selectinload(Note.category))
+    user: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
+    category_id: Annotated[int | None, Query()] = None,
+) -> list[EventNoteDTO | AnalysisNoteDTO]:
+    notes_query = (
+        select(Note)
+        .where(Note.user_id == user.id)
+        .options(
+            selectinload(Note.category),
+            selectinload(Note.analysis, Analysis.event, Event.original_article),
+            selectinload(Note.event, Event.original_article),
+        )
     )
+    if category_id:
+        notes_query = notes_query.where(Note.category_id == category_id)
+    notes_query = notes_query.order_by(Note.created_at.desc())
+    notes = session.scalars(notes_query).all()
     return notes
 
 
@@ -70,14 +87,16 @@ def update_note(
     note: Note = Depends(retrieve_note),
     session=Depends(get_session),
 ) -> NoteDTO:
-    category = session.get(Category, data.category_id)
-    if not category:
-        raise HTTPException(HTTPStatus.NOT_FOUND)
-
     note.content = data.content
     note.start_index = data.start_index
     note.end_index = data.end_index
-    note.category_id = data.category_id
+
+    if note.category_id:
+        category = session.get(Category, data.category_id)
+        if not category:
+            raise HTTPException(HTTPStatus.NOT_FOUND)
+        note.category_id = data.category_id
+
     session.add(note)
     session.commit()
     session.refresh(note)

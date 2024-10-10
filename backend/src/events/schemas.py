@@ -23,7 +23,7 @@ class ReadDTO(BaseModel):
     last_read: datetime
 
 
-class MiniEventDTO(BaseModel):
+class BaseEventDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
@@ -33,6 +33,9 @@ class MiniEventDTO(BaseModel):
 
     categories: list[CategoryDTO]
     original_article: ArticleDTO
+
+
+class MiniEventDTO(BaseEventDTO):
     reads: list[ReadDTO]
 
 
@@ -42,6 +45,11 @@ class AnalysisMiniDTO(BaseModel):
     category: CategoryDTO
     content: str
     likes: list[LikeDTO]
+    event_id: int
+
+
+class AnalysisToEventDTO(AnalysisMiniDTO):
+    event: BaseEventDTO
 
 
 class AnalysisDTO(AnalysisMiniDTO):
@@ -73,3 +81,11 @@ class EventIndexResponse(BaseModel):
     total_count: int
     count: int
     data: list[MiniEventDTO]
+
+
+class EventNoteDTO(NoteDTO):
+    event: "BaseEventDTO"
+
+
+class AnalysisNoteDTO(NoteDTO):
+    analysis: "AnalysisToEventDTO"
