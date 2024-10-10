@@ -1,4 +1,7 @@
 import { NoteDTO, src__events__schemas__AnalysisDTO } from "@/client";
+import CategoryChip from "@/components/display/category-chip";
+import NotesCategoryItem from "@/components/notes/notes-category-item";
+import { Category } from "@/types/categories";
 
 interface MiniGenericAnalysisNoteProps {
   note: NoteDTO;
@@ -27,6 +30,16 @@ const MiniGenericAnalysisNote = ({
         </span>
       )}
       <p>{note.content}</p>
+      {note.category && (
+        <div className="mt-4">
+          <CategoryChip
+            category={note.category.name as Category}
+            size="default"
+            iconSize={12}
+            showIcon={false}
+          />
+        </div>
+      )}
     </div>
   );
 };
