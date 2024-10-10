@@ -143,7 +143,7 @@ const EventAnalysis = ({ event }: Props) => {
   const eventCategories = event.categories;
 
   const [activeCategories, setActiveCategories] = useState<string[]>(
-    event.analysises.map((item) => getCategoryFor(item.category.name)),
+    event.analysises.map((item) => item.category.name),
   );
 
   // todo: this should be for each analysis but without knowing what the ui wants, i can't really refactor it
@@ -336,6 +336,7 @@ const EventAnalysis = ({ event }: Props) => {
           return (
             <AccordionItem
               className="border rounded-lg px-8 py-2 border-cyan-600/60 bg-cyan-50/30"
+              id={"analysis-" + eventAnalysis.id}
               key={category.id}
               ref={
                 eventAnalysis.id === highlightSelection?.analysisId
