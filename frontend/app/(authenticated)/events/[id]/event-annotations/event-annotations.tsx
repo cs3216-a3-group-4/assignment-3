@@ -36,6 +36,7 @@ const EventAnnotations = ({ event }: Props) => {
                   note={note}
                   key={note.id}
                   eventAnalysis={event.analysises}
+                  eventId={event.id}
                 />
               ))}
             </TabsContent>
@@ -46,6 +47,7 @@ const EventAnnotations = ({ event }: Props) => {
                   note={note}
                   key={note.id}
                   eventAnalysis={event.analysises}
+                  eventId={event.id}
                 />
               ))}
             </TabsContent>
@@ -56,6 +58,7 @@ const EventAnnotations = ({ event }: Props) => {
                   note={note}
                   key={note.id}
                   eventAnalysis={event.analysises}
+                  eventId={event.id}
                 />
               ))}
             </TabsContent>
