@@ -5,7 +5,9 @@ import { SubmitHandler } from "react-hook-form";
 import {
   ChevronsDownUpIcon,
   ChevronsUpDownIcon,
+  EditIcon,
   NotebookIcon,
+  TrashIcon,
 } from "lucide-react";
 
 import { EventDTO } from "@/client";
@@ -18,6 +20,9 @@ import {
 } from "@/queries/note";
 
 import NoteForm, { NoteFormType } from "./note-form";
+import CategoryChip from "@/components/display/category-chip";
+import { Category } from "@/types/categories";
+import NoteItem from "./note-item";
 
 interface Props {
   event: EventDTO;
@@ -58,19 +63,21 @@ const EventNotes = ({ event }: Props) => {
         </span>
         <div className={`flex flex-col gap-y-4 ${showNotes ? "" : "hidden"}`}>
           <Tabs defaultValue="saved">
-            <TabsList>
-              <TabsTrigger value="saved">Saved {`(${numNotes})`}</TabsTrigger>
-              <TabsTrigger value="new">New</TabsTrigger>
+            <TabsList className="mb-2 h-12">
+              <TabsTrigger value="saved" className="text-lg">
+                Saved {`(${numNotes})`}
+              </TabsTrigger>
+              <TabsTrigger value="new" className="text-lg">
+                New
+              </TabsTrigger>
             </TabsList>
-            <TabsContent value="saved">
+            <TabsContent value="saved" className="flex flex-col gap-y-8">
               {event.notes.map((note) => (
-                <div key={note.id} id={`event-note-${note.id}`}>
-                  {note.content}, {note.category?.name}
-                  <Button onClick={() => deleteNoteMutation.mutate(note.id)}>
-                    delete
-                  </Button>
-                  <NoteForm onSubmit={handleEditNote(note.id)} />
-                </div>
+                <NoteItem
+                  note={note}
+                  eventId={event.id}
+                  handleEditNote={handleEditNote}
+                />
               ))}
             </TabsContent>
             <TabsContent value="new">

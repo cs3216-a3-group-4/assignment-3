@@ -4,7 +4,7 @@ import NotesCategoryItem from "@/components/notes/notes-category-item";
 import { Button } from "@/components/ui/button";
 import { useDeleteNote } from "@/queries/note";
 import { Category } from "@/types/categories";
-import { TrashIcon } from "lucide-react";
+import { EditIcon, TrashIcon } from "lucide-react";
 
 interface MiniGenericAnalysisNoteProps {
   note: NoteDTO;
@@ -30,21 +30,17 @@ const MiniGenericAnalysisNote = ({
 
   const onClick = () => {
     if (analysis) {
-      document
-        .getElementById("analysis-" + analysis.id)
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "start",
-        });
+      document.getElementById("analysis-" + analysis.id)?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
     } else if (note.parent_type === "event") {
-      document
-        .getElementById(`event-note-${note.id}`)
-        ?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "start",
-        });
+      document.getElementById(`event-note-${note.id}`)?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
     }
   };
 
@@ -63,15 +59,17 @@ const MiniGenericAnalysisNote = ({
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        {note.category && (
-          <CategoryChip
-            category={note.category.name as Category}
-            size="default"
-            iconSize={12}
-            showIcon={false}
-          />
-        )}
         <div>
+          {note.category && (
+            <CategoryChip
+              category={note.category.name as Category}
+              size="default"
+              iconSize={12}
+              showIcon={false}
+            />
+          )}
+        </div>
+        <div className="flex gap-x-2">
           <Button
             size="icon"
             variant="destructive_ghost"
@@ -79,6 +77,15 @@ const MiniGenericAnalysisNote = ({
             onClick={() => deleteNoteMutation.mutate(note.id)}
           >
             <TrashIcon className="h-4 w-4" />
+          </Button>
+
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-6 w-6"
+            onClick={() => deleteNoteMutation.mutate(note.id)}
+          >
+            <EditIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>
