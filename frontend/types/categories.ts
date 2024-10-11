@@ -15,17 +15,17 @@ import {
 } from "lucide-react";
 
 export enum Category {
-  SciTech = "Science & tech",
-  ArtsHumanities = "Arts & humanities",
+  SciTech = "Science & Tech",
+  ArtsHumanities = "Arts & Humanities",
   Politics = "Politics",
   Media = "Media",
   Environment = "Environment",
   Education = "Education",
   Economics = "Economics",
   Sports = "Sports",
-  GenderEquality = "Gender & equality",
+  GenderEquality = "Gender & Equality",
   Religion = "Religion",
-  SocietyCulture = "Society & culture",
+  SocietyCulture = "Society & Culture",
   Others = "Others",
 }
 

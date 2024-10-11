@@ -29,10 +29,11 @@ const chipVariants = cva(
   },
 );
 
-interface ChipProps extends VariantProps<typeof chipVariants> {
+export interface ChipProps extends VariantProps<typeof chipVariants> {
   label: string;
   className?: string;
   Icon?: LucideIcon;
+  iconSize?: string | number;
   onClick?: () => void;
 }
 
@@ -42,6 +43,7 @@ const Chip = ({
   size,
   className,
   Icon,
+  iconSize = 16,
   onClick,
 }: ChipProps) => {
   return (
@@ -49,7 +51,7 @@ const Chip = ({
       className={cn(chipVariants({ variant, size }), className)}
       onClick={onClick}
     >
-      {Icon && <Icon className="mr-2" size={16} strokeWidth={1.6} />}
+      {Icon && <Icon className="mr-2" size={iconSize} strokeWidth={1.6} />}
       {label}
     </Box>
   );

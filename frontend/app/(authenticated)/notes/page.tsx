@@ -19,7 +19,7 @@ const Page = () => {
     if (isNotesLoaded) {
       setNotes(fetchedNotes!);
     }
-  }, [isNotesLoaded]);
+  }, [isNotesLoaded, fetchedNotes]);
 
   return (
     <div className="relative w-full h-full">

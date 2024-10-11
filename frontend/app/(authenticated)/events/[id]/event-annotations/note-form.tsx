@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
+import { NoteDTO } from "@/client";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { getCategories } from "@/queries/category";
 
 const noteFormSchema = z.object({
@@ -32,17 +33,28 @@ const noteFormSchema = z.object({
 
 export type NoteFormType = z.infer<typeof noteFormSchema>;
 
-const noteFormDefault = {
-  content: "",
-  category_id: undefined,
-};
-
 type Props = {
   onSubmit: SubmitHandler<NoteFormType>;
   hideCategory?: boolean;
+  onCancel?: () => void;
+  isHighlight?: boolean;
+  highlightSelection?: string;
+  defaultValue?: NoteDTO;
 };
 
-const NoteForm = ({ onSubmit, hideCategory }: Props) => {
+const NoteForm = ({
+  onSubmit,
+  hideCategory,
+  onCancel,
+  isHighlight = false,
+  highlightSelection,
+  defaultValue,
+}: Props) => {
+  const noteFormDefault = {
+    content: defaultValue?.content || "",
+    category_id: defaultValue?.category?.id.toString() || undefined,
+  };
+
   const form = useForm<NoteFormType>({
     resolver: zodResolver(noteFormSchema),
     defaultValues: noteFormDefault,
@@ -57,15 +69,22 @@ const NoteForm = ({ onSubmit, hideCategory }: Props) => {
           className="flex flex-col space-y-4"
           onSubmit={form.handleSubmit(onSubmit)}
         >
+          {isHighlight && (
+            <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700">
+              {highlightSelection}
+            </span>
+          )}
           <Box className="flex flex-col space-y-2.5">
             <FormField
               control={form.control}
-              name={"content"}
+              name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="!text-current">Content</FormLabel>
+                  <FormLabel className="!text-current text-base">
+                    Annotation
+                  </FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Textarea {...field} className="bg-white text-lg" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -73,25 +92,31 @@ const NoteForm = ({ onSubmit, hideCategory }: Props) => {
             />
           </Box>
           {!hideCategory && categories && (
-            <Box className="flex flex-col space-y-2.5">
+            <Box className="flex flex-col gap-y-2.5">
               <FormField
                 control={form.control}
-                name={"category_id"}
+                name="category_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="!text-current">Category</FormLabel>
+                    <FormLabel className="!text-current text-base">
+                      Category
+                    </FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select a category" />
+                          <SelectValue
+                            className="text-base"
+                            placeholder="Select a category"
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {categories?.map((category) => (
                           <SelectItem
+                            className="text-base"
                             key={category.id}
                             value={category.id.toString()}
                           >
@@ -106,7 +131,20 @@ const NoteForm = ({ onSubmit, hideCategory }: Props) => {
               />
             </Box>
           )}
-          <Button type="submit">Submit</Button>
+          <div className="flex gap-x-6 w-full">
+            <Button className="w-full text-base" type="submit">
+              Submit
+            </Button>
+            {onCancel && (
+              <Button
+                className="bg-transparent w-full"
+                onClick={onCancel}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
         </form>
       </Form>
     </div>

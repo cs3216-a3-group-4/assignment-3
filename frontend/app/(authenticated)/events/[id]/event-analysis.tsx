@@ -1,6 +1,6 @@
 "use client";
 
-import { LegacyRef, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { SparklesIcon } from "lucide-react";
 
@@ -11,19 +11,26 @@ import {
 import LikeButtons from "@/components/likes/like-buttons";
 import {
   Accordion,
-  AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  ScrewedUpAccordionContent,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { cn } from "@/lib/utils";
 import { useLikeEvent } from "@/queries/like";
 import { useAddAnalysisNote, useDeleteNote } from "@/queries/note";
 import { useUserStore } from "@/store/user/user-store-provider";
+import { HighlightType } from "@/types/annotations";
 import { Category, getCategoryFor, getIconFor } from "@/types/categories";
+import {
+  addNotHighlightedRegion,
+  addSelectedRegion,
+} from "@/utils/annotations";
 
-import NoteForm, { NoteFormType } from "./note-form";
+import AnalysisFragment, {
+  ANNOTATION_ACTIONS_BUTTON_ID,
+} from "./event-annotations/analysis-fragment";
+import AnalysisNotes from "./event-annotations/analysis-notes";
+import NoteForm, { NoteFormType } from "./event-annotations/note-form";
 
 interface HighlightSelection {
   analysisId: number;
@@ -31,113 +38,14 @@ interface HighlightSelection {
   endIndex: number;
 }
 
-enum HighlightType {
-  None,
-  Annotation,
-  Selected,
-}
-
-interface Region {
-  startIndex: number;
-  endIndex: number;
-  highlighted: HighlightType;
-}
-
 interface Props {
   event: EventDTO;
+  showAnnotations: boolean;
 }
 
-const addNotHighlightedRegion = (regions: Region[], length: number) => {
-  const result = regions.reduce(
-    (prev: Region[], curr: Region) => {
-      if (prev.length === 0) {
-        return [curr];
-      }
-      if (
-        curr.startIndex <= prev[prev.length - 1].endIndex + 1 &&
-        prev[prev.length - 1].highlighted === curr.highlighted
-      ) {
-        prev[prev.length - 1].endIndex = Math.max(
-          curr.endIndex,
-          prev[prev.length - 1].endIndex,
-        );
-        return prev;
-      }
-      return [
-        ...prev,
-        {
-          startIndex: prev[prev.length - 1].endIndex + 1,
-          endIndex: curr.startIndex - 1,
-          highlighted: HighlightType.None,
-        },
-        curr,
-      ];
-    },
-    (regions.length === 0
-      ? ([
-          {
-            startIndex: 0,
-            endIndex: length - 1,
-            highlighted: HighlightType.None,
-          },
-        ] as Region[])
-      : regions[0].startIndex === 0
-        ? []
-        : [
-            {
-              startIndex: 0,
-              endIndex: regions[0].startIndex - 1,
-              highlighted: HighlightType.None,
-            },
-          ]) as Region[],
-  );
-  if (result[result.length - 1].endIndex != length - 1) {
-    result.push({
-      startIndex: result[result.length - 1].endIndex + 1,
-      endIndex: length - 1,
-      highlighted: HighlightType.None,
-    });
-  }
-  return result;
-};
+const EVENT_ANALYSIS_ID_PREFIX = "event-analysis-";
 
-const addSelectedRegion = (start: number, end: number, regions: Region[]) => {
-  const result = [] as Region[];
-  let added = false;
-  for (const region of regions) {
-    // no intersection
-    if (region.startIndex > end || region.endIndex < start) {
-      result.push(region);
-      continue;
-    }
-    // four cases of collision
-    if (region.startIndex < start) {
-      result.push({
-        startIndex: region.startIndex,
-        endIndex: start - 1,
-        highlighted: region.highlighted,
-      });
-    }
-    if (!added) {
-      result.push({
-        startIndex: start,
-        endIndex: end,
-        highlighted: HighlightType.Selected,
-      });
-      added = true;
-    }
-    if (end < region.endIndex) {
-      result.push({
-        startIndex: end + 1,
-        endIndex: region.endIndex,
-        highlighted: region.highlighted,
-      });
-    }
-  }
-  return result.filter((region) => region.startIndex <= region.endIndex);
-};
-
-const EventAnalysis = ({ event }: Props) => {
+const EventAnalysis = ({ event, showAnnotations }: Props) => {
   const user = useUserStore((state) => state.user);
 
   const eventCategories = event.categories;
@@ -163,6 +71,11 @@ const EventAnalysis = ({ event }: Props) => {
   const addNoteMutation = useAddAnalysisNote(event.id);
   const deleteNoteMutation = useDeleteNote(event.id);
 
+  const clearHighlight = () => {
+    setShowAnnotationForm(false);
+    setHighlightSelection(null);
+  };
+
   const handleAddNote: (
     analysis_id: number,
     category_id_num: number,
@@ -178,86 +91,76 @@ const EventAnalysis = ({ event }: Props) => {
           category_id: category_id_num,
         },
         {
-          onSuccess: () => {
-            setShowAnnotationForm(false);
-            setHighlightSelection(null);
-          },
+          onSuccess: clearHighlight,
         },
       );
     };
 
-  const onSelectEnd = () => {
-    const selection = document.getSelection();
-    const id = selection?.anchorNode?.parentElement?.parentElement?.id;
-    if (!id?.startsWith("event-analysis-")) {
-      return;
-    }
-
-    // Check if focus node (where the cursor ends) is also within the analysis
-    if (
-      !selection?.focusNode?.parentElement?.parentElement?.id?.startsWith(
-        "event-analysis-",
-      )
-    ) {
-      return;
-    }
-    if (selection?.type === "Caret") {
-      return;
-    }
-
-    const analysisId = parseInt(id.split("event-analysis-")[1]);
-    const anchorStart = parseInt(
-      selection?.anchorNode?.parentElement?.id.split(
-        "-",
-      )[1] as unknown as string,
-    );
-
-    const focusStart = parseInt(
-      selection?.focusNode?.parentElement?.id.split(
-        "-",
-      )[1] as unknown as string,
-    );
-
-    setHighlightSelection({
-      analysisId,
-      startIndex: Math.min(
-        anchorStart + selection!.anchorOffset,
-        focusStart + selection!.focusOffset,
-      ),
-      endIndex: Math.max(
-        anchorStart + selection!.anchorOffset,
-        focusStart + selection!.focusOffset,
-      ),
-    });
-  };
-
   useEffect(() => {
+    const onSelectEnd = () => {
+      const selection = document.getSelection();
+      if (!selection) return;
+
+      if (
+        selection.type == "Caret" &&
+        document
+          .getElementById(ANNOTATION_ACTIONS_BUTTON_ID)
+          ?.contains(selection.anchorNode)
+      ) {
+        return; // don't clear highlight if add-annotation button is being clicked
+      }
+
+      if (selection.type != "Range") {
+        if (!showAnnotationForm) clearHighlight();
+        return;
+      }
+
+      if (!selection.rangeCount) return;
+
+      const startRange = selection.getRangeAt(0);
+      const endRange = selection.getRangeAt(selection.rangeCount - 1);
+
+      const startNode = startRange.startContainer;
+      const endNode = endRange.endContainer;
+
+      const startParent = startNode?.parentElement;
+      const endParent = endNode?.parentElement;
+
+      if (!startParent || !endParent) return;
+
+      const parentStartIndexStr = startParent.id.split("-")[1];
+      const parentEndIndexStr = endParent.id.split("-")[1];
+
+      if (!parentStartIndexStr || !parentEndIndexStr) return;
+
+      const startParentStartIndex = parseInt(parentStartIndexStr);
+      const endParentStartIndex = parseInt(parentEndIndexStr);
+
+      const startIndex = startParentStartIndex + startRange.startOffset;
+      const endIndex = endParentStartIndex + endRange.endOffset;
+
+      const analysisIdStr = startParent?.parentElement?.id.split(
+        EVENT_ANALYSIS_ID_PREFIX,
+      )[1];
+      if (!analysisIdStr) return;
+      const analysisId = parseInt(analysisIdStr);
+
+      setHighlightSelection({
+        analysisId,
+        startIndex: startIndex,
+        endIndex: endIndex - 1,
+      });
+
+      selection.empty();
+    };
+
     document.addEventListener("mouseup", onSelectEnd);
     document.addEventListener("touchend", onSelectEnd);
     return () => {
       document.removeEventListener("mouseup", onSelectEnd);
       document.removeEventListener("touchend", onSelectEnd);
     };
-  }, []);
-
-  const node = useRef<HTMLDivElement>();
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        node &&
-        node.current &&
-        // @ts-expect-error not going to bother fixing type errors for code that could be deleted
-        !node.current.contains(event.target)
-      ) {
-        setShowAnnotationForm(false);
-        setHighlightSelection(null);
-      }
-    };
-
-    document.addEventListener("click", handleOutsideClick);
-    return () => document.removeEventListener("click", handleOutsideClick);
-  }, []);
+  }, [showAnnotationForm]);
 
   return (
     <div className="flex flex-col px-6 gap-y-8">
@@ -314,6 +217,7 @@ const EventAnalysis = ({ event }: Props) => {
               startIndex: notes.start_index!,
               endIndex: notes.end_index!,
               highlighted: HighlightType.Annotation,
+              highlightedNoteId: notes.id,
             }))
             .sort((a, b) => a.startIndex - b.startIndex);
 
@@ -338,11 +242,6 @@ const EventAnalysis = ({ event }: Props) => {
               className="border rounded-lg px-8 py-2 border-cyan-600/60 bg-cyan-50/30"
               id={"analysis-" + eventAnalysis.id}
               key={category.id}
-              ref={
-                eventAnalysis.id === highlightSelection?.analysisId
-                  ? (node as LegacyRef<HTMLDivElement>)
-                  : undefined
-              }
               value={category.name}
             >
               <AccordionTrigger
@@ -354,82 +253,90 @@ const EventAnalysis = ({ event }: Props) => {
                   {category.name}
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
-                <div>
-                  <div id={`event-analysis-${eventAnalysis.id}`}>
-                    {highlightStartEndNormalised.map(
-                      ({ startIndex, endIndex, highlighted }) => (
-                        <span
-                          className={cn({
-                            "bg-yellow-100":
-                              highlighted === HighlightType.Annotation,
-                            "bg-green-100 relative":
-                              highlighted === HighlightType.Selected,
-                          })}
-                          id={`analysis${eventAnalysis.id}-${startIndex}`}
-                          key={`analysis${eventAnalysis.id}-${startIndex}`}
-                        >
-                          {content.slice(startIndex, endIndex + 1)}
-                          {highlighted === HighlightType.Selected && (
-                            <Button
-                              className="absolute bottom-6 left-0 z-[100000] whitespace-nowrap"
-                              id="add-annotation"
-                              onClick={() => setShowAnnotationForm(true)}
-                            >
-                              Add annotation
-                            </Button>
-                          )}
-                        </span>
-                      ),
-                    )}
+              <div className="relative">
+                <ScrewedUpAccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
+                  <div>
+                    <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
+                      {highlightStartEndNormalised.map(
+                        ({
+                          startIndex,
+                          endIndex,
+                          highlighted,
+                          highlightedNoteId,
+                        }) => (
+                          <AnalysisFragment
+                            clearHighlight={clearHighlight}
+                            content={content.slice(startIndex, endIndex + 1)}
+                            highlighted={highlighted}
+                            highlightedNoteId={highlightedNoteId}
+                            id={`analysis${eventAnalysis.id}-${startIndex}`}
+                            key={`analysis${eventAnalysis.id}-${startIndex}`}
+                            setShowAnnotationForm={setShowAnnotationForm}
+                          />
+                        ),
+                      )}
+                    </div>
                   </div>
+                  <LikeButtons
+                    onDislike={() =>
+                      likeMutation.mutate({
+                        analysis_id: eventAnalysis.id,
+                        type: -1,
+                      })
+                    }
+                    onLike={() =>
+                      likeMutation.mutate({
+                        analysis_id: eventAnalysis.id,
+                        type: 1,
+                      })
+                    }
+                    userLikeValue={userLikeValue}
+                  />
                   {highlightSelection &&
                     showAnnotationForm &&
                     highlightSelection.analysisId === eventAnalysis.id && (
-                      <NoteForm
-                        hideCategory
-                        onSubmit={handleAddNote(eventAnalysis.id, category.id)}
-                      />
+                      <div className="p-6 mt-4 border border-primary-500/30 rounded-md">
+                        <div className="flex items-center mb-3 text-primary-800">
+                          <h1 className="font-medium">Add new highlight</h1>
+                        </div>
+                        <NoteForm
+                          hideCategory
+                          highlightSelection={
+                            (highlightSelection &&
+                              highlightSelection.analysisId ===
+                                eventAnalysis.id &&
+                              eventAnalysis.content.slice(
+                                highlightSelection.startIndex,
+                                highlightSelection.endIndex + 1,
+                              )) ||
+                            undefined
+                          }
+                          isHighlight
+                          onCancel={clearHighlight}
+                          onSubmit={handleAddNote(
+                            eventAnalysis.id,
+                            category.id,
+                          )}
+                        />
+                      </div>
                     )}
-                  {eventAnalysis.notes.map((note) => (
-                    <div key={note.id}>
-                      {eventAnalysis.content.slice(
-                        note.start_index!,
-                        note.end_index!,
-                      )}
-                      <br />
-                      {note.content}
-                      <hr />
-                      <Button
-                        onClick={() => deleteNoteMutation.mutate(note.id)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  ))}
-                  {/* Commenting out GP questions for now */}
-                  {/* <Separator className="my-4" />
-                  <div>
-                    How does the commercialization of global sports impact
-                    societal values and economies?
-                  </div> */}
-                </div>
-                <LikeButtons
-                  onDislike={() =>
-                    likeMutation.mutate({
-                      analysis_id: eventAnalysis.id,
-                      type: -1,
-                    })
-                  }
-                  onLike={() =>
-                    likeMutation.mutate({
-                      analysis_id: eventAnalysis.id,
-                      type: 1,
-                    })
-                  }
-                  userLikeValue={userLikeValue}
-                />
-              </AccordionContent>
+                  {showAnnotations && (
+                    <AnalysisNotes
+                      eventAnalysisContent={eventAnalysis.content}
+                      notes={eventAnalysis.notes}
+                      onDelete={(noteId: number) =>
+                        deleteNoteMutation.mutate(noteId)
+                      }
+                      showNoteForm={
+                        (highlightSelection &&
+                          showAnnotationForm &&
+                          highlightSelection.analysisId === eventAnalysis.id) ??
+                        false
+                      }
+                    />
+                  )}
+                </ScrewedUpAccordionContent>
+              </div>
             </AccordionItem>
           );
         })}
