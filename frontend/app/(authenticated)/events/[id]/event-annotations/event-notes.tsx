@@ -1,14 +1,8 @@
 "use client";
 
-import { createElement, useState } from "react";
+import { useState } from "react";
 import { SubmitHandler } from "react-hook-form";
-import {
-  ChevronsDownUpIcon,
-  ChevronsUpDownIcon,
-  EditIcon,
-  NotebookIcon,
-  TrashIcon,
-} from "lucide-react";
+import { NotebookIcon } from "lucide-react";
 
 import { EventDTO } from "@/client";
 import { Button } from "@/components/ui/button";
@@ -20,8 +14,6 @@ import {
 } from "@/queries/note";
 
 import NoteForm, { NoteFormType } from "./note-form";
-import CategoryChip from "@/components/display/category-chip";
-import { Category } from "@/types/categories";
 import NoteItem from "./note-item";
 
 interface Props {
@@ -66,36 +58,37 @@ const EventNotes = ({ event }: Props) => {
           <Tabs value={activeTab}>
             <TabsList className="mb-2 h-12">
               <TabsTrigger
-                value="saved"
                 className="text-lg"
                 onClick={() => setActiveTab("saved")}
+                value="saved"
               >
                 Saved {`(${numNotes})`}
               </TabsTrigger>
               <TabsTrigger
-                value="new"
                 className="text-lg"
                 onClick={() => setActiveTab("new")}
+                value="new"
               >
                 New
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="saved" className="flex flex-col gap-y-8">
+            <TabsContent className="flex flex-col gap-y-8" value="saved">
               {event.notes.map((note) => (
                 <NoteItem
-                  note={note}
                   eventId={event.id}
                   handleEditNote={handleEditNote}
+                  key={note.id}
+                  note={note}
                 />
               ))}
               {event.notes.length === 0 && (
                 <div className="bg-gray-200/40 text-gray-700 px-8 py-4 text-lg rounded">
                   No notes yet.{" "}
                   <Button
-                    variant="link"
-                    size="lg"
                     className="px-0"
                     onClick={() => setActiveTab("new")}
+                    size="lg"
+                    variant="link"
                   >
                     Create one?
                   </Button>

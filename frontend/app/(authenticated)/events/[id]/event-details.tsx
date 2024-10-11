@@ -1,14 +1,9 @@
 import { ClockIcon, LayoutDashboardIcon, NewspaperIcon } from "lucide-react";
 
 import { EventDTO } from "@/client";
-import Chip from "@/components/display/chip";
-import {
-  categoriesToDisplayName,
-  categoriesToIconsMap,
-  getCategoryFor,
-} from "@/types/categories";
-import { parseDate } from "@/utils/date";
 import CategoryChip from "@/components/display/category-chip";
+import { getCategoryFor } from "@/types/categories";
+import { parseDate } from "@/utils/date";
 
 interface Props {
   event: EventDTO;

@@ -61,7 +61,7 @@ const MobileSidebar = () => {
     if (!isCollapsed) {
       setIsCollapsed(true);
     }
-  }, [pathname]);
+  }, [pathname, isCollapsed]);
 
   return (
     <div className="sm:hidden" key={pathname}>

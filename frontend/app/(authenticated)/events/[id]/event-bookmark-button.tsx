@@ -36,8 +36,8 @@ const EventBookmarkButton = ({
             description: `Bookmark removed for ${eventTitle}`,
           });
         }}
-        variant="default"
         size="lg"
+        variant="default"
       >
         <BookmarkCheck className="w-5 h-5" /> Bookmarked
       </Button>
@@ -55,8 +55,8 @@ const EventBookmarkButton = ({
           description: `Bookmark added for ${eventTitle} ${isBookmarked}`,
         });
       }}
-      variant="outline"
       size="lg"
+      variant="outline"
     >
       <Bookmark className="w-5 h-5" /> Bookmark
     </Button>

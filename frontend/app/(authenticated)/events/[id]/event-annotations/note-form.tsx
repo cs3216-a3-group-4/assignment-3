@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
+import { NoteDTO } from "@/client";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -23,9 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getCategories } from "@/queries/category";
 import { Textarea } from "@/components/ui/textarea";
-import { NoteDTO } from "@/client";
+import { getCategories } from "@/queries/category";
 
 const noteFormSchema = z.object({
   content: z.string(),
@@ -109,17 +108,17 @@ const NoteForm = ({
                       <FormControl>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue
-                            placeholder="Select a category"
                             className="text-base"
+                            placeholder="Select a category"
                           />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {categories?.map((category) => (
                           <SelectItem
+                            className="text-base"
                             key={category.id}
                             value={category.id.toString()}
-                            className="text-base"
                           >
                             {category.name}
                           </SelectItem>
@@ -133,14 +132,14 @@ const NoteForm = ({
             </Box>
           )}
           <div className="flex gap-x-6 w-full">
-            <Button type="submit" className="w-full text-base">
+            <Button className="w-full text-base" type="submit">
               Submit
             </Button>
             {onCancel && (
               <Button
+                className="bg-transparent w-full"
                 onClick={onCancel}
                 variant="outline"
-                className="bg-transparent w-full"
               >
                 Cancel
               </Button>

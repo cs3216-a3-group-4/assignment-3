@@ -1,6 +1,7 @@
+import { CopyIcon, HighlighterIcon } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { HighlightType } from "@/types/annotations";
-import { CopyIcon, HighlighterIcon } from "lucide-react";
 
 export const ANNOTATION_ACTIONS_BUTTON_ID = "annotation-actions";
 

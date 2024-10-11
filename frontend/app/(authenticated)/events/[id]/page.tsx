@@ -14,11 +14,11 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
 import { getEvent, useReadEvent } from "@/queries/event";
 
-import EventAnalysis from "./event-analysis";
 import EventAnnotations from "./event-annotations/event-annotations";
+import EventNotes from "./event-annotations/event-notes";
+import EventAnalysis from "./event-analysis";
 import EventBookmarkButton from "./event-bookmark-button";
 import EventDetails from "./event-details";
-import EventNotes from "./event-annotations/event-notes";
 import EventSource from "./event-source";
 import EventSummary from "./event-summary";
 
@@ -103,10 +103,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                 isBookmarked={data?.bookmarks.length}
               />
               <Button
-                onClick={() => setIsViewAnnotation((prev) => !prev)}
-                variant={isViewAnnotation ? "outline" : "default"}
-                size="lg"
                 className="px-4 flex gap-x-2"
+                onClick={() => setIsViewAnnotation((prev) => !prev)}
+                size="lg"
+                variant={isViewAnnotation ? "outline" : "default"}
               >
                 {isViewAnnotation && <PanelRightClose />}
                 {!isViewAnnotation && <PanelRightOpenIcon />}

@@ -1,8 +1,9 @@
 import {
-  categoriesToIconsMap,
   categoriesToDisplayName,
+  categoriesToIconsMap,
   Category,
 } from "@/types/categories";
+
 import Chip, { ChipProps } from "./chip";
 
 interface CategoryChipProps extends Omit<ChipProps, "label"> {
@@ -22,8 +23,8 @@ const CategoryChip = ({
   return (
     <Chip
       Icon={(showIcon && categoriesToIconsMap[category]) || undefined}
-      iconSize={iconSize}
       className="mb-2 md:mb-0"
+      iconSize={iconSize}
       key={category}
       label={categoriesToDisplayName[category]}
       size={size}

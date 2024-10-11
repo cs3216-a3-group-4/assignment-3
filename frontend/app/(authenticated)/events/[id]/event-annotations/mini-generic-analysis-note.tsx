@@ -1,10 +1,10 @@
+import { EditIcon, TrashIcon } from "lucide-react";
+
 import { NoteDTO, src__events__schemas__AnalysisDTO } from "@/client";
 import CategoryChip from "@/components/display/category-chip";
-import NotesCategoryItem from "@/components/notes/notes-category-item";
 import { Button } from "@/components/ui/button";
 import { useDeleteNote } from "@/queries/note";
 import { Category } from "@/types/categories";
-import { EditIcon, TrashIcon } from "lucide-react";
 
 interface MiniGenericAnalysisNoteProps {
   note: NoteDTO;
@@ -49,7 +49,7 @@ const MiniGenericAnalysisNote = ({
       className="flex flex-col border-y py-6 first:pt-2 first:border-t-transparent last:border-b-transparent"
       id={`annotation-${note.id}`}
     >
-      <div onClick={onClick} className="flex flex-col cursor-pointer">
+      <div className="flex flex-col cursor-pointer" onClick={onClick}>
         {quote && (
           <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700 italic text-base mb-4">
             {quote}
@@ -63,23 +63,23 @@ const MiniGenericAnalysisNote = ({
           {note.category && (
             <CategoryChip
               category={note.category.name as Category}
-              size="default"
               iconSize={12}
               showIcon={false}
+              size="default"
             />
           )}
         </div>
         <div className="flex gap-x-2">
           <Button
-            size="icon"
-            variant="destructive_ghost"
             className="h-6 w-6"
             onClick={() => deleteNoteMutation.mutate(note.id)}
+            size="icon"
+            variant="destructive_ghost"
           >
             <TrashIcon className="h-4 w-4" />
           </Button>
 
-          <Button size="icon" variant="ghost" className="h-6 w-6">
+          <Button className="h-6 w-6" size="icon" variant="ghost">
             <EditIcon className="h-4 w-4" />
           </Button>
         </div>

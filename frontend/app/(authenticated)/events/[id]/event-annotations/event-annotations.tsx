@@ -1,9 +1,9 @@
+import { PanelRightCloseIcon } from "lucide-react";
+
 import { EventDTO } from "@/client";
-import Note from "@/components/notes/note";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import MiniGenericAnalysisNote from "./mini-generic-analysis-note";
-import { Button } from "@/components/ui/button";
-import { PanelRightClose, PanelRightCloseIcon } from "lucide-react";
 
 interface Props {
   event: EventDTO;
@@ -30,7 +30,7 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
       </span>
       <h1 className="text-xl font-semibold">Your highlights and notes</h1>
       <div className="flex flex-col flex-1 max-h-[calc(100%_-_28px)]">
-        <Tabs defaultValue="all" className="mt-2 h-full max-h-full">
+        <Tabs className="mt-2 h-full max-h-full" defaultValue="all">
           <TabsList className="mb-1">
             <TabsTrigger value="all">All ({allNotes.length})</TabsTrigger>
             <TabsTrigger value="highlights">
@@ -43,10 +43,10 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
             <TabsContent value="all">
               {allNotes.map((note) => (
                 <MiniGenericAnalysisNote
-                  note={note}
-                  key={note.id}
                   eventAnalysis={event.analysises}
                   eventId={event.id}
+                  key={note.id}
+                  note={note}
                 />
               ))}
               {allNotes.length === 0 && (
@@ -59,10 +59,10 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
             <TabsContent value="highlights">
               {analysisAnnotations.map((note) => (
                 <MiniGenericAnalysisNote
-                  note={note}
-                  key={note.id}
                   eventAnalysis={event.analysises}
                   eventId={event.id}
+                  key={note.id}
+                  note={note}
                 />
               ))}
               {analysisAnnotations.length === 0 && (
@@ -75,10 +75,10 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
             <TabsContent value="notes">
               {eventNotes.map((note) => (
                 <MiniGenericAnalysisNote
-                  note={note}
-                  key={note.id}
                   eventAnalysis={event.analysises}
                   eventId={event.id}
+                  key={note.id}
+                  note={note}
                 />
               ))}
               {eventNotes.length === 0 && (

@@ -1,3 +1,12 @@
+import { createElement, useEffect, useState } from "react";
+import {
+  ChevronsDownUpIcon,
+  ChevronsUpDownIcon,
+  EllipsisVerticalIcon,
+  HighlighterIcon,
+  TrashIcon,
+} from "lucide-react";
+
 import { NoteDTO } from "@/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,19 +15,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import {
-  ChevronsDownUpIcon,
-  ChevronsUpDownIcon,
-  DeleteIcon,
-  EllipsisVerticalIcon,
-  FilePlus2Icon,
-  HighlighterIcon,
-  TrashIcon,
-} from "lucide-react";
-import { createElement, useEffect, useState } from "react";
-import { SubmitHandler } from "react-hook-form";
-import eventAnalysis from "../event-analysis";
-import NoteForm, { NoteFormType } from "./note-form";
 
 interface AnalysisNoteProps {
   notes: NoteDTO[];
@@ -68,9 +64,9 @@ const AnalysisNotes = ({
         <div className="flex flex-col gap-y-2 mt-4 px-4">
           {notes.map((note) => (
             <div
+              className="flex flex-col gap-y-3 py-4 border-b-2 border-border last:border-none"
               id={"annotation-" + note.id}
               key={note.id}
-              className="flex flex-col gap-y-3 py-4 border-b-2 border-border last:border-none"
             >
               <div className="flex gap-x-2 justify-between pb-1">
                 <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700 italic text-base">
@@ -86,9 +82,9 @@ const AnalysisNotes = ({
                   <PopoverContent className="w-32 p-2">
                     <div className="flex flex-col">
                       <Button
-                        variant="destructive_outline"
                         className="border-none"
                         onClick={() => onDelete(note.id)}
+                        variant="destructive_outline"
                       >
                         <TrashIcon className="mr-2 h-4 w-4" /> Delete
                       </Button>

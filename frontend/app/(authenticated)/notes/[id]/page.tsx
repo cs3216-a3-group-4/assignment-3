@@ -24,7 +24,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     if (isNotesLoaded) {
       setNotes(fetchedNotes!);
     }
-  }, [isNotesLoaded]);
+  }, [isNotesLoaded, fetchedNotes]);
 
   // Very inefficient, but is there a better way to do this? New StoreProvider for CategoryDTO[]?
   useEffect(() => {

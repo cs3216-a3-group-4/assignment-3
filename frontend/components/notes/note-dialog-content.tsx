@@ -100,7 +100,7 @@ const NoteDialogContent = ({
   useEffect(() => {
     setPendingNoteContent(noteContent);
     setIsEditing(false);
-  }, [open]);
+  }, [open, noteContent]);
 
   return (
     <DialogContent className="sm:max-w-[425px]">

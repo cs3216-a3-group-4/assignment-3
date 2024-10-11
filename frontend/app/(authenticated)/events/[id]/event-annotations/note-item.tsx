@@ -1,12 +1,14 @@
+import { useState } from "react";
+import { SubmitHandler } from "react-hook-form";
+import { EditIcon, TrashIcon } from "lucide-react";
+
 import { NoteDTO } from "@/client";
 import CategoryChip from "@/components/display/category-chip";
 import { Button } from "@/components/ui/button";
-import { Category } from "@/types/categories";
-import { TrashIcon, EditIcon } from "lucide-react";
-import NoteForm, { NoteFormType } from "./note-form";
 import { useDeleteNote } from "@/queries/note";
-import { SubmitHandler } from "react-hook-form";
-import { useState } from "react";
+import { Category } from "@/types/categories";
+
+import NoteForm, { NoteFormType } from "./note-form";
 
 interface NoteItemProps {
   note: NoteDTO;
@@ -20,15 +22,15 @@ const NoteItem = ({ note, eventId, handleEditNote }: NoteItemProps) => {
 
   return (
     <div
-      key={note.id}
-      id={`event-note-${note.id}`}
       className="flex flex-col p-6 rounded bg-teal-50/30 border border-teal-600/40"
+      id={`event-note-${note.id}`}
+      key={note.id}
     >
       {isEditing ? (
         <NoteForm
-          onSubmit={handleEditNote(note.id)}
-          onCancel={() => setIsEditing(false)}
           defaultValue={note}
+          onCancel={() => setIsEditing(false)}
+          onSubmit={handleEditNote(note.id)}
         />
       ) : (
         <div>
@@ -45,19 +47,19 @@ const NoteItem = ({ note, eventId, handleEditNote }: NoteItemProps) => {
             </div>
             <div className="flex gap-x-2">
               <Button
-                size="icon"
-                variant="destructive_ghost"
                 className="h-6 w-6"
                 onClick={() => deleteNoteMutation.mutate(note.id)}
+                size="icon"
+                variant="destructive_ghost"
               >
                 <TrashIcon className="h-4 w-4" />
               </Button>
 
               <Button
-                size="icon"
-                variant="ghost"
                 className="h-6 w-6"
                 onClick={() => setIsEditing(true)}
+                size="icon"
+                variant="ghost"
               >
                 <EditIcon className="h-4 w-4" />
               </Button>

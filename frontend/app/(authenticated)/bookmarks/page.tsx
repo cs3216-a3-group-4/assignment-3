@@ -40,6 +40,10 @@ const Page = () => {
     getBookmarkedEvents(page),
   );
 
+  const changePage = (page: number) => {
+    router.push(getPageUrl(page));
+  };
+
   useEffect(() => {
     if (page < 0) {
       changePage(1);
@@ -53,7 +57,7 @@ const Page = () => {
         }
       }
     }
-  }, [page, isEventsLoaded]);
+  }, [page, isEventsLoaded, changePage, events?.total_count]);
 
   const getPageUrl = (page: number) => {
     // now you got a read/write object
@@ -68,10 +72,6 @@ const Page = () => {
     const query = search ? `?${search}` : "";
 
     return `${pathname}${query}`;
-  };
-
-  const changePage = (page: number) => {
-    router.push(getPageUrl(page));
   };
 
   return (

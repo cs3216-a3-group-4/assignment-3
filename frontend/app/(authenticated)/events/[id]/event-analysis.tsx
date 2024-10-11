@@ -1,8 +1,8 @@
 "use client";
 
-import { LegacyRef, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { CopyIcon, HighlighterIcon, SparklesIcon } from "lucide-react";
+import { SparklesIcon } from "lucide-react";
 
 import {
   EventDTO,
@@ -15,24 +15,22 @@ import {
   AccordionTrigger,
   ScrewedUpAccordionContent,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { cn } from "@/lib/utils";
 import { useLikeEvent } from "@/queries/like";
 import { useAddAnalysisNote, useDeleteNote } from "@/queries/note";
 import { useUserStore } from "@/store/user/user-store-provider";
+import { HighlightType } from "@/types/annotations";
 import { Category, getCategoryFor, getIconFor } from "@/types/categories";
-
-import NoteForm, { NoteFormType } from "./event-annotations/note-form";
-import AnalysisFragment, {
-  ANNOTATION_ACTIONS_BUTTON_ID,
-} from "./event-annotations/analysis-fragment";
-import { HighlightType, Region } from "@/types/annotations";
 import {
   addNotHighlightedRegion,
   addSelectedRegion,
 } from "@/utils/annotations";
+
+import AnalysisFragment, {
+  ANNOTATION_ACTIONS_BUTTON_ID,
+} from "./event-annotations/analysis-fragment";
 import AnalysisNotes from "./event-annotations/analysis-notes";
+import NoteForm, { NoteFormType } from "./event-annotations/note-form";
 
 interface HighlightSelection {
   analysisId: number;
@@ -162,7 +160,7 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
       document.removeEventListener("mouseup", onSelectEnd);
       document.removeEventListener("touchend", onSelectEnd);
     };
-  }, [showAnnotationForm]);
+  }, [showAnnotationForm, onSelectEnd]);
 
   return (
     <div className="flex flex-col px-6 gap-y-8">
@@ -267,13 +265,13 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                           highlightedNoteId,
                         }) => (
                           <AnalysisFragment
+                            clearHighlight={clearHighlight}
                             content={content.slice(startIndex, endIndex + 1)}
                             highlighted={highlighted}
+                            highlightedNoteId={highlightedNoteId}
                             id={`analysis${eventAnalysis.id}-${startIndex}`}
                             key={`analysis${eventAnalysis.id}-${startIndex}`}
                             setShowAnnotationForm={setShowAnnotationForm}
-                            clearHighlight={clearHighlight}
-                            highlightedNoteId={highlightedNoteId}
                           />
                         ),
                       )}
@@ -303,12 +301,6 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                         </div>
                         <NoteForm
                           hideCategory
-                          isHighlight
-                          onSubmit={handleAddNote(
-                            eventAnalysis.id,
-                            category.id,
-                          )}
-                          onCancel={clearHighlight}
                           highlightSelection={
                             (highlightSelection &&
                               highlightSelection.analysisId ===
@@ -319,21 +311,27 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                               )) ||
                             undefined
                           }
+                          isHighlight
+                          onCancel={clearHighlight}
+                          onSubmit={handleAddNote(
+                            eventAnalysis.id,
+                            category.id,
+                          )}
                         />
                       </div>
                     )}
                   {showAnnotations && (
                     <AnalysisNotes
-                      notes={eventAnalysis.notes}
                       eventAnalysisContent={eventAnalysis.content}
+                      notes={eventAnalysis.notes}
+                      onDelete={(noteId: number) =>
+                        deleteNoteMutation.mutate(noteId)
+                      }
                       showNoteForm={
                         (highlightSelection &&
                           showAnnotationForm &&
                           highlightSelection.analysisId === eventAnalysis.id) ??
                         false
-                      }
-                      onDelete={(noteId: number) =>
-                        deleteNoteMutation.mutate(noteId)
                       }
                     />
                   )}
