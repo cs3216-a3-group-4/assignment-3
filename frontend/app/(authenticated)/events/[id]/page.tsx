@@ -12,7 +12,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
+import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 import { getEvent, useReadEvent } from "@/queries/event";
+import { MediaBreakpoint } from "@/utils/media";
 
 import EventAnnotations from "./event-annotations/event-annotations";
 import EventNotes from "./event-annotations/event-notes";
@@ -24,11 +26,18 @@ import EventSummary from "./event-summary";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
-  const [isViewAnnotation, setIsViewAnnotation] = useState<boolean>(true);
   const { data, isLoading } = useQuery(getEvent(id));
+  const mediaQuery = useBreakpointMediaQuery();
 
   const readEventMutation = useReadEvent(id);
   const [sentRead, setSentRead] = useState(false);
+  const [isViewAnnotation, setIsViewAnnotation] = useState<boolean>(
+    mediaQuery === MediaBreakpoint.Lg ||
+      mediaQuery === MediaBreakpoint.Md ||
+      mediaQuery === MediaBreakpoint.Sm
+      ? false
+      : true,
+  );
 
   useEffect(() => {
     if (!isLoading && !sentRead) {
@@ -96,7 +105,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             <h1 className="text-4xl font-bold px-6">{data.title}</h1>
             <EventDetails event={data} />
             <EventSummary summary={data.description} />
-            <div className="flex gap-x-4 px-6">
+            <div className="flex flex-wrap gap-x-4 gap-y-2 px-6">
               <EventBookmarkButton
                 eventId={id}
                 eventTitle={data.title}

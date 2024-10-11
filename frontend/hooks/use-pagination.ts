@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { NUM_EVENTS_PER_PAGE } from "@/queries/event";
-import { isNumeric, isPositiveNumeric } from "@/utils/string";
+import { isPositiveNumeric } from "@/utils/string";
 
 interface usePaginationProps {
   totalCount?: number;
