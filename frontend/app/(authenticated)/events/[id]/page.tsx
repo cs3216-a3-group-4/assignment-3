@@ -82,7 +82,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <div
-      className={`w-full h-fit min-h-full bg-muted ${isViewAnnotation ? "relative flex" : "px-8 md:px-16 xl:px-56"}`}
+      className={`w-full h-fit min-h-full bg-muted ${isViewAnnotation ? "relative flex" : "sm:px-8 md:px-16 xl:px-56"}`}
     >
       <div
         className={`flex flex-col bg-background ${isViewAnnotation ? (showPanelAsSheet ? "hidden" : "w-8/12 h-full mx-16") : ""}`}
@@ -101,7 +101,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               width={273}
             />
           </div>
-          <div className="md:px-8 flex flex-col gap-y-10">
+          <div className="px-3 md:px-8 flex flex-col gap-y-10">
             <h1 className="text-4xl font-bold px-6">{data.title}</h1>
             <EventDetails event={data} />
             <EventSummary summary={data.description} />
@@ -126,12 +126,12 @@ const Page = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
         </div>
-        <div className="md:px-8 flex flex-col gap-y-10 pb-8">
-          <Separator className="my-10" />
+        <div className="md:px-8 flex flex-col pb-8 gap-y-4 lg:gap-y-8">
+          <Separator className="my-4 lg:my-8" />
           <EventAnalysis event={data} showAnnotations={!isViewAnnotation} />
-          <Separator className="my-10" />
+          <Separator className="my-4 lg:my-8" />
           <EventNotes event={data} />
-          <Separator className="my-10" />
+          <Separator className="my-4 lg:my-8" />
           <EventSource originalSource={data.original_article} />
         </div>
       </div>
