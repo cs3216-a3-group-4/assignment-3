@@ -24,8 +24,9 @@ const MiniGenericAnalysisNote = ({
 
   const quote =
     analysis &&
-    note.start_index &&
-    note.end_index &&
+    note.start_index !== null &&
+    note.end_index !== undefined &&
+    note.end_index !== null &&
     analysis.content.slice(note.start_index, note.end_index + 1);
 
   const onClick = () => {
