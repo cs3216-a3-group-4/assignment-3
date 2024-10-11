@@ -96,71 +96,71 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
       );
     };
 
-  const onSelectEnd = () => {
-    const selection = document.getSelection();
-    if (!selection) return;
-
-    if (
-      selection.type == "Caret" &&
-      document
-        .getElementById(ANNOTATION_ACTIONS_BUTTON_ID)
-        ?.contains(selection.anchorNode)
-    ) {
-      return; // don't clear highlight if add-annotation button is being clicked
-    }
-
-    if (selection.type != "Range") {
-      if (!showAnnotationForm) clearHighlight();
-      return;
-    }
-
-    if (!selection.rangeCount) return;
-
-    const startRange = selection.getRangeAt(0);
-    const endRange = selection.getRangeAt(selection.rangeCount - 1);
-
-    const startNode = startRange.startContainer;
-    const endNode = endRange.endContainer;
-
-    const startParent = startNode?.parentElement;
-    const endParent = endNode?.parentElement;
-
-    if (!startParent || !endParent) return;
-
-    const parentStartIndexStr = startParent.id.split("-")[1];
-    const parentEndIndexStr = endParent.id.split("-")[1];
-
-    if (!parentStartIndexStr || !parentEndIndexStr) return;
-
-    const startParentStartIndex = parseInt(parentStartIndexStr);
-    const endParentStartIndex = parseInt(parentEndIndexStr);
-
-    const startIndex = startParentStartIndex + startRange.startOffset;
-    const endIndex = endParentStartIndex + endRange.endOffset;
-
-    const analysisIdStr = startParent?.parentElement?.id.split(
-      EVENT_ANALYSIS_ID_PREFIX,
-    )[1];
-    if (!analysisIdStr) return;
-    const analysisId = parseInt(analysisIdStr);
-
-    setHighlightSelection({
-      analysisId,
-      startIndex: startIndex,
-      endIndex: endIndex - 1,
-    });
-
-    selection.empty();
-  };
-
   useEffect(() => {
+    const onSelectEnd = () => {
+      const selection = document.getSelection();
+      if (!selection) return;
+
+      if (
+        selection.type == "Caret" &&
+        document
+          .getElementById(ANNOTATION_ACTIONS_BUTTON_ID)
+          ?.contains(selection.anchorNode)
+      ) {
+        return; // don't clear highlight if add-annotation button is being clicked
+      }
+
+      if (selection.type != "Range") {
+        if (!showAnnotationForm) clearHighlight();
+        return;
+      }
+
+      if (!selection.rangeCount) return;
+
+      const startRange = selection.getRangeAt(0);
+      const endRange = selection.getRangeAt(selection.rangeCount - 1);
+
+      const startNode = startRange.startContainer;
+      const endNode = endRange.endContainer;
+
+      const startParent = startNode?.parentElement;
+      const endParent = endNode?.parentElement;
+
+      if (!startParent || !endParent) return;
+
+      const parentStartIndexStr = startParent.id.split("-")[1];
+      const parentEndIndexStr = endParent.id.split("-")[1];
+
+      if (!parentStartIndexStr || !parentEndIndexStr) return;
+
+      const startParentStartIndex = parseInt(parentStartIndexStr);
+      const endParentStartIndex = parseInt(parentEndIndexStr);
+
+      const startIndex = startParentStartIndex + startRange.startOffset;
+      const endIndex = endParentStartIndex + endRange.endOffset;
+
+      const analysisIdStr = startParent?.parentElement?.id.split(
+        EVENT_ANALYSIS_ID_PREFIX,
+      )[1];
+      if (!analysisIdStr) return;
+      const analysisId = parseInt(analysisIdStr);
+
+      setHighlightSelection({
+        analysisId,
+        startIndex: startIndex,
+        endIndex: endIndex - 1,
+      });
+
+      selection.empty();
+    };
+
     document.addEventListener("mouseup", onSelectEnd);
     document.addEventListener("touchend", onSelectEnd);
     return () => {
       document.removeEventListener("mouseup", onSelectEnd);
       document.removeEventListener("touchend", onSelectEnd);
     };
-  }, [showAnnotationForm, onSelectEnd]);
+  }, [showAnnotationForm]);
 
   return (
     <div className="flex flex-col px-6 gap-y-8">

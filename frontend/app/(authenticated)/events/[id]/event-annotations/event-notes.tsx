@@ -7,11 +7,7 @@ import { NotebookIcon } from "lucide-react";
 import { EventDTO } from "@/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  useAddEventNote,
-  useDeleteNote,
-  useEditEventNote,
-} from "@/queries/note";
+import { useAddEventNote, useEditEventNote } from "@/queries/note";
 
 import NoteForm, { NoteFormType } from "./note-form";
 import NoteItem from "./note-item";
@@ -22,9 +18,7 @@ interface Props {
 
 const EventNotes = ({ event }: Props) => {
   const addNoteMutation = useAddEventNote(event.id);
-  const deleteNoteMutation = useDeleteNote(event.id);
   const editNoteMutation = useEditEventNote(event.id);
-  const [showNotes, setShowNotes] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>("saved");
   const numNotes = event?.notes ? event.notes.length : 0;
 
@@ -54,7 +48,7 @@ const EventNotes = ({ event }: Props) => {
             My Notes
           </h1>
         </span>
-        <div className={`flex flex-col gap-y-4 ${showNotes ? "" : "hidden"}`}>
+        <div className="flex flex-col gap-y-4">
           <Tabs value={activeTab}>
             <TabsList className="mb-2 h-12">
               <TabsTrigger

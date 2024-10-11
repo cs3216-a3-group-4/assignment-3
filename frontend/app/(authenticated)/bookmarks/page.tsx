@@ -57,7 +57,8 @@ const Page = () => {
         }
       }
     }
-  }, [page, isEventsLoaded, changePage, events?.total_count]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, isEventsLoaded, events?.total_count, router, searchParams]);
 
   const getPageUrl = (page: number) => {
     // now you got a read/write object
