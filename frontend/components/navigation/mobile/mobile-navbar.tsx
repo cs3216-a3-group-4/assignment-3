@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import UserProfileButton from "@/components/auth/user-profile-button";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
+import JippyIconSm from "@/public/jippy-icon/jippy-icon-sm";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
 import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -37,6 +38,11 @@ function MobileNavbar() {
           <Link className="hidden sm:flex mr-6 items-center gap-x-2" href="/">
             <JippyLogo />
           </Link>
+          {!isLoggedIn && (
+            <Link className="flex sm:hidden mr-6 items-center gap-x-2" href="/">
+              <JippyIconSm />
+            </Link>
+          )}
           <div className="flex flex-1 justify-center">
             {isLoggedIn && <MobileSidebar />}
           </div>
