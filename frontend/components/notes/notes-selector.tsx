@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction } from "react";
 import { ChevronDown } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "../ui/button";
 
 export const enum Filter {
   CATEGORY = "Category",
@@ -35,8 +35,8 @@ const NotesSelector = ({ filter, setFilter }: Props) => {
         <DropdownMenuTrigger asChild>
           <Button
             className="flex p-2 gap-1 rounded-md"
-            variant="ghost"
             size="lg"
+            variant="ghost"
           >
             {filter} <ChevronDown className="w-4 h-4 self-center" />
           </Button>
