@@ -39,7 +39,7 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
             <TabsTrigger value="notes">Notes ({eventNotes.length})</TabsTrigger>
           </TabsList>
 
-          <div className="flex flex-col max-h-[calc(100%_-_44px)] overflow-y-auto">
+          <div className="flex flex-col max-h-[calc(100%_-_44px)] overflow-y-auto w-full">
             <TabsContent value="all">
               {allNotes.map((note) => (
                 <MiniGenericAnalysisNote

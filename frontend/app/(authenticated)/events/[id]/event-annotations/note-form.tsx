@@ -40,6 +40,8 @@ type Props = {
   isHighlight?: boolean;
   highlightSelection?: string;
   defaultValue?: NoteDTO;
+  textSize?: string;
+  textAreaTextSize?: string;
 };
 
 const NoteForm = ({
@@ -49,6 +51,8 @@ const NoteForm = ({
   isHighlight = false,
   highlightSelection,
   defaultValue,
+  textSize = "text-base",
+  textAreaTextSize = "text-lg",
 }: Props) => {
   const noteFormDefault = {
     content: defaultValue?.content || "",
@@ -80,11 +84,14 @@ const NoteForm = ({
               name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="!text-current text-base">
+                  <FormLabel className={"!text-current " + textSize}>
                     Annotation
                   </FormLabel>
                   <FormControl>
-                    <Textarea {...field} className="bg-white text-lg" />
+                    <Textarea
+                      {...field}
+                      className={"bg-white " + textAreaTextSize}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,7 +105,7 @@ const NoteForm = ({
                 name="category_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="!text-current text-base">
+                    <FormLabel className={"!text-current " + textSize}>
                       Category
                     </FormLabel>
                     <Select
@@ -108,7 +115,7 @@ const NoteForm = ({
                       <FormControl>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue
-                            className="text-base"
+                            className={textSize}
                             placeholder="Select a category"
                           />
                         </SelectTrigger>
@@ -116,7 +123,7 @@ const NoteForm = ({
                       <SelectContent>
                         {categories?.map((category) => (
                           <SelectItem
-                            className="text-base"
+                            className={textSize}
                             key={category.id}
                             value={category.id.toString()}
                           >
@@ -132,7 +139,7 @@ const NoteForm = ({
             </Box>
           )}
           <div className="flex gap-x-6 w-full">
-            <Button className="w-full text-base" type="submit">
+            <Button className={"w-full " + textSize} type="submit">
               Submit
             </Button>
             {onCancel && (

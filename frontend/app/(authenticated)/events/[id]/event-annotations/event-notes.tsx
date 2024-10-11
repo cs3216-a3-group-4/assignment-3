@@ -27,6 +27,7 @@ const EventNotes = ({ event }: Props) => {
     category_id,
   }) => {
     addNoteMutation.mutate({ category_id: parseInt(category_id!), content });
+    setActiveTab("saved");
   };
 
   const handleEditNote: (id: number) => SubmitHandler<NoteFormType> =

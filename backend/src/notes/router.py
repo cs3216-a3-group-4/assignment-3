@@ -88,8 +88,12 @@ def update_note(
     session=Depends(get_session),
 ) -> NoteDTO:
     note.content = data.content
-    note.start_index = data.start_index
-    note.end_index = data.end_index
+
+    if note.parent_type == NoteType.ANALYSIS:
+        if data.start_index is not None:
+            note.start_index = data.start_index
+        if data.end_index is not None:
+            note.end_index = data.end_index
 
     if note.category_id:
         category = session.get(Category, data.category_id)
