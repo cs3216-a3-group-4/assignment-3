@@ -26,7 +26,7 @@ const EventAnnotations = ({ event, hideAnnotationsPanel }: Props) => {
         onClick={hideAnnotationsPanel}
       >
         <PanelRightCloseIcon className="h-4 w-4 mr-2" />
-        View annotations on page
+        Hide annotations panel
       </span>
       <h1 className="text-xl font-semibold">Your highlights and notes</h1>
       <div className="flex flex-col flex-1 max-h-[calc(100%_-_28px)]">
