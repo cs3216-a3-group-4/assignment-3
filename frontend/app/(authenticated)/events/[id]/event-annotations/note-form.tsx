@@ -93,7 +93,7 @@ const NoteForm = ({
             />
           </Box>
           {!hideCategory && categories && (
-            <Box className="flex flex-col space-y-2.5">
+            <Box className="flex flex-col gap-y-2.5">
               <FormField
                 control={form.control}
                 name="category_id"
@@ -108,7 +108,10 @@ const NoteForm = ({
                     >
                       <FormControl>
                         <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select a category" />
+                          <SelectValue
+                            placeholder="Select a category"
+                            className="text-base"
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -116,6 +119,7 @@ const NoteForm = ({
                           <SelectItem
                             key={category.id}
                             value={category.id.toString()}
+                            className="text-base"
                           >
                             {category.name}
                           </SelectItem>
@@ -129,7 +133,7 @@ const NoteForm = ({
             </Box>
           )}
           <div className="flex gap-x-6 w-full">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full text-base">
               Submit
             </Button>
             {onCancel && (

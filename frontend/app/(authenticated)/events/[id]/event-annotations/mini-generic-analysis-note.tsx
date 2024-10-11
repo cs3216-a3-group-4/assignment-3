@@ -79,12 +79,7 @@ const MiniGenericAnalysisNote = ({
             <TrashIcon className="h-4 w-4" />
           </Button>
 
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-6 w-6"
-            onClick={() => deleteNoteMutation.mutate(note.id)}
-          >
+          <Button size="icon" variant="ghost" className="h-6 w-6">
             <EditIcon className="h-4 w-4" />
           </Button>
         </div>
