@@ -56,98 +56,93 @@ function RegisterPage() {
 
   return (
     <Box className="flex w-full gap-x-24">
-      <Box className="flex justify-center items-center bg-card text-card-foreground px-12 md:px-20 w-full lg:w-6/12">
-        <Box className="flex-col space-y-8 w-full max-w-3xl">
-          {/* Header */}
-          <Box className="flex flex-col space-y-3">
-            <h3 className="text-2xl font-semibold leading-none tracking-tight">
-              Join the {process.env.NEXT_PUBLIC_APP_NAME} community today
-            </h3>
-            <span className="text-sm text-muted-foreground">
-              By continuing, you agree to our&nbsp;
-              <Link
-                className="text-card-foreground"
-                href="/policies/user-agreement"
-                size="sm"
-              >
-                User Agreement
-              </Link>
-              &nbsp;and acknowledge that you understand our&nbsp;
-              <Link
-                className="text-card-foreground"
-                href="/policies/privacy-policy"
-                size="sm"
-              >
-                Privacy Policy
-              </Link>
-              .
-            </span>
-          </Box>
-
-          {/* Body */}
-          <Box className="space-y-6 pt-0 flex-col w-full">
-            {isError && (
-              <Alert variant="destructive">
-                <CircleAlert className="h-5 w-5" />
-                <AlertDescription>
-                  This email is already registered.{" "}
-                  <Link href="/login" size="sm">
-                    Sign in
-                  </Link>{" "}
-                  instead?
-                </AlertDescription>
-              </Alert>
-            )}
-            <Form {...form}>
-              <form
-                className="space-y-10"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
-                <div className="space-y-4">
-                  <TextField
-                    label="Email"
-                    name="email"
-                    placeholder="you@example.com"
-                  />
-                  <PasswordField
-                    label="Password"
-                    name="password"
-                    placeholder="Minimum 6 characters"
-                  />
-                </div>
-
-                <Button className="w-full" type="submit">
-                  Create account
-                </Button>
-              </form>
-            </Form>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <GoogleOAuthButton />
-            </div>
-          </Box>
-
-          {/* Login button */}
-          <div className="flex gap-x-2 w-full justify-center items-baseline">
-            <p className="text-sm text-muted-foreground">
-              Already have an account?
-            </p>
-            <Link href="/login" size="sm">
-              Login
+      <Box className="flex flex-col space-y-8 justify-center items-center bg-card text-card-foreground py-12 px-12 md:px-20 w-full lg:w-6/12 max-w-3xl h-fit">
+        {/* Header */}
+        <Box className="flex flex-col space-y-3">
+          <h3 className="text-2xl font-semibold leading-none tracking-tight">
+            Join the {process.env.NEXT_PUBLIC_APP_NAME} community today
+          </h3>
+          <span className="text-sm text-muted-foreground">
+            By continuing, you agree to our&nbsp;
+            <Link
+              className="text-card-foreground"
+              href="/policies/user-agreement"
+              size="sm"
+            >
+              User Agreement
             </Link>
+            &nbsp;and acknowledge that you understand our&nbsp;
+            <Link
+              className="text-card-foreground"
+              href="/policies/privacy-policy"
+              size="sm"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </span>
+        </Box>
+
+        {/* Body */}
+        <Box className="space-y-6 pt-0 flex-col w-full">
+          {isError && (
+            <Alert variant="destructive">
+              <CircleAlert className="h-5 w-5" />
+              <AlertDescription>
+                This email is already registered.{" "}
+                <Link href="/login" size="sm">
+                  Sign in
+                </Link>{" "}
+                instead?
+              </AlertDescription>
+            </Alert>
+          )}
+          <Form {...form}>
+            <form className="space-y-10" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="space-y-4">
+                <TextField
+                  label="Email"
+                  name="email"
+                  placeholder="you@example.com"
+                />
+                <PasswordField
+                  label="Password"
+                  name="password"
+                  placeholder="Minimum 6 characters"
+                />
+              </div>
+
+              <Button className="w-full" type="submit">
+                Create account
+              </Button>
+            </form>
+          </Form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <GoogleOAuthButton />
           </div>
         </Box>
+
+        {/* Login button */}
+        <div className="flex gap-x-2 w-full justify-center items-baseline">
+          <p className="text-sm text-muted-foreground">
+            Already have an account?
+          </p>
+          <Link href="/login" size="sm">
+            Login
+          </Link>
+        </div>
       </Box>
 
       <Box className="bg-primary hidden lg:flex lg:w-6/12" />
