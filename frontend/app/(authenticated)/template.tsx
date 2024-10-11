@@ -11,35 +11,19 @@ export default function RedirectIfNotAuthenticated({
 }: Readonly<{ children: React.ReactNode }>) {
   const router = useRouter();
 
-  const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
-    (state) => state,
-  );
-  const {
-    data: userProfile,
-    isSuccess: isUserProfileSuccess,
-    isFetching,
-  } = useQuery(getUserProfile());
+  const { isLoggedIn, isFetching, user } = useUserStore((state) => state);
 
   useEffect(() => {
-    if (!isFetching) {
-      if (!userProfile) {
-        if (!isLoggedIn) {
-          router.push("/login");
-        }
-        if (isLoggedIn && !userProfile!.categories.length) {
-          router.push("/onboarding");
-        }
-      }
+    if (isFetching) return;
+    if (!isLoggedIn) {
+      // Assume unauthenticated
+      router.push("/login");
     }
-  }, [
-    userProfile,
-    isUserProfileSuccess,
-    setLoggedIn,
-    setNotLoggedIn,
-    isLoggedIn,
-    router,
-    isFetching,
-  ]);
+
+    if (isLoggedIn && user && user.categories.length === 0) {
+      router.push("/onboarding");
+    }
+  }, [isFetching, isLoggedIn, user]);
 
   return <Suspense>{children}</Suspense>;
 }

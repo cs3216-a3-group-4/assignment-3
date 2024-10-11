@@ -24,16 +24,6 @@ function Navbar() {
   const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
     (state) => state,
   );
-  const { data: userProfile, isSuccess: isUserProfileSuccess } =
-    useQuery(getUserProfile());
-
-  useEffect(() => {
-    if (isUserProfileSuccess && userProfile) {
-      setLoggedIn(userProfile);
-    } else {
-      setNotLoggedIn();
-    }
-  }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
 
   return (
     <header

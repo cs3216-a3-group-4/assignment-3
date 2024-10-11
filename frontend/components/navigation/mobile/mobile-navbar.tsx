@@ -20,16 +20,6 @@ function MobileNavbar() {
   const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
     (state) => state,
   );
-  const { data: userProfile, isSuccess: isUserProfileSuccess } =
-    useQuery(getUserProfile());
-
-  useEffect(() => {
-    if (isUserProfileSuccess && userProfile) {
-      setLoggedIn(userProfile);
-    } else {
-      setNotLoggedIn();
-    }
-  }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
 
   return (
     <header className="md:hidden sticky top-0 z-50 w-full border-border bg-primary/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 border-b-[1px] min-h-[84px] max-h-[84px]">
