@@ -32,6 +32,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const readEventMutation = useReadEvent(id);
   const [sentRead, setSentRead] = useState(false);
 
+  console.log("mediaQuery", mediaQuery);
   const showPanelAsSheet =
     mediaQuery === MediaBreakpoint.Lg ||
     mediaQuery === MediaBreakpoint.Md ||
@@ -138,10 +139,8 @@ const Page = ({ params }: { params: { id: string } }) => {
       {isViewAnnotation && (
         <div
           className={
-            "sticky top-0 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]" +
-            showPanelAsSheet
-              ? "absolute right-0"
-              : "flex w-4/12 "
+            "sticky top-0 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)] " +
+            (showPanelAsSheet ? "absolute right-0" : "flex w-4/12 ")
           }
         >
           <EventAnnotations
