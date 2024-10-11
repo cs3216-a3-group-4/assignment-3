@@ -22,8 +22,11 @@ def upsert_like(
 ):
     # 1. check if the analysis or point exists
     analysis = session.get(Analysis, data.analysis_id)
-    if not analysis:
-        raise HTTPException(HTTPStatus.NOT_FOUND, "analysis doesn't exist")
+    point = session.get(Point, data.point_id)
+    print(analysis)
+    print(point)
+    # if not analysis or not point:
+    #     raise HTTPException(HTTPStatus.NOT_FOUND, "analysis doesn't exist")
 
     query = select(Like).where(Like.analysis_id == data.analysis_id)
 

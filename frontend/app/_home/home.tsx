@@ -17,25 +17,17 @@ const DEFAULT_EVENT_PERIOD = Period.Week;
 
 /* This component should only be rendered to authenticated users */
 const Home = () => {
-  const [totalEventCount, setTotalEventCount] = useState<number | undefined>(
-    undefined,
-  );
-
-  const [selectedPeriod, setSelectedPeriod] =
-    useState<Period>(DEFAULT_EVENT_PERIOD);
-
-  const { page, pageCount, getPageUrl } = usePagination({
-    totalCount: totalEventCount,
-  });
   const user = useUserStore((state) => state.user);
 
-  const router = useRouter();
+  const eventPeriod = user?.top_events_period
+    ? user.top_events_period
+    : DEFAULT_EVENT_PERIOD;
 
-  const eventPeriod = useMemo(
-    () =>
-      user?.top_events_period ? user.top_events_period : DEFAULT_EVENT_PERIOD,
-    [user?.top_events_period],
-  );
+  const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
+
+  const { page, pageCount, getPageUrl } = usePagination({
+    totalCount,
+  });
 
   const eventStartDate = useMemo(() => {
     const eventStartDate = new Date();
@@ -51,16 +43,11 @@ const Home = () => {
     ),
   );
 
-  useEffect(() => setSelectedPeriod(eventPeriod), [eventPeriod]);
-
   useEffect(() => {
-    if (user?.top_events_period) setSelectedPeriod(user.top_events_period);
-  }, [user]);
+    setTotalCount(events?.total_count);
+  }, [events?.total_count]);
 
-  useEffect(
-    () => setTotalEventCount(events?.total_count),
-    [events?.total_count],
-  );
+  const router = useRouter();
 
   if (!user!.categories.length) {
     router.push("/onboarding");
@@ -78,14 +65,11 @@ const Home = () => {
             className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
             id="homePage"
           >
-            <div className="flex">
+            <div>
               <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
                 What happened this&nbsp;
               </span>
-              <DateRangeSelector
-                selectedPeriod={selectedPeriod}
-                setSelectedPeriod={setSelectedPeriod}
-              />
+              <DateRangeSelector selectedPeriod={eventPeriod} />
             </div>
             <span className="text-primary text-lg">
               {parseDate(eventStartDate)} - {parseDate(new Date())}

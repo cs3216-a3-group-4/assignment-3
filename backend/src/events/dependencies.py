@@ -6,6 +6,8 @@ from src.auth.dependencies import get_current_user
 from src.common.dependencies import get_session
 from src.events.models import Analysis, Bookmark, Event, GPQuestion, UserReadEvent
 from src.likes.models import Like
+from src.notes.models import Note
+from src.user_questions.models import Point  # noqa: F401
 
 
 def retrieve_event(
@@ -16,8 +18,8 @@ def retrieve_event(
     event = session.scalar(
         select(Event)
         .where(Event.id == id)
-        .outerjoin(Event.reads.and_(UserReadEvent.user_id == user.id))
         .options(
+            selectinload(Event.reads.and_(UserReadEvent.user_id == user.id)),
             selectinload(
                 Event.gp_questions,
                 GPQuestion.categories,
@@ -26,6 +28,10 @@ def retrieve_event(
                 Event.categories,
             ),
             selectinload(Event.analysises, Analysis.category),
+            selectinload(
+                Event.analysises, Analysis.notes.and_(Note.user_id == user.id)
+            ),
+            selectinload(Event.notes.and_(Note.user_id == user.id)),
             selectinload(
                 Event.analysises, Analysis.likes.and_(Like.point_id.is_(None))
             ),

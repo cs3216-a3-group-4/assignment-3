@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Bookmark } from "lucide-react";
 
-import { CategoryDTO, MiniEventDTO } from "@/client";
+import { MiniEventDTO } from "@/client";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
@@ -20,42 +20,45 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getCategories } from "@/queries/category";
 import { getBookmarkedEvents } from "@/queries/event";
 
 function isNumeric(value: string | null) {
   return value !== null && /^-?\d+$/.test(value);
 }
 
-const Page = ({ params }: { params: { id: string } }) => {
+const Page = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const categoryId = parseInt(params.id);
-
   const pageStr = searchParams.get("page");
 
   const page = isNumeric(pageStr) && pageStr !== "0" ? parseInt(pageStr!) : 1;
-
-  const [categoryName, setCategoryName] = useState<string>(""); // eslint-disable-line
+  const [pageCount, setPageCount] = useState<number>(0);
 
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
     getBookmarkedEvents(page),
   );
-  const { data: categories, isSuccess: isCategoriesLoaded } =
-    useQuery(getCategories());
 
-  // Very inefficient, but is there a better way to do this? New StoreProvider for CategoryDTO[]?
+  const changePage = (page: number) => {
+    router.push(getPageUrl(page));
+  };
+
   useEffect(() => {
-    if (isCategoriesLoaded && categories!.length > 0) {
-      categories!.forEach((category: CategoryDTO) => {
-        if (category.id == categoryId) {
-          setCategoryName(category.name);
+    if (page < 0) {
+      changePage(1);
+    } else {
+      const items = events?.total_count;
+      const mPageCount = items !== undefined ? Math.ceil(items / 10) : -1;
+      if (mPageCount !== -1) {
+        setPageCount(mPageCount);
+        if (page > mPageCount) {
+          changePage(mPageCount);
         }
-      });
+      }
     }
-  }, [categories, isCategoriesLoaded, categoryId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, isEventsLoaded, events?.total_count, router, searchParams]);
 
   const getPageUrl = (page: number) => {
     // now you got a read/write object
@@ -71,26 +74,6 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     return `${pathname}${query}`;
   };
-
-  const changePage = (page: number) => {
-    router.push(getPageUrl(page));
-  };
-
-  if (!pageStr) {
-    changePage(1);
-    return;
-  }
-
-  const items = events?.total_count;
-  const pageCount = items !== undefined && Math.ceil(items / 10);
-  if (pageCount !== false) {
-    if (page <= 0) {
-      changePage(1);
-    }
-    if (page > pageCount) {
-      changePage(pageCount);
-    }
-  }
 
   return (
     <div className="relative w-full h-full">

@@ -1,18 +1,20 @@
 "use client";
 
 import { createElement, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
 
-import { getCategories } from "@/queries/category";
+import { CategoryDTO } from "@/client";
 import { getIconFor } from "@/types/categories";
 
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
 
-const SidebarOtherTopics = () => {
-  const router = useRouter();
-  const { data: categories, isSuccess } = useQuery(getCategories());
+type Props = {
+  label: string;
+  categories: CategoryDTO[];
+};
+
+const SidebarTopics = ({ label, categories }: Props) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const numTopics = categories?.length;
 
@@ -25,7 +27,7 @@ const SidebarOtherTopics = () => {
     <div className="flex flex-col space-y-2.5 w-full max-w-xs">
       <div className="flex items-center cursor-pointer w-full justify-between">
         <h1 className="text-sm font-medium text-muted-foreground/80 px-2">
-          Other topics {isSuccess && `(${numTopics})`}
+          {label} {`(${numTopics})`}
         </h1>
         {createElement(isExpanded ? ChevronsUpDownIcon : ChevronsDownUpIcon, {
           onClick: () => setIsExpanded((prevState) => !prevState),
@@ -34,10 +36,11 @@ const SidebarOtherTopics = () => {
           className: "text-muted-foreground",
         })}
       </div>
-      <div className={`flex flex-col ${isExpanded ? "" : "hidden"}`}>
+      <div
+        className={`flex flex-col space-y-2 sm:space-y-1 ${isExpanded ? "" : "hidden"}`}
+      >
         {categories?.map((category) => {
           const categoryIcon = getIconFor(category.name);
-          const onClick = () => router.push(`/categories/${category.id}`);
           return (
             // TODO: active category
             <SidebarItemWithIcon
@@ -47,7 +50,7 @@ const SidebarOtherTopics = () => {
               }
               key={category.id}
               label={category.name}
-              onClick={onClick}
+              path={`/categories/${category.id}`}
             />
           );
         })}
@@ -56,4 +59,4 @@ const SidebarOtherTopics = () => {
   );
 };
 
-export default SidebarOtherTopics;
+export default SidebarTopics;

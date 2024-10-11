@@ -12,7 +12,7 @@ Jippy is an AI-powered companion for students aiming to excel in their GCE A-Lev
 | ----------------- | ------------- | ---------- | ---------------------------- |
 | Chloe Lim Xinying | A0238609W     | @chloeelim | Frontend + Branding + UI/UX  |
 | Kyal Sin Min Thet | A0258874J     | @marcus-ny | Prompt Engineering + Backend |
-| Leong See Leng    | A0239616X     | @seelengxd | Full stack + Web scraping    |
+| Leong See Leng    | A0239616X     | @seelengxd | Full stack + DevOps          |
 | Wang Haoyang      | A0234534J     | @haoyangw  | Frontend                     |
 
 ## Setup instructions

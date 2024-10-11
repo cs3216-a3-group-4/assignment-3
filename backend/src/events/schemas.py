@@ -3,6 +3,7 @@ from pydantic import BaseModel, ConfigDict
 from src.categories.schemas import CategoryDTO
 from src.events.models import ArticleSource
 from src.likes.schemas import LikeDTO
+from src.notes.schemas import NoteDTO
 
 
 class ArticleDTO(BaseModel):
@@ -22,7 +23,7 @@ class ReadDTO(BaseModel):
     last_read: datetime
 
 
-class MiniEventDTO(BaseModel):
+class BaseEventDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
@@ -32,15 +33,27 @@ class MiniEventDTO(BaseModel):
 
     categories: list[CategoryDTO]
     original_article: ArticleDTO
+
+
+class MiniEventDTO(BaseEventDTO):
     reads: list[ReadDTO]
 
 
-class AnalysisDTO(BaseModel):
+class AnalysisMiniDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     category: CategoryDTO
     content: str
     likes: list[LikeDTO]
+    event_id: int
+
+
+class AnalysisToEventDTO(AnalysisMiniDTO):
+    event: BaseEventDTO
+
+
+class AnalysisDTO(AnalysisMiniDTO):
+    notes: list[NoteDTO]
 
 
 class GPQuestionDTO(BaseModel):
@@ -61,9 +74,18 @@ class EventDTO(MiniEventDTO):
     analysises: list[AnalysisDTO]
     gp_questions: list[GPQuestionDTO]
     bookmarks: list[BookmarkDTO]
+    notes: list[NoteDTO]
 
 
 class EventIndexResponse(BaseModel):
     total_count: int
     count: int
     data: list[MiniEventDTO]
+
+
+class EventNoteDTO(NoteDTO):
+    event: "BaseEventDTO"
+
+
+class AnalysisNoteDTO(NoteDTO):
+    analysis: "AnalysisToEventDTO"

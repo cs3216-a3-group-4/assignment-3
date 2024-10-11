@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
@@ -14,36 +15,46 @@ class Points(BaseModel):
     against_points: List[dict]
 
 
-def generate_points_from_question(question: str) -> dict:
+async def generate_points_from_question(question: str) -> dict:
     human_message = HUMAN_PROMPT + question
     messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
 
-    result = lm_model.invoke(messages)
+    result = await lm_model.ainvoke(messages)
     parser = JsonOutputParser(pydantic_object=Points)
     points = parser.invoke(result)
     return points
 
 
-def get_relevant_analyses(question: str, analyses_per_point: int = 5) -> dict:
+async def populate_point(point: str, analyses_per_point: int, relevant_results: list):
+    relevant_analyses = await get_similar_results(point, top_k=analyses_per_point)
+    relevant_results.append({"point": point, "analyses": relevant_analyses})
+
+
+async def get_relevant_analyses(question: str, analyses_per_point: int = 5) -> dict:
     print(f"Freq penalty: {lm_model.frequency_penalty}")
-    points = generate_points_from_question(question)
+    points = await generate_points_from_question(question)
 
     for_pts = points.get("for_points", [])
     against_pts = points.get("against_points", [])
 
     relevant_results = {"for_points": [], "against_points": []}
-    for point in for_pts:
-        relevant_analyses = get_similar_results(point, top_k=analyses_per_point)
-        relevant_results.get("for_points").append(
-            {"point": point, "analyses": relevant_analyses}
-        )
 
-    for point in against_pts:
-        relevant_analyses = get_similar_results(point, top_k=analyses_per_point)
-        relevant_results.get("against_points").append(
-            {"point": point, "analyses": relevant_analyses}
+    await asyncio.gather(
+        *(
+            [
+                populate_point(
+                    point, analyses_per_point, relevant_results.get("for_points")
+                )
+                for point in for_pts
+            ]
+            + [
+                populate_point(
+                    point, analyses_per_point, relevant_results.get("against_points")
+                )
+                for point in against_pts
+            ]
         )
-
+    )
     return relevant_results
 
 

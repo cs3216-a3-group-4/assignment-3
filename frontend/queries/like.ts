@@ -26,3 +26,22 @@ export const useLikeEvent = (event_id: number) => {
     },
   });
 };
+
+export const useLikePoint = (answer_id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ point_id, type }: { point_id: number; type: LikeType }) => {
+      return upsertLikeLikesPost({
+        body: {
+          point_id,
+          type,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Answers, answer_id],
+      });
+    },
+  });
+};

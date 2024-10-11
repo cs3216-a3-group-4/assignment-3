@@ -1,12 +1,8 @@
 import { ClockIcon, LayoutDashboardIcon, NewspaperIcon } from "lucide-react";
 
 import { EventDTO } from "@/client";
-import Chip from "@/components/display/chip";
-import {
-  categoriesToDisplayName,
-  categoriesToIconsMap,
-  getCategoryFor,
-} from "@/types/categories";
+import CategoryChip from "@/components/display/category-chip";
+import { getCategoryFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
 
 interface Props {
@@ -31,14 +27,7 @@ const EventDetails = ({ event }: Props) => {
         </span>
         <div className="flex flex-wrap gap-x-3 gap-y-2 col-span-12 md:col-span-8 xl:col-span-9">
           {eventCategories.map((category) => (
-            <Chip
-              Icon={categoriesToIconsMap[category]}
-              className="mb-2 md:mb-0"
-              key={category}
-              label={categoriesToDisplayName[category]}
-              size={"lg"}
-              variant="primary" // TODO: this is ugly
-            />
+            <CategoryChip category={category} key={category} />
           ))}
         </div>
       </div>

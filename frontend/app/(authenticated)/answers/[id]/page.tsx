@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 
 import Chip from "@/components/display/chip";
+import LikeButtons from "@/components/likes/like-buttons";
+import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import {
   Accordion,
   AccordionContent,
@@ -19,13 +21,17 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useLikePoint } from "@/queries/like";
 import { getAnswer } from "@/queries/user-question";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const AnswerPage = ({ params }: { params: { id: string } }) => {
+  const user = useUserStore((state) => state.user);
   const id = parseInt(params.id);
-  const { data, isFetching } = useQuery(getAnswer(id));
+  const { data, isPending } = useQuery(getAnswer(id));
+  const likeMutation = useLikePoint(id);
 
-  if (isFetching) {
+  if (isPending) {
     return (
       <div className="flex justify-center items-center w-full">
         <LoadingSpinner className="w-24 h-24" />
@@ -33,9 +39,11 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
     );
   }
   return (
-    // TODO: @seeleng scroll to top
     data && (
-      <div className="flex flex-col bg-muted w-full h-full max-h-full px-4 md:px-8 xl:px-24 overflow-y-auto">
+      <div
+        className="flex flex-col bg-muted w-full h-full max-h-full px-4 md:px-8 xl:px-24 overflow-y-auto"
+        id="answer"
+      >
         <div className="flex flex-col pb-4 mb-4 py-8 xl:py-16 max-w-6xl md:mx-8 lg:mx-16 xl:mx-auto">
           <h1 className="px-8 md:px-0 text-2xl lg:text-3x xl:text-4xl font-semibold text-text mb-10 2xl:mb-12">
             {data.question}
@@ -44,6 +52,11 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
             <Accordion className="flex flex-col gap-y-4" type="multiple">
               {/* TODO @seeleng: sort by position? for arguments first? */}
               {data.answer.points.map((point) => {
+                const likes = point.likes;
+                const userLike = likes.filter(
+                  (like) => like.user_id === user?.id,
+                )[0];
+                const userLikeValue = userLike ? userLike.type : 0;
                 const pointHasAnalysis = point.point_analysises.length > 0;
                 return (
                   <AccordionItem
@@ -70,14 +83,32 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="border-t-[0.5px] border-primary-600 mt-2 pt-4 2xl:pt-8">
-                        <span className="flex items-center text-lg 2xl:text-2xl px-6 2xl:px-10 pb-2 2xl:pb-0 pt-2">
-                          <BookOpenTextIcon
-                            className="inline-flex mr-3"
-                            size={20}
-                            strokeWidth={1.6}
+                        <div className="flex items-center text-lg 2xl:text-2xl px-6 2xl:px-10 pb-2 2xl:pb-0 pt-2 justify-between">
+                          <span className="flex items-center">
+                            <BookOpenTextIcon
+                              className="inline-flex mr-3"
+                              size={20}
+                              strokeWidth={1.6}
+                            />
+                            <h2>Jippy Examples</h2>
+                          </span>
+                          <LikeButtons
+                            className="mt-0"
+                            onDislike={() =>
+                              likeMutation.mutate({
+                                point_id: point.id,
+                                type: -1,
+                              })
+                            }
+                            onLike={() =>
+                              likeMutation.mutate({
+                                point_id: point.id,
+                                type: 1,
+                              })
+                            }
+                            userLikeValue={userLikeValue}
                           />
-                          <h2>Jippy Examples</h2>
-                        </span>
+                        </div>
 
                         {pointHasAnalysis ? (
                           <Accordion className="" type="multiple">
@@ -146,7 +177,7 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                             )}
                           </Accordion>
                         ) : (
-                          <Alert className="p-8 bg-accent-100/20">
+                          <Alert className="p-8 bg-accent-100/20 mt-2">
                             <AlertTitle className="font-medium text-lg">
                               Jippy couldn&apos;t find relevant examples but has
                               some pointers!
@@ -171,6 +202,11 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
             </Accordion>
           </div>
         </div>
+        <ScrollToTopButton
+          className="absolute right-4 bottom-4"
+          minHeight={200}
+          scrollElementId="answer"
+        />
       </div>
     )
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CreditCardIcon, LogOutIcon, UserIcon } from "lucide-react";
 
@@ -64,19 +65,23 @@ const UserProfileButton = () => {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => router.push("/user/profile")}>
-              <UserIcon className="mr-2" size={16} />
-              <span>Profile settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/user/profile")}>
-              <CreditCardIcon className="mr-2" size={16} />
-              <span>Manage billings</span>
-              <Chip
-                className="ml-4 hidden xl:inline-flex"
-                label="Free tier"
-                size="sm"
-              />
-            </DropdownMenuItem>
+            <Link href="/user/profile">
+              <DropdownMenuItem>
+                <UserIcon className="mr-2" size={16} />
+                <span>Profile settings</span>
+              </DropdownMenuItem>
+            </Link>
+            <Link className="cursor-pointer" href="/user/profile">
+              <DropdownMenuItem>
+                <CreditCardIcon className="mr-2" size={16} />
+                <span>Manage billings</span>
+                <Chip
+                  className="ml-4 hidden xl:inline-flex"
+                  label="Free tier"
+                  size="sm"
+                />
+              </DropdownMenuItem>
+            </Link>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>

@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { AccordionContent } from "@radix-ui/react-accordion";
 import { Wand2 } from "lucide-react";
 
@@ -18,7 +18,6 @@ import {
 
 const Landing = () => {
   // TODO: build landing page
-  const router = useRouter();
   return (
     <div className="relative w-full h-full overflow-y-auto">
       <div className="flex flex-col bg-muted w-full h-fit">
@@ -32,16 +31,15 @@ const Landing = () => {
               General Paper grades.
             </h2>
             <div className="flex flex-col md:flex-row w-full items-center justify-center gap-x-6 gap-y-3 mt-10">
-              <Button onClick={() => router.push("/register")} size="lg">
-                Join for free
-              </Button>
-              <Button
-                onClick={() => router.push("#learn-more")}
-                size="lg"
-                variant="ghost"
-              >
-                Learn more
-              </Button>
+              <Link href="/register">
+                <Button size="lg">Join for free</Button>
+              </Link>
+
+              <Link href="#learn-more">
+                <Button size="lg" variant="ghost">
+                  Learn more
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

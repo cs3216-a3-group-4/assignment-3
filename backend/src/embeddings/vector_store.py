@@ -23,7 +23,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "main-index-1"  # change to create a new index
+    index_name = "cna-primary-index"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
@@ -77,8 +77,8 @@ def store_documents(analysis_list: List[Analysis]):
     print(f"Stored {len(documents)} documents")
 
 
-def get_similar_results(query: str, top_k: int = 3):
-    documents = vector_store.similarity_search_with_relevance_scores(
+async def get_similar_results(query: str, top_k: int = 3):
+    documents = await vector_store.asimilarity_search_with_relevance_scores(
         query=query, k=top_k
     )
     results = []
