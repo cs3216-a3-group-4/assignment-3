@@ -83,13 +83,17 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="border-t-[0.5px] border-primary-600 mt-2 pt-4 2xl:pt-8">
-                        <span className="flex items-center text-lg 2xl:text-2xl px-6 2xl:px-10 pb-2 2xl:pb-0 pt-2">
-                          <BookOpenTextIcon
-                            className="inline-flex mr-3"
-                            size={20}
-                            strokeWidth={1.6}
-                          />
+                        <div className="flex items-center text-lg 2xl:text-2xl px-6 2xl:px-10 pb-2 2xl:pb-0 pt-2 justify-between">
+                          <span className="flex items-center">
+                            <BookOpenTextIcon
+                              className="inline-flex mr-3"
+                              size={20}
+                              strokeWidth={1.6}
+                            />
+                            <h2>Jippy Examples</h2>
+                          </span>
                           <LikeButtons
+                            className="mt-0"
                             onDislike={() =>
                               likeMutation.mutate({
                                 point_id: point.id,
@@ -104,8 +108,7 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                             }
                             userLikeValue={userLikeValue}
                           />
-                          <h2>Jippy Examples</h2>
-                        </span>
+                        </div>
 
                         {pointHasAnalysis ? (
                           <Accordion className="" type="multiple">
@@ -174,7 +177,7 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                             )}
                           </Accordion>
                         ) : (
-                          <Alert className="p-8 bg-accent-100/20">
+                          <Alert className="p-8 bg-accent-100/20 mt-2">
                             <AlertTitle className="font-medium text-lg">
                               Jippy couldn&apos;t find relevant examples but has
                               some pointers!
