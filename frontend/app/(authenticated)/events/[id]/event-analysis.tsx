@@ -171,7 +171,7 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
         </span>
         <div className="flex w-full">
           <ToggleGroup
-            className="flex flex-col sm:flex-row flex-wrap md:flex-row gap-3"
+            className="flex flex-col sm:flex-row flex-wrap lg:flex-row gap-3 w-full lg:w-auto"
             onValueChange={(value) => setActiveCategories(value)}
             size="lg"
             type="multiple"
@@ -184,11 +184,11 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
               return (
                 <ToggleGroupItem
                   aria-label={`Toggle ${categoryName}`}
-                  className="border-none bg-muted text-muted-foreground data-[state=on]:bg-cyan-400/30 data-[state=on]:text-cyan-600 rounded-xl hover:bg-cyan-200/30 hover:text-cyan-500"
+                  className="w-full lg:w-auto border-none bg-muted text-muted-foreground data-[state=on]:bg-cyan-400/30 data-[state=on]:text-cyan-600 rounded-lg hover:bg-cyan-200/30 hover:text-cyan-500"
                   key={category.id}
                   value={category.name}
                 >
-                  <span className="flex items-center">
+                  <span className="flex items-center w-full justify-center">
                     <CategoryIcon className="inline-flex mr-2" size={18} />
                     {categoryName}
                   </span>

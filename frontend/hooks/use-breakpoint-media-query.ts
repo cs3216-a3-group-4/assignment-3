@@ -16,8 +16,8 @@ function useBreakpointMediaQuery(): MediaBreakpoint {
   if (isXxxlBreakpoint) return MediaBreakpoint.Xxxl;
   if (isXxlBreakpoint) return MediaBreakpoint.Xxl;
   if (isXlBreakpoint) return MediaBreakpoint.Xl;
-  if (isMdBreakpoint) return MediaBreakpoint.Md;
   if (isLgBreakpoint) return MediaBreakpoint.Lg;
+  if (isMdBreakpoint) return MediaBreakpoint.Md;
 
   return MediaBreakpoint.Sm;
 }

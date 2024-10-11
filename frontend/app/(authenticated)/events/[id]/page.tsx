@@ -12,7 +12,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
+import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 import { getEvent, useReadEvent } from "@/queries/event";
+import { MediaBreakpoint } from "@/utils/media";
 
 import EventAnnotations from "./event-annotations/event-annotations";
 import EventNotes from "./event-annotations/event-notes";
@@ -24,11 +26,19 @@ import EventSummary from "./event-summary";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
-  const [isViewAnnotation, setIsViewAnnotation] = useState<boolean>(true);
   const { data, isLoading } = useQuery(getEvent(id));
+  const mediaQuery = useBreakpointMediaQuery();
 
   const readEventMutation = useReadEvent(id);
   const [sentRead, setSentRead] = useState(false);
+
+  console.log("mediaQuery", mediaQuery);
+  const showPanelAsSheet =
+    mediaQuery === MediaBreakpoint.Lg ||
+    mediaQuery === MediaBreakpoint.Md ||
+    mediaQuery === MediaBreakpoint.Sm;
+  const [isViewAnnotation, setIsViewAnnotation] =
+    useState<boolean>(!showPanelAsSheet);
 
   useEffect(() => {
     if (!isLoading && !sentRead) {
@@ -76,7 +86,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       className={`w-full h-fit min-h-full bg-muted ${isViewAnnotation ? "relative flex" : "px-8 md:px-16 xl:px-56"}`}
     >
       <div
-        className={`flex flex-col bg-background ${isViewAnnotation ? "w-8/12 h-full mx-16" : ""}`}
+        className={`flex flex-col bg-background ${isViewAnnotation ? (showPanelAsSheet ? "hidden" : "w-8/12 h-full mx-16") : ""}`}
       >
         <div className="flex flex-col gap-y-10">
           <div className="flex w-full max-h-52 overflow-y-clip items-center rounded-b-sm border">
@@ -96,7 +106,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             <h1 className="text-4xl font-bold px-6">{data.title}</h1>
             <EventDetails event={data} />
             <EventSummary summary={data.description} />
-            <div className="flex gap-x-4 px-6">
+            <div className="flex flex-wrap gap-x-4 gap-y-4 px-6">
               <EventBookmarkButton
                 eventId={id}
                 eventTitle={data.title}
@@ -127,7 +137,12 @@ const Page = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       {isViewAnnotation && (
-        <div className="sticky top-0 flex w-4/12 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
+        <div
+          className={
+            "sticky top-0 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)] " +
+            (showPanelAsSheet ? "absolute right-0" : "flex w-4/12 ")
+          }
+        >
           <EventAnnotations
             event={data}
             hideAnnotationsPanel={() => setIsViewAnnotation(false)}
