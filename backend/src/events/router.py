@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload, aliased, Session
+from sqlalchemy.orm import selectinload, aliased
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.events.dependencies import retrieve_event
