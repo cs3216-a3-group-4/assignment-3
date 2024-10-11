@@ -61,7 +61,8 @@ const MobileSidebar = () => {
     if (!isCollapsed) {
       setIsCollapsed(true);
     }
-  }, [pathname, isCollapsed]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <div className="sm:hidden" key={pathname}>
