@@ -13,7 +13,8 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import ContentLayout from "./content-layout";
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
-  const { setLoggedIn, setNotLoggedIn } = useUserStore((state) => state);
+  const { setLoggedIn, setNotLoggedIn, setIsFetching, setIsNotFetching } =
+    useUserStore((state) => state);
   const {
     data: userProfile,
     isSuccess: isUserProfileSuccess,
@@ -21,12 +22,27 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   } = useQuery(getUserProfile());
 
   useEffect(() => {
+    if (isUserProfileLoading) {
+      setIsFetching();
+      return;
+    }
+
     if (isUserProfileSuccess && userProfile) {
       setLoggedIn(userProfile);
     } else {
       setNotLoggedIn();
     }
-  }, [userProfile, isUserProfileSuccess, setLoggedIn, setNotLoggedIn]);
+
+    setIsNotFetching();
+  }, [
+    userProfile,
+    isUserProfileSuccess,
+    isUserProfileLoading,
+    setLoggedIn,
+    setIsFetching,
+    setIsNotFetching,
+    setNotLoggedIn,
+  ]);
 
   return (
     <div className="relative flex min-h-screen max-h-screen flex-col bg-background">
