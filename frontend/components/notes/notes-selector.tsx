@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 export const enum Filter {
   CATEGORY = "Category",
@@ -28,13 +29,17 @@ const NotesSelector = ({ filter, setFilter }: Props) => {
   };
 
   return (
-    <div className="flex justify-center self-center grow-0">
+    <div className="flex justify-center w-fit max-w-full">
       <DropdownMenu>
         {/* Trigger: button with the selected option displayed */}
         <DropdownMenuTrigger asChild>
-          <button className="flex p-2 gap-1 rounded-md hover:bg-muted-foreground/10">
+          <Button
+            className="flex p-2 gap-1 rounded-md"
+            variant="ghost"
+            size="lg"
+          >
             {filter} <ChevronDown className="w-4 h-4 self-center" />
-          </button>
+          </Button>
         </DropdownMenuTrigger>
 
         {/* Menu content */}
