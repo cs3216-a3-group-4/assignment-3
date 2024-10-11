@@ -3,8 +3,15 @@ import { EditIcon, TrashIcon } from "lucide-react";
 import { NoteDTO, src__events__schemas__AnalysisDTO } from "@/client";
 import CategoryChip from "@/components/display/category-chip";
 import { Button } from "@/components/ui/button";
-import { useDeleteNote } from "@/queries/note";
+import {
+  useAddEventNote,
+  useDeleteNote,
+  useEditEventNote,
+} from "@/queries/note";
 import { Category } from "@/types/categories";
+import { useState } from "react";
+import NoteForm, { NoteFormType } from "./note-form";
+import { SubmitHandler } from "react-hook-form";
 
 interface MiniGenericAnalysisNoteProps {
   note: NoteDTO;
@@ -17,6 +24,8 @@ const MiniGenericAnalysisNote = ({
   eventAnalysis,
   eventId,
 }: MiniGenericAnalysisNoteProps) => {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const editNoteMutation = useEditEventNote(eventId);
   const deleteNoteMutation = useDeleteNote(eventId);
   const analysis =
     note.parent_type === "analysis" &&
@@ -43,6 +52,38 @@ const MiniGenericAnalysisNote = ({
       });
     }
   };
+
+  const handleEditNote: SubmitHandler<NoteFormType> = ({
+    content,
+    category_id,
+  }) => {
+    editNoteMutation.mutate({
+      id: note.id,
+      content,
+      category_id: category_id ? parseInt(category_id) : note.category?.id,
+    });
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <div
+        className="flex flex-col border-y py-6 px-1 first:pt-2 first:border-t-transparent last:border-b-transparent"
+        id={`annotation-${note.id}`}
+      >
+        <NoteForm
+          isHighlight={note.parent_type === "analysis"}
+          highlightSelection={quote || undefined}
+          hideCategory={note.parent_type === "analysis"}
+          defaultValue={note}
+          onSubmit={handleEditNote}
+          onCancel={() => setIsEditing(false)}
+          textSize="text-sm"
+          textAreaTextSize="text-base"
+        />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -80,7 +121,7 @@ const MiniGenericAnalysisNote = ({
           </Button>
 
           <Button className="h-6 w-6" size="icon" variant="ghost">
-            <EditIcon className="h-4 w-4" />
+            <EditIcon className="h-4 w-4" onClick={() => setIsEditing(true)} />
           </Button>
         </div>
       </div>
