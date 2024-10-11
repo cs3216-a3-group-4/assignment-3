@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-
 import UserProfileButton from "@/components/auth/user-profile-button";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 import JippyIconSm from "@/public/jippy-icon/jippy-icon-sm";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
-import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
 
@@ -17,9 +13,7 @@ import MobileSidebar from "./mobile-sidebar";
 export const NavItems: NavItem[] = [];
 
 function MobileNavbar() {
-  const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
-    (state) => state,
-  );
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   return (
     <header className="md:hidden sticky top-0 z-50 w-full border-border bg-primary/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 border-b-[1px] min-h-[84px] max-h-[84px]">

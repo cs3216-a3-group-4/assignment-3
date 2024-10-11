@@ -39,6 +39,8 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     isUserProfileSuccess,
     isUserProfileLoading,
     setLoggedIn,
+    setIsFetching,
+    setIsNotFetching,
     setNotLoggedIn,
   ]);
 

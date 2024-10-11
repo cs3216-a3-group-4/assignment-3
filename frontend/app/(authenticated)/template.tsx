@@ -1,9 +1,7 @@
 "use client";
 import { Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 
-import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 
 export default function RedirectIfNotAuthenticated({
@@ -23,7 +21,7 @@ export default function RedirectIfNotAuthenticated({
     if (isLoggedIn && user && user.categories.length === 0) {
       router.push("/onboarding");
     }
-  }, [isFetching, isLoggedIn, user]);
+  }, [isFetching, isLoggedIn, user, router]);
 
   return <Suspense>{children}</Suspense>;
 }

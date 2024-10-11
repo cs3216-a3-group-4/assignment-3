@@ -1,29 +1,24 @@
 "use client";
 
-import { useEffect } from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@radix-ui/react-navigation-menu";
-import { useQuery } from "@tanstack/react-query";
 
 import UserProfileButton from "@/components/auth/user-profile-button";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
-import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
 
 export const NavItems: NavItem[] = [];
 
 function Navbar() {
-  const { isLoggedIn, setLoggedIn, setNotLoggedIn } = useUserStore(
-    (state) => state,
-  );
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   return (
     <header
