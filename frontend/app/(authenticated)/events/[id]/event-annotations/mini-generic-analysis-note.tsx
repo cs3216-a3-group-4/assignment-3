@@ -1,17 +1,14 @@
+import { useState } from "react";
+import { SubmitHandler } from "react-hook-form";
 import { EditIcon, TrashIcon } from "lucide-react";
 
 import { NoteDTO, src__events__schemas__AnalysisDTO } from "@/client";
 import CategoryChip from "@/components/display/category-chip";
 import { Button } from "@/components/ui/button";
-import {
-  useAddEventNote,
-  useDeleteNote,
-  useEditEventNote,
-} from "@/queries/note";
+import { useDeleteNote, useEditEventNote } from "@/queries/note";
 import { Category } from "@/types/categories";
-import { useState } from "react";
+
 import NoteForm, { NoteFormType } from "./note-form";
-import { SubmitHandler } from "react-hook-form";
 
 interface MiniGenericAnalysisNoteProps {
   note: NoteDTO;
@@ -72,14 +69,14 @@ const MiniGenericAnalysisNote = ({
         id={`annotation-${note.id}`}
       >
         <NoteForm
-          isHighlight={note.parent_type === "analysis"}
-          highlightSelection={quote || undefined}
-          hideCategory={note.parent_type === "analysis"}
           defaultValue={note}
-          onSubmit={handleEditNote}
+          hideCategory={note.parent_type === "analysis"}
+          highlightSelection={quote || undefined}
+          isHighlight={note.parent_type === "analysis"}
           onCancel={() => setIsEditing(false)}
-          textSize="text-sm"
+          onSubmit={handleEditNote}
           textAreaTextSize="text-base"
+          textSize="text-sm"
         />
       </div>
     );
