@@ -8,6 +8,8 @@ import DateRangeSelector, { Period } from "@/app/_home/date-range-selector";
 import EventsList from "@/app/_home/events-list";
 import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import usePagination from "@/hooks/use-pagination";
 import { getHomeEvents } from "@/queries/event";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -35,10 +37,13 @@ const Home = () => {
     return eventStartDate;
   }, [eventPeriod]);
 
+  const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
+
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
     getHomeEvents(
       toQueryDate(eventStartDate),
       page,
+      singaporeOnly,
       user?.categories.map((category) => category.id),
     ),
   );
@@ -74,6 +79,15 @@ const Home = () => {
             <span className="text-primary text-lg">
               {parseDate(eventStartDate)} - {parseDate(new Date())}
             </span>
+          </div>
+          <div className="flex items-center w-fit gap-2 px-4 md:px-8 xl:px-12">
+            <Label className="whitespace-nowrap">Singapore only</Label>
+            <Input
+              onChange={() => {
+                setSingaporeOnly(!singaporeOnly);
+              }}
+              type="checkbox"
+            />
           </div>
 
           <EventsList events={events} isEventsLoaded={isEventsLoaded} />
