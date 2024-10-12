@@ -62,7 +62,7 @@ def generate_comment_orm(
             inclination=inclination,
             content=content,
             lack_example=lacking_examples,
-            parent_type=CommentParentType.PARAGRAPH,
+            parent_type=parent_type,
         )
         if lacking_examples:
             print("Caught lacking")
