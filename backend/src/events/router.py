@@ -28,6 +28,7 @@ def get_events(
     limit: int | None = None,
     offset: int | None = None,
     bookmarks: bool = False,
+    singapore_only: bool = False,
 ) -> EventIndexResponse:
     query = select(Event.id).distinct()
     if start_date is not None:
@@ -36,6 +37,8 @@ def get_events(
         query = query.where(Event.original_article.has(Article.date <= end_date))
     if bookmarks:
         query = query.where(Event.bookmarks.any(Bookmark.user_id == user.id))
+    if singapore_only:
+        query = query.where(Event.is_singapore == True)  # noqa: E712
     if category_ids:
         query = query.join(Event.categories.and_(Category.id.in_(category_ids)))
     relevant_ids = [id for id in session.scalars(query)]

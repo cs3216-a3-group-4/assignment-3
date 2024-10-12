@@ -7,6 +7,7 @@ import {
 } from "@/client/services.gen";
 
 import { QueryKeys } from "./utils/query-keys";
+import { boolean } from "zod";
 
 export const NUM_EVENTS_PER_PAGE = 10;
 
@@ -33,10 +34,11 @@ export const useReadEvent = (id: number) => {
 export const getHomeEvents = (
   startDate: string,
   page: number,
+  isSingapore: boolean,
   categoryIds?: number[],
 ) =>
   queryOptions({
-    queryKey: [QueryKeys.Categories, categoryIds, page, startDate],
+    queryKey: [QueryKeys.Categories, categoryIds, page, isSingapore, startDate],
     queryFn: () =>
       getEventsEventsGet({
         withCredentials: true,
@@ -45,17 +47,23 @@ export const getHomeEvents = (
           category_ids: categoryIds,
           limit: NUM_EVENTS_PER_PAGE,
           offset: (page - 1) * NUM_EVENTS_PER_PAGE,
+          singapore_only: isSingapore,
         },
       }).then((data) => data.data),
   });
 
-export const getEventsForCategory = (categoryId: number, page: number) =>
+export const getEventsForCategory = (
+  categoryId: number,
+  page: number,
+  singaporeOnly: boolean,
+) =>
   queryOptions({
-    queryKey: [QueryKeys.Categories, categoryId, page],
+    queryKey: [QueryKeys.Categories, categoryId, singaporeOnly, page],
     queryFn: () =>
       getEventsEventsGet({
         withCredentials: true,
         query: {
+          singapore_only: singaporeOnly,
           category_ids: [categoryId],
           limit: NUM_EVENTS_PER_PAGE,
           offset: (page - 1) * NUM_EVENTS_PER_PAGE,

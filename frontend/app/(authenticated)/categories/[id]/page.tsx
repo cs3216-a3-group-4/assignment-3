@@ -8,6 +8,8 @@ import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import usePagination from "@/hooks/use-pagination";
 import { getCategories } from "@/queries/category";
 import { getEventsForCategory } from "@/queries/event";
@@ -16,10 +18,11 @@ const Page = ({ params }: { params: { id: string } }) => {
   const categoryId = parseInt(params.id);
   const [categoryName, setCategoryName] = useState<string>("");
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
+  const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
 
   const { page, pageCount, getPageUrl } = usePagination({ totalCount });
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
-    getEventsForCategory(categoryId, page),
+    getEventsForCategory(categoryId, page, singaporeOnly),
   );
   const { data: categories, isSuccess: isCategoriesLoaded } =
     useQuery(getCategories());
@@ -56,6 +59,15 @@ const Page = ({ params }: { params: { id: string } }) => {
                 Top events from {categoryName}
               </span>
             </div>
+          </div>
+          <div className="flex items-center w-fit gap-2 px-4 md:px-8 xl:px-12">
+            <Label className="whitespace-nowrap">Singapore only</Label>
+            <Input
+              onChange={() => {
+                setSingaporeOnly(!singaporeOnly);
+              }}
+              type="checkbox"
+            />
           </div>
 
           <div className="flex flex-col w-full">
