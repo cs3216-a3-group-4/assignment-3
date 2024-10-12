@@ -3,7 +3,7 @@ from typing import List
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel
-from src.lm.generate_events import lm_model_essay as lm_model
+from src.lm.lm import lm_model_essay as lm_model
 from src.embeddings.vector_store import get_similar_results
 
 from src.lm.prompts import ROLE_SYSPROMPT as SYSPROMPT

@@ -14,6 +14,8 @@ from src.essays.models import (
     Paragraph,
     ParagraphType,
 )
+from src.lm.generate_essay_comments import get_comments
+
 from src.essays.schemas import EssayCreate, EssayDTO, EssayMiniDTO
 from sqlalchemy.orm import Session, selectinload
 from src.events.models import Analysis
@@ -36,24 +38,28 @@ def create_essay(
         # TODO: Categorise the paragraph?
         paragraph_orm = Paragraph(type=ParagraphType.PARAGRAPH, content=paragraph)
 
-        comment_with_example = Comment(
-            inclination=Inclination.NEUTRAL,
-            content=f"comment for paragraph {index} with example",
-            parent_type=CommentParentType.PARAGRAPH,
-        )
-        comment_with_example.comment_analysises.append(
-            CommentAnalysis(skill_issue="get good", analysis_id=1)
-        )
+        # comment_with_example = Comment(
+        #     inclination=Inclination.NEUTRAL,
+        #     content=f"comment for paragraph {index} with example",
+        #     parent_type=CommentParentType.PARAGRAPH,
+        # )
+        # comment_with_example.comment_analysises.append(
+        #     CommentAnalysis(skill_issue="get good", analysis_id=1)
+        # )
 
-        # TODO: Add comments for each paragraph
-        paragraph_orm.comments = [
-            Comment(
-                inclination=Inclination.NEUTRAL,
-                content=f"comment for paragraph {index}",
-                parent_type=CommentParentType.PARAGRAPH,
-            ),
-            comment_with_example,
-        ]
+        # # TODO: Add comments for each paragraph
+        # paragraph_orm.comments = [
+        #     Comment(
+        #         inclination=Inclination.NEUTRAL,
+        #         content=f"comment for paragraph {index}",
+        #         parent_type=CommentParentType.PARAGRAPH,
+        #     ),
+        #     comment_with_example,
+        # ]
+
+        comments = get_comments(paragraph, data.question)
+        paragraph_orm.comments = comments
+
         essay.paragraphs.append(paragraph_orm)
 
     # TODO: Add general comments for essay
