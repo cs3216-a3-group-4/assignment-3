@@ -14,6 +14,7 @@ GRADER_HUMAN_PROMPT = """
     You can give up to 4 comments for the given paragraph. Ecah comment must be self-contained and should not be a continuation of the previous comment.
     Give sufficient details for each comment to justify your inclination. Each comment should be 2-3 sentences long.
     Important: For each comment, it should be clear whether the comment is positive or negative. Do not mix positive and negative comments in the same comment.
+    Important: Only comments that are related to examples must indicate if the paragraph is lacking in examples. Other comments should have this field as False by default.
 
     Your output should be in the following format:
     {
@@ -43,4 +44,15 @@ GRADER_SYSPROMPT = """
     You are a grader for a GCE A Level General Paper essay.
     You will be given a paragraph from an essay, and the question that the essay is answering. Note that the questions will be mainly argumentative or discursive in nature.
     Your task is to give comments on the given paragraph based on the question.
+"""
+
+POINT_EXTRACTION_PROMPT = """
+    Given a paragraph from an essay, extract the main argument made in the paragraph.
+    The paragraph will be in the context of an argumentative or discursive essay.
+    The argument should be a concise statement that encapsulates the main point made in the paragraph.
+
+    Your output should be in the following format:
+    {
+        "argument": "Main argument made in the paragraph"
+    }
 """

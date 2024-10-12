@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 from pydantic import BaseModel
 from src.lm.lm import lm_model_essay as lm_model
@@ -6,8 +7,12 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.messages import HumanMessage, SystemMessage
 from src.lm.essay_grader_prompts import GRADER_SYSPROMPT as SYSPROMPT
 from src.lm.essay_grader_prompts import GRADER_HUMAN_PROMPT as HUMAN_PROMPT
+from src.lm.essay_grader_prompts import (
+    POINT_EXTRACTION_PROMPT as POINT_EXTRACTION_PROMPT,
+)
+from src.embeddings.vector_store import get_similar_results
 
-from src.essays.models import Comment, CommentParentType, Inclination
+from src.essays.models import Comment, CommentAnalysis, CommentParentType, Inclination
 
 
 class LMComment(BaseModel):
@@ -30,19 +35,19 @@ def generate_paragraph_comments(content: str, question: str):
     messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
 
     result = lm_model.invoke(messages)
-    print(result.content)
     parser = JsonOutputParser(pydantic_object=Comments)
     comments = parser.invoke(result.content)
+    print("COMMENT: ", comments)
     return comments
 
 
-def generate_comment_orm(comments: dict):
+def generate_comment_orm(comments: dict, content: str, question: str):
     comment_list = comments.get("comments")
     orm_list = []
     for comment in comment_list:
         inclination = comment.get("inclination")
         content = comment.get("comment")
-        lacking_examples = True if comment.get("lacking_examples") == "Yes" else False
+        lacking_examples = True if comment.get("lacking_examples") == "True" else False
 
         orm = Comment(
             inclination=inclination,
@@ -50,21 +55,55 @@ def generate_comment_orm(comments: dict):
             lack_example=lacking_examples,
             parent_type=CommentParentType.PARAGRAPH,
         )
+        if lacking_examples:
+            print("Caught lacking")
+            examples = asyncio.run(generate_comment_with_example(content, question))
+            orm.comment_analysises.append(
+                CommentAnalysis(
+                    skill_issue=examples[0].get("content"),
+                    analysis_id=examples[0].get("id"),
+                )
+            )
         orm_list.append(orm)
 
     return orm_list
 
 
+def extract_point(content: str, question: str):
+    prompt = f"""
+    Question: {question}
+    Paragraph: {content}
+    """
+
+    human_message = POINT_EXTRACTION_PROMPT + prompt
+    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
+
+    result = lm_model.invoke(messages)
+    parser = JsonOutputParser()
+    points = parser.invoke(result.content)
+    return points["argument"]
+
+
+async def generate_comment_with_example(content: str, question: str):
+    """
+    Generate comments for a paragraph with bad examples
+    """
+    argument = extract_point(content, question)
+    examples = await get_similar_results(argument, top_k=1)
+
+    return examples
+
+
 def get_comments(content: str, question: str):
     comments = generate_paragraph_comments(content, question)
-    comment_orm = generate_comment_orm(comments)
+    comment_orm = generate_comment_orm(comments, content, question)
     return comment_orm
 
 
 if __name__ == "__main__":
-    content = "Moreover, by providing aid to different beneficiaries, charitable giving is seen as a desirable way to develop empathy and compassion in us. In the long-run, it may even be part of governmental aims to build the ‘heartware’ of societies through whole-of-society approaches, by implementing policies, community infrastructure and services. Countries such as Singapore have embarked on public education campaigns to imbue these values from a young age. The ‘Singapore Kindness Movement’ (SKF), for example, aims to help build a gracious Singapore, by encouraging individuals to internalise courtesy, kindness and consideration. In the Seed Kindness Fund, SKF supports kindness community projects by youths aged 14–26 years old with up to $1,000 funding per project. It provides invaluable opportunities for youths to take ownership of their contributions to the community through Values In Action (VIA) projects such as fundraising or volunteering initiatives. Besides, at an individual level, charitable giving is also seen as a meaningful way to contribute to the community while broadening one’s perspectives. Voluntourism, for instance, offers tourist volunteers an emotionally charged experience by alleviating poverty at places such as Cambodia and Guatemala. These include teaching the young or building basic amenities for some impoverished families in these countries. Therefore, charitable giving is desirable as it provides avenues for us to invest time, effort or money in causes we deeply resonate in and find significant fulfillment and purpose amidst the hustle and bustle of our everyday lives."
+    content = "Moreover, by providing aid to different beneficiaries, charitable giving is seen as a desirable way to develop empathy and compassion in us. In the long-run, it may even be part of governmental aims to build the ‘heartware’ of societies through whole-of-society approaches, by implementing policies, community infrastructure and services. Many charities help people and this incorporates empathy in us, therefore it is desirable."
     question = "To what extent is charitable giving desirable?"
-    comments = generate_paragraph_comments(content, question)
-    print("Comments\n", comments)
-    comment_orm = generate_comment_orm(comments)
-    print(comment_orm[0].content)
+    comment_orm = get_comments(content, question)
+    for comment in comment_orm:
+        print(comment.comment_analysises)
+        print("\n")
