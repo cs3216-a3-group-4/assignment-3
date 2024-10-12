@@ -8,12 +8,15 @@ from src.common.dependencies import get_session
 from src.essays.models import (
     Comment,
     CommentAnalysis,
-    CommentParentType,
     Essay,
-    Inclination,
     Paragraph,
     ParagraphType,
 )
+from src.lm.generate_essay_comments import (
+    get_comments,
+    get_essay_comments,
+)
+
 from src.essays.schemas import EssayCreate, EssayDTO, EssayMiniDTO
 from sqlalchemy.orm import Session, selectinload
 from src.events.models import Analysis
@@ -36,34 +39,12 @@ def create_essay(
         # TODO: Categorise the paragraph?
         paragraph_orm = Paragraph(type=ParagraphType.PARAGRAPH, content=paragraph)
 
-        comment_with_example = Comment(
-            inclination=Inclination.NEUTRAL,
-            content=f"comment for paragraph {index} with example",
-            parent_type=CommentParentType.PARAGRAPH,
-        )
-        comment_with_example.comment_analysises.append(
-            CommentAnalysis(skill_issue="get good", analysis_id=1)
-        )
+        comments = get_comments(paragraph, data.question)
+        paragraph_orm.comments = comments
 
-        # TODO: Add comments for each paragraph
-        paragraph_orm.comments = [
-            Comment(
-                inclination=Inclination.NEUTRAL,
-                content=f"comment for paragraph {index}",
-                parent_type=CommentParentType.PARAGRAPH,
-            ),
-            comment_with_example,
-        ]
         essay.paragraphs.append(paragraph_orm)
 
-    # TODO: Add general comments for essay
-    essay.comments = [
-        Comment(
-            inclination=Inclination.GOOD,
-            content="placeholder",
-            parent_type=CommentParentType.ESSAY,
-        )
-    ]
+    essay.comments = get_essay_comments(data.paragraphs, data.question)
 
     session.add(essay)
     session.commit()
