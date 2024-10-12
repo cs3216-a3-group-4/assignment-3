@@ -14,7 +14,11 @@ from src.essays.models import (
     Paragraph,
     ParagraphType,
 )
-from src.lm.generate_essay_comments import get_comments
+from src.lm.generate_essay_comments import (
+    generate_essay_comments,
+    get_comments,
+    get_essay_comments,
+)
 
 from src.essays.schemas import EssayCreate, EssayDTO, EssayMiniDTO
 from sqlalchemy.orm import Session, selectinload
@@ -63,13 +67,14 @@ def create_essay(
         essay.paragraphs.append(paragraph_orm)
 
     # TODO: Add general comments for essay
-    essay.comments = [
-        Comment(
-            inclination=Inclination.GOOD,
-            content="placeholder",
-            parent_type=CommentParentType.ESSAY,
-        )
-    ]
+    essay.comments = get_essay_comments(data.paragraphs, data.question)
+    # essay.comments = [
+    #     Comment(
+    #         inclination=Inclination.GOOD,
+    #         content="placeholder",
+    #         parent_type=CommentParentType.ESSAY,
+    #     )
+    # ]
 
     session.add(essay)
     session.commit()

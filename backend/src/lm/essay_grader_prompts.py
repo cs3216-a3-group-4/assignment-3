@@ -56,3 +56,41 @@ POINT_EXTRACTION_PROMPT = """
         "argument": "Main argument made in the paragraph"
     }
 """
+
+WHOLE_ESSAY_GRADER_SYSPROMPT = """
+    You are a grader for a GCE A Level General Paper essay.
+    You will be given an essay and the question that the essay is answering. Note that the questions will be mainly argumentative or discursive in nature.
+    Your task is to give comments on the essay based on the question.
+"""
+
+WHOLE_ESSAY_GRADER_HUMAN_PROMPT = """
+    Your comments should be in the context of grading A Level General Paper essays.
+    Give some general comments on the essay as a whole. You should consider the following points:
+    - The relevance of the essay to the question
+    - The clarity of the argument made
+    - The coherence of the essay
+    - The robustness of examples used to support the argument
+
+    The comments should be self-contained and should not be a continuation of the previous comment.
+    Your output should be in the following format:
+    {
+        "comments": [
+            {
+                "comment": Comment 1,
+                "lacking_examples": "True/False",
+                "inclination": "good/bad/neutral"
+            },
+            {
+                "comment": Comment 2,
+                "lacking_examples": "True/False",
+                "inclination": "good/bad/neutral"
+            },
+            {
+                "comment": Comment 3,
+                "lacking_examples": "True/False",
+                "inclination": "good/bad/neutral"
+            }
+        ]
+        
+    }
+    """
