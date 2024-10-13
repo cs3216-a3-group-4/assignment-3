@@ -85,7 +85,7 @@ const AnalysisFragment = ({
             onClick={onHighlight}
           >
             <HighlighterIcon className="inline-block" />
-            <span className="inline-block ml-2 transition-all font-medium text-sm">
+            <span className="inline-block transition-all font-medium text-sm">
               Highlight
             </span>
           </button>
@@ -94,7 +94,7 @@ const AnalysisFragment = ({
             onClick={onCopy}
           >
             <CopyIcon className="inline-block" />
-            <span className="inline-block ml-2 transition-all font-medium text-sm">
+            <span className="inline-block transition-all font-medium text-sm">
               Copy
             </span>
           </div>
@@ -103,7 +103,7 @@ const AnalysisFragment = ({
             onClick={onClose}
           >
             <SquareXIcon className="inline-block" />
-            <span className="inline-block ml-2 transition-all font-medium text-sm">
+            <span className="inline-block transition-all font-medium text-sm">
               Close
             </span>
           </div>
