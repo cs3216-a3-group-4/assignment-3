@@ -8,12 +8,6 @@ import DateRangeSelector, { Period } from "@/app/_home/date-range-selector";
 import EventsList from "@/app/_home/events-list";
 import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import usePagination from "@/hooks/use-pagination";
-import { getHomeEvents } from "@/queries/event";
-import { useUserStore } from "@/store/user/user-store-provider";
-import { parseDate, toQueryDate } from "@/utils/date";
 import {
   Select,
   SelectContent,
@@ -23,6 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import usePagination from "@/hooks/use-pagination";
+import { getHomeEvents } from "@/queries/event";
+import { useUserStore } from "@/store/user/user-store-provider";
+import { parseDate, toQueryDate } from "@/utils/date";
 
 const DEFAULT_EVENT_PERIOD = Period.Week;
 
@@ -107,10 +105,10 @@ const Home = () => {
               <SelectContent className="min-w-[9rem]">
                 <SelectGroup>
                   <SelectLabel className="text-base">Event filter</SelectLabel>
-                  <SelectItem value="global" className="text-base">
+                  <SelectItem className="text-base" value="global">
                     Global
                   </SelectItem>
-                  <SelectItem value="singapore-only" className="text-base">
+                  <SelectItem className="text-base" value="singapore-only">
                     Singapore
                   </SelectItem>
                 </SelectGroup>

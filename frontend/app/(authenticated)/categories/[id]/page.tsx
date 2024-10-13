@@ -8,20 +8,18 @@ import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import usePagination from "@/hooks/use-pagination";
 import { getCategories } from "@/queries/category";
 import { getEventsForCategory } from "@/queries/event";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectLabel,
-  SelectItem,
-} from "@/components/ui/select";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const categoryId = parseInt(params.id);
@@ -87,10 +85,10 @@ const Page = ({ params }: { params: { id: string } }) => {
               <SelectContent className="min-w-[9rem]">
                 <SelectGroup>
                   <SelectLabel className="text-base">Event filter</SelectLabel>
-                  <SelectItem value="global" className="text-base">
+                  <SelectItem className="text-base" value="global">
                     Global
                   </SelectItem>
-                  <SelectItem value="singapore-only" className="text-base">
+                  <SelectItem className="text-base" value="singapore-only">
                     Singapore
                   </SelectItem>
                 </SelectGroup>
