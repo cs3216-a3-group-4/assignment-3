@@ -1,6 +1,7 @@
 "use client";
 
 import UserProfileButton from "@/components/auth/user-profile-button";
+import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 import JippyIconSm from "@/public/jippy-icon/jippy-icon-sm";
@@ -9,7 +10,6 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
 
 import MobileSidebar from "./mobile-sidebar";
-import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 
 export const NavItems: NavItem[] = [];
 

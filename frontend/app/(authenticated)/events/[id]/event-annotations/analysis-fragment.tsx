@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { CopyIcon, HighlighterIcon } from "lucide-react";
 
+import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import { cn } from "@/lib/utils";
 import { HighlightType } from "@/types/annotations";
 
@@ -14,8 +15,6 @@ interface AnalysisFragmentProps {
   clearHighlight: () => void;
   highlightedNoteId?: number;
 }
-
-const NAVBAR_HEIGHT = 84;
 
 const AnalysisFragment = ({
   content,

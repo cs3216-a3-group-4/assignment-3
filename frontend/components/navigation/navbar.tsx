@@ -8,13 +8,13 @@ import {
 } from "@radix-ui/react-navigation-menu";
 
 import UserProfileButton from "@/components/auth/user-profile-button";
+import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import Link from "@/components/navigation/link";
 import { Button } from "@/components/ui/button";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
-import { NAVBAR_HEIGHT } from "../layout/app-layout";
 
 export const NavItems: NavItem[] = [];
 

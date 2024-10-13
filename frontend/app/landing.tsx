@@ -3,6 +3,7 @@ import { AccordionContent } from "@radix-ui/react-accordion";
 import { Wand2 } from "lucide-react";
 
 import Chip from "@/components/display/chip";
+import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import {
   Accordion,
   AccordionItem,
@@ -15,7 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 
 const Landing = () => {
   return (
