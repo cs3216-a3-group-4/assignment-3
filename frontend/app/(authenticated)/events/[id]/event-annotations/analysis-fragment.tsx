@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import { CopyIcon, HighlighterIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -14,6 +15,8 @@ interface AnalysisFragmentProps {
   highlightedNoteId?: number;
 }
 
+const NAVBAR_HEIGHT = 84;
+
 const AnalysisFragment = ({
   content,
   id,
@@ -22,7 +25,9 @@ const AnalysisFragment = ({
   clearHighlight,
   highlightedNoteId,
 }: AnalysisFragmentProps) => {
-  const onHighlight = () => setShowAnnotationForm(true);
+  const onHighlight = () => {
+    setShowAnnotationForm(true);
+  };
   const onCopy = () => {
     navigator.clipboard.writeText(content);
     clearHighlight();
@@ -42,22 +47,42 @@ const AnalysisFragment = ({
         });
   };
 
+  const spanRef = useRef<HTMLSpanElement>(null);
+
+  const [top, setTop] = useState(0);
+  const [left, setLeft] = useState(0);
+
+  useLayoutEffect(() => {
+    if (highlighted === HighlightType.Selected && spanRef.current) {
+      const rect = spanRef.current.getBoundingClientRect();
+
+      const container = spanRef.current?.closest("#main-content");
+      const scrollX = container ? container.scrollLeft : window.scrollX;
+      const scrollY = container ? container.scrollTop : window.scrollY;
+      const sidebarWidth =
+        document.querySelector("#sidebar")?.getBoundingClientRect().width || 0;
+
+      const top = (rect?.top || 0) + scrollY - NAVBAR_HEIGHT - 70;
+      const left = (rect?.left || 0) + scrollX - sidebarWidth;
+
+      setTop(top);
+      setLeft(left);
+    }
+  }, [highlighted]);
+
   return (
-    <span
-      className={cn({
-        "bg-yellow-100": highlighted === HighlightType.Annotation,
-        "bg-blue-200 relative": highlighted === HighlightType.Selected,
-      })}
-      id={id}
-      key={id}
-      onClick={onClick}
-    >
+    <>
       {highlighted === HighlightType.Selected && (
         <div
-          className="absolute flex gap-x-4 whitespace-nowrap bottom-6 left-0 z-[1000] bg-card px-3 py-2 mb-2 border border-border-2 rounded cursor-pointer transition-all animate-duration-150 animate-jump-in"
+          className="absolute flex gap-x-4 whitespace-nowrap z-[1000] bg-card px-3 py-2 mb-2 border border-border-2 rounded cursor-pointer transition-all animate-duration-150 animate-jump-in"
           id={ANNOTATION_ACTIONS_BUTTON_ID}
+          style={{
+            // transform: `translate3d(${position.x}px, ${position.y}px, 0)`
+            top: top + "px",
+            left: left + "px",
+          }}
         >
-          <div
+          <button
             className="content-center flex flex-col items-center hover:bg-card-foreground/5 p-0.5 rounded-sm"
             id="add-annotation"
             onClick={onHighlight}
@@ -66,8 +91,7 @@ const AnalysisFragment = ({
             <span className="inline-block ml-2 transition-all font-medium text-sm">
               Highlight
             </span>
-          </div>
-
+          </button>
           <div
             className="content-center flex flex-col items-center hover:bg-card-foreground/5 p-0.5 rounded-sm"
             onClick={onCopy}
@@ -79,8 +103,19 @@ const AnalysisFragment = ({
           </div>
         </div>
       )}
-      {content}
-    </span>
+      <span
+        className={cn({
+          "bg-yellow-100": highlighted === HighlightType.Annotation,
+          "bg-blue-200 relative": highlighted === HighlightType.Selected,
+        })}
+        id={id}
+        key={id}
+        onClick={onClick}
+        ref={highlighted === HighlightType.Selected ? spanRef : undefined}
+      >
+        {content}
+      </span>
+    </>
   );
 };
 
