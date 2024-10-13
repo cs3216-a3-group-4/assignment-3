@@ -25,9 +25,7 @@ const AnalysisFragment = ({
   clearHighlight,
   highlightedNoteId,
 }: AnalysisFragmentProps) => {
-  const onHighlight = () => {
-    setShowAnnotationForm(true);
-  };
+  const onHighlight = () => setShowAnnotationForm(true);
   const onCopy = () => {
     navigator.clipboard.writeText(content);
     clearHighlight();
@@ -77,7 +75,6 @@ const AnalysisFragment = ({
           className="absolute flex gap-x-4 whitespace-nowrap z-[1000] bg-card px-3 py-2 mb-2 border border-border-2 rounded cursor-pointer transition-all animate-duration-150 animate-jump-in"
           id={ANNOTATION_ACTIONS_BUTTON_ID}
           style={{
-            // transform: `translate3d(${position.x}px, ${position.y}px, 0)`
             top: top + "px",
             left: left + "px",
           }}

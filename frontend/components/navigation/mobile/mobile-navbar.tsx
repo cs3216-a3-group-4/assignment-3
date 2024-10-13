@@ -9,6 +9,7 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
 
 import MobileSidebar from "./mobile-sidebar";
+import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 
 export const NavItems: NavItem[] = [];
 
@@ -16,7 +17,9 @@ function MobileNavbar() {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   return (
-    <header className="md:hidden sticky top-0 z-50 w-full border-border backdrop-blur-lg bg-background/60 border-b-[1px] min-h-[84px] max-h-[84px]">
+    <header
+      className={`md:hidden sticky top-0 z-50 w-full border-border backdrop-blur-lg bg-background/60 border-b-[1px] min-h-[${NAVBAR_HEIGHT}px] max-h-[${NAVBAR_HEIGHT}px`}
+    >
       <div className="w-full flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
           <Link className="hidden sm:flex mr-6 items-center gap-x-2" href="/">

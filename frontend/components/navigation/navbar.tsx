@@ -14,6 +14,7 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
+import { NAVBAR_HEIGHT } from "../layout/app-layout";
 
 export const NavItems: NavItem[] = [];
 
@@ -22,7 +23,7 @@ function Navbar() {
 
   return (
     <header
-      className={`hidden md:flex sticky top-0 z-50 w-full ${isLoggedIn ? "bg-background/60 border-border" : "bg-muted/60 border-muted"} backdrop-blur-lg border-b-[1px] min-h-[84px] max-h-[84px]`}
+      className={`hidden md:flex sticky top-0 z-50 w-full ${isLoggedIn ? "bg-background/60 border-border" : "bg-muted/60 border-muted"} backdrop-blur-lg border-b-[1px] min-h-[${NAVBAR_HEIGHT}px] max-h-[${NAVBAR_HEIGHT}px]`}
     >
       <div className="w-full flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
