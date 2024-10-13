@@ -13,6 +13,15 @@ import { Label } from "@/components/ui/label";
 import usePagination from "@/hooks/use-pagination";
 import { getCategories } from "@/queries/category";
 import { getEventsForCategory } from "@/queries/event";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectItem,
+} from "@/components/ui/select";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const categoryId = parseInt(params.id);
@@ -60,14 +69,33 @@ const Page = ({ params }: { params: { id: string } }) => {
               </span>
             </div>
           </div>
-          <div className="flex items-center w-fit gap-2 px-4 md:px-8 xl:px-12">
-            <Label className="whitespace-nowrap">Singapore only</Label>
-            <Input
-              onChange={() => {
-                setSingaporeOnly(!singaporeOnly);
-              }}
-              type="checkbox"
-            />
+          <div className="flex items-center w-fit px-1 md:px-5 xl:px-9">
+            <Select
+              defaultValue="global"
+              onValueChange={(value) =>
+                setSingaporeOnly(value === "singapore-only")
+              }
+            >
+              <SelectTrigger
+                className={
+                  "border-none focus:ring-0 focus:ring-offset-0 font-medium hover:bg-gray-200/40 rounded-2xl text-primary-900 text-base " +
+                  (singaporeOnly ? "w-[125px]" : "w-[105px]")
+                }
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="min-w-[9rem]">
+                <SelectGroup>
+                  <SelectLabel className="text-base">Event filter</SelectLabel>
+                  <SelectItem value="global" className="text-base">
+                    Global
+                  </SelectItem>
+                  <SelectItem value="singapore-only" className="text-base">
+                    Singapore
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col w-full">
