@@ -7,7 +7,9 @@ GRADER_HUMAN_PROMPT = """
     - The coherence of the paragraph
 
     You should also check if the paragraph is lacking in examples or if the examples are not relevant to the argument made.
-    If so, you should indicate that the paragraph is lacking in examples accordingly.
+    If so, you should indicate that the paragraph is lacking in examples accordingly. Be conservative in marking a paragraph as lacking in examples.
+    If the paragraph has reasonable examples given, you should not mark it as lacking in examples.
+    If the paragraph has reasonable examples given but they are not relevant to the argument made, you should mark it as NOT lacking in examples.
 
     You must also indicate whether the comment you have given is positive, negative or neutral.
 

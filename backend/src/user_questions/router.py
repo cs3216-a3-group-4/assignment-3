@@ -23,7 +23,6 @@ from src.user_questions.schemas import (
     ValidationResult,
 )
 from src.lm.generate_response import generate_response
-from src.lm.generate_points import get_relevant_analyses
 from src.lm.validate_question import validate_question
 
 
@@ -43,16 +42,6 @@ def get_user_questions(
         .options(selectinload(UserQuestion.answer).selectinload(Answer.points))
     )
     return user_questions
-
-
-@router.get("/ask-gp-question")
-async def ask_gp_question(question: str):
-    return await generate_response(question)
-
-
-@router.get("/gen-points")
-def gen_points(question: str):
-    return get_relevant_analyses(question)
 
 
 @router.get("/{id}")
@@ -105,13 +94,10 @@ async def create_user_question(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
 ) -> UserQuestionDTO | ValidationResult:
-    validation = validate_question(data.question)
-    if not validation["is_valid"]:
+    validation = within_usage_limit(user, session, data.question)
+
+    if not validation.is_valid:
         return validation
-    else:
-        within_use_limit, validation_result = within_usage_limit(user, session)
-        if not within_use_limit:
-            return validation_result
 
     user_question = UserQuestion(question=data.question, user_id=user.id)
 
