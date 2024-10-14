@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 from src.essays.models import Inclination, ParagraphType
-from src.events.schemas import AnalysisMiniDTO, AnalysisToEventDTO
+from src.events.schemas import AnalysisToEventDTO
 
 
 class ParagraphDTO(BaseModel):
