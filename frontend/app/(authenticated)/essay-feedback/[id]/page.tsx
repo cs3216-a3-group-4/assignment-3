@@ -131,11 +131,13 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                             <p>{comment.content}</p>
                             {comment.lack_example &&
                               comment.comment_analysises && (
-                                <Alert className="mt-4 px-6">
-                                  <BookOpenTextIcon />
-                                  <AlertTitle>
-                                    Jippy's example suggestion
-                                  </AlertTitle>
+                                <Alert className="mt-6 px-6 border-none p-0">
+                                  <div className="flex items-center gap-x-3 text-text-muted">
+                                    <BookOpenTextIcon />
+                                    <AlertTitle className="leading-normal tracking-normal">
+                                      Jippy's example suggestion
+                                    </AlertTitle>
+                                  </div>
                                   {/* TODO: currently only returns the top result- might change */}
                                   <AlertDescription>
                                     <Accordion type="multiple">
