@@ -95,7 +95,8 @@ async def create_user_question(
     session=Depends(get_session),
 ) -> UserQuestionDTO | ValidationResult:
     validation = within_usage_limit(user, session, data.question)
-    if not validation["is_valid"]:
+
+    if not validation.is_valid:
         return validation
 
     user_question = UserQuestion(question=data.question, user_id=user.id)

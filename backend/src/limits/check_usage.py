@@ -24,9 +24,12 @@ def within_usage_limit(user, session, question: str) -> ValidationResult:
         question_validation = validate_question(question)
         if not question_validation["is_valid"]:
             # If question is invalid, simply return error without increment
-            return question_validation
+            return ValidationResult(
+                is_valid=False, error_message=question_validation["error_message"]
+            )
 
     # If question is valid, increment usage and return success
+
     usage.gp_question_asked += 1
     session.commit()
     return ValidationResult(is_valid=True, error_message="")
