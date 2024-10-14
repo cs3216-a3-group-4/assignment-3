@@ -44,6 +44,7 @@ class CommentDTO(BaseModel):
 class ParagraphDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     content: str
+    type: str
 
     comments: list[CommentDTO]
 

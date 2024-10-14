@@ -225,6 +225,7 @@ export type ParagraphDTO_Input = {
 
 export type ParagraphDTO_Output = {
     content: string;
+    type: string;
     comments: Array<CommentDTO>;
 };
 

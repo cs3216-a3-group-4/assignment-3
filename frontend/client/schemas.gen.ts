@@ -977,6 +977,10 @@ export const ParagraphDTO_OutputSchema = {
             type: 'string',
             title: 'Content'
         },
+        type: {
+            type: 'string',
+            title: 'Type'
+        },
         comments: {
             items: {
                 '$ref': '#/components/schemas/CommentDTO'
@@ -986,7 +990,7 @@ export const ParagraphDTO_OutputSchema = {
         }
     },
     type: 'object',
-    required: ['content', 'comments'],
+    required: ['content', 'type', 'comments'],
     title: 'ParagraphDTO'
 } as const;
 

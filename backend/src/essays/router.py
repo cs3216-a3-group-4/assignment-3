@@ -83,6 +83,13 @@ def get_essay(
                 Paragraph.comments,
                 Comment.comment_analysises,
                 CommentAnalysis.analysis,
+                Analysis.event,
+            ),
+            selectinload(
+                Essay.paragraphs,
+                Paragraph.comments,
+                Comment.comment_analysises,
+                CommentAnalysis.analysis,
                 Analysis.likes.and_(Like.point_id.is_(None)).and_(
                     Like.user_id == user.id
                 ),
@@ -92,6 +99,12 @@ def get_essay(
                 Comment.comment_analysises,
                 CommentAnalysis.analysis,
                 Analysis.category,
+            ),
+            selectinload(
+                Essay.comments,
+                Comment.comment_analysises,
+                CommentAnalysis.analysis,
+                Analysis.event,
             ),
             selectinload(
                 Essay.comments,

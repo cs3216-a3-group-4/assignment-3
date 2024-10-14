@@ -77,7 +77,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
             <div className="border border-primary rounded-t-lg w-fit px-4 py-1 bg-primary">
               <span className="font-semibold text-primary-foreground capitalize">
                 {/* TODO: link */}
-                paragraph.type
+                {paragraph.type}
               </span>
             </div>
             <div className="w-full border border-primary rounded-b-lg rounded-tr-lg px-12 py-8 bg-card text-justify">
