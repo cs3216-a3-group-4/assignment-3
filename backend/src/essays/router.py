@@ -10,14 +10,13 @@ from src.essays.models import (
     CommentAnalysis,
     Essay,
     Paragraph,
-    ParagraphType,
 )
 from src.lm.generate_essay_comments import (
     get_comments,
     get_essay_comments,
 )
 
-from src.essays.schemas import EssayCreate, EssayDTO, EssayMiniDTO
+from src.essays.schemas import EssayCreate, EssayCreateDTO, EssayDTO, EssayMiniDTO
 from sqlalchemy.orm import Session, selectinload
 from src.events.models import Analysis
 from src.likes.models import Like
@@ -31,23 +30,25 @@ def create_essay(
     data: EssayCreate,
     user: Annotated[User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
-):
+) -> EssayCreateDTO:
     essay = Essay(question=data.question, user_id=user.id)
 
-    paragraph = []
+    paragraphs = []
     for index, paragraph in enumerate(data.paragraphs):
         # TODO: Categorise the paragraph?
-        paragraph_orm = Paragraph(type=ParagraphType.PARAGRAPH, content=paragraph)
+        paragraph_orm = Paragraph(type=paragraph.type, content=paragraph.content)
 
         comments = get_comments(paragraph, data.question)
         paragraph_orm.comments = comments
 
+        paragraphs.append(paragraph.content)
         essay.paragraphs.append(paragraph_orm)
 
-    essay.comments = get_essay_comments(data.paragraphs, data.question)
+    essay.comments = get_essay_comments(paragraphs, data.question)
 
     session.add(essay)
     session.commit()
+    return {"essay_id": essay.id}
 
 
 @router.get("/")
@@ -82,6 +83,13 @@ def get_essay(
                 Paragraph.comments,
                 Comment.comment_analysises,
                 CommentAnalysis.analysis,
+                Analysis.event,
+            ),
+            selectinload(
+                Essay.paragraphs,
+                Paragraph.comments,
+                Comment.comment_analysises,
+                CommentAnalysis.analysis,
                 Analysis.likes.and_(Like.point_id.is_(None)).and_(
                     Like.user_id == user.id
                 ),
@@ -91,6 +99,12 @@ def get_essay(
                 Comment.comment_analysises,
                 CommentAnalysis.analysis,
                 Analysis.category,
+            ),
+            selectinload(
+                Essay.comments,
+                Comment.comment_analysises,
+                CommentAnalysis.analysis,
+                Analysis.event,
             ),
             selectinload(
                 Essay.comments,

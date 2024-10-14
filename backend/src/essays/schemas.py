@@ -1,11 +1,20 @@
 from pydantic import BaseModel, ConfigDict, Field
-from src.essays.models import Inclination
-from src.events.schemas import AnalysisMiniDTO
+from src.essays.models import Inclination, ParagraphType
+from src.events.schemas import AnalysisToEventDTO
+
+
+class ParagraphDTO(BaseModel):
+    content: str
+    type: ParagraphType
 
 
 class EssayCreate(BaseModel):
     question: str
-    paragraphs: list[str] = Field(min_length=1)
+    paragraphs: list[ParagraphDTO] = Field(min_length=1)
+
+
+class EssayCreateDTO(BaseModel):
+    essay_id: int
 
 
 class EssayMiniDTO(BaseModel):
@@ -19,7 +28,7 @@ class CommentAnalysisDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     skill_issue: str
-    analysis: AnalysisMiniDTO
+    analysis: AnalysisToEventDTO
 
 
 class CommentDTO(BaseModel):
@@ -35,6 +44,7 @@ class CommentDTO(BaseModel):
 class ParagraphDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     content: str
+    type: str
 
     comments: list[CommentDTO]
 
