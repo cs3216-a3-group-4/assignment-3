@@ -1,5 +1,6 @@
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
-import { BookOpenCheckIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { BookOpenCheckIcon, SparklesIcon } from "lucide-react";
 
 const EssayFeedbackPage = () => {
   return (
@@ -18,15 +19,23 @@ const EssayFeedbackPage = () => {
           anything else than providing you feedback.
         </h2>
       </div>
-      <div className="flex flex-col py-6 lg:py-12 w-full h-fit min-h-full bg-background rounded-lg border border-border px-28">
-        <AutosizeTextarea
-          placeholder="Type your GP essay question"
-          className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-3xl font-semibold mb-2 text-primary-700"
-        />
-        <AutosizeTextarea
-          placeholder="Type or paste your essay here"
-          className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-lg overflow-hidden"
-        />
+      <div className="h-full">
+        <div className="flex flex-col py-6 lg:py-12 w-full h-fit min-h-full bg-background rounded-lg border border-border px-28 justify-between">
+          <div className="flex flex-col h-fit">
+            <AutosizeTextarea
+              placeholder="Type your GP essay question"
+              className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-3xl font-semibold mb-2 text-primary-700"
+            />
+            <AutosizeTextarea
+              placeholder="Type or paste your essay here"
+              className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-lg overflow-hidden"
+            />
+          </div>
+          <Button size="lg" className="mt-16">
+            <SparklesIcon className="w-6 h-6 mr-3" />
+            Get Jippy's feedback
+          </Button>
+        </div>
       </div>
     </div>
   );
