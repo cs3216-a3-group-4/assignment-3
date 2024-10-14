@@ -23,7 +23,6 @@ from src.user_questions.schemas import (
     ValidationResult,
 )
 from src.lm.generate_response import generate_response
-from src.lm.generate_points import get_relevant_analyses
 from src.lm.validate_question import validate_question
 
 
@@ -95,13 +94,9 @@ async def create_user_question(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
 ) -> UserQuestionDTO | ValidationResult:
-    validation = validate_question(data.question)
+    validation = within_usage_limit(user, session, data.question)
     if not validation["is_valid"]:
         return validation
-    else:
-        within_use_limit, validation_result = within_usage_limit(user, session)
-        if not within_use_limit:
-            return validation_result
 
     user_question = UserQuestion(question=data.question, user_id=user.id)
 

@@ -1,23 +1,32 @@
 from src.limits.models import Usage, Tier
+from src.lm.validate_question import validate_question
 from src.user_questions.schemas import ValidationResult
 
 
-def within_usage_limit(user, session) -> bool:
+def within_usage_limit(user, session, question: str) -> ValidationResult:
     usage = session.get(Usage, user.id)
 
+    # First time usage, populate db with zero questions asked
     if not usage:
         usage = Usage(user_id=user.id, gp_question_asked=0)
         session.add(usage)
         session.commit()
-        return True, ValidationResult(is_valid=True, error_message="")
 
     tier = session.get(Tier, user.tier_id)
+    # If user has reached their question limit, we simply return an error message, no need for LM validation
     if usage.gp_question_asked >= tier.gp_question_limit:
-        return False, ValidationResult(
+        return ValidationResult(
             is_valid=False,
             error_message=f"You have reached your question limit of {tier.gp_question_limit} for the week.",
         )
+    else:
+        # If user has not reached their limit, we validate the question
+        question_validation = validate_question(question)
+        if not question_validation["is_valid"]:
+            # If question is invalid, simply return error without increment
+            return question_validation
 
+    # If question is valid, increment usage and return success
     usage.gp_question_asked += 1
     session.commit()
-    return True, ValidationResult(is_valid=True, error_message="")
+    return ValidationResult(is_valid=True, error_message="")
