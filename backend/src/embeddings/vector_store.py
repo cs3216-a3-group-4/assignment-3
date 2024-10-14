@@ -92,7 +92,7 @@ def store_documents(analysis_list: List[Analysis]):
 
 async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = False):
     # NOTE: filter_sg == False means all examples are allowed, not just Singapore examples
-    filter_dict = {"is_singapore": "True"} if filter_sg else {}
+    filter_dict = {"is_singapore": True} if filter_sg else {}
 
     documents = await vector_store.asimilarity_search_with_relevance_scores(
         query=query,
@@ -116,9 +116,9 @@ async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = Fals
 if __name__ == "__main__":
     docs = asyncio.run(
         vector_store.asimilarity_search_with_relevance_scores(
-            query="Travelling is not a luxury as there are other affordable options",
+            query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
             k=3,
-            filter={},
+            filter={"is_singapore": True},
         )
     )
     print(docs)

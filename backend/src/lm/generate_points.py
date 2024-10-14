@@ -25,12 +25,21 @@ async def generate_points_from_question(question: str) -> dict:
     return points
 
 
-async def populate_point(point: str, analyses_per_point: int, relevant_results: list):
-    relevant_analyses = await get_similar_results(point, top_k=analyses_per_point)
+async def populate_point(
+    point: str,
+    analyses_per_point: int,
+    relevant_results: list,
+    is_singapore: bool = False,
+):
+    relevant_analyses = await get_similar_results(
+        point, top_k=analyses_per_point, filter_sg=is_singapore
+    )
     relevant_results.append({"point": point, "analyses": relevant_analyses})
 
 
-async def get_relevant_analyses(question: str, analyses_per_point: int = 5) -> dict:
+async def get_relevant_analyses(
+    question: str, analyses_per_point: int = 5, is_singapore: bool = False
+) -> dict:
     print(f"Freq penalty: {lm_model.frequency_penalty}")
     points = await generate_points_from_question(question)
 
@@ -43,13 +52,19 @@ async def get_relevant_analyses(question: str, analyses_per_point: int = 5) -> d
         *(
             [
                 populate_point(
-                    point, analyses_per_point, relevant_results.get("for_points")
+                    point,
+                    analyses_per_point,
+                    relevant_results.get("for_points"),
+                    is_singapore,
                 )
                 for point in for_pts
             ]
             + [
                 populate_point(
-                    point, analyses_per_point, relevant_results.get("against_points")
+                    point,
+                    analyses_per_point,
+                    relevant_results.get("against_points"),
+                    is_singapore,
                 )
                 for point in against_pts
             ]
@@ -59,6 +74,8 @@ async def get_relevant_analyses(question: str, analyses_per_point: int = 5) -> d
 
 
 if __name__ == "__main__":
-    question = "Should the government provide free education for all citizens?"
-    relevant_analyses = get_relevant_analyses(question)
+    question = "Censorship is necessary. How true is this of your society?"
+    # points = asyncio.run(generate_points_from_question(question))
+    # print(points)
+    relevant_analyses = asyncio.run(get_relevant_analyses(question, is_singapore=True))
     print(relevant_analyses)
