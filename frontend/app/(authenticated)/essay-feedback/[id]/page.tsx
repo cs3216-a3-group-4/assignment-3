@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import { getEssay } from "@/queries/essay";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -30,6 +31,24 @@ const inclinationToIconMap: Record<Inclination, LucideIcon> = {
   good: SmileIcon,
   neutral: MessageSquareTextIcon,
   bad: BadgeHelpIcon,
+};
+
+const inclinationToClassNameMap: Record<Inclination, string> = {
+  good: "text-green-700",
+  neutral: "text-blue-500",
+  bad: "text-amber-600",
+};
+
+const inclinationToChipClassNameMap: Record<Inclination, string> = {
+  good: "bg-green-200/40",
+  neutral: "bg-blue-100/50",
+  bad: "bg-amber-200/40",
+};
+
+const inclinationToTriggerClassNameMap: Record<Inclination, string> = {
+  good: "decoration-green-700",
+  neutral: "decoration-blue-500",
+  bad: "decoration-amber-600",
 };
 
 const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
@@ -79,10 +98,30 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                         value={comment.id.toString()}
                         key={comment.id}
                       >
-                        <AccordionTrigger>
-                          <span className="flex items-center">
+                        <AccordionTrigger
+                          className={cn(
+                            inclinationToTriggerClassNameMap[
+                              comment.inclination
+                            ],
+                          )}
+                        >
+                          <span
+                            className={cn(
+                              "flex items-center",
+                              inclinationToClassNameMap[comment.inclination],
+                            )}
+                          >
                             {<CommentIcon className="mr-3" />}
-                            {inclinationToDisplayMap[comment.inclination]}
+                            <span
+                              className={cn(
+                                "px-2 py-1 rounded-lg",
+                                inclinationToChipClassNameMap[
+                                  comment.inclination
+                                ],
+                              )}
+                            >
+                              {inclinationToDisplayMap[comment.inclination]}
+                            </span>
                           </span>
                         </AccordionTrigger>
                         <AccordionContent className="text-text-muted text-lg">
