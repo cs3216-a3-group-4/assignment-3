@@ -1,5 +1,12 @@
 "use client";
 
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { BookCheckIcon, BookOpenCheckIcon, SparklesIcon } from "lucide-react";
+import { z } from "zod";
+
 import { createEssayEssaysPost, ParagraphType } from "@/client";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
@@ -12,12 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import JippyIconSm from "@/public/jippy-icon/jippy-icon-sm";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { BookCheckIcon, BookOpenCheckIcon, SparklesIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 interface Paragraph {
   content: string;
@@ -27,6 +28,7 @@ interface Paragraph {
 const EssayFeedbackPage = () => {
   const router = useRouter();
   const [gpQuestion, setGpQuestion] = useState<string | undefined>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [essay, setEssay] = useState<string | undefined>(undefined);
 
   const [paragraphs, setParagraphs] = useState<Paragraph[]>([]);
@@ -132,6 +134,7 @@ const EssayFeedbackPage = () => {
             and that each paragraph is appropriately tagged. This helps Jippy
             give you accurate and meaningful feedback!
           </h2>
+          {errorMessage && <p className="text-destructive">{errorMessage}</p>}
         </div>
         <div className="flex flex-col gap-y-6">
           {paragraphs.map((paragraph, index) => (
@@ -149,14 +152,14 @@ const EssayFeedbackPage = () => {
         </div>
         <div className="flex w-full mt-8 gap-x-6">
           <Button
-            size="lg"
-            variant="outline"
             className="w-full"
             onClick={onCancelReview}
+            size="lg"
+            variant="outline"
           >
             Cancel
           </Button>
-          <Button size="lg" className="w-full" onClick={onSubmitReview}>
+          <Button className="w-full" onClick={onSubmitReview} size="lg">
             Looks good!
           </Button>
         </div>
@@ -192,8 +195,8 @@ const EssayFeedbackPage = () => {
                     <FormItem className="mb-2">
                       <FormControl>
                         <AutosizeTextarea
-                          placeholder="Type your GP essay question"
                           className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-3xl font-semibold text-primary-700"
+                          placeholder="Type your GP essay question"
                           {...field}
                         />
                       </FormControl>
@@ -208,8 +211,8 @@ const EssayFeedbackPage = () => {
                     <FormItem className="mb-2">
                       <FormControl>
                         <AutosizeTextarea
-                          placeholder="Type or paste your essay here"
                           className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-lg overflow-hidden"
+                          placeholder="Type or paste your essay here"
                           {...field}
                         />
                       </FormControl>
@@ -218,9 +221,9 @@ const EssayFeedbackPage = () => {
                   )}
                 />
               </div>
-              <Button size="lg" className="mt-16" type="submit">
+              <Button className="mt-16" size="lg" type="submit">
                 <SparklesIcon className="w-6 h-6 mr-3" />
-                Get Jippy's feedback
+                Get Jippy&apos;s feedback
               </Button>
             </form>
           </Form>

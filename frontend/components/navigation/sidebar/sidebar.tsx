@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
+  BookOpenCheckIcon,
   HistoryIcon,
   HomeIcon,
   MessageCircleQuestionIcon,
   NotebookIcon,
-  BookOpenCheckIcon,
 } from "lucide-react";
 
 import SidebarTopics from "@/components/navigation/sidebar/sidebar-topics";

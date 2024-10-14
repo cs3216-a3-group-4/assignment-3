@@ -1,20 +1,5 @@
 "use client";
 
-import { Inclination } from "@/client";
-import LikeButtons from "@/components/likes/like-buttons";
-import Link from "@/components/navigation/link";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { getEssay } from "@/queries/essay";
 import { useQuery } from "@tanstack/react-query";
 import {
   BadgeHelpIcon,
@@ -27,6 +12,21 @@ import {
   SparkleIcon,
   ZapIcon,
 } from "lucide-react";
+
+import { Inclination } from "@/client";
+import LikeButtons from "@/components/likes/like-buttons";
+import Link from "@/components/navigation/link";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { getEssay } from "@/queries/essay";
 
 const inclinationToDisplayMap: Record<Inclination, string> = {
   good: "Good",
@@ -72,11 +72,10 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
         {data.question}
       </h1>
       <div className="flex flex-col gap-y-12">
-        {data.paragraphs.map((paragraph) => (
-          <div className="text-lg">
+        {data.paragraphs.map((paragraph, index) => (
+          <div className="text-lg" key={index}>
             <div className="border border-primary rounded-t-lg w-fit px-4 py-1 bg-primary">
               <span className="font-semibold text-primary-foreground capitalize">
-                {/* TODO: link */}
                 {paragraph.type}
               </span>
             </div>
@@ -102,8 +101,8 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                       inclinationToIconMap[comment.inclination];
                     return (
                       <AccordionItem
-                        value={comment.id.toString()}
                         key={comment.id}
+                        value={comment.id.toString()}
                       >
                         <AccordionTrigger
                           className={cn(
@@ -149,9 +148,9 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                                       {comment.comment_analysises.map(
                                         (analysis) => (
                                           <AccordionItem
-                                            value={analysis.analysis.id.toString()}
-                                            key={analysis.analysis.id}
                                             className="border-none"
+                                            key={analysis.analysis.id}
+                                            value={analysis.analysis.id.toString()}
                                           >
                                             {/* TODO: currently assuming analysis always has event */}
                                             <AccordionTrigger className="text-lg text-text-muted">
