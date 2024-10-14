@@ -3,6 +3,7 @@ import { AccordionContent } from "@radix-ui/react-accordion";
 import { Wand2 } from "lucide-react";
 
 import Chip from "@/components/display/chip";
+import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import {
   Accordion,
   AccordionItem,
@@ -17,11 +18,13 @@ import {
 } from "@/components/ui/card";
 
 const Landing = () => {
-  // TODO: build landing page
   return (
     <div className="relative w-full h-full overflow-y-auto">
       <div className="flex flex-col bg-muted w-full h-fit">
-        <div className="flex flex-col w-full items-center justify-center px-12 md:px-0 py-8 gap-y-8 h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
+        <div
+          // h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]
+          className={`flex flex-col w-full items-center justify-center px-12 md:px-0 py-8 gap-y-8 h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] min-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] max-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)]`}
+        >
           <h1 className="flex max-w-xl text-center text-4xl sm:text-5xl md:text-7xl font-bold text-primary-800 animate-fade-up">
             Your GP Teacher isn’t the only one who croaks.
           </h1>

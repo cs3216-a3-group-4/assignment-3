@@ -115,7 +115,10 @@ const ContentLayout = ({ isLoading, children }: ContentLayoutProps) => {
 
   // For `sm` and `xs` breakpoints don't render anything
   return (
-    <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto">
+    <div
+      className="flex flex-1 w-full h-full max-h-full !overflow-y-auto relative"
+      id="main-content"
+    >
       {children}
     </div>
   );

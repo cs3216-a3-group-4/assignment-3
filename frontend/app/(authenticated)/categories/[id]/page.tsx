@@ -8,6 +8,15 @@ import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import usePagination from "@/hooks/use-pagination";
 import { getCategories } from "@/queries/category";
 import { getEventsForCategory } from "@/queries/event";
@@ -16,10 +25,11 @@ const Page = ({ params }: { params: { id: string } }) => {
   const categoryId = parseInt(params.id);
   const [categoryName, setCategoryName] = useState<string>("");
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
+  const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
 
   const { page, pageCount, getPageUrl } = usePagination({ totalCount });
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
-    getEventsForCategory(categoryId, page),
+    getEventsForCategory(categoryId, page, singaporeOnly),
   );
   const { data: categories, isSuccess: isCategoriesLoaded } =
     useQuery(getCategories());
@@ -56,6 +66,34 @@ const Page = ({ params }: { params: { id: string } }) => {
                 Top events from {categoryName}
               </span>
             </div>
+          </div>
+          <div className="flex items-center w-fit px-1 md:px-5 xl:px-9">
+            <Select
+              defaultValue="global"
+              onValueChange={(value) =>
+                setSingaporeOnly(value === "singapore-only")
+              }
+            >
+              <SelectTrigger
+                className={
+                  "border-none focus:ring-0 focus:ring-offset-0 font-medium hover:bg-gray-200/40 rounded-2xl text-primary-900 text-base " +
+                  (singaporeOnly ? "w-[125px]" : "w-[105px]")
+                }
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="min-w-[9rem]">
+                <SelectGroup>
+                  <SelectLabel className="text-base">Event filter</SelectLabel>
+                  <SelectItem className="text-base" value="global">
+                    Global
+                  </SelectItem>
+                  <SelectItem className="text-base" value="singapore-only">
+                    Singapore
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col w-full">

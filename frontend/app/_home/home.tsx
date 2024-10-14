@@ -8,6 +8,15 @@ import DateRangeSelector, { Period } from "@/app/_home/date-range-selector";
 import EventsList from "@/app/_home/events-list";
 import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import usePagination from "@/hooks/use-pagination";
 import { getHomeEvents } from "@/queries/event";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -35,10 +44,13 @@ const Home = () => {
     return eventStartDate;
   }, [eventPeriod]);
 
+  const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
+
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
     getHomeEvents(
       toQueryDate(eventStartDate),
       page,
+      singaporeOnly,
       user?.categories.map((category) => category.id),
     ),
   );
@@ -62,7 +74,7 @@ const Home = () => {
         <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
           {/* TODO: x-padding here is tied to the news article */}
           <div
-            className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
+            className="flex flex-col mb-2 gap-y-2 px-4 md:px-8 xl:px-12"
             id="homePage"
           >
             <div>
@@ -74,6 +86,34 @@ const Home = () => {
             <span className="text-primary text-lg">
               {parseDate(eventStartDate)} - {parseDate(new Date())}
             </span>
+          </div>
+          <div className="flex items-center w-fit px-1 md:px-5 xl:px-9">
+            <Select
+              defaultValue="global"
+              onValueChange={(value) =>
+                setSingaporeOnly(value === "singapore-only")
+              }
+            >
+              <SelectTrigger
+                className={
+                  "border-none focus:ring-0 focus:ring-offset-0 font-medium hover:bg-gray-200/40 rounded-2xl text-primary-900 text-base " +
+                  (singaporeOnly ? "w-[125px]" : "w-[105px]")
+                }
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="min-w-[9rem]">
+                <SelectGroup>
+                  <SelectLabel className="text-base">Event filter</SelectLabel>
+                  <SelectItem className="text-base" value="global">
+                    Global
+                  </SelectItem>
+                  <SelectItem className="text-base" value="singapore-only">
+                    Singapore
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <EventsList events={events} isEventsLoaded={isEventsLoaded} />
