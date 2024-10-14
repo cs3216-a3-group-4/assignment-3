@@ -2,6 +2,7 @@
 
 import { Inclination } from "@/client";
 import LikeButtons from "@/components/likes/like-buttons";
+import Link from "@/components/navigation/link";
 import {
   Accordion,
   AccordionContent,
@@ -9,6 +10,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -18,9 +20,12 @@ import {
   BadgeHelpIcon,
   BookOpenCheckIcon,
   BookOpenTextIcon,
+  FileSymlinkIcon,
   LucideIcon,
   MessageSquareTextIcon,
   SmileIcon,
+  SparkleIcon,
+  ZapIcon,
 } from "lucide-react";
 
 const inclinationToDisplayMap: Record<Inclination, string> = {
@@ -87,7 +92,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                     size={22}
                     strokeWidth={1.6}
                   />
-                  <h2>Jippy Feedback</h2>
+                  <h2 className="font-semibold">Jippy Feedback</h2>
                 </span>
               </div>
               <div className="flex flex-col gap-y-6 px-6 2xl:px-10">
@@ -131,7 +136,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                             <p>{comment.content}</p>
                             {comment.lack_example &&
                               comment.comment_analysises && (
-                                <Alert className="mt-6 px-6 border-none p-0">
+                                <Alert className="my-6 px-6 border-none p-0">
                                   <div className="flex items-center gap-x-3 text-text-muted">
                                     <BookOpenTextIcon />
                                     <AlertTitle className="leading-normal tracking-normal">
@@ -146,13 +151,52 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                                           <AccordionItem
                                             value={analysis.analysis.id.toString()}
                                             key={analysis.analysis.id}
+                                            className="border-none"
                                           >
                                             {/* TODO: currently assuming analysis always has event */}
-                                            <AccordionTrigger className="text-lg">
-                                              {analysis.analysis.event_id}
+                                            <AccordionTrigger className="text-lg text-text-muted">
+                                              {analysis.analysis.event.title}
                                             </AccordionTrigger>
                                             <AccordionContent className="text-lg">
-                                              {analysis.skill_issue}
+                                              <div className="flex justify-between items-baseline mb-4">
+                                                <span className="font-medium text-lg 2xl:text-xl text-text-muted/80">
+                                                  <ZapIcon
+                                                    className="inline-flex mr-3"
+                                                    size={20}
+                                                  />
+                                                  Event summary
+                                                </span>
+                                                <Link
+                                                  href={`/events/${analysis.analysis.event_id}`}
+                                                >
+                                                  <Button
+                                                    className="h-8 w-fit text-text-muted mt-2"
+                                                    size="sm"
+                                                    variant="outline"
+                                                  >
+                                                    <FileSymlinkIcon className="h-4 w-4 mr-2" />
+                                                    Read more
+                                                  </Button>
+                                                </Link>
+                                              </div>
+                                              <blockquote className="border-l-2 pl-6 italic text-text-muted 2xl:text-2xl tracking-wide mb-8">
+                                                {
+                                                  analysis.analysis.event
+                                                    .description
+                                                }
+                                              </blockquote>
+                                              <div className="flex flex-col gap-y-4">
+                                                <span className="font-medium text-lg 2xl:text-xl text-text-muted/80">
+                                                  <SparkleIcon
+                                                    className="inline-flex mr-3"
+                                                    size={20}
+                                                  />
+                                                  Possible argument
+                                                </span>
+                                                <p className="tracking-wide">
+                                                  {analysis.skill_issue}
+                                                </p>
+                                              </div>
                                             </AccordionContent>
                                           </AccordionItem>
                                         ),

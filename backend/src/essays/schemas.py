@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 from src.essays.models import Inclination, ParagraphType
-from src.events.schemas import AnalysisMiniDTO
+from src.events.schemas import AnalysisMiniDTO, AnalysisToEventDTO
 
 
 class ParagraphDTO(BaseModel):
@@ -28,7 +28,7 @@ class CommentAnalysisDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     skill_issue: str
-    analysis: AnalysisMiniDTO
+    analysis: AnalysisToEventDTO
 
 
 class CommentDTO(BaseModel):
