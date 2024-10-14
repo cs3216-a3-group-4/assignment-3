@@ -139,7 +139,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                                   <div className="flex items-center gap-x-3 text-text-muted">
                                     <BookOpenTextIcon />
                                     <AlertTitle className="leading-normal tracking-normal">
-                                      Jippy's example suggestion
+                                      Jippy&apos;s example suggestion
                                     </AlertTitle>
                                   </div>
                                   {/* TODO: currently only returns the top result- might change */}
