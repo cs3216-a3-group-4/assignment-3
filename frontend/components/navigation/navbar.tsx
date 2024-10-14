@@ -22,6 +22,7 @@ function Navbar() {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   return (
+    // min-h-[84px] max-h-[84px]
     <header
       className={`hidden md:flex sticky top-0 z-50 w-full ${isLoggedIn ? "bg-background/60 border-border" : "bg-muted/60 border-muted"} backdrop-blur-lg border-b-[1px] min-h-[${NAVBAR_HEIGHT}px] max-h-[${NAVBAR_HEIGHT}px]`}
     >

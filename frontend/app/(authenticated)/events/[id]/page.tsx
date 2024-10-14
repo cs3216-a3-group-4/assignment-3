@@ -137,6 +137,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       {isViewAnnotation && (
+        // h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]
         <div
           className={
             `sticky top-0 min-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] max-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] ` +

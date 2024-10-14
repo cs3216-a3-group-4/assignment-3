@@ -51,6 +51,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
       <Navbar />
       <MobileNavbar />
       <main
+        // h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]
         className={`flex w-full h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] min-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] max-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)]`}
       >
         <Suspense
