@@ -72,6 +72,16 @@ QUESTION_POINT_GEN_SYSPROMPT = """
     - Against Point: "The government should not prioritize economic growth over environmental protection because neglecting the environment can lead to long-term damage that affects future generations."
     - Explanation: "Sustainable practices ensure that natural resources are preserved, which is crucial for maintaining the quality of life for future citizens."
 
+    Some questions may ask for a points specific to your society. In this case, you should provide points that are relevant to Singapore.
+    Example:
+
+    2. Question: "Censorship is necessary. How true is this of your society?"
+    - For Point: "Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions."
+    - Explanation: "By regulating sensitive content, the government can prevent the spread of hate speech and misinformation, fostering a cohesive and inclusive society."
+
+    - Against Point: "Censorship is not necessary in Singapore as it can stifle freedom of speech and impede the exchange of ideas critical for societal progress."
+    - Explanation: "Allowing diverse viewpoints to be expressed encourages critical thinking and innovation, which are essential for societal advancement."
+
    
     Your response should be in the following json format:
     
