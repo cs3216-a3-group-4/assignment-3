@@ -8,6 +8,7 @@ import {
   HomeIcon,
   MessageCircleQuestionIcon,
   NotebookIcon,
+  BookOpenCheckIcon,
 } from "lucide-react";
 
 import SidebarTopics from "@/components/navigation/sidebar/sidebar-topics";
@@ -48,6 +49,12 @@ const Sidebar = () => {
           isActive={pathname === "/notes"}
           label="Notes"
           path="/notes"
+        />
+        <SidebarItemWithIcon
+          Icon={BookOpenCheckIcon}
+          isActive={pathname === "/essay-feedback"}
+          label="Essay feedback"
+          path="/essay-feedback"
         />
         <SidebarItemWithIcon
           Icon={MessageCircleQuestionIcon}

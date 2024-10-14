@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
+  BookOpenCheckIcon,
   HistoryIcon,
   HomeIcon,
   LucideIcon,
@@ -41,6 +42,11 @@ const OPTIONS: SidebarOption[] = [
     icon: NotebookIcon,
     label: "Notes",
     path: "/notes",
+  },
+  {
+    icon: BookOpenCheckIcon,
+    label: "Essay feedback",
+    path: "/essay-feedback",
   },
   { icon: MessageCircleQuestionIcon, label: "Ask a question", path: "/ask" },
   { icon: HistoryIcon, label: "Past questions", path: "/questions" },
