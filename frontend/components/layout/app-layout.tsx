@@ -12,6 +12,8 @@ import { useUserStore } from "@/store/user/user-store-provider";
 
 import ContentLayout from "./content-layout";
 
+export const NAVBAR_HEIGHT = 84;
+
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const { setLoggedIn, setNotLoggedIn, setIsFetching, setIsNotFetching } =
     useUserStore((state) => state);
@@ -48,7 +50,9 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     <div className="relative flex min-h-screen max-h-screen flex-col bg-background">
       <Navbar />
       <MobileNavbar />
-      <main className="flex w-full h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]">
+      <main
+        className={`flex w-full h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] min-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] max-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)]`}
+      >
         <Suspense
           fallback={
             <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto justify-center items-center">
