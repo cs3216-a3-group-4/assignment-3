@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 from langchain_openai import OpenAIEmbeddings
 
@@ -89,9 +90,14 @@ def store_documents(analysis_list: List[Analysis]):
     print(f"Stored {len(documents)} documents")
 
 
-async def get_similar_results(query: str, top_k: int = 3):
+async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = False):
+    # NOTE: filter_sg == False means all examples are allowed, not just Singapore examples
+    filter_dict = {"is_singapore": "True"} if filter_sg else {}
+
     documents = await vector_store.asimilarity_search_with_relevance_scores(
-        query=query, k=top_k
+        query=query,
+        k=top_k,
+        filter=filter_dict,
     )
     results = []
     for document, score in documents:
@@ -105,3 +111,14 @@ async def get_similar_results(query: str, top_k: int = 3):
             }
         )
     return results
+
+
+if __name__ == "__main__":
+    docs = asyncio.run(
+        vector_store.asimilarity_search_with_relevance_scores(
+            query="Travelling is not a luxury as there are other affordable options",
+            k=3,
+            filter={},
+        )
+    )
+    print(docs)
