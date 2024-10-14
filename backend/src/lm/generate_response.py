@@ -5,6 +5,9 @@ from src.lm.prompts import QUESTION_ANALYSIS_GEN_SYSPROMPT_2 as SYSPROMPT
 from src.lm.prompts import (
     QUESTION_ANALYSIS_GEN_FALLBACK_SYSPROMPT as FALLBACK_SYSPROMPT,
 )
+from src.lm.prompts import (
+    SOCIETY_QUESTION_CLASSIFICATION_SYSPROMPT as SOCIETY_SYSPROMPT,
+)
 
 from langchain_core.output_parsers import JsonOutputParser
 from sqlalchemy.orm import Session
@@ -83,7 +86,11 @@ async def process_point_dict(point_dict, question):
 
 
 async def generate_response(question: str) -> dict:
-    relevant_analyses = await get_relevant_analyses(question)
+    # NOTE: add a check to see if the question is a society question
+    is_society_qn = classify_society_qn(question)
+    relevant_analyses = await get_relevant_analyses(
+        question, is_singapore=is_society_qn
+    )
 
     await asyncio.gather(
         *[
@@ -106,6 +113,22 @@ def generate_fallback_response(question: str, point: str):
     result = lm_model.invoke(messages)
     parser = JsonOutputParser()
     return parser.invoke(result)
+
+
+def classify_society_qn(question: str) -> bool:
+    # NOTE: if the words "In your society" are in the question, then there is no doubt
+    if "in your society" in question.lower():
+        return True
+
+    # Otherwise, we let the LM decide
+    messages = [
+        SystemMessage(content=SOCIETY_SYSPROMPT),
+        HumanMessage(content=question),
+    ]
+    result = lm_model.invoke(messages)
+    if result.content == "Yes":
+        return True
+    return False
 
 
 if __name__ == "__main__":

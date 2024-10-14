@@ -67,11 +67,18 @@ QUESTION_POINT_GEN_SYSPROMPT = """
 
     1. Question: "Should the government prioritize economic growth over environmental protection?"
     - For Point: "The government should prioritize economic growth because a strong economy creates jobs and improves living standards for citizens."
-    - Explanation: "A robust economy enables the government to fund essential services, including healthcare and education, ultimately benefiting society as a whole."
 
     - Against Point: "The government should not prioritize economic growth over environmental protection because neglecting the environment can lead to long-term damage that affects future generations."
-    - Explanation: "Sustainable practices ensure that natural resources are preserved, which is crucial for maintaining the quality of life for future citizens."
 
+    Some questions may ask for a points specific to your society. In this case, you should provide points that are relevant to Singapore.
+
+    Example:
+    2. Question: "Censorship is necessary. How true is this of your society?"
+    - For Point: "Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions."
+
+    - Against Point: "Censorship is not necessary in Singapore as it can stifle freedom of speech and impede the exchange of ideas critical for societal progress."
+
+    Important: If a question is specific to your society, your points must clearly state how the argument applies to your society. If the question is not specific to your society, you should provide points that are general and not specific to any particular country.
    
     Your response should be in the following json format:
     
@@ -190,3 +197,30 @@ QUESTION_CLASSIFICAITON_SYSPROMPT = """
     
     Discuss the view below:
 """
+
+SOCIETY_QUESTION_CLASSIFICATION_SYSPROMPT = """
+    You are an expert in General Paper essay questions.
+    You will be given a General Paper essay question that is argumentative or discursive in nature.
+    Your task is to determine whether the question is asking for points that are specific to the writer's society.
+
+    Some keywords that indicate a question is asking for points specific to the writer's society include:
+    - "your society"
+    - "in your country"
+    - "in Singapore"
+
+    If the question is asking for points that are specific to the writer's society, you should respond with "Yes".
+    Otherwise, you should respond "No".
+    Only respond with "Yes" or "No".
+
+    Example:
+    "Should the government provide free education for all citizens? Discuss."
+    - Response: "No"
+    - Explanation: The question is not asking for points specific to the writer's society.
+
+    "Censorship is necessary. How true is this of your society?"
+    - Response: "Yes"
+    - Explanation: The question is asking for points specific to the writer's society.
+
+    The question:
+
+    """
