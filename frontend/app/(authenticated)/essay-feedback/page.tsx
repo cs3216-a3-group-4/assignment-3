@@ -95,7 +95,7 @@ const EssayFeedbackPage = () => {
       }
 
       const essayId = response.data.essay_id;
-      router.push(`/essays/${essayId}`);
+      router.push(`/essay-feedback/${essayId}`);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -107,22 +107,21 @@ const EssayFeedbackPage = () => {
   };
 
   if (isLoading) {
-    <div className="absolute w-full h-full bg-slate-600/80 z-50 bottom-0 right-0 flex justify-center items-center">
-      <Card className="p-8 flex flex-col justify-center items-center gap-8">
-        <h1 className="text-lg">
-          Jippy is studying your essay! Please wait...
-        </h1>
-        <JippyIconSm classname="animate-bounce w-24 h-24 pt-4" />
-      </Card>
-    </div>;
+    return (
+      <div className="absolute w-full h-full bg-slate-600/80 z-50 bottom-0 right-0 flex justify-center items-center">
+        <Card className="p-8 flex flex-col justify-center items-center gap-8">
+          <h1 className="text-lg">
+            Jippy is studying your essay! Please wait...
+          </h1>
+          <JippyIconSm classname="animate-bounce w-24 h-24 pt-4" />
+        </Card>
+      </div>
+    );
   }
 
   if (isReviewing) {
     return (
-      <div
-        className="flex flex-col bg-muted w-full h-full max-h-full py-8 overflow-y-auto px-4 md:px-8 xl:px-24 "
-        id="home-page"
-      >
+      <div className="flex flex-col bg-muted w-full h-full max-h-full py-8 overflow-y-auto px-4 md:px-8 xl:px-24 ">
         <div className="mt-4 mb-8">
           <span className="flex items-center text-primary-800">
             <BookCheckIcon className="w-8 h-8 mr-4" />
