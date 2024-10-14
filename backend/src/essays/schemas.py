@@ -1,11 +1,20 @@
 from pydantic import BaseModel, ConfigDict, Field
-from src.essays.models import Inclination
+from src.essays.models import Inclination, ParagraphType
 from src.events.schemas import AnalysisMiniDTO
+
+
+class ParagraphDTO(BaseModel):
+    content: str
+    type: ParagraphType
 
 
 class EssayCreate(BaseModel):
     question: str
-    paragraphs: list[str] = Field(min_length=1)
+    paragraphs: list[ParagraphDTO] = Field(min_length=1)
+
+
+class EssayCreateDTO(BaseModel):
+    essay_id: int
 
 
 class EssayMiniDTO(BaseModel):

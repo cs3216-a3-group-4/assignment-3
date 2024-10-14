@@ -398,7 +398,7 @@ export const EssayCreateSchema = {
         },
         paragraphs: {
             items: {
-                type: 'string'
+                '$ref': '#/components/schemas/ParagraphDTO-Input'
             },
             type: 'array',
             minItems: 1,
@@ -408,6 +408,18 @@ export const EssayCreateSchema = {
     type: 'object',
     required: ['question', 'paragraphs'],
     title: 'EssayCreate'
+} as const;
+
+export const EssayCreateDTOSchema = {
+    properties: {
+        essay_id: {
+            type: 'integer',
+            title: 'Essay Id'
+        }
+    },
+    type: 'object',
+    required: ['essay_id'],
+    title: 'EssayCreateDTO'
 } as const;
 
 export const EssayDTOSchema = {
@@ -429,7 +441,7 @@ export const EssayDTOSchema = {
         },
         paragraphs: {
             items: {
-                '$ref': '#/components/schemas/ParagraphDTO'
+                '$ref': '#/components/schemas/ParagraphDTO-Output'
             },
             type: 'array',
             title: 'Paragraphs'
@@ -974,7 +986,22 @@ export const NoteUpdateSchema = {
     title: 'NoteUpdate'
 } as const;
 
-export const ParagraphDTOSchema = {
+export const ParagraphDTO_InputSchema = {
+    properties: {
+        content: {
+            type: 'string',
+            title: 'Content'
+        },
+        type: {
+            '$ref': '#/components/schemas/ParagraphType'
+        }
+    },
+    type: 'object',
+    required: ['content', 'type'],
+    title: 'ParagraphDTO'
+} as const;
+
+export const ParagraphDTO_OutputSchema = {
     properties: {
         content: {
             type: 'string',
@@ -991,6 +1018,12 @@ export const ParagraphDTOSchema = {
     type: 'object',
     required: ['content', 'comments'],
     title: 'ParagraphDTO'
+} as const;
+
+export const ParagraphTypeSchema = {
+    type: 'string',
+    enum: ['introduction', 'paragraph', 'conclusion'],
+    title: 'ParagraphType'
 } as const;
 
 export const PasswordResetCompleteDataSchema = {

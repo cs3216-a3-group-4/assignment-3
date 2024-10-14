@@ -99,14 +99,18 @@ export type CreateUserQuestion = {
 
 export type EssayCreate = {
     question: string;
-    paragraphs: Array<(string)>;
+    paragraphs: Array<ParagraphDTO_Input>;
+};
+
+export type EssayCreateDTO = {
+    essay_id: number;
 };
 
 export type EssayDTO = {
     id: number;
     question: string;
     comments: Array<CommentDTO>;
-    paragraphs: Array<ParagraphDTO>;
+    paragraphs: Array<ParagraphDTO_Output>;
 };
 
 export type EssayMiniDTO = {
@@ -222,10 +226,17 @@ export type NoteUpdate = {
     category_id?: (number | null);
 };
 
-export type ParagraphDTO = {
+export type ParagraphDTO_Input = {
+    content: string;
+    type: ParagraphType;
+};
+
+export type ParagraphDTO_Output = {
     content: string;
     comments: Array<CommentDTO>;
 };
+
+export type ParagraphType = 'introduction' | 'paragraph' | 'conclusion';
 
 export type PasswordResetCompleteData = {
     password: string;
@@ -602,7 +613,7 @@ export type CreateEssayEssaysPostData = {
     body: EssayCreate;
 };
 
-export type CreateEssayEssaysPostResponse = (unknown);
+export type CreateEssayEssaysPostResponse = (EssayCreateDTO);
 
 export type CreateEssayEssaysPostError = (HTTPValidationError);
 
