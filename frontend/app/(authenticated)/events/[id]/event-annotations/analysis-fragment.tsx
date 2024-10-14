@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { CopyIcon, HighlighterIcon } from "lucide-react";
+import { CopyIcon, HighlighterIcon, SquareXIcon } from "lucide-react";
 
 import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import { cn } from "@/lib/utils";
@@ -29,6 +29,7 @@ const AnalysisFragment = ({
     navigator.clipboard.writeText(content);
     clearHighlight();
   };
+  const onClose = () => clearHighlight();
 
   const onClick = () => {
     if (
@@ -84,7 +85,7 @@ const AnalysisFragment = ({
             onClick={onHighlight}
           >
             <HighlighterIcon className="inline-block" />
-            <span className="inline-block ml-2 transition-all font-medium text-sm">
+            <span className="inline-block transition-all font-medium text-sm">
               Highlight
             </span>
           </button>
@@ -93,8 +94,17 @@ const AnalysisFragment = ({
             onClick={onCopy}
           >
             <CopyIcon className="inline-block" />
-            <span className="inline-block ml-2 transition-all font-medium text-sm">
+            <span className="inline-block transition-all font-medium text-sm">
               Copy
+            </span>
+          </div>
+          <div
+            className="content-center flex flex-col items-center hover:bg-card-foreground/5 p-0.5 rounded-sm"
+            onClick={onClose}
+          >
+            <SquareXIcon className="inline-block" />
+            <span className="inline-block transition-all font-medium text-sm">
+              Close
             </span>
           </div>
         </div>
