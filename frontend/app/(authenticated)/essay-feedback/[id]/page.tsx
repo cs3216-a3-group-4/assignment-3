@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   BadgeHelpIcon,
   BookOpenCheckIcon,
+  BookOpenTextIcon,
   LucideIcon,
   MessageSquareTextIcon,
   SmileIcon,
@@ -126,7 +128,37 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                         </AccordionTrigger>
                         <AccordionContent className="text-text-muted text-lg">
                           <div className="px-4">
-                            {comment.content}
+                            <p>{comment.content}</p>
+                            {comment.lack_example &&
+                              comment.comment_analysises && (
+                                <Alert className="mt-4 px-6">
+                                  <BookOpenTextIcon />
+                                  <AlertTitle>
+                                    Jippy's example suggestion
+                                  </AlertTitle>
+                                  {/* TODO: currently only returns the top result- might change */}
+                                  <AlertDescription>
+                                    <Accordion type="multiple">
+                                      {comment.comment_analysises.map(
+                                        (analysis) => (
+                                          <AccordionItem
+                                            value={analysis.analysis.id.toString()}
+                                            key={analysis.analysis.id}
+                                          >
+                                            {/* TODO: currently assuming analysis always has event */}
+                                            <AccordionTrigger className="text-lg">
+                                              {analysis.analysis.event_id}
+                                            </AccordionTrigger>
+                                            <AccordionContent className="text-lg">
+                                              {analysis.skill_issue}
+                                            </AccordionContent>
+                                          </AccordionItem>
+                                        ),
+                                      )}
+                                    </Accordion>
+                                  </AlertDescription>
+                                </Alert>
+                              )}
                             <LikeButtons
                               onDislike={() => {}}
                               onLike={() => {}}
