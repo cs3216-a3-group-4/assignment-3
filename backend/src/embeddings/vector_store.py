@@ -5,11 +5,14 @@ from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone, ServerlessSpec
 from langchain_core.documents import Document
 
+from sqlalchemy import select
 from src.common.constants import LANGCHAIN_API_KEY
 from src.common.constants import OPENAI_API_KEY
 from src.common.constants import PINECONE_API_KEY
 
-from src.events.models import Analysis
+from src.events.models import Analysis, Event
+from sqlalchemy.orm import Session
+from src.common.database import engine
 
 import os
 import time
@@ -23,7 +26,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "cna-primary-index"  # change to create a new index
+    index_name = "prod-index-1"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
@@ -51,6 +54,14 @@ def create_vector_store():
 vector_store = create_vector_store()
 
 
+def get_is_singapore(event_id):
+    with Session(engine) as session:
+        event = session.scalars(select(Event).where(Event.id == event_id)).first()
+        if event:
+            return event.is_singapore
+        return "Unknown"
+
+
 def store_documents(analysis_list: List[Analysis]):
     documents = []
     for analysis in analysis_list:
@@ -60,6 +71,7 @@ def store_documents(analysis_list: List[Analysis]):
                 "id": analysis.id,
                 "event_id": analysis.event_id,
                 "category_id": analysis.category_id,
+                "is_singapore": get_is_singapore(analysis.event_id),
             },
         )
         documents.append(document)
