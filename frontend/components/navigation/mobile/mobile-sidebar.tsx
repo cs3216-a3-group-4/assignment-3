@@ -71,7 +71,7 @@ const MobileSidebar = () => {
   }, [pathname]);
 
   return (
-    <div className="sm:hidden" key={pathname}>
+    <div className="md:hidden" key={pathname}>
       <Button onClick={() => setIsCollapsed(false)} variant={"ghost"}>
         <MenuIcon />
       </Button>
