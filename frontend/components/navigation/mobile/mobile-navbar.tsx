@@ -23,7 +23,7 @@ function MobileNavbar() {
     >
       <div className="w-full flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
-          <Link className="hidden sm:flex mr-6 items-center gap-x-2" href="/">
+          <Link className="hidden md:flex mr-6 items-center gap-x-2" href="/">
             <JippyLogo />
           </Link>
           {!isLoggedIn && (
