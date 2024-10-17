@@ -20,20 +20,19 @@ def retrieve_event(
         .where(Event.id == id)
         .options(
             selectinload(Event.reads.and_(UserReadEvent.user_id == user.id)),
-            selectinload(
-                Event.gp_questions,
+            selectinload(Event.gp_questions).selectinload(
                 GPQuestion.categories,
             ),
             selectinload(
                 Event.categories,
             ),
-            selectinload(Event.analysises, Analysis.category),
-            selectinload(
-                Event.analysises, Analysis.notes.and_(Note.user_id == user.id)
+            selectinload(Event.analysises).selectinload(Analysis.category),
+            selectinload(Event.analysises).selectinload(
+                Analysis.notes.and_(Note.user_id == user.id)
             ),
             selectinload(Event.notes.and_(Note.user_id == user.id)),
-            selectinload(
-                Event.analysises, Analysis.likes.and_(Like.point_id.is_(None))
+            selectinload(Event.analysises).selectinload(
+                Analysis.likes.and_(Like.point_id.is_(None))
             ),
             selectinload(Event.original_article),
             selectinload(Event.bookmarks.and_(Bookmark.user_id == user.id)),
