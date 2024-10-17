@@ -63,8 +63,6 @@ async def stripe_webhook(request: Request):
             status_code=HTTPStatus.BAD_REQUEST, detail=f"""Invalid signature: {e}"""
         )
 
-    event_data_object = event_data["object"]
-
     if event_type == "checkout.session.completed":
         handle_checkout_completed(event)
     elif event_type == "invoice.payment_succeeded":
