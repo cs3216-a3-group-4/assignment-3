@@ -44,6 +44,9 @@ const Page = ({ params }: { params: { id: string } }) => {
     if (!isLoading && !sentRead) {
       readEventMutation.mutate();
       setSentRead(true);
+      if (data?.notes.length === 0) {
+        setIsViewAnnotation(false);
+      }
     }
   }, [isLoading, readEventMutation, sentRead]);
 
