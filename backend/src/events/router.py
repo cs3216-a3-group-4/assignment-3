@@ -30,7 +30,11 @@ def get_events(
     bookmarks: bool = False,
     singapore_only: bool = False,
 ) -> EventIndexResponse:
-    query = select(Event.id).distinct()
+    query = (
+        select(Event.id)
+        .distinct()
+        .where(Event.original_article.has(Article.useless == False))  # noqa: E712
+    )  # noqa: E712
     if start_date is not None:
         query = query.where(Event.original_article.has(Article.date >= start_date))
     if end_date is not None:
