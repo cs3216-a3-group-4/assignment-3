@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from fastapi.responses import RedirectResponse
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
@@ -42,15 +42,14 @@ async def create_checkout_session(
 
 
 @router.post("/webhook")
-async def stripe_webhook(request: Request):
+async def stripe_webhook(request: Request, stripe_signature: str = Header(None)):
     payload = await request.body()
-    sig_header = request.headers.get("stripe-signature")
-
     webhook_secret = STRIPE_WEBHOOK_SECRET
 
     try:
-        event = stripe.Webhook.construct_event(payload, sig_header, webhook_secret)
-        event_data = event["data"]
+        event = stripe.Webhook.construct_event(
+            payload, stripe_signature, webhook_secret
+        )
         event_type = event["type"]
     except ValueError as e:
         # Invalid payload
