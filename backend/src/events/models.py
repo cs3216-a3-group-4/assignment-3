@@ -30,6 +30,7 @@ class Article(Base):
     source: Mapped[ArticleSource]
     date: Mapped[datetime]
     image_url: Mapped[str]
+    useless: Mapped[bool] = mapped_column(server_default="false")
 
     original_events: Mapped[list["Event"]] = relationship(
         back_populates="original_article"
