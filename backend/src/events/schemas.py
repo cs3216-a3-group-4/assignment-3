@@ -52,8 +52,29 @@ class AnalysisToEventDTO(AnalysisMiniDTO):
     event: BaseEventDTO
 
 
+# Used by user_question
 class AnalysisDTO(AnalysisMiniDTO):
     notes: list[NoteDTO]
+
+
+class ConceptDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+
+
+class AnalysisConceptDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    explanation: str
+    concept: ConceptDTO
+
+
+#  Used by /event/:id via EventDTO
+class AnalysisWithConceptDTO(AnalysisDTO):
+    model_config = ConfigDict(from_attributes=True)
+    analysis_concepts: list[AnalysisConceptDTO]
 
 
 class GPQuestionDTO(BaseModel):
@@ -71,7 +92,7 @@ class BookmarkDTO(BaseModel):
 
 class EventDTO(MiniEventDTO):
     model_config = ConfigDict(from_attributes=True)
-    analysises: list[AnalysisDTO]
+    analysises: list[AnalysisWithConceptDTO]
     gp_questions: list[GPQuestionDTO]
     bookmarks: list[BookmarkDTO]
     notes: list[NoteDTO]
