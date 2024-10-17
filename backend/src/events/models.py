@@ -109,6 +109,10 @@ class Concept(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
 
+    analysis_concepts: Mapped[list["AnalysisConcept"]] = relationship(
+        back_populates="concept"
+    )
+
 
 class AnalysisConcept(Base):
     __tablename__ = "analysis_concept"
@@ -118,6 +122,9 @@ class AnalysisConcept(Base):
         ForeignKey("analysis.id"), primary_key=True
     )
     explanation: Mapped[str]
+
+    analysis: Mapped["Analysis"] = relationship(back_populates="analysis_concepts")
+    concept: Mapped["Concept"] = relationship(back_populates="analysis_concepts")
 
 
 class Analysis(Base):
@@ -136,6 +143,10 @@ class Analysis(Base):
         "Note",
         primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "analysis"),
         backref="analysis",
+    )
+
+    analysis_concepts: Mapped[list[AnalysisConcept]] = relationship(
+        back_populates="analysis"
     )
 
 

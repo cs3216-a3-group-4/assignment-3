@@ -60,7 +60,6 @@ async def generate_concept_from_analysis(
     )
 
 
-# TODO(seeleng): fill this in
 async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
     with Session(engine) as session:
         # query db for analysis
