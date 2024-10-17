@@ -224,3 +224,23 @@ SOCIETY_QUESTION_CLASSIFICATION_SYSPROMPT = """
     The question:
 
     """
+
+FILTER_USELESS_ARTICLES_SYSPROMPT = """
+    Do you think this article is good for finding examples for General Paper to answer essay questions that are argumentative/discursive in nature?
+    GP focuses on current affairs, global issues, and topics that encourage critical thinking and analysis of societal, political, and economic developments.
+    
+    Follow these examples:
+    "Analysis: AI enhances flood warnings but cannot erase risk of disaster", example response:
+    {
+        "useful": true,
+        "explanation": "This can be used by students to argue about the power of technology in solving environmental problems."
+    }
+
+    "Inside Felicia Chin and Jeffrey Xu’s 4-room HDB flat, a cosy home for a celebrity couple"
+    {
+        "useful": false,
+        "explanation": "Minor life choices of small celebrities like Jeffrey are not useful to argue about interconnected concepts and impact in General Paper."
+    }
+
+    The article's title:
+"""
