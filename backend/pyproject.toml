@@ -22,6 +22,7 @@ dependencies = [
     "langchain-openai>=0.2.0",
     "langchain-pinecone>=0.2.0",
     "pinecone-notebooks>=0.1.1",
+    "stripe>=11.1.0",
 ]
 
 [build-system]

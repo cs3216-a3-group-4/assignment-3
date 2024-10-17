@@ -1175,6 +1175,7 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "setuptools" },
     { name = "sqlalchemy" },
+    { name = "stripe" },
     { name = "wheel" },
 ]
 
@@ -1203,6 +1204,7 @@ requires-dist = [
     { name = "python-dotenv" },
     { name = "setuptools" },
     { name = "sqlalchemy", specifier = ">=2.0.35" },
+    { name = "stripe", specifier = ">=11.1.0" },
     { name = "wheel" },
 ]
 
@@ -1223,6 +1225,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/13/aa/57975da16ca0c368bbb5687daa6ad79561c2328a44667a1d6802e94df3e5/starlette-0.38.5.tar.gz", hash = "sha256:04a92830a9b6eb1442c766199d62260c3d4dc9c4f9188360626b1e0273cb7077", size = 2569511 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/90/1a/8853ba4cea1ec99535ac9be5795a50ca92cddd04d57bbaa56e866cb7548c/starlette-0.38.5-py3-none-any.whl", hash = "sha256:632f420a9d13e3ee2a6f18f437b0a9f1faecb0bc42e1942aa2ea0e379a4c4206", size = 71447 },
+]
+
+[[package]]
+name = "stripe"
+version = "11.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/97/e1/d867a08081f1627d13310cb55ec27b7c687d731ee0c3c8928a57e0d65739/stripe-11.1.0.tar.gz", hash = "sha256:1fac660dcc3014268cafc94a45ebeac66f1a752365f60019d2263e0c1e0f965b", size = 1339459 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3f/35/77152065e287e0aa98be205055036ca68835ccc1c1e74cabfd2327f0a6d1/stripe-11.1.0-py2.py3-none-any.whl", hash = "sha256:2cd09ca015dc5ce9d80cf5bbe81cd6a4d528997ddedadd53844e183f36211ace", size = 1590658 },
 ]
 
 [[package]]
