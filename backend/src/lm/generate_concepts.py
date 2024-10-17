@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from sqlalchemy import exists, select
-from src.events.models import Analysis, AnalysisConcept, Concept
+from src.events.models import Analysis, AnalysisConcept, Concept, Event
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from src.common.database import engine
 
 import json
@@ -65,13 +65,14 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
     with Session(engine) as session:
         # query db for analysis
         subquery = select(AnalysisConcept.analysis_id)
-        query = select(Analysis).where(
-            ~exists(subquery.where(AnalysisConcept.analysis_id == Analysis.id))
+        query = (
+            select(Analysis)
+            .where(~exists(subquery.where(AnalysisConcept.analysis_id == Analysis.id)))
+            .options(selectinload(Analysis.event).selectinload(Event.original_article))
         )
         if limit:
             query = query.limit(limit)
         analyses = session.scalars(query).all()
-        print(len(analyses))
 
         # call blackbox lm function
         res: list[AnalysisConceptsWithId] = []
