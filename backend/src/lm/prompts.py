@@ -229,7 +229,7 @@ FILTER_USELESS_ARTICLES_SYSPROMPT = """
     Do you think this article is good for finding examples for General Paper to answer essay questions that are argumentative/discursive in nature?
     GP focuses on current affairs, global issues, and topics that encourage critical thinking and analysis of societal, political, and economic developments.
     
-    Follow these examples:
+    Return a JSON output, following these examples:
     "Analysis: AI enhances flood warnings but cannot erase risk of disaster", example response:
     {
         "useful": true,
@@ -243,4 +243,5 @@ FILTER_USELESS_ARTICLES_SYSPROMPT = """
     }
 
     The article's title:
+
 """

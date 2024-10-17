@@ -8,7 +8,8 @@ from langchain_core.output_parsers import JsonOutputParser
 
 async def check_article_title(title: str) -> bool:
     """Return true if the article is useful."""
-    while True:
+    retry_attempts = 3
+    for _ in range(retry_attempts):
         try:
             messages = [
                 SystemMessage(content=SYSPROMPT),
@@ -19,10 +20,16 @@ async def check_article_title(title: str) -> bool:
             parser = JsonOutputParser()
             response = parser.invoke(result)
             return response.get("useful")
+        except asyncio.CancelledError as e:
+            print(e)
+            return True
         except Exception as e:  # noqa: E722
             print(e)
             print("hit the rate limit! waiting 10s for article", title)
             await asyncio.sleep(10)
+
+    # give up and dont filter
+    return True
 
 
 async def main():

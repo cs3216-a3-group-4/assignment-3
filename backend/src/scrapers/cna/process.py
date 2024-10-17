@@ -9,6 +9,8 @@ from pydantic import BaseModel, ConfigDict
 from bs4 import BeautifulSoup
 import os
 
+from src.lm.evaluate_article import check_article_title
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--input", help="input folder path")
@@ -85,6 +87,8 @@ async def process(category: str, folder_path: str):
                 if not body.strip():
                     continue
 
+                useless = not (await check_article_title(article.title))
+
                 # Add to database
                 article_orm = Article(
                     title=article.title,
@@ -96,6 +100,7 @@ async def process(category: str, folder_path: str):
                     body=body.strip(),
                     date=article.release_date,
                     image_url=article.image_url,
+                    useless=useless,
                 )
                 with Session(engine) as session:
                     session.add(article_orm)
