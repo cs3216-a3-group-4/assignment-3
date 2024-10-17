@@ -291,6 +291,7 @@ export type UserPublic = {
     email: string;
     categories: Array<CategoryDTO>;
     top_events_period?: number;
+    tier_id: (number | 1);
 };
 
 export type UserQuestionDTO = {
