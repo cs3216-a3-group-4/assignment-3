@@ -103,7 +103,7 @@ class Category(Base):
     analysises: Mapped[list["Analysis"]] = relationship(back_populates="category")
 
 
-class Concepts(Base):
+class Concept(Base):
     __tablename__ = "concept"
 
     id: Mapped[int] = mapped_column(primary_key=True)
