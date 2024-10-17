@@ -109,6 +109,13 @@ def handle_subscription_canceled(event):
     # Mark subscription as canceled in the database
     pass
 
+def handle_subscription_paused(event):
+    # Mark subscription as paused in the database
+    pass
+
+def handle_subscription_resumed(event):
+    # Mark subscription as resumed in the database
+    pass
 
 def handle_subscription_updated(event):
     # Update subscription status (e.g., trial ended, renewed)
