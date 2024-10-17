@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import DateRangeSelector, { Period } from "@/app/_home/date-range-selector";
@@ -27,6 +27,8 @@ const DEFAULT_EVENT_PERIOD = Period.Week;
 /* This component should only be rendered to authenticated users */
 const Home = () => {
   const user = useUserStore((state) => state.user);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const eventPeriod = user?.top_events_period
     ? user.top_events_period
@@ -44,7 +46,10 @@ const Home = () => {
     return eventStartDate;
   }, [eventPeriod]);
 
-  const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
+  const initialSingaporeOnly = searchParams.get("singaporeOnly") === "true";
+
+  const [singaporeOnly, setSingaporeOnly] =
+    useState<boolean>(initialSingaporeOnly);
 
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
     getHomeEvents(
@@ -59,7 +64,12 @@ const Home = () => {
     setTotalCount(events?.total_count);
   }, [events?.total_count]);
 
-  const router = useRouter();
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("singaporeOnly", singaporeOnly.toString());
+
+    router.push(`?${params.toString()}`);
+  }, [singaporeOnly, router, searchParams]);
 
   if (!user!.categories.length) {
     router.push("/onboarding");
@@ -89,7 +99,7 @@ const Home = () => {
           </div>
           <div className="flex items-center w-fit px-1 md:px-5 xl:px-9">
             <Select
-              defaultValue="global"
+              defaultValue={singaporeOnly ? "singapore-only" : "global"}
               onValueChange={(value) =>
                 setSingaporeOnly(value === "singapore-only")
               }

@@ -32,13 +32,13 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const readEventMutation = useReadEvent(id);
   const [sentRead, setSentRead] = useState(false);
+  const [first, setFirst] = useState(true);
 
   const showPanelAsSheet =
     mediaQuery === MediaBreakpoint.Lg ||
     mediaQuery === MediaBreakpoint.Md ||
     mediaQuery === MediaBreakpoint.Sm;
-  const [isViewAnnotation, setIsViewAnnotation] =
-    useState<boolean>(!showPanelAsSheet);
+  const [isViewAnnotation, setIsViewAnnotation] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isLoading && !sentRead) {
@@ -46,6 +46,21 @@ const Page = ({ params }: { params: { id: string } }) => {
       setSentRead(true);
     }
   }, [isLoading, readEventMutation, sentRead]);
+
+  useEffect(() => {
+    if (!data || !first) {
+      return;
+    }
+
+    setFirst(false);
+
+    if (
+      data.notes.length > 0 ||
+      data.analysises.flatMap((analysis) => analysis.notes).length > 0
+    ) {
+      setIsViewAnnotation(!showPanelAsSheet);
+    }
+  }, [data, first, showPanelAsSheet]);
 
   if (isLoading) {
     return (
