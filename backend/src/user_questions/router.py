@@ -55,28 +55,31 @@ def get_user_question(
         .where(UserQuestion.id == id)
         .where(UserQuestion.user_id == user.id)
         .options(
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.point_analysises,
-                PointAnalysis.analysis,
-                Analysis.event,
-                Event.original_article,
-            ),
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.fallback,
-            ),
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.point_analysises,
-                PointAnalysis.analysis,
-                Analysis.category,
-            ),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.point_analysises)
+            .selectinload(PointAnalysis.analysis)
+            .selectinload(Analysis.event)
+            .selectinload(Event.original_article),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.fallback),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.point_analysises)
+            .selectinload(PointAnalysis.analysis)
+            .selectinload(Analysis.category),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.likes),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.point_analysises)
+            .selectinload(PointAnalysis.analysis)
+            .selectinload(Analysis.likes),
         )
     )
+
     if not user_question:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 

@@ -3,10 +3,12 @@ import json
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
 import openai
+
 from src.scrapers.guardian.get_articles import get_articles
 from typing import List
 from pydantic import BaseModel
 from src.lm.lm import lm_model
+
 
 from src.lm.prompts import EVENT_GEN_SYSPROMPT as SYSPROMPT
 import asyncio
