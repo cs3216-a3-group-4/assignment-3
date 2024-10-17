@@ -103,6 +103,23 @@ class Category(Base):
     analysises: Mapped[list["Analysis"]] = relationship(back_populates="category")
 
 
+class Concepts(Base):
+    __tablename__ = "concept"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(unique=True)
+
+
+class AnalysisConcept(Base):
+    __tablename__ = "analysis_concept"
+
+    concept_id: Mapped[int] = mapped_column(ForeignKey("concept.id"), primary_key=True)
+    analysis_id: Mapped[int] = mapped_column(
+        ForeignKey("analysis.id"), primary_key=True
+    )
+    explanation: Mapped[str]
+
+
 class Analysis(Base):
     __tablename__ = "analysis"
 
