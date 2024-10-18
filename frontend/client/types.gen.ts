@@ -80,6 +80,10 @@ export type CategoryDTO = {
     name: string;
 };
 
+export type CheckoutRequestData = {
+    price_id: string;
+};
+
 export type CommentAnalysisDTO = {
     skill_issue: string;
     analysis: AnalysisMiniDTO;
@@ -291,7 +295,7 @@ export type UserPublic = {
     email: string;
     categories: Array<CategoryDTO>;
     top_events_period?: number;
-    tier_id: (number | 1);
+    tier_id?: number;
 };
 
 export type UserQuestionDTO = {
@@ -401,6 +405,24 @@ export type ChangePasswordAuthChangePasswordPutData = {
 export type ChangePasswordAuthChangePasswordPutResponse = (unknown);
 
 export type ChangePasswordAuthChangePasswordPutError = (HTTPValidationError);
+
+export type CreateCheckoutSessionBillingCreateCheckoutSessionPostData = {
+    body: CheckoutRequestData;
+};
+
+export type CreateCheckoutSessionBillingCreateCheckoutSessionPostResponse = (unknown);
+
+export type CreateCheckoutSessionBillingCreateCheckoutSessionPostError = (HTTPValidationError);
+
+export type StripeWebhookBillingWebhookPostData = {
+    headers?: {
+        'stripe-signature'?: string;
+    };
+};
+
+export type StripeWebhookBillingWebhookPostResponse = (unknown);
+
+export type StripeWebhookBillingWebhookPostError = (HTTPValidationError);
 
 export type GetCategoriesCategoriesGetData = unknown;
 

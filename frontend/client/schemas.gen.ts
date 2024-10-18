@@ -333,6 +333,18 @@ export const CategoryDTOSchema = {
     title: 'CategoryDTO'
 } as const;
 
+export const CheckoutRequestDataSchema = {
+    properties: {
+        price_id: {
+            type: 'string',
+            title: 'Price Id'
+        }
+    },
+    type: 'object',
+    required: ['price_id'],
+    title: 'CheckoutRequestData'
+} as const;
+
 export const CommentAnalysisDTOSchema = {
     properties: {
         skill_issue: {
@@ -1233,6 +1245,11 @@ export const UserPublicSchema = {
             type: 'integer',
             title: 'Top Events Period',
             default: 7
+        },
+        tier_id: {
+            type: 'integer',
+            title: 'Tier Id',
+            default: 1
         }
     },
     type: 'object',
