@@ -4,7 +4,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.common.base import Base
 from src.events.models import Bookmark, Category
 from src.notes.models import Note
-from src.limits.models import Tier
 from src.subscriptions.models import Subscription  # noqa: F401
 
 

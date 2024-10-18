@@ -1,7 +1,7 @@
 from enum import Enum
 from sqlalchemy import ForeignKey
 from src.common.base import Base
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 
 

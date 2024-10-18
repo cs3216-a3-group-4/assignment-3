@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from fastapi.responses import RedirectResponse
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
-from src.common.dependencies import get_session
 from src.common.constants import FRONTEND_URL, STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET
 from .schemas import CheckoutRequestData
 import stripe
