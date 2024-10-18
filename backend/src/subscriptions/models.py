@@ -25,4 +25,3 @@ class Subscription(Base):
     subscription_cancelled_date: Mapped[datetime] = mapped_column(nullable = True)
     status: Mapped[SubscriptionStatusType]
 
-    user = relationship("User", backref="subscription")
