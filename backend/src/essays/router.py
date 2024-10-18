@@ -34,8 +34,7 @@ def create_essay(
     essay = Essay(question=data.question, user_id=user.id)
 
     paragraphs = []
-    for index, paragraph in enumerate(data.paragraphs):
-        # TODO: Categorise the paragraph?
+    for paragraph in data.paragraphs:
         paragraph_orm = Paragraph(type=paragraph.type, content=paragraph.content)
 
         comments = get_comments(paragraph, data.question)

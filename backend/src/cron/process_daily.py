@@ -14,11 +14,10 @@ from src.lm.generate_events import (
     form_event_json,
     generate_events_from_article,
 )
+from src.lm.lm import CONCURRENCY
 from src.scripts.populate import populate
 
 file_path = "daily_events.json"
-
-CONCURRENCY = 150
 
 
 async def generate_daily_events(articles: list[dict]) -> List[EventPublic]:

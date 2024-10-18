@@ -10,11 +10,10 @@ import json
 from langchain_core.messages import SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
 
-from src.lm.lm import lm_model
+from src.lm.lm import CONCURRENCY, lm_model
 import asyncio
 
 CONCEPTS_FILE_PATH = "concepts_output.json"
-CONCURRENCY = 150
 
 
 class AnalysisConceptLM(BaseModel):
