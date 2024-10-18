@@ -310,7 +310,7 @@ export type UserPublic = {
     categories: Array<CategoryDTO>;
     top_events_period?: number;
     tier_id?: number;
-    subscription_id?: string;
+    subscription_id?: (string | null);
 };
 
 export type UserQuestionDTO = {

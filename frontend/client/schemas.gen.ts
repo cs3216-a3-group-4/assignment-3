@@ -1333,9 +1333,15 @@ export const UserPublicSchema = {
             default: 1
         },
         subscription_id: {
-            type: 'string',
-            title: 'Subscription Id',
-            default: ''
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Subscription Id'
         }
     },
     type: 'object',
