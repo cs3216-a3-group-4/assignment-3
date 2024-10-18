@@ -42,7 +42,6 @@ class Point(Base):
     )
     positive: Mapped[bool]
 
-    # analysises = relationship("Analysis", secondary="point_analysis")
     point_analysises: Mapped[list["PointAnalysis"]] = relationship(
         back_populates="point"
     )

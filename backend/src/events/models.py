@@ -79,6 +79,31 @@ class Event(Base):
 
     reads: Mapped[list["UserReadEvent"]] = relationship(backref="user")
     bookmarks: Mapped[list["Bookmark"]] = relationship(back_populates="event")
+    top_event_groups: Mapped[list["TopEventGroup"]] = relationship(
+        back_populates="events", secondary="top_event_group_event"
+    )
+
+
+class TopEventGroup(Base):
+    __tablename__ = "top_event_group"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    date: Mapped[datetime]
+    singapore_only: Mapped[bool]
+    published: Mapped[bool] = mapped_column(server_default="false")
+
+    events: Mapped[list[Event]] = relationship(
+        back_populates="top_event_groups", secondary="top_event_group_event"
+    )
+
+
+class TopEventGroupEvent(Base):
+    __tablename__ = "top_event_group_event"
+
+    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), primary_key=True)
+    top_event_group: Mapped[int] = mapped_column(
+        ForeignKey("top_event_group.id"), primary_key=True
+    )
 
 
 class UserReadEvent(Base):
