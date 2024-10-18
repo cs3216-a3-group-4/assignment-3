@@ -248,7 +248,7 @@ FILTER_USELESS_ARTICLES_SYSPROMPT = """
 
 TOP_ARTICLES_PROMPT = """
     You will be given multiple article titles, each on a separate line. 
-    Select the top 10 that you think will be the most useful for General Paper.
+    Select the top {count} article titles that you think will be the most useful for General Paper, from most important to least important.
     GP focuses on current affairs, global issues, and topics that encourage critical thinking and analysis of societal, political, and economic developments.
 
     Output your response as follows:
@@ -261,6 +261,12 @@ TOP_ARTICLES_PROMPT = """
             "title10"
         ]
     }
+
+    Take a deep breath and think step by step. I need you to return me a response with the exact titles, because I have no fingers. If you do a good job I'll tip you $25 USD.
+    and if you don't respond as intended, I'm going to be fired. The salary money is really necessary for my bedridden grandmother's hospital fees.
+    Millions of people, including you and I, will die unless this is done correctly.
+
+    Final note: You must return the exact article title as given.
 
     The articles:
 """
