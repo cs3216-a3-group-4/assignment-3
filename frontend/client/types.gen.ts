@@ -284,6 +284,20 @@ export type SignUpData = {
     password: string;
 };
 
+export type SubscriptionDTO = {
+    id: string;
+    user_id: number;
+    price_id: string;
+    customer_id: string;
+    subscription_period_end?: (string | null);
+    subscription_ended_date?: (string | null);
+    subscription_cancel_at?: (string | null);
+    subscription_cancelled_date?: (string | null);
+    status: SubscriptionStatusType;
+};
+
+export type SubscriptionStatusType = 'active' | 'cancelled' | 'paused' | 'past_due' | 'unpaid';
+
 export type Token = {
     access_token: string;
     token_type: string;
@@ -296,6 +310,7 @@ export type UserPublic = {
     categories: Array<CategoryDTO>;
     top_events_period?: number;
     tier_id?: number;
+    subscription_id?: string;
 };
 
 export type UserQuestionDTO = {
@@ -644,3 +659,23 @@ export type GetEssayEssaysIdGetData = {
 export type GetEssayEssaysIdGetResponse = (EssayDTO);
 
 export type GetEssayEssaysIdGetError = (HTTPValidationError);
+
+export type GetSubscriptionSubscriptionsIdGetData = {
+    path: {
+        id: number;
+    };
+};
+
+export type GetSubscriptionSubscriptionsIdGetResponse = (SubscriptionDTO);
+
+export type GetSubscriptionSubscriptionsIdGetError = (HTTPValidationError);
+
+export type GetSubscriptionStatusSubscriptionsIdStatusGetData = {
+    path: {
+        id: number;
+    };
+};
+
+export type GetSubscriptionStatusSubscriptionsIdStatusGetResponse = (SubscriptionStatusType);
+
+export type GetSubscriptionStatusSubscriptionsIdStatusGetError = (HTTPValidationError);
