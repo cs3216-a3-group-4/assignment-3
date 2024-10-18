@@ -11,6 +11,7 @@ class UserPublic(BaseModel):
     categories: list[CategoryDTO]
     top_events_period: int = 7
     tier_id: int = 1
+    subscription_id: str = ""
 
 
 class Token(BaseModel):
