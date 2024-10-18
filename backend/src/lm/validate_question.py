@@ -3,7 +3,7 @@ from src.lm.prompts import QUESTION_CLASSIFICAITON_SYSPROMPT as SYSPROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
 
-from src.lm.generate_events import lm_model_essay as lm_model
+from src.lm.lm import lm_model_essay as lm_model
 
 
 def validate_question(question: str) -> dict:

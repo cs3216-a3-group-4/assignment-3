@@ -16,6 +16,7 @@ import {
   ScrewedUpAccordionContent,
 } from "@/components/ui/accordion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from "@/lib/utils";
 import { useLikeEvent } from "@/queries/like";
 import { useAddAnalysisNote, useDeleteNote } from "@/queries/note";
 import { useUserStore } from "@/store/user/user-store-provider";
@@ -102,10 +103,11 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
       if (!selection) return;
 
       if (
-        selection.type == "Caret" &&
-        document
-          .getElementById(ANNOTATION_ACTIONS_BUTTON_ID)
-          ?.contains(selection.anchorNode)
+        selection.type === "None" ||
+        (selection.type == "Caret" &&
+          document
+            .getElementById(ANNOTATION_ACTIONS_BUTTON_ID)
+            ?.contains(selection.anchorNode))
       ) {
         return; // don't clear highlight if add-annotation button is being clicked
       }
@@ -154,11 +156,9 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
       selection.empty();
     };
 
-    document.addEventListener("mouseup", onSelectEnd);
-    document.addEventListener("touchend", onSelectEnd);
+    document.addEventListener("pointerup", onSelectEnd);
     return () => {
-      document.removeEventListener("mouseup", onSelectEnd);
-      document.removeEventListener("touchend", onSelectEnd);
+      document.removeEventListener("pointerup", onSelectEnd);
     };
   }, [showAnnotationForm]);
 
@@ -226,6 +226,8 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
             content.length,
           );
 
+          let hasSelection = false;
+
           if (
             highlightSelection &&
             highlightSelection.analysisId == eventAnalysis.id
@@ -235,11 +237,17 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
               highlightSelection.endIndex,
               highlightStartEndNormalised,
             );
+            hasSelection = true;
           }
 
           return (
             <AccordionItem
-              className="border rounded-lg px-8 py-2 border-cyan-600/60 bg-cyan-50/30"
+              className={cn(
+                "border rounded-lg px-8 py-2 border-cyan-600/60 bg-cyan-50/30",
+                {
+                  "select-none": hasSelection,
+                },
+              )}
               id={"analysis-" + eventAnalysis.id}
               key={category.id}
               value={category.name}
@@ -253,9 +261,16 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                   {category.name}
                 </span>
               </AccordionTrigger>
-              <div className="relative">
+              <div>
                 <ScrewedUpAccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
-                  <div>
+                  <div
+                    onClick={() => {
+                      if (hasSelection && showAnnotationForm) {
+                        setHighlightSelection(null);
+                        setShowAnnotationForm(false);
+                      }
+                    }}
+                  >
                     <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
                       {highlightStartEndNormalised.map(
                         ({

@@ -9,6 +9,7 @@ import {
   RotateCwIcon,
 } from "lucide-react";
 
+import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
@@ -31,13 +32,13 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const readEventMutation = useReadEvent(id);
   const [sentRead, setSentRead] = useState(false);
+  const [first, setFirst] = useState(true);
 
   const showPanelAsSheet =
     mediaQuery === MediaBreakpoint.Lg ||
     mediaQuery === MediaBreakpoint.Md ||
     mediaQuery === MediaBreakpoint.Sm;
-  const [isViewAnnotation, setIsViewAnnotation] =
-    useState<boolean>(!showPanelAsSheet);
+  const [isViewAnnotation, setIsViewAnnotation] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isLoading && !sentRead) {
@@ -45,6 +46,21 @@ const Page = ({ params }: { params: { id: string } }) => {
       setSentRead(true);
     }
   }, [isLoading, readEventMutation, sentRead]);
+
+  useEffect(() => {
+    if (!data || !first) {
+      return;
+    }
+
+    setFirst(false);
+
+    if (
+      data.notes.length > 0 ||
+      data.analysises.flatMap((analysis) => analysis.notes).length > 0
+    ) {
+      setIsViewAnnotation(!showPanelAsSheet);
+    }
+  }, [data, first, showPanelAsSheet]);
 
   if (isLoading) {
     return (
@@ -136,9 +152,10 @@ const Page = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       {isViewAnnotation && (
+        // h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]
         <div
           className={
-            "sticky top-0 min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)] " +
+            `sticky top-0 min-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] max-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] ` +
             (showPanelAsSheet ? "absolute right-0 w-full" : "flex w-4/12 ")
           }
         >

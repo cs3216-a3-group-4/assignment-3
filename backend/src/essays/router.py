@@ -8,13 +8,15 @@ from src.common.dependencies import get_session
 from src.essays.models import (
     Comment,
     CommentAnalysis,
-    CommentParentType,
     Essay,
-    Inclination,
     Paragraph,
-    ParagraphType,
 )
-from src.essays.schemas import EssayCreate, EssayDTO, EssayMiniDTO
+from src.lm.generate_essay_comments import (
+    get_comments,
+    get_essay_comments,
+)
+
+from src.essays.schemas import EssayCreate, EssayCreateDTO, EssayDTO, EssayMiniDTO
 from sqlalchemy.orm import Session, selectinload
 from src.events.models import Analysis
 from src.likes.models import Like
@@ -28,45 +30,25 @@ def create_essay(
     data: EssayCreate,
     user: Annotated[User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
-):
+) -> EssayCreateDTO:
     essay = Essay(question=data.question, user_id=user.id)
 
-    paragraph = []
+    paragraphs = []
     for index, paragraph in enumerate(data.paragraphs):
         # TODO: Categorise the paragraph?
-        paragraph_orm = Paragraph(type=ParagraphType.PARAGRAPH, content=paragraph)
+        paragraph_orm = Paragraph(type=paragraph.type, content=paragraph.content)
 
-        comment_with_example = Comment(
-            inclination=Inclination.NEUTRAL,
-            content=f"comment for paragraph {index} with example",
-            parent_type=CommentParentType.PARAGRAPH,
-        )
-        comment_with_example.comment_analysises.append(
-            CommentAnalysis(skill_issue="get good", analysis_id=1)
-        )
+        comments = get_comments(paragraph, data.question)
+        paragraph_orm.comments = comments
 
-        # TODO: Add comments for each paragraph
-        paragraph_orm.comments = [
-            Comment(
-                inclination=Inclination.NEUTRAL,
-                content=f"comment for paragraph {index}",
-                parent_type=CommentParentType.PARAGRAPH,
-            ),
-            comment_with_example,
-        ]
+        paragraphs.append(paragraph.content)
         essay.paragraphs.append(paragraph_orm)
 
-    # TODO: Add general comments for essay
-    essay.comments = [
-        Comment(
-            inclination=Inclination.GOOD,
-            content="placeholder",
-            parent_type=CommentParentType.ESSAY,
-        )
-    ]
+    essay.comments = get_essay_comments(paragraphs, data.question)
 
     session.add(essay)
     session.commit()
+    return {"essay_id": essay.id}
 
 
 @router.get("/")
@@ -89,35 +71,40 @@ def get_essay(
         .where(Essay.id == id)
         .where(Essay.user_id == user.id)
         .options(
-            selectinload(
-                Essay.paragraphs,
-                Paragraph.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
-                Analysis.category,
-            ),
-            selectinload(
-                Essay.paragraphs,
-                Paragraph.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
+            selectinload(Essay.paragraphs)
+            .selectinload(Paragraph.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(Analysis.category),
+            selectinload(Essay.paragraphs)
+            .selectinload(Paragraph.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(Analysis.event),
+            selectinload(Essay.paragraphs)
+            .selectinload(Paragraph.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(
                 Analysis.likes.and_(Like.point_id.is_(None)).and_(
                     Like.user_id == user.id
                 ),
             ),
-            selectinload(
-                Essay.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
-                Analysis.category,
-            ),
-            selectinload(
-                Essay.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
+            selectinload(Essay.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(Analysis.category),
+            selectinload(Essay.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(Analysis.event),
+            selectinload(Essay.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(
                 Analysis.likes.and_(Like.point_id.is_(None)).and_(
                     Like.user_id == user.id
-                ),
+                )
             ),
         )
     )

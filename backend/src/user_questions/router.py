@@ -23,7 +23,6 @@ from src.user_questions.schemas import (
     ValidationResult,
 )
 from src.lm.generate_response import generate_response
-from src.lm.generate_points import get_relevant_analyses
 from src.lm.validate_question import validate_question
 
 
@@ -45,16 +44,6 @@ def get_user_questions(
     return user_questions
 
 
-@router.get("/ask-gp-question")
-async def ask_gp_question(question: str):
-    return await generate_response(question)
-
-
-@router.get("/gen-points")
-def gen_points(question: str):
-    return get_relevant_analyses(question)
-
-
 @router.get("/{id}")
 def get_user_question(
     id: int,
@@ -66,28 +55,31 @@ def get_user_question(
         .where(UserQuestion.id == id)
         .where(UserQuestion.user_id == user.id)
         .options(
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.point_analysises,
-                PointAnalysis.analysis,
-                Analysis.event,
-                Event.original_article,
-            ),
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.fallback,
-            ),
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.point_analysises,
-                PointAnalysis.analysis,
-                Analysis.category,
-            ),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.point_analysises)
+            .selectinload(PointAnalysis.analysis)
+            .selectinload(Analysis.event)
+            .selectinload(Event.original_article),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.fallback),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.point_analysises)
+            .selectinload(PointAnalysis.analysis)
+            .selectinload(Analysis.category),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.likes),
+            selectinload(UserQuestion.answer)
+            .selectinload(Answer.points)
+            .selectinload(Point.point_analysises)
+            .selectinload(PointAnalysis.analysis)
+            .selectinload(Analysis.likes),
         )
     )
+
     if not user_question:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
@@ -105,13 +97,10 @@ async def create_user_question(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
 ) -> UserQuestionDTO | ValidationResult:
-    validation = validate_question(data.question)
-    if not validation["is_valid"]:
+    validation = within_usage_limit(user, session, data.question)
+
+    if not validation.is_valid:
         return validation
-    else:
-        within_use_limit, validation_result = within_usage_limit(user, session)
-        if not within_use_limit:
-            return validation_result
 
     user_question = UserQuestion(question=data.question, user_id=user.id)
 

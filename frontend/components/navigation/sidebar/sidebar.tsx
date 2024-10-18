@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
+  BookOpenCheckIcon,
   HistoryIcon,
   HomeIcon,
   MessageCircleQuestionIcon,
@@ -48,6 +49,12 @@ const Sidebar = () => {
           isActive={pathname === "/notes"}
           label="Notes"
           path="/notes"
+        />
+        <SidebarItemWithIcon
+          Icon={BookOpenCheckIcon}
+          isActive={pathname === "/essay-feedback"}
+          label="Essay feedback"
+          path="/essay-feedback"
         />
         <SidebarItemWithIcon
           Icon={MessageCircleQuestionIcon}

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
+  BookOpenCheckIcon,
   HistoryIcon,
   HomeIcon,
   LucideIcon,
@@ -42,6 +43,11 @@ const OPTIONS: SidebarOption[] = [
     label: "Notes",
     path: "/notes",
   },
+  {
+    icon: BookOpenCheckIcon,
+    label: "Essay feedback",
+    path: "/essay-feedback",
+  },
   { icon: MessageCircleQuestionIcon, label: "Ask a question", path: "/ask" },
   { icon: HistoryIcon, label: "Past questions", path: "/questions" },
 ];
@@ -65,7 +71,7 @@ const MobileSidebar = () => {
   }, [pathname]);
 
   return (
-    <div className="sm:hidden" key={pathname}>
+    <div className="md:hidden" key={pathname}>
       <Button onClick={() => setIsCollapsed(false)} variant={"ghost"}>
         <MenuIcon />
       </Button>

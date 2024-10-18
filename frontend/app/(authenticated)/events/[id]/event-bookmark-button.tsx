@@ -52,7 +52,7 @@ const EventBookmarkButton = ({
         toast.toast({
           title: "Added bookmark",
           icon: <BookmarkCheckIcon />,
-          description: `Bookmark added for ${eventTitle} ${isBookmarked}`,
+          description: `Bookmark added for ${eventTitle}`,
         });
       }}
       size="lg"
