@@ -21,6 +21,8 @@ GOOGLE_REDIRECT_URI: str = _get_env_var("GOOGLE_REDIRECT_URI")
 LANGCHAIN_API_KEY: str = _get_env_var("LANGCHAIN_API_KEY")
 OPENAI_API_KEY: str = _get_env_var("OPENAI_API_KEY")
 PINECONE_API_KEY: str = _get_env_var("PINECONE_API_KEY")
+STRIPE_API_KEY: str = _get_env_var("STRIPE_API_KEY")
+STRIPE_WEBHOOK_SECRET: str = _get_env_var("STRIPE_WEBHOOK_SECRET")
 
 # for scrapers
 GUARDIAN_API_KEY: str = _get_env_var("GUARDIAN_API_KEY", required=False)
