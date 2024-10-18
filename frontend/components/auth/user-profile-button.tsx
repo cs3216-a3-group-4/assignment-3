@@ -78,7 +78,7 @@ const UserProfileButton = () => {
                 <span>Manage billings</span>
                 <Chip
                   className="ml-4 hidden xl:inline-flex"
-                  label={tierIDToTierName(user.tier_id)}
+                  label={tierIDToTierName(user.tier_id || 1)}
                   size="sm"
                 />
               </DropdownMenuItem>
