@@ -19,6 +19,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { getInitialFromEmail } from "@/utils/string";
+import { tierIDToTierName } from "@/types/billing";
 
 const UserProfileButton = () => {
   const router = useRouter();
@@ -71,13 +72,13 @@ const UserProfileButton = () => {
                 <span>Profile settings</span>
               </DropdownMenuItem>
             </Link>
-            <Link className="cursor-pointer" href="/user/profile">
+            <Link className="cursor-pointer" href="/user/billing">
               <DropdownMenuItem>
                 <CreditCardIcon className="mr-2" size={16} />
                 <span>Manage billings</span>
                 <Chip
                   className="ml-4 hidden xl:inline-flex"
-                  label="Free tier"
+                  label={tierIDToTierName(user.tier_id)}
                   size="sm"
                 />
               </DropdownMenuItem>
