@@ -245,3 +245,22 @@ FILTER_USELESS_ARTICLES_SYSPROMPT = """
     The article's title:
 
 """
+
+TOP_ARTICLES_PROMPT = """
+    You will be given multiple article titles, each on a separate line. 
+    Select the top 10 that you think will be the most useful for General Paper.
+    GP focuses on current affairs, global issues, and topics that encourage critical thinking and analysis of societal, political, and economic developments.
+
+    Output your response as follows:
+
+    { 
+        "top_articles": [
+            "title1",
+            "title2",
+            ...
+            "title10"
+        ]
+    }
+
+    The articles:
+"""
