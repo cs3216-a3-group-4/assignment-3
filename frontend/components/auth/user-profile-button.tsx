@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserStore } from "@/store/user/user-store-provider";
-import { getInitialFromEmail } from "@/utils/string";
 import { tierIDToTierName } from "@/types/billing";
+import { getInitialFromEmail } from "@/utils/string";
 
 const UserProfileButton = () => {
   const router = useRouter();

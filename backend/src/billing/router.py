@@ -12,6 +12,7 @@ import stripe
 stripe.api_key = STRIPE_API_KEY
 router = APIRouter(prefix="/billing", tags=["billing"])
 
+
 @router.post("/create-checkout-session")
 async def create_checkout_session(
     request_data: CheckoutRequestData,

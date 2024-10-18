@@ -12,20 +12,21 @@ from src.subscriptions.schemas import SubscriptionDTO
 
 router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
 
+
 @router.get("/{id}")
 def get_subscription(
     _: Annotated[User, Depends(get_current_user)],
-    subscription = Depends(retrieve_subscription),
+    subscription=Depends(retrieve_subscription),
 ) -> SubscriptionDTO:
-    
     return subscription
+
 
 @router.get("/{id}/status")
 def get_subscription_status(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
-    _ = Depends(retrieve_subscription),
-    session = Depends(get_session),
+    _=Depends(retrieve_subscription),
+    session=Depends(get_session),
 ) -> SubscriptionStatusType:
     subscription = session.scalar(
         select(Subscription.status)
