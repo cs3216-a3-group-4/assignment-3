@@ -12,16 +12,20 @@ export const useCreateStripeCheckoutSession = () => {
           // Stripe price ID
           price_id 
         }, 
+      }).then(response => {
+        return { data: response.data as { url?: string } };
       });
     },
-    onSuccess: (data) => {
-      // Response should contain the Stripe Checkout session URL from backend
-      if (data?.url) {
-        router.push(data.url);
+    onSuccess: (response: { data?: { url?: string } }) => {
+      if (response.data?.url) {
+        // Response contains the Stripe Checkout session URL from backend
+        router.push(response.data.url);
+      } else {
+        console.error("No URL found in the response data");
       }
     },
     onError: (error) => {
-      console.error("Error creating Stripe checkout session:", error);
+      console.error("Error creating Stripe checkout session: ", error);
       // Redirect to checkout failed page
       router.push("/billing/?error=checkout_failed");
     },
