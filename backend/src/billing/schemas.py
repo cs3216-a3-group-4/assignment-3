@@ -26,6 +26,7 @@ class StripeSessionResponseDTO(BaseModel):
     payment_method_types: list[str]
     payment_status: str
     status: str
+    subscription: str
     success_url: str
     url: str
 
