@@ -81,7 +81,7 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(None))
 
     if event_type == "checkout.session.completed":
         handle_checkout_completed(event)
-    elif event_type == "invoice.payment_succeeded":
+    elif event_type == "invoice.paid":
         handle_payment_success(event)
     elif event_type == "invoice.payment_failed":
         handle_payment_failure(event)
@@ -109,7 +109,7 @@ def handle_checkout_completed(event):
 
 
 def handle_payment_success(event):
-    # Update your database to reflect payment success
+    # Subscription renewed successfully, update your database to reflect payment success
     pass
 
 
