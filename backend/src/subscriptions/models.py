@@ -18,8 +18,8 @@ class Subscription(Base):
     __tablename__ = "subscription"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    # Make user_id nullable since the frontend needs to match subscription.id 
-    #   to user.id for us, which might only happen after stripe webhook is triggered 
+    # Make user_id nullable since the frontend needs to match subscription.id
+    #   to user.id for us, which might only happen after stripe webhook is triggered
     #   and this table is populated
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
     price_id: Mapped[str]
@@ -31,4 +31,6 @@ class Subscription(Base):
     status: Mapped[SubscriptionStatusType]
 
     # Nullable for the same reason as user_id above
-    user: Mapped[User] = relationship("User", back_populates="subscription", foreign_keys=[user_id], nullable=True)
+    user: Mapped[User] = relationship(
+        "User", back_populates="subscription", foreign_keys=[user_id], nullable=True
+    )
