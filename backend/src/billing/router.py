@@ -95,6 +95,10 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(None))
         handle_subscription_resumed(event)
     elif event_type == "customer.subscription.updated":
         handle_subscription_updated(event)
+    elif event_type == "charge.dispute.created":
+        handle_charge_dispute_created(event)
+    elif event_type == "charge.dispute.closed":
+        handle_charge_dispute_closed(event)
 
     return {"status": "success"}
 
@@ -136,4 +140,12 @@ def handle_subscription_resumed(event):
 
 def handle_subscription_updated(event):
     # Update subscription status (e.g., trial ended, renewed)
+    pass
+
+def handle_charge_dispute_created(event):
+    # Update user subscription status to paused
+    pass
+
+def handle_charge_dispute_closed(event):
+    # Update user subscription status based on whether customer won or we won
     pass
