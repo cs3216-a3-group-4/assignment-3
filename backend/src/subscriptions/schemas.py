@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional
+from src.auth.schemas import UserPublic
 from src.subscriptions.models import SubscriptionStatusType
 
 
@@ -15,3 +16,4 @@ class SubscriptionDTO(BaseModel):
     subscription_cancel_at: Optional[datetime] = None
     subscription_cancelled_date: Optional[datetime] = None
     status: SubscriptionStatusType
+    user: Optional[UserPublic] = None

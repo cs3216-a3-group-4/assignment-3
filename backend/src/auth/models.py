@@ -37,9 +37,7 @@ class User(Base):
     tier_id: Mapped[int] = mapped_column(
         ForeignKey("tier.id"), default=1, server_default="1"
     )
-    subscription_id: Mapped[int] = mapped_column(
-        ForeignKey("subscription.id"), nullable=True
-    )
+    subscription: Mapped[Subscription] = relationship("Subscription", back_populates="user", nullable=True)
 
 
 class PasswordReset(Base):
