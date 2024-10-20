@@ -17,10 +17,7 @@ class Subscription(Base):
     __tablename__ = "subscription"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    # Make user_id nullable since the frontend needs to match subscription.id
-    #   to user.id for us, which might only happen after stripe webhook is triggered
-    #   and this table is populated
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     price_id: Mapped[str]
     customer_id: Mapped[str]
     subscription_period_end: Mapped[datetime] = mapped_column(nullable=True)
