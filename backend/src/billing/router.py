@@ -57,15 +57,19 @@ async def create_checkout_session(
 
         # Return stripe checkout URL to frontend for redirect
         return RedirectResponse(
-            url=checkout_session.url if checkout_session.url else "", 
-            status_code=HTTPStatus.SEE_OTHER
+            url=checkout_session.url if checkout_session.url else "",
+            status_code=HTTPStatus.SEE_OTHER,
         )
     except Exception as e:
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.post("/webhook")
-async def stripe_webhook(request: Request, stripe_signature: str = Header(None), session=Depends(get_session),):
+async def stripe_webhook(
+    request: Request,
+    stripe_signature: str = Header(None),
+    session=Depends(get_session),
+):
     payload = await request.body()
     webhook_secret = STRIPE_WEBHOOK_SECRET
 
@@ -79,7 +83,7 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(None),
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST, detail=f"""Invalid payload: {e}"""
         )
-    except stripe.error.SignatureVerificationError as e: # type: ignore
+    except stripe.error.SignatureVerificationError as e:  # type: ignore
         # Invalid signature
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST, detail=f"""Invalid signature: {e}"""
@@ -153,23 +157,30 @@ def handle_subscription_updated(event, session):
     update_subscription_for(checkout_session, session)
     # TODO: Update user tier_id if needed
 
+
 def handle_charge_dispute_created(event):
     # Update user subscription status to paused
     pass
+
 
 def handle_charge_dispute_closed(event):
     # Update user subscription status based on whether customer won or we won
     pass
 
+
 def update_subscription_for(checkout_session: stripe.checkout.Session, session):
-    if (checkout_session.mode != 'subscription'):
+    if checkout_session.mode != "subscription":
         return
     # Update stripe_session table to with updated subscription data from stripe
     subscriptionId: str = str(checkout_session.subscription)
     customer_id: str = str(checkout_session.customer)
     stripe_session = session.get(StripeSession, checkout_session.id)
-    user_id: int = int(checkout_session.client_reference_id if checkout_session.client_reference_id else stripe_session.user_id)
-    
+    user_id: int = int(
+        checkout_session.client_reference_id
+        if checkout_session.client_reference_id
+        else stripe_session.user_id
+    )
+
     stripe_subscription = stripe.Subscription.retrieve(subscriptionId)
     new_subscription = Subscription(
         id=subscriptionId,
@@ -178,10 +189,26 @@ def update_subscription_for(checkout_session: stripe.checkout.Session, session):
         customer_id=customer_id,
         status=stripe_subscription.status,
         quantity=stripe_subscription.items.data[0].quantity,
-        subscription_period_end=datetime.fromtimestamp(stripe_subscription.current_period_end).isoformat() if stripe_subscription.current_period_end else None,
-        subscription_ended_date=datetime.fromtimestamp(stripe_subscription.ended_at).isoformat() if stripe_subscription.ended_at else None,
-        subscription_cancel_at=datetime.fromtimestamp(stripe_subscription.cancel_at_period_end).isoformat() if stripe_subscription.cancel_at_period_end else None,
-        subscription_cancelled_date=datetime.fromtimestamp(stripe_subscription.canceled_at).isoformat() if stripe_subscription.canceled_at else None,
+        subscription_period_end=datetime.fromtimestamp(
+            stripe_subscription.current_period_end
+        ).isoformat()
+        if stripe_subscription.current_period_end
+        else None,
+        subscription_ended_date=datetime.fromtimestamp(
+            stripe_subscription.ended_at
+        ).isoformat()
+        if stripe_subscription.ended_at
+        else None,
+        subscription_cancel_at=datetime.fromtimestamp(
+            stripe_subscription.cancel_at_period_end
+        ).isoformat()
+        if stripe_subscription.cancel_at_period_end
+        else None,
+        subscription_cancelled_date=datetime.fromtimestamp(
+            stripe_subscription.canceled_at
+        ).isoformat()
+        if stripe_subscription.canceled_at
+        else None,
     )
     new_subscription.user = session.get(User, new_subscription.user_id)
     session.add(new_subscription)
