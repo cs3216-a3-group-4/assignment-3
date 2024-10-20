@@ -9,14 +9,14 @@ from src.subscriptions.models import Subscription
 
 def retrieve_subscription(
     id: int,
-    user=Depends(get_current_user),
+    _=Depends(get_current_user),
     session=Depends(get_session),
 ) -> Subscription:
     subscription = session.scalar(
         select(Subscription)
         .where(Subscription.id == id)
         .options(
-            selectinload(Subscription.user.and_(Subscription.user_id == user.id)),
+            selectinload(Subscription.user),
         )
     )
     if not subscription:
