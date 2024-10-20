@@ -38,7 +38,7 @@ class User(Base):
         ForeignKey("tier.id"), default=1, server_default="1"
     )
     subscription: Mapped[Subscription] = relationship(
-        "Subscription", back_populates="user", nullable=True
+        "Subscription", backref="user"
     )
 
 
