@@ -299,7 +299,6 @@ export type SubscriptionDTO = {
     subscription_cancel_at?: (string | null);
     subscription_cancelled_date?: (string | null);
     status: SubscriptionStatusType;
-    user?: (UserPublic | null);
 };
 
 export type SubscriptionStatusType = 'active' | 'cancelled' | 'paused' | 'past_due' | 'unpaid';
@@ -316,6 +315,7 @@ export type UserPublic = {
     categories: Array<CategoryDTO>;
     top_events_period?: number;
     tier_id?: number;
+    subscription?: (SubscriptionDTO | null);
 };
 
 export type UserQuestionDTO = {

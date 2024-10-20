@@ -1283,16 +1283,6 @@ export const SubscriptionDTOSchema = {
         },
         status: {
             '$ref': '#/components/schemas/SubscriptionStatusType'
-        },
-        user: {
-            anyOf: [
-                {
-                    '$ref': '#/components/schemas/UserPublic'
-                },
-                {
-                    type: 'null'
-                }
-            ]
         }
     },
     type: 'object',
@@ -1352,6 +1342,16 @@ export const UserPublicSchema = {
             type: 'integer',
             title: 'Tier Id',
             default: 1
+        },
+        subscription: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/SubscriptionDTO'
+                },
+                {
+                    type: 'null'
+                }
+            ]
         }
     },
     type: 'object',
