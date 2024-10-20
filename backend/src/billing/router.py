@@ -210,10 +210,17 @@ def update_subscription_for(checkout_session: stripe.checkout.Session, session):
         if stripe_subscription.canceled_at
         else None,
     )
-    new_subscription.user = session.get(User, new_subscription.user_id)
     session.add(new_subscription)
     session.commit()
     session.refresh(new_subscription)
+
+    # Populate user.subscription with updated subscription 
+    ##  This populates subscription.user as well
+    current_user = session.get(User, user_id)
+    current_user.subscription = stripe_subscription
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
 
     if not stripe_session.subscription_id:
         stripe_session.subscription_id = subscriptionId
