@@ -61,23 +61,6 @@ async def create_checkout_session(
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
 
 
-@router.post("/sessions")
-def create_session(
-    stripe_session: StripeSessionCreate,
-    user: Annotated[User, Depends(get_current_user)],
-    session=Depends(get_session),
-) -> StripeSessionDTO:
-    new_stripe_session = StripeSession(
-        id=stripe_session.stripe_session.id,
-        subscription_id=stripe_session.stripe_session.subscription,
-        user_id=user.id,
-    )
-    session.add(new_stripe_session)
-    session.commit()
-    session.refresh(new_stripe_session)
-    return new_stripe_session
-
-
 @router.post("/webhook")
 async def stripe_webhook(request: Request, stripe_signature: str = Header(None)):
     payload = await request.body()
