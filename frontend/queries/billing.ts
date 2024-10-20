@@ -6,11 +6,13 @@ export const useCreateStripeCheckoutSession = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: ({ price_id }: { price_id: string }) => {
+    mutationFn: ({ price_id, tier_id }: { price_id: string, tier_id: number }) => {
       return createCheckoutSessionBillingCreateCheckoutSessionPost({
         body: {
           // Stripe price ID
-          price_id 
+          price_id,
+          // Tier ID associated with payment
+          tier_id
         }, 
       }).then(response => {
         return { data: response.data as { url?: string } };
