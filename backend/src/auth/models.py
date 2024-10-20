@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.common.base import Base
 from src.events.models import Bookmark, Category
 from src.notes.models import Note
+from src.subscriptions.models import Subscription  # noqa: F401
 
 
 class AccountType(str, Enum):
@@ -35,6 +36,9 @@ class User(Base):
 
     tier_id: Mapped[int] = mapped_column(
         ForeignKey("tier.id"), default=1, server_default="1"
+    )
+    subscription: Mapped[Subscription] = relationship(
+        "Subscription", backref="user"
     )
 
 

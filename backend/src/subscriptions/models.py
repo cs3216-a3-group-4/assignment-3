@@ -1,8 +1,7 @@
 from enum import Enum
 from sqlalchemy import ForeignKey
-from src.auth.models import User
 from src.common.base import Base
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 
 
@@ -29,8 +28,3 @@ class Subscription(Base):
     subscription_cancel_at: Mapped[datetime] = mapped_column(nullable=True)
     subscription_cancelled_date: Mapped[datetime] = mapped_column(nullable=True)
     status: Mapped[SubscriptionStatusType]
-
-    # Nullable for the same reason as user_id above
-    user: Mapped[User] = relationship(
-        "User", foreign_keys=[user_id], backref="subscription"
-    )
