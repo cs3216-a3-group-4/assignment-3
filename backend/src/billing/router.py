@@ -7,7 +7,7 @@ from src.auth.models import User
 from src.billing.models import StripeSession
 from src.common.constants import FRONTEND_URL, STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET
 from src.common.dependencies import get_session
-from .schemas import CheckoutRequestData, StripeSessionCreate, StripeSessionDTO
+from .schemas import CheckoutRequestData
 import stripe
 
 stripe.api_key = STRIPE_API_KEY
