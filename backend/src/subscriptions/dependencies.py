@@ -12,10 +12,7 @@ def retrieve_subscription(
     _=Depends(get_current_user),
     session=Depends(get_session),
 ) -> Subscription:
-    subscription = session.scalar(
-        select(Subscription)
-        .where(Subscription.id == id)
-    )
+    subscription = session.scalar(select(Subscription).where(Subscription.id == id))
     if not subscription:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 

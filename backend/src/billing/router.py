@@ -214,7 +214,7 @@ def update_subscription_for(checkout_session: stripe.checkout.Session, session):
     session.commit()
     session.refresh(new_subscription)
 
-    # Populate user.subscription with updated subscription 
+    # Populate user.subscription with updated subscription
     ##  This populates subscription.user as well
     current_user = session.get(User, user_id)
     current_user.subscription = stripe_subscription
