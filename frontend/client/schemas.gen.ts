@@ -308,10 +308,14 @@ export const CheckoutRequestDataSchema = {
         price_id: {
             type: 'string',
             title: 'Price Id'
+        },
+        tier_id: {
+            type: 'integer',
+            title: 'Tier Id'
         }
     },
     type: 'object',
-    required: ['price_id'],
+    required: ['price_id', 'tier_id'],
     title: 'CheckoutRequestData'
 } as const;
 
@@ -1339,16 +1343,15 @@ export const UserPublicSchema = {
             title: 'Tier Id',
             default: 1
         },
-        subscription_id: {
+        subscription: {
             anyOf: [
                 {
-                    type: 'string'
+                    '$ref': '#/components/schemas/SubscriptionDTO'
                 },
                 {
                     type: 'null'
                 }
-            ],
-            title: 'Subscription Id'
+            ]
         }
     },
     type: 'object',

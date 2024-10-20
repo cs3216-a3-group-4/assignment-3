@@ -74,6 +74,7 @@ export type CategoryDTO = {
 
 export type CheckoutRequestData = {
     price_id: string;
+    tier_id: number;
 };
 
 export type CommentAnalysisDTO = {
@@ -314,7 +315,7 @@ export type UserPublic = {
     categories: Array<CategoryDTO>;
     top_events_period?: number;
     tier_id?: number;
-    subscription_id?: (string | null);
+    subscription?: (SubscriptionDTO | null);
 };
 
 export type UserQuestionDTO = {
