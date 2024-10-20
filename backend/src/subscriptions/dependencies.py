@@ -15,9 +15,6 @@ def retrieve_subscription(
     subscription = session.scalar(
         select(Subscription)
         .where(Subscription.id == id)
-        .options(
-            selectinload(Subscription.user),
-        )
     )
     if not subscription:
         raise HTTPException(HTTPStatus.NOT_FOUND)
