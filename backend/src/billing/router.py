@@ -17,12 +17,15 @@ router = APIRouter(prefix="/billing", tags=["billing"])
 @router.post("/create-checkout-session")
 async def create_checkout_session(
     request_data: CheckoutRequestData,
-    _: Annotated[User, Depends(get_current_user)],
+    user: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
 ):
     price_id = request_data.price_id
+    tier_id = request_data.tier_id
 
     try:
         checkout_session = stripe.checkout.Session.create(
+            client_reference_id=str(user.id),
             payment_method_types=["card"],
             mode="subscription",
             line_items=[
@@ -34,6 +37,23 @@ async def create_checkout_session(
             success_url=f"""{FRONTEND_URL}/billing/?success=true&session_id={{CHECKOUT_SESSION_ID}}""",
             cancel_url=f"""{FRONTEND_URL}/billing/?cancelled=true""",
         )
+
+        # Create new stripe session object
+        stripe_session_id = checkout_session.id
+        user_id = user.id
+        new_stripe_session = StripeSession(
+            id=stripe_session_id,
+            # Subscription ID has to be updated later by webhook event handler
+            subscription_id="",
+            user_id=user_id,
+            tier_id=tier_id,
+        )
+        # Save new stripe session to database
+        session.add(new_stripe_session)
+        session.commit()
+        session.refresh(new_stripe_session)
+
+        # Return stripe checkout URL to frontend for redirect
         return RedirectResponse(
             url=checkout_session.url, status_code=HTTPStatus.SEE_OTHER
         )
