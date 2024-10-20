@@ -36,6 +36,7 @@ const Page = () => {
       onClickBuy: () => {
         stripeCheckoutMutation.mutate({
           price_id: process.env.NEXT_PUBLIC_STRIPE_PREMIUM_TIER_PRICE_ID || "",
+          tier_id: Number(process.env.NEXT_PUBLIC_PREMIUM_TIER_ID) || 1,
         });
       },
       price: TierPrice.Premium,
