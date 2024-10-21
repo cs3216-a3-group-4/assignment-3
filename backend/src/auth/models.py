@@ -20,6 +20,11 @@ user_category_table = Table(
 )
 
 
+class Role(str, Enum):
+    NORMAL = "normal"
+    ADMIN = "admin"
+
+
 class User(Base):
     __tablename__ = "user"
 
@@ -27,6 +32,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
     account_type: Mapped[AccountType]
+
+    role: Mapped[Role] = mapped_column(server_default="NORMAL")
 
     categories: Mapped[list[Category]] = relationship(secondary=user_category_table)
     notes: Mapped[list[Note]] = relationship("Note", backref="user")
