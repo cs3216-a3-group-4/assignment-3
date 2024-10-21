@@ -1,7 +1,7 @@
 from langchain_core.messages import HumanMessage, SystemMessage
 from src.events.models import Analysis
 from src.lm.concept_gen_prompt import CONCEPT_GEN_SYSPROMPT as SYSPROMPT
-from src.lm.lm import lm_model
+from src.lm.lm import lm_model_concept as lm_model
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session

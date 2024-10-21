@@ -7,6 +7,7 @@ os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 lm_model = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, max_retries=5)
 
+lm_model_concept = ChatOpenAI(model="gpt-4o-mini", temperature=0.9, max_retries=5)
 
 lm_model_essay = ChatOpenAI(
     model="gpt-4o-mini", temperature=0.7, frequency_penalty=0.5, max_retries=5
