@@ -19,6 +19,17 @@ article_event_table = Table(
 )
 
 
+class ArticleConcept(Base):
+    __tablename__ = "article_concept"
+
+    concept_id: Mapped[int] = mapped_column(ForeignKey("concept.id"), primary_key=True)
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"), primary_key=True)
+    explanation: Mapped[str]
+
+    article: Mapped["Article"] = relationship(back_populates="article_concepts")
+    concept: Mapped["Concept"] = relationship(back_populates="article_concepts")
+
+
 class Article(Base):
     __tablename__ = "article"
 
@@ -43,6 +54,10 @@ class Article(Base):
         "Note",
         primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "article"),
         backref="article",
+    )
+
+    article_concepts: Mapped[list[ArticleConcept]] = relationship(
+        back_populates="article"
     )
 
 
@@ -109,22 +124,9 @@ class Concept(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
 
-    analysis_concepts: Mapped[list["AnalysisConcept"]] = relationship(
+    article_concepts: Mapped[list["ArticleConcept"]] = relationship(
         back_populates="concept"
     )
-
-
-class AnalysisConcept(Base):
-    __tablename__ = "analysis_concept"
-
-    concept_id: Mapped[int] = mapped_column(ForeignKey("concept.id"), primary_key=True)
-    analysis_id: Mapped[int] = mapped_column(
-        ForeignKey("analysis.id"), primary_key=True
-    )
-    explanation: Mapped[str]
-
-    analysis: Mapped["Analysis"] = relationship(back_populates="analysis_concepts")
-    concept: Mapped["Concept"] = relationship(back_populates="analysis_concepts")
 
 
 class Analysis(Base):
@@ -143,10 +145,6 @@ class Analysis(Base):
         "Note",
         primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "analysis"),
         backref="analysis",
-    )
-
-    analysis_concepts: Mapped[list[AnalysisConcept]] = relationship(
-        back_populates="analysis"
     )
 
 
