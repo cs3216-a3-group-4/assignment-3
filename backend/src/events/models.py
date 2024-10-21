@@ -26,7 +26,7 @@ class ArticleConcept(Base):
     article_id: Mapped[int] = mapped_column(ForeignKey("article.id"), primary_key=True)
     explanation: Mapped[str]
 
-    analysis: Mapped["Article"] = relationship(back_populates="article_concepts")
+    article: Mapped["Article"] = relationship(back_populates="article_concepts")
     concept: Mapped["Concept"] = relationship(back_populates="article_concepts")
 
 
@@ -124,7 +124,7 @@ class Concept(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
 
-    analysis_concepts: Mapped[list["ArticleConcept"]] = relationship(
+    article_concepts: Mapped[list["ArticleConcept"]] = relationship(
         back_populates="concept"
     )
 

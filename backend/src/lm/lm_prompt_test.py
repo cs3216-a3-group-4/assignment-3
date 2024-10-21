@@ -16,7 +16,7 @@ with Session(engine) as session:
 
 concept_human = f"""
     Event Title: {title}
-    Event Description: {article}
+    Article Description: {article}
     """
 
 print(concept_human)

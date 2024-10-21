@@ -14,7 +14,7 @@ CONCEPT_GEN_SYSPROMPT = """
     and society (where relevant) 
 
     Your details must showcase this skill of conceptual understanding at a high level.
-    
+
     Important Note: Your focus must not be on the content but on the concept, idea or theme that the given content is portraying.
     Your explanation must not start with the content of the given text. Instead, you should provide insights into a general trend or idea happening in that concept first.
     Your explanation must be very insightful and should not be a mere summary or rephrasing of the content. It should provide insights into a general trend or idea happening in that concept.
@@ -22,8 +22,11 @@ CONCEPT_GEN_SYSPROMPT = """
     Important Note: In particular, you MUST avoid the following phrases that indicate a lack of opinion or insight:
     "Raises questions about", "Illustrates", "Highlights", "Shows", "Underscores". These words are too vague and neutral.
 
+    You must also generate a summary of the events in the article. This summary should cover the main events in the article.
+
     You must return the list of concepts in the following JSON output format:
     {
+        "summary": "Summary of the events in the article",
         "concepts": [
             {
                 "concept": "concept1",
