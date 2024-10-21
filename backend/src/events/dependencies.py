@@ -6,7 +6,7 @@ from src.auth.dependencies import get_current_user
 from src.common.dependencies import get_session
 from src.events.models import (
     Analysis,
-    AnalysisConcept,
+    ArticleConcept,
     Bookmark,
     Event,
     GPQuestion,
@@ -33,9 +33,7 @@ def retrieve_event(
             selectinload(
                 Event.categories,
             ),
-            selectinload(Event.analysises)
-            .selectinload(Analysis.analysis_concepts)
-            .selectinload(AnalysisConcept.concept),
+            selectinload(Event.analysises),
             selectinload(Event.analysises).selectinload(Analysis.category),
             selectinload(Event.analysises).selectinload(
                 Analysis.notes.and_(Note.user_id == user.id)
