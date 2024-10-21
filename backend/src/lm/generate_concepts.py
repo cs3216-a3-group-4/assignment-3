@@ -7,10 +7,11 @@ from src.common.database import engine
 
 import json
 
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.output_parsers import JsonOutputParser
 
-from src.lm.lm import lm_model
+from src.lm.lm import lm_model_concept as lm_model
+from src.lm.concept_gen_prompt import CONCEPT_GEN_SYSPROMPT as SYSPROMPT
 import asyncio
 
 CONCEPTS_FILE_PATH = "concepts_output.json"
@@ -23,6 +24,7 @@ class ArticleConceptLM(BaseModel):
 
 
 class ArticleConcepts(BaseModel):
+    summary: str
     concepts: list[ArticleConceptLM]
 
 
@@ -36,14 +38,18 @@ async def generate_concept_from_article(
     async with semaphore:
         while True:
             try:
+                title: str = article.title  # noqa: F841
                 content: str = article.body  # noqa: F841
+
+                human_message: str = f"""
+                Article Title: {title}
+                Article Description: {content}
+                """
 
                 # TODO(marcus): fill this in
                 messages = [
-                    SystemMessage(
-                        content='Can you reply {"concepts":[{"concept": "test", "explanation": "test"}]}'
-                    ),
-                    # HumanMessage(content="placeholder"),
+                    SystemMessage(content=SYSPROMPT),
+                    HumanMessage(content=human_message),
                 ]
 
                 result = await lm_model.ainvoke(messages)
