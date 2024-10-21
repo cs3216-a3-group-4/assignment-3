@@ -12,11 +12,11 @@ with Session(engine) as session:
     analysis = session.execute(query).scalars().first()
     title = analysis.event.title
     event = analysis.event.description
-    article = analysis.event.original_article.body
+    article = analysis.event.original_article
 
 concept_human = f"""
-    Event Title: {title}
-    Article Description: {article}
+    Article Title: {article.title}
+    Article Description: {article.body}
     """
 
 print(concept_human)
