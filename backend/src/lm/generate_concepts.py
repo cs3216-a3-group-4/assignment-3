@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from sqlalchemy import exists, select
-from src.events.models import Analysis, AnalysisConcept, Concept, Event
+from src.events.models import ArticleConcept, Concept, Article
 
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session
 from src.common.database import engine
 
 import json
@@ -17,26 +17,26 @@ CONCEPTS_FILE_PATH = "concepts_output.json"
 CONCURRENCY = 150
 
 
-class AnalysisConceptLM(BaseModel):
+class ArticleConceptLM(BaseModel):
     concept: str
     explanation: str
 
 
-class AnalysisConcepts(BaseModel):
-    concepts: list[AnalysisConceptLM]
+class ArticleConcepts(BaseModel):
+    concepts: list[ArticleConceptLM]
 
 
-class AnalysisConceptsWithId(AnalysisConcepts):
-    analysis_id: int
+class ArticleConceptsWithId(ArticleConcepts):
+    article_id: int
 
 
-async def generate_concept_from_analysis(
-    analysis: Analysis, res: list[AnalysisConceptsWithId], semaphore: asyncio.Semaphore
+async def generate_concept_from_article(
+    article: Article, res: list[ArticleConceptsWithId], semaphore: asyncio.Semaphore
 ):
     async with semaphore:
         while True:
             try:
-                content: str = analysis.content  # noqa: F841
+                content: str = article.body  # noqa: F841
 
                 # TODO(marcus): fill this in
                 messages = [
@@ -47,44 +47,46 @@ async def generate_concept_from_analysis(
                 ]
 
                 result = await lm_model.ainvoke(messages)
-                parser = JsonOutputParser(pydantic_object=AnalysisConcepts)
+                parser = JsonOutputParser(pydantic_object=ArticleConcepts)
                 concepts = parser.invoke(result)
                 print(f"Model temp: {lm_model.temperature}")
                 break
             except Exception as e:  # noqa: E722
                 print(e)
-                print("hit the rate limit! waiting 10s for analysis", analysis.id)
+                print("hit the rate limit! waiting 10s for article", article.id)
                 await asyncio.sleep(10)
     res.append(
-        AnalysisConceptsWithId(concepts=concepts["concepts"], analysis_id=analysis.id)
+        ArticleConceptsWithId(concepts=concepts["concepts"], article_id=article.id)
     )
 
 
 async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
     with Session(engine) as session:
-        # query db for analysis
-        subquery = select(AnalysisConcept.analysis_id)
+        # query db for article
+        subquery = select(ArticleConcept.article_id)
         query = (
-            select(Analysis)
-            .where(~exists(subquery.where(AnalysisConcept.analysis_id == Analysis.id)))
-            .options(selectinload(Analysis.event).selectinload(Event.original_article))
+            select(Article).where(
+                ~exists(subquery.where(ArticleConcept.article_id == Article.id))
+            )
+            # NOTE: @seeleng: Help to check if this is correct. I think this won't be needed anymore
+            # .options(selectinload(Analysis.event).selectinload(Event.original_article))
         )
         if limit:
             query = query.limit(limit)
-        analyses = session.scalars(query).all()
+        articles = session.scalars(query).all()
 
         # call blackbox lm function
-        res: list[AnalysisConceptsWithId] = []
+        res: list[ArticleConceptsWithId] = []
         semaphore = asyncio.Semaphore(CONCURRENCY)
         async with asyncio.TaskGroup() as tg:
-            for analysis in analyses:
-                tg.create_task(generate_concept_from_analysis(analysis, res, semaphore))
+            for article in articles:
+                tg.create_task(generate_concept_from_article(article, res, semaphore))
 
         if add_to_db:
             # first, lowercase all concepts in result
             concepts: list[str] = []
-            for analysis_concept_with_id in res:
-                for concept in analysis_concept_with_id.concepts:
+            for article_concept_with_id in res:
+                for concept in article_concept_with_id.concepts:
                     concept.concept = concept.concept.lower()
                     concepts.append(concept.concept)
 
@@ -102,8 +104,8 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
             existing_concept_names = [concept.name for concept in existing_concepts]
 
             missing_concepts_string = set()
-            for analysis_concept_with_id in res:
-                for concept in analysis_concept_with_id.concepts:
+            for article_concept_with_id in res:
+                for concept in article_concept_with_id.concepts:
                     concept_name = concept.concept
                     if concept_name not in existing_concept_names:
                         missing_concepts_string.add(concept_name)
@@ -120,13 +122,13 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 
             # add new models to db
             results = []
-            for analysis_concept_with_id in res:
-                for analysis_concept_llm in analysis_concept_with_id.concepts:
+            for article_concept_with_id in res:
+                for article_concept_llm in article_concept_with_id.concepts:
                     results.append(
-                        AnalysisConcept(
-                            analysis_id=analysis_concept_with_id.analysis_id,
-                            explanation=analysis_concept_llm.explanation,
-                            concept_id=concept_map[analysis_concept_llm.concept].id,
+                        ArticleConcept(
+                            article_id=article_concept_with_id.article_id,
+                            explanation=article_concept_llm.explanation,
+                            concept_id=concept_map[article_concept_llm.concept].id,
                         )
                     )
 
