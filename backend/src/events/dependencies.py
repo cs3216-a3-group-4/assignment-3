@@ -6,7 +6,6 @@ from src.auth.dependencies import get_current_user
 from src.common.dependencies import get_session
 from src.events.models import (
     Analysis,
-    ArticleConcept,
     Bookmark,
     Event,
     GPQuestion,
