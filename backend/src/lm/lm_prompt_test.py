@@ -3,8 +3,8 @@ from src.events.models import Analysis
 from src.lm.concept_gen_prompt import CONCEPT_GEN_SYSPROMPT as SYSPROMPT
 from src.lm.lm import lm_model
 
-from sqlalchemy import exists, select
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 from src.common.database import engine
 
 with Session(engine) as session:
