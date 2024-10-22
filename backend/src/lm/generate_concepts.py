@@ -61,8 +61,13 @@ async def generate_concept_from_article(
                 print(e)
                 print("hit the rate limit! waiting 10s for article", article.id)
                 await asyncio.sleep(10)
+
     res.append(
-        ArticleConceptsWithId(concepts=concepts["concepts"], article_id=article.id)
+        ArticleConceptsWithId(
+            concepts=concepts["concepts"],
+            summary=concepts["summary"],
+            article_id=article.id,
+        )
     )
 
 
