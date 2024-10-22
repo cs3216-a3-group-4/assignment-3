@@ -71,5 +71,4 @@ def get_articles(
 
 @router.get("/{id}")
 def get_article(article: Annotated[Article, Depends(retrieve_article)]) -> ArticleDTO:
-    # TODO: query one article
     return article
