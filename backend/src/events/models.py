@@ -60,6 +60,16 @@ class Article(Base):
         back_populates="article"
     )
 
+    # https://stackoverflow.com/questions/29302176/relationship-spanning-four-tables-in-sqlalchemy
+    categories: Mapped[list["Category"]] = relationship(
+        "Category",
+        secondary="join(Event, Analysis, Event.id == Analysis.event_id)"
+        ".join(Category, Analysis.category_id == Category.id)",
+        primaryjoin="Article.id == Event.original_article_id",
+        viewonly=True,
+        backref="articles",
+    )
+
 
 class Event(Base):
     __tablename__ = "event"
