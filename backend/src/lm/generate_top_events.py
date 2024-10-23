@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta
-from src.events.models import Article, Event, TopEventGroup
+from src.events.models import Article, Event, TopArticleGroup
 from src.common.database import engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -18,12 +18,14 @@ TRIES = 5
 BUFFER = 5
 
 
-async def generate_top_events(events: list[Event], count=10):
-    if len(events) <= count:
-        logging.warning(f"Less than {count} articles supplied to generate_top_events.")
-        return events
+async def generate_top_articles(articles: list[Article], count=10):
+    if len(articles) <= count:
+        logging.warning(
+            f"Less than {count} articles supplied to generate_top_articles."
+        )
+        return articles
 
-    titles = [event.title for event in events]
+    titles = [article.title for article in articles]
 
     for _ in range(TRIES):
         try:
@@ -43,49 +45,58 @@ async def generate_top_events(events: list[Event], count=10):
                 title.lower().strip() for title in response.get("top_articles", [])
             ]
             print(response, len(response.get("top_articles", [])))
-            events = [
-                event
-                for event in events
-                if event.title.lower().strip() in selected_titles
+            articles = [
+                article
+                for article in articles
+                if article.title.lower().strip() in selected_titles
             ]
-            print(len(events))
-            if len(events) < count:
+            print(len(articles))
+            if len(articles) < count:
                 raise ValueError("Suspected hallucination, try again")
-            events = events[:count]
-            return events
+            articles = articles[:count]
+            return articles
         except Exception as e:  # noqa: E722
             print(e, type(e))
             await asyncio.sleep(10)
 
 
-async def get_top_10_events_in_past_week(cutoff: datetime, is_singapore: bool = False):
+async def get_top_10_articles_in_past_week(
+    cutoff: datetime, is_singapore: bool = False
+):
     query = (
-        select(Event)
-        .where(Event.original_article.has(Article.useless == False))  # noqa: E712
-        .where(Event.date >= cutoff)
-        .where(Event.is_singapore == is_singapore)
+        select(Article)
+        .where(Article.useless == False)  # noqa: E712
+        .where(Article.date >= cutoff)
+        .where(Article.original_events.any())
     )
 
-    with Session(engine) as session:
-        qualifying_events = session.scalars(query).all()
+    if is_singapore:
+        query = query.where(Article.original_events.any(Event.is_singapore == True))  # noqa: E712
+    else:
+        query = query.where(~Article.original_events.any(Event.is_singapore == True))  # noqa: E712
 
-    top_events = await generate_top_events(qualifying_events)
-    return top_events
+    with Session(engine) as session:
+        qualifying_articles = session.scalars(query).all()
+
+    top_articles = await generate_top_articles(qualifying_articles)
+    return top_articles
 
 
 async def populate_article_groups():
     cutoff = datetime.now() - timedelta(days=7)
-    global_events = await get_top_10_events_in_past_week(cutoff, is_singapore=False)
-    sg_events = await get_top_10_events_in_past_week(cutoff, is_singapore=True)
+    global_articles = await get_top_10_articles_in_past_week(cutoff, is_singapore=False)
+    sg_articles = await get_top_10_articles_in_past_week(cutoff, is_singapore=True)
     with Session(engine) as session:
-        global_event_group = TopEventGroup(
+        global_article_group = TopArticleGroup(
             date=cutoff, singapore_only=False, published=True
         )
-        global_event_group.events = global_events
+        global_article_group.articles = global_articles
 
-        sg_event_group = TopEventGroup(date=cutoff, singapore_only=True, published=True)
-        sg_event_group.events = sg_events
-        session.add_all([global_event_group, sg_event_group])
+        sg_article_group = TopArticleGroup(
+            date=cutoff, singapore_only=True, published=True
+        )
+        sg_article_group.articles = sg_articles
+        session.add_all([global_article_group, sg_article_group])
         session.commit()
 
 

@@ -71,6 +71,13 @@ class Article(Base):
         backref="articles",
     )
 
+    # ArticleBookmark is NOT a join table. It's just scuffed.
+    bookmarks: Mapped[list["ArticleBookmark"]] = relationship(back_populates="article")
+
+    top_article_groups: Mapped[list["TopArticleGroup"]] = relationship(
+        back_populates="articles", secondary="top_article_group_article"
+    )
+
 
 class Event(Base):
     __tablename__ = "event"
@@ -104,30 +111,27 @@ class Event(Base):
 
     reads: Mapped[list["UserReadEvent"]] = relationship(backref="user")
     bookmarks: Mapped[list["Bookmark"]] = relationship(back_populates="event")
-    top_event_groups: Mapped[list["TopEventGroup"]] = relationship(
-        back_populates="events", secondary="top_event_group_event"
-    )
 
 
-class TopEventGroup(Base):
-    __tablename__ = "top_event_group"
+class TopArticleGroup(Base):
+    __tablename__ = "top_article_group"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     date: Mapped[datetime]
     singapore_only: Mapped[bool]
     published: Mapped[bool] = mapped_column(server_default="false")
 
-    events: Mapped[list[Event]] = relationship(
-        back_populates="top_event_groups", secondary="top_event_group_event"
+    articles: Mapped[list[Article]] = relationship(
+        back_populates="top_article_groups", secondary="top_article_group_article"
     )
 
 
-class TopEventGroupEvent(Base):
-    __tablename__ = "top_event_group_event"
+class TopArticleGroupArticle(Base):
+    __tablename__ = "top_article_group_article"
 
-    event_id: Mapped[int] = mapped_column(ForeignKey("event.id"), primary_key=True)
-    top_event_group: Mapped[int] = mapped_column(
-        ForeignKey("top_event_group.id"), primary_key=True
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"), primary_key=True)
+    top_article_group: Mapped[int] = mapped_column(
+        ForeignKey("top_article_group.id"), primary_key=True
     )
 
 
@@ -138,6 +142,17 @@ class UserReadEvent(Base):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     event_id: Mapped[int] = mapped_column(ForeignKey("event.id"))
+    first_read: Mapped[datetime]
+    last_read: Mapped[datetime]
+
+
+class UserReadArticle(Base):
+    __tablename__ = "user_read_article"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
     first_read: Mapped[datetime]
     last_read: Mapped[datetime]
 
@@ -210,6 +225,7 @@ class GPQuestionCategories(Base):
     )
 
 
+# TODO: DEPRECATE THIS TABLE
 class Bookmark(Base):
     __tablename__ = "bookmark"
 
@@ -218,3 +234,17 @@ class Bookmark(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
     event: Mapped[Event] = relationship(back_populates="bookmarks")
+
+
+class ArticleBookmark(Base):
+    """The new, actual bookmark table.
+    Ignore how the table name makes it sound like a join table. It's not.
+    It's just scuffed because I can't name it bookmark because of the above table."""
+
+    __tablename__ = "article_bookmark"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+
+    article: Mapped[Article] = relationship(back_populates="bookmarks")

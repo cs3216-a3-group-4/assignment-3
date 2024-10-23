@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Notebook } from "lucide-react";
 
-import { AnalysisNoteDTO, EventNoteDTO } from "@/client";
+import { AnalysisNoteDTO, ArticleNoteDTO, EventNoteDTO } from "@/client";
 import Notes from "@/components/notes/notes-list";
 import NotesSelector, { Filter } from "@/components/notes/notes-selector";
 import { getAllNotes } from "@/queries/note";
@@ -12,7 +12,9 @@ import { getAllNotes } from "@/queries/note";
 const Page = () => {
   const { data: fetchedNotes, isSuccess: isNotesLoaded } =
     useQuery(getAllNotes());
-  const [notes, setNotes] = useState<(EventNoteDTO | AnalysisNoteDTO)[]>([]);
+  const [notes, setNotes] = useState<
+    (EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO)[]
+  >([]);
   const [filter, setFilter] = useState<string>(Filter.CATEGORY);
 
   useEffect(() => {

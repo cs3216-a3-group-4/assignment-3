@@ -139,7 +139,167 @@ export const AnswerMiniDTOSchema = {
     title: 'AnswerMiniDTO'
 } as const;
 
+export const ArticleConceptDTOSchema = {
+    properties: {
+        explanation: {
+            type: 'string',
+            title: 'Explanation'
+        },
+        concept: {
+            '$ref': '#/components/schemas/ConceptDTO'
+        }
+    },
+    type: 'object',
+    required: ['explanation', 'concept'],
+    title: 'ArticleConceptDTO'
+} as const;
+
 export const ArticleDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        title: {
+            type: 'string',
+            title: 'Title'
+        },
+        summary: {
+            type: 'string',
+            title: 'Summary'
+        },
+        url: {
+            type: 'string',
+            title: 'Url'
+        },
+        source: {
+            '$ref': '#/components/schemas/ArticleSource'
+        },
+        date: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Date'
+        },
+        image_url: {
+            type: 'string',
+            title: 'Image Url'
+        },
+        categories: {
+            items: {
+                '$ref': '#/components/schemas/CategoryDTO'
+            },
+            type: 'array',
+            title: 'Categories'
+        },
+        article_concepts: {
+            items: {
+                '$ref': '#/components/schemas/ArticleConceptDTO'
+            },
+            type: 'array',
+            title: 'Article Concepts'
+        },
+        original_events: {
+            items: {
+                '$ref': '#/components/schemas/EventWithoutArticleDTO'
+            },
+            type: 'array',
+            title: 'Original Events'
+        },
+        bookmarks: {
+            items: {
+                '$ref': '#/components/schemas/BookmarkDTO'
+            },
+            type: 'array',
+            title: 'Bookmarks'
+        },
+        notes: {
+            items: {
+                '$ref': '#/components/schemas/NoteDTO'
+            },
+            type: 'array',
+            title: 'Notes'
+        }
+    },
+    type: 'object',
+    required: ['id', 'title', 'summary', 'url', 'source', 'date', 'image_url', 'categories', 'article_concepts', 'original_events', 'bookmarks', 'notes'],
+    title: 'ArticleDTO'
+} as const;
+
+export const ArticleNoteDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        content: {
+            type: 'string',
+            title: 'Content'
+        },
+        start_index: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Start Index'
+        },
+        end_index: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'End Index'
+        },
+        parent_id: {
+            type: 'integer',
+            title: 'Parent Id'
+        },
+        parent_type: {
+            '$ref': '#/components/schemas/NoteType'
+        },
+        category: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/CategoryDTO'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
+        },
+        article: {
+            '$ref': '#/components/schemas/BaseArticleDTO'
+        }
+    },
+    type: 'object',
+    required: ['id', 'content', 'parent_id', 'parent_type', 'created_at', 'updated_at', 'article'],
+    title: 'ArticleNoteDTO'
+} as const;
+
+export const ArticleSourceSchema = {
+    type: 'string',
+    enum: ['CNA', 'GUARDIAN'],
+    title: 'ArticleSource'
+} as const;
+
+export const BaseArticleDTOSchema = {
     properties: {
         id: {
             type: 'integer',
@@ -172,13 +332,7 @@ export const ArticleDTOSchema = {
     },
     type: 'object',
     required: ['id', 'title', 'summary', 'url', 'source', 'date', 'image_url'],
-    title: 'ArticleDTO'
-} as const;
-
-export const ArticleSourceSchema = {
-    type: 'string',
-    enum: ['CNA', 'GUARDIAN'],
-    title: 'ArticleSource'
+    title: 'BaseArticleDTO'
 } as const;
 
 export const BaseEventDTOSchema = {
@@ -212,7 +366,7 @@ export const BaseEventDTOSchema = {
             title: 'Categories'
         },
         original_article: {
-            '$ref': '#/components/schemas/ArticleDTO'
+            '$ref': '#/components/schemas/BaseArticleDTO'
         }
     },
     type: 'object',
@@ -284,7 +438,9 @@ export const BookmarkDTOSchema = {
     },
     type: 'object',
     required: ['user_id'],
-    title: 'BookmarkDTO'
+    title: 'BookmarkDTO',
+    description: `Be careful when editing this model. It is used by both article/event
+despite them using two different ORM models (ArticleBookmark & Bookmark)`
 } as const;
 
 export const CategoryDTOSchema = {
@@ -346,6 +502,22 @@ export const CommentDTOSchema = {
     type: 'object',
     required: ['id', 'lack_example', 'inclination', 'content', 'comment_analysises'],
     title: 'CommentDTO'
+} as const;
+
+export const ConceptDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        }
+    },
+    type: 'object',
+    required: ['id', 'name'],
+    title: 'ConceptDTO'
 } as const;
 
 export const CreateUserQuestionSchema = {
@@ -469,7 +641,7 @@ export const EventDTOSchema = {
             title: 'Categories'
         },
         original_article: {
-            '$ref': '#/components/schemas/ArticleDTO'
+            '$ref': '#/components/schemas/BaseArticleDTO'
         },
         reads: {
             items: {
@@ -510,29 +682,6 @@ export const EventDTOSchema = {
     type: 'object',
     required: ['id', 'title', 'description', 'is_singapore', 'date', 'categories', 'original_article', 'reads', 'analysises', 'gp_questions', 'bookmarks', 'notes'],
     title: 'EventDTO'
-} as const;
-
-export const EventIndexResponseSchema = {
-    properties: {
-        total_count: {
-            type: 'integer',
-            title: 'Total Count'
-        },
-        count: {
-            type: 'integer',
-            title: 'Count'
-        },
-        data: {
-            items: {
-                '$ref': '#/components/schemas/MiniEventDTO'
-            },
-            type: 'array',
-            title: 'Data'
-        }
-    },
-    type: 'object',
-    required: ['total_count', 'count', 'data'],
-    title: 'EventIndexResponse'
 } as const;
 
 export const EventNoteDTOSchema = {
@@ -603,6 +752,49 @@ export const EventNoteDTOSchema = {
     title: 'EventNoteDTO'
 } as const;
 
+export const EventWithoutArticleDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        title: {
+            type: 'string',
+            title: 'Title'
+        },
+        description: {
+            type: 'string',
+            title: 'Description'
+        },
+        is_singapore: {
+            type: 'boolean',
+            title: 'Is Singapore'
+        },
+        date: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Date'
+        },
+        analysises: {
+            items: {
+                '$ref': '#/components/schemas/src__events__schemas__AnalysisDTO'
+            },
+            type: 'array',
+            title: 'Analysises'
+        },
+        notes: {
+            items: {
+                '$ref': '#/components/schemas/NoteDTO'
+            },
+            type: 'array',
+            title: 'Notes'
+        }
+    },
+    type: 'object',
+    required: ['id', 'title', 'description', 'is_singapore', 'date', 'analysises', 'notes'],
+    title: 'EventWithoutArticleDTO'
+} as const;
+
 export const FallbackDTOSchema = {
     properties: {
         alt_approach: {
@@ -664,6 +856,52 @@ export const InclinationSchema = {
     type: 'string',
     enum: ['good', 'neutral', 'bad'],
     title: 'Inclination'
+} as const;
+
+export const IndexResponse_MiniArticleDTO_Schema = {
+    properties: {
+        total_count: {
+            type: 'integer',
+            title: 'Total Count'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        },
+        data: {
+            items: {
+                '$ref': '#/components/schemas/MiniArticleDTO'
+            },
+            type: 'array',
+            title: 'Data'
+        }
+    },
+    type: 'object',
+    required: ['total_count', 'count', 'data'],
+    title: 'IndexResponse[MiniArticleDTO]'
+} as const;
+
+export const IndexResponse_MiniEventDTO_Schema = {
+    properties: {
+        total_count: {
+            type: 'integer',
+            title: 'Total Count'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        },
+        data: {
+            items: {
+                '$ref': '#/components/schemas/MiniEventDTO'
+            },
+            type: 'array',
+            title: 'Data'
+        }
+    },
+    type: 'object',
+    required: ['total_count', 'count', 'data'],
+    title: 'IndexResponse[MiniEventDTO]'
 } as const;
 
 export const LikeDTOSchema = {
@@ -742,6 +980,49 @@ export const LikeTypeSchema = {
     title: 'LikeType'
 } as const;
 
+export const MiniArticleDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        title: {
+            type: 'string',
+            title: 'Title'
+        },
+        summary: {
+            type: 'string',
+            title: 'Summary'
+        },
+        url: {
+            type: 'string',
+            title: 'Url'
+        },
+        source: {
+            '$ref': '#/components/schemas/ArticleSource'
+        },
+        date: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Date'
+        },
+        image_url: {
+            type: 'string',
+            title: 'Image Url'
+        },
+        categories: {
+            items: {
+                '$ref': '#/components/schemas/CategoryDTO'
+            },
+            type: 'array',
+            title: 'Categories'
+        }
+    },
+    type: 'object',
+    required: ['id', 'title', 'summary', 'url', 'source', 'date', 'image_url', 'categories'],
+    title: 'MiniArticleDTO'
+} as const;
+
 export const MiniEventDTOSchema = {
     properties: {
         id: {
@@ -773,7 +1054,7 @@ export const MiniEventDTOSchema = {
             title: 'Categories'
         },
         original_article: {
-            '$ref': '#/components/schemas/ArticleDTO'
+            '$ref': '#/components/schemas/BaseArticleDTO'
         },
         reads: {
             items: {

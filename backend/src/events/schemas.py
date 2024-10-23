@@ -25,6 +25,8 @@ class MiniArticleDTO(BaseArticleDTO):
 class ArticleDTO(MiniArticleDTO):
     article_concepts: list["ArticleConceptDTO"]
     original_events: list["EventWithoutArticleDTO"]
+    bookmarks: list["BookmarkDTO"]
+    notes: list[NoteDTO]
 
 
 # Refactor this one day. :(
@@ -36,6 +38,7 @@ class EventWithoutArticleDTO(BaseModel):
     is_singapore: bool
     date: datetime
     analysises: list["AnalysisDTO"]
+    notes: list["NoteDTO"]
 
 
 class ReadDTO(BaseModel):
@@ -107,6 +110,9 @@ class GPQuestionDTO(BaseModel):
 
 
 class BookmarkDTO(BaseModel):
+    """Be careful when editing this model. It is used by both article/event
+    despite them using two different ORM models (ArticleBookmark & Bookmark)"""
+
     model_config = ConfigDict(from_attributes=True)
     user_id: int
 
@@ -128,3 +134,7 @@ class EventNoteDTO(NoteDTO):
 
 class AnalysisNoteDTO(NoteDTO):
     analysis: "AnalysisToEventDTO"
+
+
+class ArticleNoteDTO(NoteDTO):
+    article: BaseArticleDTO

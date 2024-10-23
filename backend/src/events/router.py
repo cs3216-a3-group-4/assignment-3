@@ -1,7 +1,6 @@
 from datetime import datetime
-from http import HTTPStatus
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload, aliased
 from src.auth.dependencies import get_current_user
@@ -12,11 +11,10 @@ from src.events.models import (
     Bookmark,
     Category,
     Event,
-    TopEventGroup,
     UserReadEvent,
 )
 from src.common.dependencies import get_session
-from src.events.schemas import EventDTO, EventIndexResponse, MiniEventDTO
+from src.events.schemas import EventDTO, EventIndexResponse
 from src.notes.models import Note, NoteType
 from src.notes.schemas import NoteDTO
 from src.embeddings.vector_store import get_similar_results
@@ -75,33 +73,6 @@ def get_events(
 
     events = session.scalars(event_query).all()
     return EventIndexResponse(total_count=total_count, count=len(events), data=events)
-
-
-@router.get("/top")
-def get_top_events(
-    singapore_only: bool,
-    user: Annotated[User, Depends(get_current_user)],
-    session=Depends(get_session),
-) -> list[MiniEventDTO]:
-    """Get events of the most recent top_event_group"""
-    top_event_group = session.scalar(
-        select(TopEventGroup)
-        .where(TopEventGroup.singapore_only == singapore_only)
-        .order_by(TopEventGroup.date.desc(), TopEventGroup.id.desc())
-        .limit(1)
-        .options(
-            selectinload(TopEventGroup.events).selectinload(Event.categories),
-            selectinload(TopEventGroup.events).selectinload(Event.original_article),
-            selectinload(TopEventGroup.events).selectinload(
-                Event.reads.and_(UserReadEvent.user_id == user.id)
-            ),
-        )
-    )
-
-    if not top_event_group:
-        raise HTTPException(HTTPStatus.NOT_FOUND)
-
-    return top_event_group.events
 
 
 @router.get("/{id}")
