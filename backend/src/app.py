@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
     # Run after server stops
 
 
-server = FastAPI(lifespan=lifespan)
+server = FastAPI(title="Jippy 🐸 Backend", lifespan=lifespan)
 
 origins = [FRONTEND_URL]
 
