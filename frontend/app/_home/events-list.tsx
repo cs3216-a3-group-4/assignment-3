@@ -1,11 +1,11 @@
-import { EventIndexResponse } from "@/client";
+import { IndexResponse_MiniEventDTO_ } from "@/client";
 import ArticleLoading from "@/components/news/article-loading";
 import NewsArticle from "@/components/news/news-article";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface EventsListProps {
   isEventsLoaded: boolean;
-  events?: EventIndexResponse;
+  events?: IndexResponse_MiniEventDTO_;
 }
 
 const EventsList = ({ isEventsLoaded, events }: EventsListProps) => {
