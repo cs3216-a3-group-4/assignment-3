@@ -46,4 +46,7 @@ def retrieve_article(
     if not article:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
+    if not article.original_events:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+
     return article

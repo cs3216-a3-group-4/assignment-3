@@ -1,6 +1,7 @@
 from datetime import datetime
+from http import HTTPStatus
 from typing import Annotated
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 from src.articles.dependencies import retrieve_article
@@ -8,7 +9,14 @@ from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.common.schemas import IndexResponse
-from src.events.models import Article, ArticleBookmark, Category, Event, UserReadArticle
+from src.events.models import (
+    Article,
+    ArticleBookmark,
+    Category,
+    Event,
+    TopArticleGroup,
+    UserReadArticle,
+)
 from src.events.schemas import ArticleDTO, MiniArticleDTO
 
 
@@ -30,6 +38,9 @@ def get_articles(
     query = select(Article.id).distinct()
 
     query = query.where(Article.useless == False)  # noqa: E712
+
+    # Scuffed fix for articles with no events
+    query = query.where(Article.original_events.any())  # noqa: E712
 
     if start_date is not None:
         query = query.where(Article.date >= start_date)
@@ -68,6 +79,29 @@ def get_articles(
     return IndexResponse[MiniArticleDTO](
         total_count=total_count, count=len(articles), data=articles
     )
+
+
+@router.get("/top")
+def get_top_articles(
+    singapore_only: bool,
+    _: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
+) -> list[MiniArticleDTO]:
+    """Get events of the most recent top_article_group"""
+    top_article_group = session.scalar(
+        select(TopArticleGroup)
+        .where(TopArticleGroup.singapore_only == singapore_only)
+        .order_by(TopArticleGroup.date.desc(), TopArticleGroup.id.desc())
+        .limit(1)
+        .options(
+            selectinload(TopArticleGroup.articles).selectinload(Article.categories),
+        )
+    )
+
+    if not top_article_group:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+
+    return top_article_group.articles
 
 
 @router.get("/{id}")
