@@ -5,7 +5,10 @@ from src.auth.router import (
     router as auth_router,
     routerWithAuth as auth_router_authenticated,
 )
-from src.billing.router import router as billing_router
+from src.billing.router import (
+    router as billing_router,
+    routerWithAuth as billing_router_authenticated,
+)
 from src.categories.router import router as category_router
 from src.profile.router import router as profile_router
 from src.events.router import router as events_router
@@ -44,10 +47,11 @@ server.add_middleware(
 )
 
 server.include_router(auth_router)
+server.include_router(billing_router)
 
 authenticated_router = APIRouter(prefix="", dependencies=[Depends(add_current_user)])
 authenticated_router.include_router(auth_router_authenticated)
-authenticated_router.include_router(billing_router)
+authenticated_router.include_router(billing_router_authenticated)
 authenticated_router.include_router(category_router)
 authenticated_router.include_router(profile_router)
 authenticated_router.include_router(events_router)

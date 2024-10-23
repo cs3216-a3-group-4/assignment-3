@@ -3,7 +3,7 @@ from http import HTTPStatus
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from fastapi.responses import RedirectResponse
-from src.auth.dependencies import get_current_user
+from src.auth.dependencies import add_current_user, get_current_user
 from src.auth.models import User
 from src.billing.models import StripeSession
 from src.common.constants import FRONTEND_URL, STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET
@@ -15,9 +15,11 @@ import stripe
 FRONTEND_BILLING_URL_PATH = "user/billing"
 stripe.api_key = STRIPE_API_KEY
 router = APIRouter(prefix="/billing", tags=["billing"])
+routerWithAuth = APIRouter(
+    prefix="/billing", tags=["billing"], dependencies=[Depends(add_current_user)]
+)
 
-
-@router.post("/create-checkout-session")
+@routerWithAuth.post("/create-checkout-session")
 async def create_checkout_session(
     request_data: CheckoutRequestData,
     user: Annotated[User, Depends(get_current_user)],
@@ -67,7 +69,7 @@ async def create_checkout_session(
 @router.post("/webhook")
 async def stripe_webhook(
     request: Request,
-    stripe_signature: str = Header(None),
+    stripe_signature: str = Header(None, alias="Stripe-Signature"),
     session=Depends(get_session),
 ):
     payload = await request.body()
