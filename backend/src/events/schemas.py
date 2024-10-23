@@ -134,3 +134,7 @@ class EventNoteDTO(NoteDTO):
 
 class AnalysisNoteDTO(NoteDTO):
     analysis: "AnalysisToEventDTO"
+
+
+class ArticleNoteDTO(NoteDTO):
+    article: BaseArticleDTO

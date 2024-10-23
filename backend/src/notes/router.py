@@ -7,7 +7,7 @@ from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.events.models import Analysis, Article, Category, Event
-from src.events.schemas import AnalysisNoteDTO, EventNoteDTO
+from src.events.schemas import AnalysisNoteDTO, ArticleNoteDTO, EventNoteDTO
 from src.notes.dependencies import retrieve_note
 from src.notes.models import Note, NoteType
 from src.notes.schemas import (
@@ -33,7 +33,7 @@ def get_all_notes(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
     category_id: Annotated[int | None, Query()] = None,
-) -> list[EventNoteDTO | AnalysisNoteDTO]:
+) -> list[EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO]:
     notes_query = (
         select(Note)
         .where(Note.user_id == user.id)
@@ -41,6 +41,7 @@ def get_all_notes(
             selectinload(Note.category),
             selectinload(Note.analysis, Analysis.event, Event.original_article),
             selectinload(Note.event, Event.original_article),
+            selectinload(Note.article),
         )
     )
     if category_id:
