@@ -70,6 +70,9 @@ class Article(Base):
         backref="articles",
     )
 
+    # ArticleBookmark is NOT a join table. It's just scuffed.
+    bookmarks: Mapped[list["ArticleBookmark"]] = relationship(back_populates="article")
+
 
 class Event(Base):
     __tablename__ = "event"
@@ -184,6 +187,7 @@ class GPQuestionCategories(Base):
     )
 
 
+# TODO: DEPRECATE THIS TABLE
 class Bookmark(Base):
     __tablename__ = "bookmark"
 
@@ -192,3 +196,17 @@ class Bookmark(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
     event: Mapped[Event] = relationship(back_populates="bookmarks")
+
+
+class ArticleBookmark(Base):
+    """The new, actual bookmark table.
+    Ignore how the table name makes it sound like a join table. It's not.
+    It's just scuffed because I can't name it bookmark because of the above table."""
+
+    __tablename__ = "article_bookmark"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+
+    article: Mapped[Article] = relationship(back_populates="bookmarks")
