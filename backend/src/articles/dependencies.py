@@ -39,6 +39,7 @@ def retrieve_article(
             selectinload(Article.original_events).selectinload(
                 Event.notes.and_(Note.user_id == user.id)
             ),
+            selectinload(Article.notes.and_(Note.user_id == user.id)),
             selectinload(Article.bookmarks.and_(ArticleBookmark.user_id == user.id)),
         )
     )

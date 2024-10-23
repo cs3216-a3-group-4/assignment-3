@@ -26,6 +26,7 @@ class ArticleDTO(MiniArticleDTO):
     article_concepts: list["ArticleConceptDTO"]
     original_events: list["EventWithoutArticleDTO"]
     bookmarks: list["BookmarkDTO"]
+    notes: list[NoteDTO]
 
 
 # Refactor this one day. :(
@@ -37,6 +38,7 @@ class EventWithoutArticleDTO(BaseModel):
     is_singapore: bool
     date: datetime
     analysises: list["AnalysisDTO"]
+    notes: list["NoteDTO"]
 
 
 class ReadDTO(BaseModel):
