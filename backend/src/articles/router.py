@@ -29,8 +29,7 @@ def get_articles(
 ) -> IndexResponse[MiniArticleDTO]:
     query = select(Article.id).distinct()
 
-    # TODO: uncomment this line after https://github.com/cs3216-a3-group-4/assignment-3/pull/252 merged
-    # query = query.where(Article.useless == False)  # noqa: E712
+    query = query.where(Article.useless == False)  # noqa: E712
 
     if start_date is not None:
         query = query.where(Article.date >= start_date)
