@@ -8,7 +8,7 @@ from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.common.schemas import IndexResponse
-from src.events.models import Article, ArticleBookmark, Category, Event
+from src.events.models import Article, ArticleBookmark, Category, Event, UserReadArticle
 from src.events.schemas import ArticleDTO, MiniArticleDTO
 
 
@@ -110,3 +110,31 @@ def delete_bookmark(
     if bookmark:
         session.delete(bookmark)
         session.commit()
+
+
+@router.post("/{id}/read")
+def read_article(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    _=Depends(retrieve_article),
+    session=Depends(get_session),
+):
+    read_article = session.scalars(
+        select(UserReadArticle)
+        .where(UserReadArticle.article_id == id)
+        .where(UserReadArticle.user_id == user.id)
+    ).first()
+
+    if read_article:
+        read_article.last_read = datetime.now()
+    else:
+        date = datetime.now()
+        read_article = UserReadArticle(
+            article_id=id,
+            user_id=user.id,
+            first_read=date,
+            last_read=date,
+        )
+    session.add(read_article)
+    session.commit()
+    return

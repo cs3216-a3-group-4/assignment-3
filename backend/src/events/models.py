@@ -125,7 +125,7 @@ class UserReadArticle(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    event_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
     first_read: Mapped[datetime]
     last_read: Mapped[datetime]
 
