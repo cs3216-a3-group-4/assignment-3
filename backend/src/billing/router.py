@@ -12,6 +12,7 @@ from src.subscriptions.models import Subscription
 from .schemas import CheckoutRequestData
 import stripe
 
+FRONTEND_BILLING_URL_PATH = "user/billing"
 stripe.api_key = STRIPE_API_KEY
 router = APIRouter(prefix="/billing", tags=["billing"])
 
@@ -36,8 +37,8 @@ async def create_checkout_session(
                     "quantity": 1,
                 }
             ],
-            success_url=f"""{FRONTEND_URL}/billing/?success=true&session_id={{CHECKOUT_SESSION_ID}}""",
-            cancel_url=f"""{FRONTEND_URL}/billing/?cancelled=true""",
+            success_url=f"""{FRONTEND_URL}/{FRONTEND_BILLING_URL_PATH}/?success=true&session_id={{CHECKOUT_SESSION_ID}}""",
+            cancel_url=f"""{FRONTEND_URL}/{FRONTEND_BILLING_URL_PATH}/?cancelled=true""",
         )
 
         # Create new stripe session object
