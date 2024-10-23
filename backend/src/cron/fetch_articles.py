@@ -128,11 +128,13 @@ async def populate_daily_articles_cna():
 def process_new_articles():
     with Session(engine) as session:
         result = session.scalars(
-            select(Article).where(
+            select(Article)
+            .where(
                 Article.id.not_in(
                     list(session.scalars(select(Event.original_article_id)))
                 )
             )
+            .where(Article.useless == False)  # noqa: E712
         ).all()
 
         articles = []
@@ -154,9 +156,10 @@ def process_new_articles():
 async def run(limit: int = 30):
     # Add new articles to database
     await populate_daily_articles_cna()
-    # ADD CNA HERE.
+
     # Process new articles i.e. find articles that we have not generated events for
     articles = process_new_articles()
+
     # # Generate events from articles, written to lm_events_output.json
     await generate_events(articles)
 
