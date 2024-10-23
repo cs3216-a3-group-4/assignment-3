@@ -45,10 +45,9 @@ async def create_checkout_session(
         user_id = user.id
         new_stripe_session = StripeSession(
             id=stripe_session_id,
-            # Subscription ID has to be updated later by webhook event handler
-            subscription_id="",
             user_id=user_id,
             tier_id=tier_id,
+            # Subscription ID isn't available yet, so it'll be updated later by webhook event handler
         )
         # Save new stripe session to database
         session.add(new_stripe_session)
