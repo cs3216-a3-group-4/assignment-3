@@ -10,12 +10,12 @@ import json
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.output_parsers import JsonOutputParser
 
-from src.lm.lm import lm_model_concept as lm_model
+from src.lm.lm import CONCURRENCY, lm_model_concept as lm_model
 from src.lm.concept_gen_prompt import CONCEPT_GEN_SYSPROMPT as SYSPROMPT
+
 import asyncio
 
 CONCEPTS_FILE_PATH = "concepts_output.json"
-CONCURRENCY = 150
 
 
 class ArticleConceptLM(BaseModel):
