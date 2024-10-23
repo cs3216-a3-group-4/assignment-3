@@ -119,6 +119,17 @@ class UserReadEvent(Base):
     last_read: Mapped[datetime]
 
 
+class UserReadArticle(Base):
+    __tablename__ = "user_read_article"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    event_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
+    first_read: Mapped[datetime]
+    last_read: Mapped[datetime]
+
+
 class Category(Base):
     __tablename__ = "category"
 
