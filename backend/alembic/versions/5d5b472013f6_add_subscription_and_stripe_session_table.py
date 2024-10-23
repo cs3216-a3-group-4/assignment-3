@@ -1,7 +1,7 @@
-"""Add subscription and stripe_session table
+"""Update subscription table
 
 Revision ID: 5d5b472013f6
-Revises: 7e94c7b5ee8d
+Revises: 933d84ad4302
 Create Date: 2024-10-20 22:03:21.508656
 
 """
@@ -14,7 +14,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = "5d5b472013f6"
-down_revision: Union[str, None] = "7e94c7b5ee8d"
+down_revision: Union[str, None] = "933d84ad4302"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
