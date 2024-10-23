@@ -25,6 +25,7 @@ class MiniArticleDTO(BaseArticleDTO):
 class ArticleDTO(MiniArticleDTO):
     article_concepts: list["ArticleConceptDTO"]
     original_events: list["EventWithoutArticleDTO"]
+    bookmarks: list["BookmarkDTO"]
 
 
 # Refactor this one day. :(
@@ -107,6 +108,9 @@ class GPQuestionDTO(BaseModel):
 
 
 class BookmarkDTO(BaseModel):
+    """Be careful when editing this model. It is used by both article/event
+    despite them using two different ORM models (ArticleBookmark & Bookmark)"""
+
     model_config = ConfigDict(from_attributes=True)
     user_id: int
 

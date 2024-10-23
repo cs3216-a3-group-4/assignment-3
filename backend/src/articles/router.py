@@ -8,7 +8,7 @@ from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
 from src.common.schemas import IndexResponse
-from src.events.models import Article, Category, Event
+from src.events.models import Article, ArticleBookmark, Category, Event
 from src.events.schemas import ArticleDTO, MiniArticleDTO
 
 
@@ -24,8 +24,7 @@ def get_articles(
     category_ids: Annotated[list[int] | None, Query()] = None,
     limit: int | None = None,
     offset: int | None = None,
-    # TODO: implement bookmarks
-    # bookmarks: bool = False,
+    bookmarks: bool = False,
     singapore_only: bool = False,
 ) -> IndexResponse[MiniArticleDTO]:
     query = select(Article.id).distinct()
@@ -45,6 +44,9 @@ def get_articles(
                 Event.categories.and_(Category.id.in_(category_ids))
             )
         )
+    if bookmarks:
+        query = query.where(Article.bookmarks.any(ArticleBookmark.user_id == user.id))
+
     relevant_ids = [id for id in session.scalars(query)]
 
     total_count = len(relevant_ids)
@@ -72,3 +74,39 @@ def get_articles(
 @router.get("/{id}")
 def get_article(article: Annotated[Article, Depends(retrieve_article)]) -> ArticleDTO:
     return article
+
+
+@router.post("/{id}/bookmarks")
+def add_bookmark(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    article: Annotated[Article, Depends(retrieve_article)],
+    session: Annotated[Session, Depends(get_session)],
+):
+    bookmark = session.scalar(
+        select(ArticleBookmark)
+        .where(ArticleBookmark.user_id == user.id)
+        .where(ArticleBookmark.article_id == id)
+    )
+    if bookmark:
+        return
+    article.bookmarks.append(ArticleBookmark(user_id=user.id))
+    session.add(article)
+    session.commit()
+
+
+@router.delete("/{id}/bookmarks")
+def delete_bookmark(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
+    _=Depends(retrieve_article),
+):
+    bookmark = session.scalar(
+        select(ArticleBookmark)
+        .where(ArticleBookmark.user_id == user.id)
+        .where(ArticleBookmark.article_id == id)
+    )
+    if bookmark:
+        session.delete(bookmark)
+        session.commit()
