@@ -1,6 +1,6 @@
 import { NewspaperIcon } from "lucide-react";
 
-import { ArticleDTO } from "@/client";
+import { BaseArticleDTO } from "@/client";
 import Link from "@/components/navigation/link";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -11,7 +11,7 @@ import {
 import { parseDate } from "@/utils/date";
 
 interface EventSourceProps {
-  originalSource: ArticleDTO;
+  originalSource: BaseArticleDTO;
 }
 
 // TODO: Ugly workaround, currently assumes one event only one source
