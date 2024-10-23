@@ -1,12 +1,13 @@
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 from src.categories.schemas import CategoryDTO
+from src.common.schemas import IndexResponse
 from src.events.models import ArticleSource
 from src.likes.schemas import LikeDTO
 from src.notes.schemas import NoteDTO
 
 
-class ArticleDTO(BaseModel):
+class BaseArticleDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
@@ -15,6 +16,26 @@ class ArticleDTO(BaseModel):
     source: ArticleSource
     date: datetime
     image_url: str
+
+
+class MiniArticleDTO(BaseArticleDTO):
+    categories: list[CategoryDTO]
+
+
+class ArticleDTO(MiniArticleDTO):
+    article_concepts: list["ArticleConceptDTO"]
+    original_events: list["EventWithoutArticleDTO"]
+
+
+# Refactor this one day. :(
+class EventWithoutArticleDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    title: str
+    description: str
+    is_singapore: bool
+    date: datetime
+    analysises: list["AnalysisDTO"]
 
 
 class ReadDTO(BaseModel):
@@ -32,7 +53,7 @@ class BaseEventDTO(BaseModel):
     date: datetime
 
     categories: list[CategoryDTO]
-    original_article: ArticleDTO
+    original_article: BaseArticleDTO
 
 
 class MiniEventDTO(BaseEventDTO):
@@ -64,7 +85,7 @@ class ConceptDTO(BaseModel):
     name: str
 
 
-class AnalysisConceptDTO(BaseModel):
+class ArticleConceptDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     explanation: str
@@ -72,9 +93,9 @@ class AnalysisConceptDTO(BaseModel):
 
 
 #  Used by /event/:id via EventDTO
-class AnalysisWithConceptDTO(AnalysisDTO):
+class ArticlesWithConceptDTO(BaseArticleDTO):
     model_config = ConfigDict(from_attributes=True)
-    analysis_concepts: list[AnalysisConceptDTO]
+    article_concepts: list[ArticleConceptDTO]
 
 
 class GPQuestionDTO(BaseModel):
@@ -92,16 +113,13 @@ class BookmarkDTO(BaseModel):
 
 class EventDTO(MiniEventDTO):
     model_config = ConfigDict(from_attributes=True)
-    analysises: list[AnalysisWithConceptDTO]
+    analysises: list[AnalysisDTO]
     gp_questions: list[GPQuestionDTO]
     bookmarks: list[BookmarkDTO]
     notes: list[NoteDTO]
 
 
-class EventIndexResponse(BaseModel):
-    total_count: int
-    count: int
-    data: list[MiniEventDTO]
+EventIndexResponse = IndexResponse[MiniEventDTO]
 
 
 class EventNoteDTO(NoteDTO):
