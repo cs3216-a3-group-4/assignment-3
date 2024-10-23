@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import PricingTable from "@/components/billing/pricing-table";
 import Chip from "@/components/display/chip";
 import { useCreateStripeCheckoutSession } from "@/queries/billing";
@@ -10,10 +12,23 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 const Page = () => {
   const user = useUserStore((store) => store.user);
   const stripeCheckoutMutation = useCreateStripeCheckoutSession();
+
+  const billingPath = usePathname();
+  const searchParams = useSearchParams();
+  const isSuccess = searchParams.get("success") === "true";
+  const stripeSessionId = searchParams.get("session_id");
+  const isCancelled = searchParams.get("cancelled") === "true";
+  const router = useRouter();
+  
+  const { toast } = useToast();
+  // Display payment status toast for 5 secs
+  const PAYMENT_TOAST_DURATION = 5000;
 
   const jippyTiers = [
     {
@@ -49,6 +64,40 @@ const Page = () => {
       ],
     },
   ];
+
+  useEffect(() => {
+    if (isSuccess && stripeSessionId) {
+      // Display toast to notify the user that payment succeeded
+      toast({
+        title: "Payment Successful!",
+        description: "You have now upgraded your tier",
+      });
+
+      // Remove query parameters from the URL after showing the toast
+      const timeout = setTimeout(() => {
+        // Remove the 'success' and 'session_id' query string from the URL
+        router.replace(billingPath, { scroll: false });
+      }, PAYMENT_TOAST_DURATION); // 5 seconds
+
+      // Cleanup timeout on unmount of the page
+      return () => clearTimeout(timeout);
+    } else if (isCancelled) {
+      // Display toast to notify the user that payment got cancelled
+      toast({
+        title: "Payment Cancelled",
+        description: `Unable to upgrade your tier, you remain at ${tierIDToTierName(user?.tier_id || 1)} Tier`,
+      });
+
+      // Remove query parameters from the URL after showing the toast
+      const timeout = setTimeout(() => {
+        // Remove the 'cancelled' query string from the URL
+        router.replace(billingPath, { scroll: false });
+      }, PAYMENT_TOAST_DURATION);
+
+      // Cleanup timeout on unmount of the page
+      return () => clearTimeout(timeout);
+    }
+  }, [isSuccess, isCancelled, stripeSessionId, toast, router]);
 
   return (
     user && (
