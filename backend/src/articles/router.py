@@ -49,11 +49,7 @@ def get_articles(
     if singapore_only:
         query = query.where(Article.original_events.any(Event.is_singapore == True))  # noqa: E712
     if category_ids:
-        query = query.join(
-            Article.original_events.any(
-                Event.categories.and_(Category.id.in_(category_ids))
-            )
-        )
+        query = query.where(Article.categories.any(Category.id.in_(category_ids)))
     if bookmarks:
         query = query.where(Article.bookmarks.any(ArticleBookmark.user_id == user.id))
 
