@@ -175,49 +175,8 @@ def handle_payment_success(event, session):
             detail="Error processing invoice.paid event due to empty subscription ID in invoice"
         )
     
-    stripe_session = session.scalars(
-        select(StripeSession)
-        .where(StripeSession.subscription_id == subscription_id)
-    ).one_or_none()
-    if stripe_session is None:
-        print(f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""")
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}"""
-        )
-        
-    if not stripe_session.user_id:
-        print(f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""")
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}"""
-        )
-
-    user = session.scalars(
-        select(User)
-        .where(User.id == stripe_session.user_id)
-    ).one_or_none()
-
-    if user is None:
-        print(f"""ERROR: No corresponding user found for subscription with ID {subscription_id}""")
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""ERROR: No corresponding user found for subscription with ID {subscription_id}"""
-        )
-    
-    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
-    if stripe_subscription["status"] != "active":
-        print(f"""ERROR: Subscription with ID {subscription_id} is not active even after payment""")
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""Subscription with ID {subscription_id} is not active even after payment"""
-        )
-
-    # Upgrade user tier now that subscription is paid for and active
-    user.tier_id = stripe_session.tier_id
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    # Upgrade user's tier after successful payment
+    do_tier_upgrade(subscription_id, session)
 
 
 def handle_payment_failure(event):
@@ -365,3 +324,48 @@ def update_subscription_for(subscription: stripe.Subscription, session):
     session.add(subscription_to_save)
     session.commit()
     session.refresh(subscription_to_save)
+
+def do_tier_upgrade(subscription_id: str, session):
+    stripe_session = session.scalars(
+        select(StripeSession)
+        .where(StripeSession.subscription_id == subscription_id)
+    ).one_or_none()
+    if stripe_session is None:
+        print(f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}"""
+        )
+        
+    if not stripe_session.user_id:
+        print(f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}"""
+        )
+
+    user = session.scalars(
+        select(User)
+        .where(User.id == stripe_session.user_id)
+    ).one_or_none()
+
+    if user is None:
+        print(f"""ERROR: No corresponding user found for subscription with ID {subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: No corresponding user found for subscription with ID {subscription_id}"""
+        )
+    
+    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
+    if stripe_subscription["status"] != "active":
+        print(f"""ERROR: Subscription with ID {subscription_id} is not active even after payment""")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""Subscription with ID {subscription_id} is not active even after payment"""
+        )
+
+    # Upgrade user tier now that subscription is paid for and active
+    user.tier_id = stripe_session.tier_id
+    session.add(user)
+    session.commit()
+    session.refresh(user)
