@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "date-fns";
 
-import { AnalysisNoteDTO, EventNoteDTO } from "@/client";
+import { AnalysisNoteDTO, ArticleNoteDTO, EventNoteDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Category, getIconFor } from "@/types/categories";
@@ -13,11 +13,12 @@ import { parseDate } from "@/utils/date";
 import NoteDialogContent from "./note-dialog-content";
 
 type Props = {
-  data: EventNoteDTO | AnalysisNoteDTO;
+  data: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO;
   handleDelete: () => void;
 };
 
-const extractUrl = (note: EventNoteDTO | AnalysisNoteDTO) => {
+// TODO: fix this to article url
+const extractUrl = (note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO) => {
   if (note.parent_type === "event") {
     const eventNote = note as EventNoteDTO;
     return { event: eventNote.event, url: `/events/${eventNote.event.id}` };
@@ -37,9 +38,14 @@ const Note = ({ data, handleDelete }: Props) => {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
   const [noteContent, setNoteContent] = useState(data.content);
   const invalidCategory = { id: -1, name: Category.Others };
+  const router = useRouter();
+
+  // TODO: temporarily stop crash from article notes... by hiding them completely
+  if (data.parent_type === "article") {
+    return <></>;
+  }
 
   const { event, url: source } = extractUrl(data);
-  const router = useRouter();
 
   return (
     <Dialog onOpenChange={setNoteOpen} open={noteOpen}>

@@ -32,7 +32,42 @@ export type AnswerMiniDTO = {
     points: Array<PointMiniDTO>;
 };
 
+export type ArticleConceptDTO = {
+    explanation: string;
+    concept: ConceptDTO;
+};
+
 export type ArticleDTO = {
+    id: number;
+    title: string;
+    summary: string;
+    url: string;
+    source: ArticleSource;
+    date: string;
+    image_url: string;
+    categories: Array<CategoryDTO>;
+    article_concepts: Array<ArticleConceptDTO>;
+    original_events: Array<EventWithoutArticleDTO>;
+    bookmarks: Array<BookmarkDTO>;
+    notes: Array<NoteDTO>;
+};
+
+export type ArticleNoteDTO = {
+    id: number;
+    content: string;
+    start_index?: (number | null);
+    end_index?: (number | null);
+    parent_id: number;
+    parent_type: NoteType;
+    category?: (CategoryDTO | null);
+    created_at: string;
+    updated_at: string;
+    article: BaseArticleDTO;
+};
+
+export type ArticleSource = 'CNA' | 'GUARDIAN';
+
+export type BaseArticleDTO = {
     id: number;
     title: string;
     summary: string;
@@ -42,8 +77,6 @@ export type ArticleDTO = {
     image_url: string;
 };
 
-export type ArticleSource = 'CNA' | 'GUARDIAN';
-
 export type BaseEventDTO = {
     id: number;
     title: string;
@@ -51,7 +84,7 @@ export type BaseEventDTO = {
     is_singapore: boolean;
     date: string;
     categories: Array<CategoryDTO>;
-    original_article: ArticleDTO;
+    original_article: BaseArticleDTO;
 };
 
 export type Body_log_in_auth_login_post = {
@@ -63,6 +96,10 @@ export type Body_log_in_auth_login_post = {
     client_secret?: (string | null);
 };
 
+/**
+ * Be careful when editing this model. It is used by both article/event
+ * despite them using two different ORM models (ArticleBookmark & Bookmark)
+ */
 export type BookmarkDTO = {
     user_id: number;
 };
@@ -88,6 +125,11 @@ export type CommentDTO = {
     inclination: Inclination;
     content: string;
     comment_analysises: Array<CommentAnalysisDTO>;
+};
+
+export type ConceptDTO = {
+    id: number;
+    name: string;
 };
 
 export type CreateUserQuestion = {
@@ -122,18 +164,12 @@ export type EventDTO = {
     is_singapore: boolean;
     date: string;
     categories: Array<CategoryDTO>;
-    original_article: ArticleDTO;
+    original_article: BaseArticleDTO;
     reads: Array<ReadDTO>;
     analysises: Array<src__events__schemas__AnalysisDTO>;
     gp_questions: Array<GPQuestionDTO>;
     bookmarks: Array<BookmarkDTO>;
     notes: Array<NoteDTO>;
-};
-
-export type EventIndexResponse = {
-    total_count: number;
-    count: number;
-    data: Array<MiniEventDTO>;
 };
 
 export type EventNoteDTO = {
@@ -147,6 +183,16 @@ export type EventNoteDTO = {
     created_at: string;
     updated_at: string;
     event: BaseEventDTO;
+};
+
+export type EventWithoutArticleDTO = {
+    id: number;
+    title: string;
+    description: string;
+    is_singapore: boolean;
+    date: string;
+    analysises: Array<src__events__schemas__AnalysisDTO>;
+    notes: Array<NoteDTO>;
 };
 
 export type FallbackDTO = {
@@ -167,6 +213,18 @@ export type HTTPValidationError = {
 
 export type Inclination = 'good' | 'neutral' | 'bad';
 
+export type IndexResponse_MiniArticleDTO_ = {
+    total_count: number;
+    count: number;
+    data: Array<MiniArticleDTO>;
+};
+
+export type IndexResponse_MiniEventDTO_ = {
+    total_count: number;
+    count: number;
+    data: Array<MiniEventDTO>;
+};
+
 export type LikeDTO = {
     point_id?: (number | null);
     analysis_id?: (number | null);
@@ -182,6 +240,17 @@ export type LikeData = {
 
 export type LikeType = 1 | -1;
 
+export type MiniArticleDTO = {
+    id: number;
+    title: string;
+    summary: string;
+    url: string;
+    source: ArticleSource;
+    date: string;
+    image_url: string;
+    categories: Array<CategoryDTO>;
+};
+
 export type MiniEventDTO = {
     id: number;
     title: string;
@@ -189,7 +258,7 @@ export type MiniEventDTO = {
     is_singapore: boolean;
     date: string;
     categories: Array<CategoryDTO>;
-    original_article: ArticleDTO;
+    original_article: BaseArticleDTO;
     reads: Array<ReadDTO>;
 };
 
@@ -470,7 +539,7 @@ export type GetEventsEventsGetData = {
     };
 };
 
-export type GetEventsEventsGetResponse = (EventIndexResponse);
+export type GetEventsEventsGetResponse = (IndexResponse_MiniEventDTO_);
 
 export type GetEventsEventsGetError = (HTTPValidationError);
 
@@ -574,7 +643,7 @@ export type GetAllNotesNotesGetData = {
     };
 };
 
-export type GetAllNotesNotesGetResponse = (Array<(EventNoteDTO | AnalysisNoteDTO)>);
+export type GetAllNotesNotesGetResponse = (Array<(EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO)>);
 
 export type GetAllNotesNotesGetError = (HTTPValidationError);
 
@@ -645,7 +714,39 @@ export type GetEssayEssaysIdGetResponse = (EssayDTO);
 
 export type GetEssayEssaysIdGetError = (HTTPValidationError);
 
+export type GetArticlesArticlesGetData = {
+    query?: {
+        bookmarks?: boolean;
+        category_ids?: (Array<(number)> | null);
+        end_date?: (string | null);
+        limit?: (number | null);
+        offset?: (number | null);
+        singapore_only?: boolean;
+        start_date?: (string | null);
+    };
+};
+
+export type GetArticlesArticlesGetResponse = (IndexResponse_MiniArticleDTO_);
+
+export type GetArticlesArticlesGetError = (HTTPValidationError);
+
+export type GetArticleArticlesIdGetData = {
+    path: {
+        id: number;
+    };
+};
+
 export type GetSubscriptionSubscriptionsIdGetData = {
+    path: {
+        id: number;
+    };
+};
+
+export type GetArticleArticlesIdGetResponse = (ArticleDTO);
+
+export type GetArticleArticlesIdGetError = (HTTPValidationError);
+
+export type AddBookmarkArticlesIdBookmarksPostData = {
     path: {
         id: number;
     };
@@ -660,6 +761,20 @@ export type GetSubscriptionStatusSubscriptionsIdStatusGetData = {
         id: number;
     };
 };
+
+export type AddBookmarkArticlesIdBookmarksPostResponse = (unknown);
+
+export type AddBookmarkArticlesIdBookmarksPostError = (HTTPValidationError);
+
+export type DeleteBookmarkArticlesIdBookmarksDeleteData = {
+    path: {
+        id: number;
+    };
+};
+
+export type DeleteBookmarkArticlesIdBookmarksDeleteResponse = (unknown);
+
+export type DeleteBookmarkArticlesIdBookmarksDeleteError = (HTTPValidationError);
 
 export type GetSubscriptionStatusSubscriptionsIdStatusGetResponse = (SubscriptionStatusType);
 

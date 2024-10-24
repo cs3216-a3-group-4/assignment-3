@@ -19,6 +19,17 @@ article_event_table = Table(
 )
 
 
+class ArticleConcept(Base):
+    __tablename__ = "article_concept"
+
+    concept_id: Mapped[int] = mapped_column(ForeignKey("concept.id"), primary_key=True)
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"), primary_key=True)
+    explanation: Mapped[str]
+
+    article: Mapped["Article"] = relationship(back_populates="article_concepts")
+    concept: Mapped["Concept"] = relationship(back_populates="article_concepts")
+
+
 class Article(Base):
     __tablename__ = "article"
 
@@ -30,6 +41,7 @@ class Article(Base):
     source: Mapped[ArticleSource]
     date: Mapped[datetime]
     image_url: Mapped[str]
+    useless: Mapped[bool] = mapped_column(server_default="false")
 
     original_events: Mapped[list["Event"]] = relationship(
         back_populates="original_article"
@@ -43,6 +55,27 @@ class Article(Base):
         "Note",
         primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "article"),
         backref="article",
+    )
+
+    article_concepts: Mapped[list[ArticleConcept]] = relationship(
+        back_populates="article"
+    )
+
+    # https://stackoverflow.com/questions/29302176/relationship-spanning-four-tables-in-sqlalchemy
+    categories: Mapped[list["Category"]] = relationship(
+        "Category",
+        secondary="join(Event, Analysis, Event.id == Analysis.event_id)"
+        ".join(Category, Analysis.category_id == Category.id)",
+        primaryjoin="Article.id == Event.original_article_id",
+        viewonly=True,
+        backref="articles",
+    )
+
+    # ArticleBookmark is NOT a join table. It's just scuffed.
+    bookmarks: Mapped[list["ArticleBookmark"]] = relationship(back_populates="article")
+
+    top_article_groups: Mapped[list["TopArticleGroup"]] = relationship(
+        back_populates="articles", secondary="top_article_group_article"
     )
 
 
@@ -80,6 +113,28 @@ class Event(Base):
     bookmarks: Mapped[list["Bookmark"]] = relationship(back_populates="event")
 
 
+class TopArticleGroup(Base):
+    __tablename__ = "top_article_group"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    date: Mapped[datetime]
+    singapore_only: Mapped[bool]
+    published: Mapped[bool] = mapped_column(server_default="false")
+
+    articles: Mapped[list[Article]] = relationship(
+        back_populates="top_article_groups", secondary="top_article_group_article"
+    )
+
+
+class TopArticleGroupArticle(Base):
+    __tablename__ = "top_article_group_article"
+
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"), primary_key=True)
+    top_article_group: Mapped[int] = mapped_column(
+        ForeignKey("top_article_group.id"), primary_key=True
+    )
+
+
 class UserReadEvent(Base):
     __tablename__ = "user_read_event"
 
@@ -87,6 +142,17 @@ class UserReadEvent(Base):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     event_id: Mapped[int] = mapped_column(ForeignKey("event.id"))
+    first_read: Mapped[datetime]
+    last_read: Mapped[datetime]
+
+
+class UserReadArticle(Base):
+    __tablename__ = "user_read_article"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
     first_read: Mapped[datetime]
     last_read: Mapped[datetime]
 
@@ -109,22 +175,9 @@ class Concept(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
 
-    analysis_concepts: Mapped[list["AnalysisConcept"]] = relationship(
+    article_concepts: Mapped[list["ArticleConcept"]] = relationship(
         back_populates="concept"
     )
-
-
-class AnalysisConcept(Base):
-    __tablename__ = "analysis_concept"
-
-    concept_id: Mapped[int] = mapped_column(ForeignKey("concept.id"), primary_key=True)
-    analysis_id: Mapped[int] = mapped_column(
-        ForeignKey("analysis.id"), primary_key=True
-    )
-    explanation: Mapped[str]
-
-    analysis: Mapped["Analysis"] = relationship(back_populates="analysis_concepts")
-    concept: Mapped["Concept"] = relationship(back_populates="analysis_concepts")
 
 
 class Analysis(Base):
@@ -143,10 +196,6 @@ class Analysis(Base):
         "Note",
         primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "analysis"),
         backref="analysis",
-    )
-
-    analysis_concepts: Mapped[list[AnalysisConcept]] = relationship(
-        back_populates="analysis"
     )
 
 
@@ -176,6 +225,7 @@ class GPQuestionCategories(Base):
     )
 
 
+# TODO: DEPRECATE THIS TABLE
 class Bookmark(Base):
     __tablename__ = "bookmark"
 
@@ -184,3 +234,17 @@ class Bookmark(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
     event: Mapped[Event] = relationship(back_populates="bookmarks")
+
+
+class ArticleBookmark(Base):
+    """The new, actual bookmark table.
+    Ignore how the table name makes it sound like a join table. It's not.
+    It's just scuffed because I can't name it bookmark because of the above table."""
+
+    __tablename__ = "article_bookmark"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+
+    article: Mapped[Article] = relationship(back_populates="bookmarks")
