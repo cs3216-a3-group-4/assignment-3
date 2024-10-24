@@ -70,13 +70,14 @@ const Page = () => {
       // Display toast to notify the user that payment succeeded
       toast({
         title: "Payment Successful!",
-        description: "You have now upgraded your tier",
+        description: "Now upgrading your tier...",
       });
 
       // Remove query parameters from the URL after showing the toast
       const timeout = setTimeout(() => {
         // Remove the 'success' and 'session_id' query string from the URL
         router.replace(billingPath, { scroll: false });
+        // TODO: Add callback to server to check whether user tier is upgraded successfully/fetch new user tier
       }, PAYMENT_TOAST_DURATION); // 5 seconds
 
       // Cleanup timeout on unmount of the page
