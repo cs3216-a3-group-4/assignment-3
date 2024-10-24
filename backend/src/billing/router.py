@@ -1,5 +1,6 @@
 from datetime import datetime
 from http import HTTPStatus
+import traceback
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from fastapi.responses import RedirectResponse
@@ -123,6 +124,8 @@ async def stripe_webhook(
         return {"status": "success"}
     
     except Exception as exc:
+        print(f"""ERROR processing webhook event type {event_type}: {traceback.print_exception(exc)}""")
+        # Indicate to the caller that an error occurred with HTTP 500 status code
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(exc)
         )
