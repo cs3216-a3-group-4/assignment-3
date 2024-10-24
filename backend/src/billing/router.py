@@ -288,33 +288,39 @@ def update_subscription_for(subscription: stripe.Subscription, session):
     stripe_subscription = stripe.Subscription.retrieve(subscription_id)
     subscription_data = stripe_subscription['items']['data'][0]
     price_id: str = subscription_data['price']['id']
-    new_subscription = Subscription(
-        id=subscription_id,
-        user_id=user_id,
-        price_id=price_id,
-        customer_id=customer_id,
-        subscription_period_end=datetime.fromtimestamp(
+    # Check whether the given subscription is already saved in database
+    subscription_to_save = session.scalars(
+        select(Subscription)
+        .where(Subscription.id == subscription_id)
+    ).one_or_none()
+    if subscription_to_save is None:
+        # Only create new Subscription with the given subscription 
+        #   data if this ID isn't already saved in the database
+        subscription_to_save = Subscription(
+            id=subscription_id,
+        )
+    
+    # Update subscription data saved in database(regardless of whether this is a newly created subscription)
+    subscription_to_save.user_id = user_id
+    subscription_to_save.price_id = price_id
+    subscription_to_save.customer_id = customer_id
+    if stripe_subscription["current_period_end"]:
+        subscription_to_save.subscription_period_end = datetime.fromtimestamp(
             stripe_subscription["current_period_end"]
-        ).isoformat()
-        if stripe_subscription["current_period_end"]
-        else None,
-        subscription_ended_date=datetime.fromtimestamp(
+        )
+    if stripe_subscription["ended_at"]:
+        subscription_to_save.subscription_ended_date = datetime.fromtimestamp(
             stripe_subscription["ended_at"]
-        ).isoformat()
-        if stripe_subscription["ended_at"]
-        else None,
-        subscription_cancel_at=datetime.fromtimestamp(
+        )
+    if stripe_subscription["cancel_at_period_end"]:
+        subscription_to_save.subscription_cancel_at = datetime.fromtimestamp(
             stripe_subscription["cancel_at_period_end"]
-        ).isoformat()
-        if stripe_subscription["cancel_at_period_end"]
-        else None,
-        subscription_cancelled_date=datetime.fromtimestamp(
+        )
+    if stripe_subscription["canceled_at"]:
+        subscription_to_save.subscription_cancelled_date = datetime.fromtimestamp(
             stripe_subscription["canceled_at"]
-        ).isoformat()
-        if stripe_subscription["canceled_at"]
-        else None,
-        status=stripe_subscription["status"],
-    )
-    session.add(new_subscription)
+        )
+    subscription_to_save.status = stripe_subscription["status"]
+    session.add(subscription_to_save)
     session.commit()
-    session.refresh(new_subscription)
+    session.refresh(subscription_to_save)
