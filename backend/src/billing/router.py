@@ -212,6 +212,18 @@ def handle_charge_dispute_closed(event):
 def update_subscription_for(checkout_session: stripe.checkout.Session, session):
     if checkout_session.mode != "subscription":
         return
+    if not checkout_session.subscription:
+        print(f"""ERROR: Invalid subscription ID received when processing subscription update: {checkout_session.subscription}""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"""Invalid subscription ID received: {checkout_session.subscription}""",
+        )
+    if not checkout_session.customer:
+        print(f"""ERROR: Invalid customer ID received when processing subscription update: {checkout_session.customer}""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"""Invalid customer ID received: {checkout_session.customer}""",
+        )
     # Update stripe_session table to with updated subscription data from stripe
     subscriptionId: str = str(checkout_session.subscription)
     customer_id: str = str(checkout_session.customer)
