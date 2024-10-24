@@ -60,10 +60,9 @@ async def create_checkout_session(
         session.refresh(new_stripe_session)
 
         # Return stripe checkout URL to frontend for redirect
-        return RedirectResponse(
-            url=checkout_session.url if checkout_session.url else "",
-            status_code=HTTPStatus.SEE_OTHER,
-        )
+        return {
+            "url": checkout_session.url if checkout_session.url else "",
+        }
     except Exception as e:
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
 
