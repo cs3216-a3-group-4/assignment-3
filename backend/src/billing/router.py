@@ -91,28 +91,34 @@ async def stripe_webhook(
             status_code=HTTPStatus.BAD_REQUEST, detail=f"""Invalid signature: {e}"""
         )
 
-    if event_type == "checkout.session.completed":
-        handle_checkout_completed(event, session)
-    elif event_type == "invoice.payment_succeeded":
-        handle_payment_success(event)
-    elif event_type == "invoice.payment_failed":
-        handle_payment_failure(event)
-    elif event_type == "customer.subscription.created":
-        handle_subscription_created(event, session)
-    elif event_type == "customer.subscription.deleted":
-        handle_subscription_canceled(event, session)
-    elif event_type == "customer.subscription.paused":
-        handle_subscription_paused(event, session)
-    elif event_type == "customer.subscription.resumed":
-        handle_subscription_resumed(event, session)
-    elif event_type == "customer.subscription.updated":
-        handle_subscription_updated(event, session)
-    elif event_type == "charge.dispute.created":
-        handle_charge_dispute_created(event)
-    elif event_type == "charge.dispute.closed":
-        handle_charge_dispute_closed(event)
+    try:
+        if event_type == "checkout.session.completed":
+            handle_checkout_completed(event, session)
+        elif event_type == "invoice.payment_succeeded":
+            handle_payment_success(event)
+        elif event_type == "invoice.payment_failed":
+            handle_payment_failure(event)
+        elif event_type == "customer.subscription.created":
+            handle_subscription_created(event, session)
+        elif event_type == "customer.subscription.deleted":
+            handle_subscription_canceled(event, session)
+        elif event_type == "customer.subscription.paused":
+            handle_subscription_paused(event, session)
+        elif event_type == "customer.subscription.resumed":
+            handle_subscription_resumed(event, session)
+        elif event_type == "customer.subscription.updated":
+            handle_subscription_updated(event, session)
+        elif event_type == "charge.dispute.created":
+            handle_charge_dispute_created(event)
+        elif event_type == "charge.dispute.closed":
+            handle_charge_dispute_closed(event)
 
-    return {"status": "success"}
+        return {"status": "success"}
+    
+    except Exception as exc:
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(exc)
+        )
 
 
 def handle_checkout_completed(event, session):
