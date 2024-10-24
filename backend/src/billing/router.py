@@ -254,12 +254,6 @@ def update_session(checkout_session: stripe.checkout.Session, session):
         session.add(stripe_session)
         session.commit()
         session.refresh(stripe_session)
-    else:
-        print(f"""ERROR: Invalid subscription ID received when processing checkout session: {stripe_session.subscription_id}""")
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"""Invalid subscription ID received in checkout handler: {stripe_session.subscription_id}""",
-        )
 
 
 def update_subscription_for(subscription: stripe.Subscription, session):
