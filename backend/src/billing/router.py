@@ -4,6 +4,7 @@ import traceback
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Header, Response
 from fastapi.responses import RedirectResponse
+from sqlalchemy import select
 from src.auth.dependencies import add_current_user, get_current_user
 from src.auth.models import User
 from src.billing.models import StripeSession
@@ -209,36 +210,76 @@ def handle_charge_dispute_closed(event):
     pass
 
 
-def update_subscription_for(checkout_session, session):
+def update_session(checkout_session: stripe.checkout.Session, session):
     if checkout_session["mode"] != "subscription":
-        return
-    if not checkout_session["subscription"]:
-        print(f"""ERROR: Invalid subscription ID received when processing subscription update: {checkout_session["subscription"]}""")
+        print(f"""ERROR: Invalid session mode received when processing checkout session: {checkout_session["mode"]}""")
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"""Invalid subscription ID received: {checkout_session["subscription"]}""",
+            detail=f"""Invalid mode received in checkout handler: {checkout_session["mode"]}""",
+        )
+    if not checkout_session["subscription"]:
+        print(f"""ERROR: Invalid subscription ID received when processing checkout session: {checkout_session["subscription"]}""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"""Invalid subscription ID received in checkout handler: {checkout_session["subscription"]}""",
         )
     if not checkout_session["customer"]:
-        print(f"""ERROR: Invalid customer ID received when processing subscription update: {checkout_session["customer"]}""")
+        print(f"""ERROR: Invalid customer ID received when processing checkout session: {checkout_session["customer"]}""")
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"""Invalid customer ID received: {checkout_session["customer"]}""",
+            detail=f"""Invalid customer ID received in checkout handler: {checkout_session["customer"]}""",
         )
     # Update stripe_session table to with updated subscription data from stripe
-    subscriptionId: str = str(checkout_session["subscription"])
-    customer_id: str = str(checkout_session["customer"])
+    subscription_id: str = str(checkout_session["subscription"])
     stripe_session = session.get(StripeSession, checkout_session["id"])
-    user_id: int = int(
-        checkout_session["client_reference_id"]
-        if checkout_session["client_reference_id"]
-        else stripe_session.user_id
-    )
 
-    stripe_subscription = stripe.Subscription.retrieve(subscriptionId)
+    if not stripe_session.subscription_id:
+        stripe_session.subscription_id = subscription_id
+        session.add(stripe_session)
+        session.commit()
+        session.refresh(stripe_session)
+    else:
+        print(f"""ERROR: Invalid subscription ID received when processing checkout session: {stripe_session.subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"""Invalid subscription ID received in checkout handler: {stripe_session.subscription_id}""",
+        )
+
+
+def update_subscription_for(subscription: stripe.Subscription, session):
+    if not subscription["id"]:
+        print(f"""ERROR: Invalid subscription ID received when processing subscription update: {subscription["id"]}""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"""Invalid subscription ID received: {subscription["id"]}""",
+        )
+    if not subscription["customer"]:
+        print(f"""ERROR: Invalid customer ID received when processing subscription update: {subscription["customer"]}""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"""Invalid customer ID received: {subscription["customer"]}""",
+        )
+    subscription_id: str = subscription["id"]
+    customer_id: str = str(subscription["customer"])
+
+    stripe_session = session.scalars(
+        select(StripeSession)
+        .where(StripeSession.subscription_id == subscription_id)
+    )
+    if not stripe_session.user_id:
+        print(f"""ERROR: Stripe session data not yet updated in database, unable to process subscription update with ID {subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="Missing user ID in database",
+        )
+    # At this point, user_id is available, so we can update the subscription in the database
+    user_id: int = int(stripe_session.user_id)
+
+    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
     subscription_data = stripe_subscription['items']['data'][0]
     price_id: str = subscription_data['price']['id']
     new_subscription = Subscription(
-        id=subscriptionId,
+        id=subscription_id,
         user_id=user_id,
         price_id=price_id,
         customer_id=customer_id,
@@ -267,9 +308,3 @@ def update_subscription_for(checkout_session, session):
     session.add(new_subscription)
     session.commit()
     session.refresh(new_subscription)
-
-    if not stripe_session.subscription_id:
-        stripe_session.subscription_id = subscriptionId
-        session.add(stripe_session)
-        session.commit()
-        session.refresh(stripe_session)
