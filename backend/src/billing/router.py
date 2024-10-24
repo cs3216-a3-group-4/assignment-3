@@ -112,7 +112,14 @@ async def stripe_webhook(
             handle_charge_dispute_created(event)
         elif event_type == "charge.dispute.closed":
             handle_charge_dispute_closed(event)
+        else:
+            # Unable to handle given event type, so respond that it's not implemented
+            raise HTTPException(
+                status_code=HTTPStatus.NOT_IMPLEMENTED,
+                detail=f"""Unable to handle event type: {event_type}""",
+            )
 
+        # Processed given webhook event successfully, so return success status
         return {"status": "success"}
     
     except Exception as exc:
