@@ -95,7 +95,7 @@ async def stripe_webhook(
     try:
         if event_type == "checkout.session.completed":
             handle_checkout_completed(event, session)
-        elif event_type == "invoice.payment_succeeded":
+        elif event_type == "invoice.paid":
             handle_payment_success(event)
         elif event_type == "invoice.payment_failed":
             handle_payment_failure(event)
