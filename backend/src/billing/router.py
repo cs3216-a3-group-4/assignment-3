@@ -141,7 +141,7 @@ async def stripe_webhook(
 
 def handle_checkout_completed(event, session):
     checkout_session: stripe.checkout.Session = event["data"]["object"]
-    update_subscription_for(checkout_session, session)
+    update_session(checkout_session, session)
 
 
 def handle_invoice_created(event):
@@ -265,7 +265,13 @@ def update_subscription_for(subscription: stripe.Subscription, session):
     stripe_session = session.scalars(
         select(StripeSession)
         .where(StripeSession.subscription_id == subscription_id)
-    )
+    ).one_or_none()
+    if stripe_session is None:
+        print(f"""ERROR: Cannot find stripe session for subscription ID {subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"""No stripe session found for subscription ID {subscription_id}""",
+        )
     if not stripe_session.user_id:
         print(f"""ERROR: Stripe session data not yet updated in database, unable to process subscription update with ID {subscription_id}""")
         raise HTTPException(
