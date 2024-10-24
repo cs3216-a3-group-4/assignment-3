@@ -139,7 +139,7 @@ async def stripe_webhook(
 
 
 def handle_checkout_completed(event, session):
-    checkout_session: stripe.checkout.Session = event.data.object
+    checkout_session: stripe.checkout.Session = event["data"]["object"]
     update_subscription_for(checkout_session, session)
 
 
@@ -170,31 +170,31 @@ def handle_payment_failure(event):
 
 
 def handle_subscription_created(event, session):
-    checkout_session: stripe.checkout.Session = event.data.object
+    checkout_session = event["data"]["object"]
     update_subscription_for(checkout_session, session)
     # TODO: Update user tier_id
 
 
 def handle_subscription_canceled(event, session):
-    checkout_session: stripe.checkout.Session = event.data.object
+    checkout_session = event["data"]["object"]
     update_subscription_for(checkout_session, session)
     # TODO: Update user tier_id
 
 
 def handle_subscription_paused(event, session):
-    checkout_session: stripe.checkout.Session = event.data.object
+    checkout_session = event["data"]["object"]
     update_subscription_for(checkout_session, session)
     # TODO: Consider how to notify the frontend about this
 
 
 def handle_subscription_resumed(event, session):
-    checkout_session: stripe.checkout.Session = event.data.object
+    checkout_session = event["data"]["object"]
     update_subscription_for(checkout_session, session)
     # TODO: Consider how to notify the frontend about this
 
 
 def handle_subscription_updated(event, session):
-    checkout_session: stripe.checkout.Session = event.data.object
+    checkout_session = event["data"]["object"]
     update_subscription_for(checkout_session, session)
     # TODO: Update user tier_id if needed
 
@@ -209,28 +209,28 @@ def handle_charge_dispute_closed(event):
     pass
 
 
-def update_subscription_for(checkout_session: stripe.checkout.Session, session):
-    if checkout_session.mode != "subscription":
+def update_subscription_for(checkout_session, session):
+    if checkout_session["mode"] != "subscription":
         return
-    if not checkout_session.subscription:
-        print(f"""ERROR: Invalid subscription ID received when processing subscription update: {checkout_session.subscription}""")
+    if not checkout_session["subscription"]:
+        print(f"""ERROR: Invalid subscription ID received when processing subscription update: {checkout_session["subscription"]}""")
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"""Invalid subscription ID received: {checkout_session.subscription}""",
+            detail=f"""Invalid subscription ID received: {checkout_session["subscription"]}""",
         )
-    if not checkout_session.customer:
-        print(f"""ERROR: Invalid customer ID received when processing subscription update: {checkout_session.customer}""")
+    if not checkout_session["customer"]:
+        print(f"""ERROR: Invalid customer ID received when processing subscription update: {checkout_session["customer"]}""")
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"""Invalid customer ID received: {checkout_session.customer}""",
+            detail=f"""Invalid customer ID received: {checkout_session["customer"]}""",
         )
     # Update stripe_session table to with updated subscription data from stripe
-    subscriptionId: str = str(checkout_session.subscription)
-    customer_id: str = str(checkout_session.customer)
-    stripe_session = session.get(StripeSession, checkout_session.id)
+    subscriptionId: str = str(checkout_session["subscription"])
+    customer_id: str = str(checkout_session["customer"])
+    stripe_session = session.get(StripeSession, checkout_session["id"])
     user_id: int = int(
-        checkout_session.client_reference_id
-        if checkout_session.client_reference_id
+        checkout_session["client_reference_id"]
+        if checkout_session["client_reference_id"]
         else stripe_session.user_id
     )
 
@@ -243,26 +243,26 @@ def update_subscription_for(checkout_session: stripe.checkout.Session, session):
         price_id=price_id,
         customer_id=customer_id,
         subscription_period_end=datetime.fromtimestamp(
-            stripe_subscription.current_period_end
+            stripe_subscription["current_period_end"]
         ).isoformat()
-        if stripe_subscription.current_period_end
+        if stripe_subscription["current_period_end"]
         else None,
         subscription_ended_date=datetime.fromtimestamp(
-            stripe_subscription.ended_at
+            stripe_subscription["ended_at"]
         ).isoformat()
-        if stripe_subscription.ended_at
+        if stripe_subscription["ended_at"]
         else None,
         subscription_cancel_at=datetime.fromtimestamp(
-            stripe_subscription.cancel_at_period_end
+            stripe_subscription["cancel_at_period_end"]
         ).isoformat()
-        if stripe_subscription.cancel_at_period_end
+        if stripe_subscription["cancel_at_period_end"]
         else None,
         subscription_cancelled_date=datetime.fromtimestamp(
-            stripe_subscription.canceled_at
+            stripe_subscription["canceled_at"]
         ).isoformat()
-        if stripe_subscription.canceled_at
+        if stripe_subscription["canceled_at"]
         else None,
-        status=stripe_subscription.status,
+        status=stripe_subscription["status"],
     )
     session.add(new_subscription)
     session.commit()
