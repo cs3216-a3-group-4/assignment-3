@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import PricingTable from "@/components/billing/pricing-table";
 import Chip from "@/components/display/chip";
+import { useToast } from "@/hooks/use-toast";
 import { useCreateStripeCheckoutSession } from "@/queries/billing";
 import { useUserStore } from "@/store/user/user-store-provider";
 import {
@@ -12,8 +14,6 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
 
 const Page = () => {
   const user = useUserStore((store) => store.user);
@@ -25,7 +25,7 @@ const Page = () => {
   const stripeSessionId = searchParams.get("session_id");
   const isCancelled = searchParams.get("cancelled") === "true";
   const router = useRouter();
-  
+
   const { toast } = useToast();
   // Display payment status toast for 5 secs
   const PAYMENT_TOAST_DURATION = 5000;

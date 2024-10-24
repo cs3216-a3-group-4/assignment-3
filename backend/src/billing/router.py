@@ -21,6 +21,7 @@ routerWithAuth = APIRouter(
     prefix="/billing", tags=["billing"], dependencies=[Depends(add_current_user)]
 )
 
+
 @routerWithAuth.post("/create-checkout-session")
 async def create_checkout_session(
     request_data: CheckoutRequestData,
@@ -123,12 +124,16 @@ async def stripe_webhook(
             )
 
         # Processed given webhook event successfully, so return success status with HTTP response status code 200
-        return Response(content='{"status": "success"}', media_type="application/json", status_code=HTTPStatus.OK)
-    
+        return Response(
+            content='{"status": "success"}',
+            media_type="application/json",
+            status_code=HTTPStatus.OK,
+        )
+
     except HTTPException as exc:
         # Rethrow any HTTP exceptions unmodified so we don't override the status code with HTTP status 500 in the catch block below
         raise exc
-    
+
     except Exception as exc:
         print(f"""ERROR processing webhook event type {event_type}: """)
         traceback.print_exception(exc)
@@ -150,7 +155,7 @@ def handle_invoice_created(event):
     invoice: stripe.Invoice = event["data"]["object"]
     invoice_id: str = invoice["id"]
     if invoice["status"] == "draft":
-        # Only attempt to finalize the invoice if the created invoice is a draft, 
+        # Only attempt to finalize the invoice if the created invoice is a draft,
         #   otherwise the invoice will be finalized automatically by stripe
         try:
             # Call Stripe API to finalise invoice automatically so that subscription payment is charged timely
@@ -171,12 +176,14 @@ def handle_payment_success(event, session):
     invoice: stripe.Invoice = event["data"]["object"]
     subscription_id: str = invoice["subscription"]
     if not subscription_id:
-        print("ERROR: Cannot process invoice.paid stripe event since invoice subscription ID is empty")
+        print(
+            "ERROR: Cannot process invoice.paid stripe event since invoice subscription ID is empty"
+        )
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail="Error processing invoice.paid event due to empty subscription ID in invoice"
+            detail="Error processing invoice.paid event due to empty subscription ID in invoice",
         )
-    
+
     # Upgrade user's tier after successful payment
     do_tier_upgrade(subscription_id, session)
 
@@ -227,19 +234,25 @@ def handle_charge_dispute_closed(event):
 
 def update_session(checkout_session: stripe.checkout.Session, session):
     if checkout_session["mode"] != "subscription":
-        print(f"""ERROR: Invalid session mode received when processing checkout session: {checkout_session["mode"]}""")
+        print(
+            f"""ERROR: Invalid session mode received when processing checkout session: {checkout_session["mode"]}"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=f"""Invalid mode received in checkout handler: {checkout_session["mode"]}""",
         )
     if not checkout_session["subscription"]:
-        print(f"""ERROR: Invalid subscription ID received when processing checkout session: {checkout_session["subscription"]}""")
+        print(
+            f"""ERROR: Invalid subscription ID received when processing checkout session: {checkout_session["subscription"]}"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=f"""Invalid subscription ID received in checkout handler: {checkout_session["subscription"]}""",
         )
     if not checkout_session["customer"]:
-        print(f"""ERROR: Invalid customer ID received when processing checkout session: {checkout_session["customer"]}""")
+        print(
+            f"""ERROR: Invalid customer ID received when processing checkout session: {checkout_session["customer"]}"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=f"""Invalid customer ID received in checkout handler: {checkout_session["customer"]}""",
@@ -257,13 +270,17 @@ def update_session(checkout_session: stripe.checkout.Session, session):
 
 def update_subscription_for(subscription: stripe.Subscription, session):
     if not subscription["id"]:
-        print(f"""ERROR: Invalid subscription ID received when processing subscription update: {subscription["id"]}""")
+        print(
+            f"""ERROR: Invalid subscription ID received when processing subscription update: {subscription["id"]}"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=f"""Invalid subscription ID received: {subscription["id"]}""",
         )
     if not subscription["customer"]:
-        print(f"""ERROR: Invalid customer ID received when processing subscription update: {subscription["customer"]}""")
+        print(
+            f"""ERROR: Invalid customer ID received when processing subscription update: {subscription["customer"]}"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=f"""Invalid customer ID received: {subscription["customer"]}""",
@@ -272,20 +289,19 @@ def update_subscription_for(subscription: stripe.Subscription, session):
     customer_id: str = str(subscription["customer"])
 
     stripe_subscription = stripe.Subscription.retrieve(subscription_id)
-    subscription_data = stripe_subscription['items']['data'][0]
-    price_id: str = subscription_data['price']['id']
+    subscription_data = stripe_subscription["items"]["data"][0]
+    price_id: str = subscription_data["price"]["id"]
     # Check whether the given subscription is already saved in database
     subscription_to_save = session.scalars(
-        select(Subscription)
-        .where(Subscription.id == subscription_id)
+        select(Subscription).where(Subscription.id == subscription_id)
     ).one_or_none()
     if subscription_to_save is None:
-        # Only create new Subscription with the given subscription 
+        # Only create new Subscription with the given subscription
         #   data if this ID isn't already saved in the database
         subscription_to_save = Subscription(
             id=subscription_id,
         )
-    
+
     # Update subscription data saved in database(regardless of whether this is a newly created subscription)
     subscription_to_save.price_id = price_id
     subscription_to_save.customer_id = customer_id
@@ -308,8 +324,7 @@ def update_subscription_for(subscription: stripe.Subscription, session):
     subscription_to_save.status = stripe_subscription["status"]
 
     stripe_session = session.scalars(
-        select(StripeSession)
-        .where(StripeSession.subscription_id == subscription_id)
+        select(StripeSession).where(StripeSession.subscription_id == subscription_id)
     ).one_or_none()
     if stripe_session is not None and stripe_session.user_id:
         # Only update the subscription.user_id in the database if checkout session
@@ -321,43 +336,50 @@ def update_subscription_for(subscription: stripe.Subscription, session):
     session.commit()
     session.refresh(subscription_to_save)
 
+
 def do_tier_upgrade(subscription_id: str, session):
     stripe_session = session.scalars(
-        select(StripeSession)
-        .where(StripeSession.subscription_id == subscription_id)
+        select(StripeSession).where(StripeSession.subscription_id == subscription_id)
     ).one_or_none()
     if stripe_session is None:
-        print(f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""")
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}"""
+        print(
+            f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}"""
         )
-        
-    if not stripe_session.user_id:
-        print(f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""")
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}"""
+            detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""",
+        )
+
+    if not stripe_session.user_id:
+        print(
+            f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}"""
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""",
         )
 
     user = session.scalars(
-        select(User)
-        .where(User.id == stripe_session.user_id)
+        select(User).where(User.id == stripe_session.user_id)
     ).one_or_none()
 
     if user is None:
-        print(f"""ERROR: No corresponding user found for subscription with ID {subscription_id}""")
+        print(
+            f"""ERROR: No corresponding user found for subscription with ID {subscription_id}"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""ERROR: No corresponding user found for subscription with ID {subscription_id}"""
+            detail=f"""ERROR: No corresponding user found for subscription with ID {subscription_id}""",
         )
-    
+
     stripe_subscription = stripe.Subscription.retrieve(subscription_id)
     if stripe_subscription["status"] != "active":
-        print(f"""ERROR: Subscription with ID {subscription_id} is not active even after payment""")
+        print(
+            f"""ERROR: Subscription with ID {subscription_id} is not active even after payment"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""Subscription with ID {subscription_id} is not active even after payment"""
+            detail=f"""Subscription with ID {subscription_id} is not active even after payment""",
         )
 
     # Upgrade user tier now that subscription is paid for and active
