@@ -142,6 +142,9 @@ async def stripe_webhook(
 def handle_checkout_completed(event, session):
     checkout_session: stripe.checkout.Session = event["data"]["object"]
     update_session(checkout_session, session)
+    # In case checkout.session.completed stripe event is delayed
+    #   (occurs after invoice.paid stripe event), try to upgrade user tier here as well
+    do_tier_upgrade(checkout_session["subscription"], session)
 
 
 def handle_invoice_created(event):
