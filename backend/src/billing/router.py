@@ -2,7 +2,7 @@ from datetime import datetime
 from http import HTTPStatus
 import traceback
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Request, Header
+from fastapi import APIRouter, Depends, HTTPException, Request, Header, Response
 from fastapi.responses import RedirectResponse
 from src.auth.dependencies import add_current_user, get_current_user
 from src.auth.models import User
@@ -95,6 +95,8 @@ async def stripe_webhook(
     try:
         if event_type == "checkout.session.completed":
             handle_checkout_completed(event, session)
+        elif event_type == "invoice.created":
+            handle_invoice_created(event)
         elif event_type == "invoice.paid":
             handle_payment_success(event)
         elif event_type == "invoice.payment_failed":
@@ -120,8 +122,8 @@ async def stripe_webhook(
                 detail=f"""Unable to handle event type: {event_type}""",
             )
 
-        # Processed given webhook event successfully, so return success status
-        return {"status": "success"}
+        # Processed given webhook event successfully, so return success status with HTTP response status code 200
+        return Response(content='{"status": "success"}', media_type="application/json", status_code=HTTPStatus.OK)
     
     except HTTPException as exc:
         # Rethrow any HTTP exceptions unmodified so we don't override the status code with HTTP status 500 in the catch block below
@@ -139,6 +141,22 @@ async def stripe_webhook(
 def handle_checkout_completed(event, session):
     checkout_session: stripe.checkout.Session = event.data.object
     update_subscription_for(checkout_session, session)
+
+
+def handle_invoice_created(event):
+    invoice_id: str = event["data"]["object"]["id"]
+    try:
+        # Call Stripe API to finalise invoice automatically so that subscription payment is charged timely
+        stripe.Invoice.finalize_invoice(invoice_id)
+    except stripe.error.StripeError as stripe_err:
+        print(f"""ERROR: Failed to finalize invoice with ID {invoice_id}:""")
+        # Print stack trace to help with debugging
+        traceback.print_exception(stripe_err)
+        # Notify the caller that an error occurred while finalizing invoice with HTTP 500 status code and exception string
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""Error finalizing invoice with ID {invoice_id}: {stripe_err}""",
+        )
 
 
 def handle_payment_success(event):
