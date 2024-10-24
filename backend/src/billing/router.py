@@ -235,13 +235,13 @@ def update_subscription_for(checkout_session: stripe.checkout.Session, session):
     )
 
     stripe_subscription = stripe.Subscription.retrieve(subscriptionId)
+    subscription_data = stripe_subscription['items']['data'][0]
+    price_id: str = subscription_data['price']['id']
     new_subscription = Subscription(
         id=subscriptionId,
         user_id=user_id,
-        price_id=stripe_subscription.items.data[0].price.id,
+        price_id=price_id,
         customer_id=customer_id,
-        status=stripe_subscription.status,
-        quantity=stripe_subscription.items.data[0].quantity,
         subscription_period_end=datetime.fromtimestamp(
             stripe_subscription.current_period_end
         ).isoformat()
@@ -262,6 +262,7 @@ def update_subscription_for(checkout_session: stripe.checkout.Session, session):
         ).isoformat()
         if stripe_subscription.canceled_at
         else None,
+        status=stripe_subscription.status,
     )
     session.add(new_subscription)
     session.commit()
