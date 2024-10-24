@@ -3,7 +3,6 @@ from http import HTTPStatus
 import traceback
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Header, Response
-from fastapi.responses import RedirectResponse
 from sqlalchemy import select
 from src.auth.dependencies import add_current_user, get_current_user
 from src.auth.models import User
