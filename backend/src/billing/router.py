@@ -99,7 +99,7 @@ async def stripe_webhook(
         elif event_type == "invoice.created":
             handle_invoice_created(event)
         elif event_type == "invoice.paid":
-            handle_payment_success(event)
+            handle_payment_success(event, session)
         elif event_type == "invoice.payment_failed":
             handle_payment_failure(event)
         elif event_type == "customer.subscription.created":
@@ -164,9 +164,60 @@ def handle_invoice_created(event):
             )
 
 
-def handle_payment_success(event):
+def handle_payment_success(event, session):
     # Subscription renewed successfully, update your database to reflect payment success
-    pass
+    invoice: stripe.Invoice = event["data"]["object"]
+    subscription_id: str = invoice["subscription"]
+    if not subscription_id:
+        print("ERROR: Cannot process invoice.paid stripe event since invoice subscription ID is empty")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing invoice.paid event due to empty subscription ID in invoice"
+        )
+    
+    stripe_session = session.scalars(
+        select(StripeSession)
+        .where(StripeSession.subscription_id == subscription_id)
+    ).one_or_none()
+    if stripe_session is None:
+        print(f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}"""
+        )
+        
+    if not stripe_session.user_id:
+        print(f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}"""
+        )
+
+    user = session.scalars(
+        select(User)
+        .where(User.id == stripe_session.user_id)
+    ).one_or_none()
+
+    if user is None:
+        print(f"""ERROR: No corresponding user found for subscription with ID {subscription_id}""")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: No corresponding user found for subscription with ID {subscription_id}"""
+        )
+    
+    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
+    if stripe_subscription["status"] != "active":
+        print(f"""ERROR: Subscription with ID {subscription_id} is not active even after payment""")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""Subscription with ID {subscription_id} is not active even after payment"""
+        )
+
+    # Upgrade user tier now that subscription is paid for and active
+    user.tier_id = stripe_session.tier_id
+    session.add(user)
+    session.commit()
+    session.refresh(user)
 
 
 def handle_payment_failure(event):
@@ -177,7 +228,6 @@ def handle_payment_failure(event):
 def handle_subscription_created(event, session):
     checkout_session = event["data"]["object"]
     update_subscription_for(checkout_session, session)
-    # TODO: Update user tier_id
 
 
 def handle_subscription_canceled(event, session):
