@@ -266,25 +266,6 @@ def update_subscription_for(subscription: stripe.Subscription, session):
     subscription_id: str = subscription["id"]
     customer_id: str = str(subscription["customer"])
 
-    stripe_session = session.scalars(
-        select(StripeSession)
-        .where(StripeSession.subscription_id == subscription_id)
-    ).one_or_none()
-    if stripe_session is None:
-        print(f"""ERROR: Cannot find stripe session for subscription ID {subscription_id}""")
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"""No stripe session found for subscription ID {subscription_id}""",
-        )
-    if not stripe_session.user_id:
-        print(f"""ERROR: Stripe session data not yet updated in database, unable to process subscription update with ID {subscription_id}""")
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail="Missing user ID in database",
-        )
-    # At this point, user_id is available, so we can update the subscription in the database
-    user_id: int = int(stripe_session.user_id)
-
     stripe_subscription = stripe.Subscription.retrieve(subscription_id)
     subscription_data = stripe_subscription['items']['data'][0]
     price_id: str = subscription_data['price']['id']
@@ -301,7 +282,6 @@ def update_subscription_for(subscription: stripe.Subscription, session):
         )
     
     # Update subscription data saved in database(regardless of whether this is a newly created subscription)
-    subscription_to_save.user_id = user_id
     subscription_to_save.price_id = price_id
     subscription_to_save.customer_id = customer_id
     if stripe_subscription["current_period_end"]:
@@ -321,6 +301,17 @@ def update_subscription_for(subscription: stripe.Subscription, session):
             stripe_subscription["canceled_at"]
         )
     subscription_to_save.status = stripe_subscription["status"]
+
+    stripe_session = session.scalars(
+        select(StripeSession)
+        .where(StripeSession.subscription_id == subscription_id)
+    ).one_or_none()
+    if stripe_session is not None and stripe_session.user_id:
+        # Only update the subscription.user_id in the database if checkout session
+        #   has completed and saved the user ID in the stripe_session table
+        user_id: int = int(stripe_session.user_id)
+        subscription_to_save.user_id = user_id
+
     session.add(subscription_to_save)
     session.commit()
     session.refresh(subscription_to_save)
