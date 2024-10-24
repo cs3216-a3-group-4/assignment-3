@@ -145,8 +145,8 @@ def handle_checkout_completed(event, session):
 
 
 def handle_invoice_created(event):
-    invoice: stripe.Subscription = event["data"]["object"]
-    invoice_id: str = event["data"]["object"]["id"]
+    invoice: stripe.Invoice = event["data"]["object"]
+    invoice_id: str = invoice["id"]
     if invoice["status"] == "draft":
         # Only attempt to finalize the invoice if the created invoice is a draft, 
         #   otherwise the invoice will be finalized automatically by stripe
