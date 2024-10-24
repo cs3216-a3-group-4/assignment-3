@@ -123,6 +123,10 @@ async def stripe_webhook(
         # Processed given webhook event successfully, so return success status
         return {"status": "success"}
     
+    except HTTPException as exc:
+        # Rethrow any HTTP exceptions unmodified so we don't override the status code with HTTP status 500 in the catch block below
+        raise exc
+    
     except Exception as exc:
         print(f"""ERROR processing webhook event type {event_type}: {traceback.print_exception(exc)}""")
         # Indicate to the caller that an error occurred with HTTP 500 status code
