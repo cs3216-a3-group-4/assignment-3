@@ -145,19 +145,23 @@ def handle_checkout_completed(event, session):
 
 
 def handle_invoice_created(event):
+    invoice: stripe.Subscription = event["data"]["object"]
     invoice_id: str = event["data"]["object"]["id"]
-    try:
-        # Call Stripe API to finalise invoice automatically so that subscription payment is charged timely
-        stripe.Invoice.finalize_invoice(invoice_id)
-    except stripe.error.StripeError as stripe_err:
-        print(f"""ERROR: Failed to finalize invoice with ID {invoice_id}:""")
-        # Print stack trace to help with debugging
-        traceback.print_exception(stripe_err)
-        # Notify the caller that an error occurred while finalizing invoice with HTTP 500 status code and exception string
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""Error finalizing invoice with ID {invoice_id}: {stripe_err}""",
-        )
+    if invoice["status"] == "draft":
+        # Only attempt to finalize the invoice if the created invoice is a draft, 
+        #   otherwise the invoice will be finalized automatically by stripe
+        try:
+            # Call Stripe API to finalise invoice automatically so that subscription payment is charged timely
+            stripe.Invoice.finalize_invoice(invoice_id)
+        except stripe.error.StripeError as stripe_err:
+            print(f"""ERROR: Failed to finalize invoice with ID {invoice_id}:""")
+            # Print stack trace to help with debugging
+            traceback.print_exception(stripe_err)
+            # Notify the caller that an error occurred while finalizing invoice with HTTP 500 status code and exception string
+            raise HTTPException(
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+                detail=f"""Error finalizing invoice with ID {invoice_id}: {stripe_err}""",
+            )
 
 
 def handle_payment_success(event):
