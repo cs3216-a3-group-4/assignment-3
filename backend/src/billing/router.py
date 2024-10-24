@@ -128,7 +128,8 @@ async def stripe_webhook(
         raise exc
     
     except Exception as exc:
-        print(f"""ERROR processing webhook event type {event_type}: {traceback.print_exception(exc)}""")
+        print(f"""ERROR processing webhook event type {event_type}: """)
+        traceback.print_exception(exc)
         # Indicate to the caller that an error occurred with HTTP 500 status code
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(exc)
