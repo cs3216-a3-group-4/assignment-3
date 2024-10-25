@@ -280,6 +280,12 @@ def handle_subscription_paused(event, session):
 def handle_subscription_resumed(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
     update_subscription_for(subscription, session)
+
+    subscription_id: str = subscription["id"]
+    # Upgrade tier here since invoice.paid event might not be triggered, but we 
+    #   downgrade the user tier when subscription is paused
+    do_tier_upgrade(subscription_id, session)
+    
     # TODO: Consider how to notify the frontend about this
 
 
