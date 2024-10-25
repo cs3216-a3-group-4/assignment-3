@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Header, Response
 from sqlalchemy import select
 from src.auth.dependencies import add_current_user, get_current_user
 from src.auth.models import User
-from src.billing.models import StripeSession
+from src.billing.models import StripePrice, StripeProduct, StripeSession
 from src.common.constants import FRONTEND_URL, STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET
 from src.common.dependencies import get_session
 from src.subscriptions.models import Subscription
@@ -171,6 +171,10 @@ async def stripe_webhook(
             handle_charge_dispute_created(event)
         elif event_type == "charge.dispute.closed":
             handle_charge_dispute_closed(event)
+        elif event_type == "product.created" or event_type == "product.updated":
+            handle_stripe_product_event(event, session)
+        elif event_type == "price.created" or event_type == "price.updated":
+            handle_stripe_price_event(event, session)
         else:
             # Unable to handle given event type, so respond that it's not implemented
             raise HTTPException(
@@ -363,6 +367,85 @@ def handle_charge_dispute_created(event):
 def handle_charge_dispute_closed(event):
     # Update user subscription status based on whether customer won or we won
     pass
+
+def handle_stripe_price_event(event, session):
+    stripe_price: stripe.Price = event["data"]["object"]
+    stripe_price_id: str = stripe_price["id"]
+    stripe_price_product_id: str = stripe_price["product"]
+    stripe_price_description: str = stripe_price["nickname"]
+    stripe_price_payment_interval: str = stripe_price["recurring"]["interval"]
+    stripe_price_price_cents: int = stripe_price["unit_amount"]
+    stripe_price_currency: str = stripe_price["currency"]
+    stripe_price_is_active: bool = stripe_price["active"]
+
+    # Check whether the given stripe price is already saved in database
+    price_to_save = session.scalars(
+        select(StripePrice).where(StripePrice.id == stripe_price_id)
+    ).one_or_none()
+    if price_to_save is None:
+        # Only create new StripePrice with the given stripe price
+        #   data if this ID isn't already saved in the database
+        price_to_save = StripePrice(
+            id=stripe_price_id,
+            product_id=stripe_price_product_id,
+            description=stripe_price_description,
+            payment_interval=stripe_price_payment_interval,
+            price=stripe_price_price_cents,
+            currency=stripe_price_currency,
+            is_active=stripe_price_is_active,
+        )
+    else:
+        # Update stripe price data saved in database(regardless of whether this is a newly created stripe price)
+        price_to_save.product_id = stripe_price_product_id
+        price_to_save.description = stripe_price_description
+        price_to_save.payment_interval = stripe_price_payment_interval
+        price_to_save.price = stripe_price_price_cents
+        price_to_save.currency = stripe_price_currency
+        price_to_save.is_active = stripe_price_is_active
+
+    session.add(price_to_save)
+    session.commit()
+    session.refresh(price_to_save)
+
+def handle_stripe_product_event(event, session):
+    stripe_product: stripe.Product = event["data"]["object"]
+    stripe_product_id: str = stripe_product["id"]
+    stripe_product_name: str = stripe_product["name"]
+    stripe_product_description: str = stripe_product["description"]
+    stripe_product_image_url: str = stripe_product["images"][0] if stripe_product["images"] else ""
+    stripe_product_is_active: bool = stripe_product["active"]
+    stripe_product_features: list[str] = get_list_of_feature_strings_for(stripe_product["marketing_features"])
+
+    # Check whether the given stripe product is already saved in database
+    product_to_save = session.scalars(
+        select(StripeProduct).where(StripeProduct.id == stripe_product_id)
+    ).one_or_none()
+    if product_to_save is None:
+        # Only create new StripeProduct with the given stripe product
+        #   data if this ID isn't already saved in the database
+        product_to_save = StripeProduct(
+            id=stripe_product_id,
+            name=stripe_product_name,
+            description=stripe_product_description,
+            image_url=stripe_product_image_url,
+            is_active=stripe_product_is_active,
+            features=stripe_product_features,
+        )
+    else:
+        # Update stripe product data saved in database(regardless of whether this is a newly created stripe product)
+        product_to_save.name = stripe_product_name
+        product_to_save.description = stripe_product_description
+        product_to_save.image_url = stripe_product_image_url
+        product_to_save.is_active = stripe_product_is_active
+        product_to_save.features = stripe_product_features
+
+    session.add(product_to_save)
+    session.commit()
+    session.refresh(product_to_save)
+
+
+def get_list_of_feature_strings_for(features: list[stripe.Product.MarketingFeature]):
+    return [feature["name"] for feature in features]
 
 
 def update_session(checkout_session: stripe.checkout.Session, session):
