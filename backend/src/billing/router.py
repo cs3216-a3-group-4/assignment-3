@@ -444,6 +444,9 @@ def do_tier_upgrade(subscription_id: str, session):
     session.refresh(user)
 
 def reset_user_tier(user_id: int, session):
+    set_user_tier(user_id, FREE_TIER_ID, session)
+
+def set_user_tier(user_id: int, tier_id: int, session):
     user = session.scalars(
         select(User).where(User.id == user_id)
     ).one_or_none()
@@ -456,7 +459,7 @@ def reset_user_tier(user_id: int, session):
             detail="ERROR: Cannot find corresponding user for subscription",
         )
 
-    user.tier_id = FREE_TIER_ID
+    user.tier_id = tier_id
     session.add(user)
     session.commit()
     session.refresh(user)
