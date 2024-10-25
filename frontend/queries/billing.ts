@@ -29,7 +29,7 @@ export const useCreateStripeCheckoutSession = () => {
     onError: (error) => {
       console.error("Error creating Stripe checkout session: ", error);
       // Redirect to checkout failed page
-      router.push("/billing/?error=checkout_failed");
+      router.push("/user/billing/?error=checkout_failed");
     },
   });
 };
@@ -54,7 +54,7 @@ export const useCreateStripeCustomerPortalSession = () => {
     onError: (error) => {
       console.error("Error creating Stripe customer portal session: ", error);
       // Redirect to customer portal failed page
-      router.push("/billing/?error=customer_portal_failed");
+      router.push("/user/billing/?error=customer_portal_failed");
     },
   });
 };
@@ -68,12 +68,12 @@ export const useDowngradeSubscription = () => {
     },
     onSuccess: () => {
       // Redirect to the billing page
-      router.push("/billing/?event=cnl_subs&status=success");
+      router.push("/user/billing/?event=cnl_subs&status=success");
     },
     onError: (error) => {
       console.error("Error cancelling subscription: ", error);
       // Redirect to subscription cancellation failed page
-      router.push("/billing/?event=cnl_subs&status=error&error=cancellation_failed");
+      router.push("/user/billing/?event=cnl_subs&status=error&error=cancellation_failed");
     },
   });
 };
