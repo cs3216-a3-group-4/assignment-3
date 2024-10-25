@@ -37,7 +37,7 @@ CONCEPT_GEN_SYSPROMPT = """
             {
                 "concept": "concept2",
                 "explanation": "An insightful explanation of the concept2"
-            },
+            }
             ]
     }
 
