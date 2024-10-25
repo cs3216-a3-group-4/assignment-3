@@ -148,6 +148,7 @@ const Page = () => {
             </div>
             {user?.subscription && (
               <Button
+                className="w-fit"
                 onClick={onClickManageSubscription}
                 variant="default">
                 Manage Subscription
