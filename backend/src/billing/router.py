@@ -193,31 +193,31 @@ def handle_payment_failure(event):
 
 
 def handle_subscription_created(event, session):
-    checkout_session = event["data"]["object"]
-    update_subscription_for(checkout_session, session)
+    subscription: stripe.Subscription = event["data"]["object"]
+    update_subscription_for(subscription, session)
 
 
 def handle_subscription_canceled(event, session):
-    checkout_session = event["data"]["object"]
-    update_subscription_for(checkout_session, session)
+    subscription: stripe.Subscription = event["data"]["object"]
+    update_subscription_for(subscription, session)
     # TODO: Update user tier_id
 
 
 def handle_subscription_paused(event, session):
-    checkout_session = event["data"]["object"]
-    update_subscription_for(checkout_session, session)
+    subscription: stripe.Subscription = event["data"]["object"]
+    update_subscription_for(subscription, session)
     # TODO: Consider how to notify the frontend about this
 
 
 def handle_subscription_resumed(event, session):
-    checkout_session = event["data"]["object"]
-    update_subscription_for(checkout_session, session)
+    subscription: stripe.Subscription = event["data"]["object"]
+    update_subscription_for(subscription, session)
     # TODO: Consider how to notify the frontend about this
 
 
 def handle_subscription_updated(event, session):
-    checkout_session = event["data"]["object"]
-    update_subscription_for(checkout_session, session)
+    subscription: stripe.Subscription = event["data"]["object"]
+    update_subscription_for(subscription, session)
     # TODO: Update user tier_id if needed
 
 
