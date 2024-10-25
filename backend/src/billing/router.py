@@ -13,6 +13,7 @@ from src.subscriptions.models import Subscription
 from .schemas import CheckoutRequestData
 import stripe
 
+FREE_TIER_ID = 1
 FRONTEND_BILLING_URL_PATH = "user/billing"
 stripe.api_key = STRIPE_API_KEY
 router = APIRouter(prefix="/billing", tags=["billing"])
@@ -199,8 +200,37 @@ def handle_subscription_created(event, session):
 
 def handle_subscription_canceled(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
-    update_subscription_for(subscription, session)
-    # TODO: Update user tier_id
+    subscription_id: str = subscription["id"]
+    subscription_to_delete = session.scalars(
+        select(Subscription).where(Subscription.id == subscription_id)
+    ).one_or_none()
+    if subscription_to_delete is not None:
+        # Delete cancelled subscription from database
+        session.delete(subscription_to_delete)
+        session.commit()
+        
+    # Find user id for the given subscription using stripe_session table
+    stripe_session = session.scalars(
+        select(StripeSession).where(StripeSession.subscription_id == subscription_id)
+    ).one_or_none()
+    if stripe_session is None:
+        print(
+            f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}"""
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""",
+        )
+    if not stripe_session.user_id:
+        print(
+            f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}"""
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""",
+        )
+    # Reset user tier to free tier
+    reset_user_tier(stripe_session.user_id, session)   
 
 
 def handle_subscription_paused(event, session):
@@ -383,6 +413,24 @@ def do_tier_upgrade(subscription_id: str, session):
 
     # Upgrade user tier now that subscription is paid for and active
     user.tier_id = stripe_session.tier_id
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+def reset_user_tier(user_id: int, session):
+    user = session.scalars(
+        select(User).where(User.id == user_id)
+    ).one_or_none()
+    if user is None:
+        print(
+            f"""ERROR: Cannot find user with ID {user_id} to update tier"""
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="ERROR: Cannot find corresponding user for subscription",
+        )
+
+    user.tier_id = FREE_TIER_ID
     session.add(user)
     session.commit()
     session.refresh(user)
