@@ -133,7 +133,7 @@ const Page = () => {
       setUserTier(tierIDToTierName(FREE_TIER_ID));
       setUserTierStatus(TIER_STATUS_ACTIVE);
     }
-  }, [user]);
+  }, [user?.subscription, user?.tier_id]);
 
   return (
     user && (
