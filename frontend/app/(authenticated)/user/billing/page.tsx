@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import PricingTable from "@/components/billing/pricing-table";
@@ -15,6 +15,13 @@ import {
   TierPrice,
 } from "@/types/billing";
 
+const FREE_TIER_ID = 1;
+const TIER_STATUS_ACTIVE = "active";
+
+const toPascalCase = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 const Page = () => {
   const user = useUserStore((store) => store.user);
   const stripeCheckoutMutation = useCreateStripeCheckoutSession();
@@ -25,6 +32,9 @@ const Page = () => {
   const stripeSessionId = searchParams.get("session_id");
   const isCancelled = searchParams.get("cancelled") === "true";
   const router = useRouter();
+
+  const [ userTier, setUserTier ] = useState<string>("");
+  const [ userTierStatus, setUserTierStatus ] = useState<string>("");
 
   const { toast } = useToast();
   // Display payment status toast for 5 secs
@@ -100,6 +110,16 @@ const Page = () => {
     }
   }, [isSuccess, isCancelled, stripeSessionId, toast, router]);
 
+  useEffect(() => {
+    if (user?.subscription) {
+      setUserTierStatus(user.subscription.status);
+      setUserTier(tierIDToTierName(user.tier_id || FREE_TIER_ID));
+    } else {
+      setUserTier(tierIDToTierName(FREE_TIER_ID));
+      setUserTierStatus(TIER_STATUS_ACTIVE);
+    }
+  }, [user]);
+
   return (
     user && (
       <div className="flex flex-col w-full py-8">
@@ -111,11 +131,11 @@ const Page = () => {
             <h2 className="text-2xl 2xl:text-3xl font-bold">Your Tier</h2>
             <div className="flex items-center gap-2">
               <h3 className="text-center">
-                {tierIDToTierName(user.tier_id || 1)} Tier:
+                {userTier} Tier:
               </h3>
               <Chip
                 className="w-fit"
-                label="Active"
+                label={toPascalCase(userTierStatus)}
                 size="lg"
                 variant="primary"
               />
