@@ -519,6 +519,12 @@ export type CreateCustomerPortalSessionBillingCreateCustomerPortalSessionPostRes
 
 export type CreateCustomerPortalSessionBillingCreateCustomerPortalSessionPostError = (HTTPValidationError);
 
+export type DowngradeSubscriptionBillingDowngradeSubscriptionPutData = unknown;
+
+export type DowngradeSubscriptionBillingDowngradeSubscriptionPutResponse = (unknown);
+
+export type DowngradeSubscriptionBillingDowngradeSubscriptionPutError = (HTTPValidationError);
+
 export type GetCategoriesCategoriesGetData = unknown;
 
 export type GetCategoriesCategoriesGetResponse = (Array<CategoryDTO>);
