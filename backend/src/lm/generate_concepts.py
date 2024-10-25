@@ -15,7 +15,7 @@ from src.lm.concept_gen_prompt import CONCEPT_GEN_SYSPROMPT as SYSPROMPT
 
 import asyncio
 
-CONCEPTS_FILE_PATH = "concepts_output.json"
+CONCEPTS_FILE_PATH = "backend/src/scripts/concepts_output.json"
 
 
 class ArticleConceptLM(BaseModel):
@@ -71,16 +71,78 @@ async def generate_concept_from_article(
     )
 
 
+def add_concepts_to_db(article_concepts: list[ArticleConceptsWithId]):
+    with Session(engine) as session:
+        # first, lowercase all concepts in result
+        concepts: list[str] = []
+        for article_concept_with_id in article_concepts:
+            for concept in article_concept_with_id.concepts:
+                concept.concept = concept.concept.lower()
+                concepts.append(concept.concept)
+
+        # query concepts that match
+        existing_concepts = session.scalars(
+            select(Concept).where(Concept.name.in_(concepts))
+        ).all()
+
+        concept_map = {
+            existing_concept.name: existing_concept
+            for existing_concept in existing_concepts
+        }
+
+        # add concept to db if not exist
+        existing_concept_names = [concept.name for concept in existing_concepts]
+
+        missing_concepts_string = set()
+        for article_concept_with_id in article_concepts:
+            article_id = article_concept_with_id.article_id
+
+            cur_article: Article = session.scalars(
+                select(Article).where(Article.id == article_id)
+            ).first()
+            if not cur_article:
+                print(f"Article with id {article_id} does not exist in db")
+            else:
+                print(f"Updating concepts for article {article_id}")
+                cur_article.summary = article_concept_with_id.summary
+
+            for concept in article_concept_with_id.concepts:
+                concept_name = concept.concept
+                if concept_name not in existing_concept_names:
+                    missing_concepts_string.add(concept_name)
+
+        missing_concepts = [
+            Concept(name=concept) for concept in missing_concepts_string
+        ]
+        session.add_all(missing_concepts)
+        session.commit()
+
+        for concept in missing_concepts:
+            session.refresh(concept)
+            concept_map[concept.name] = concept
+
+        # add new models to db
+        results = []
+        for article_concept_with_id in article_concepts:
+            for article_concept_llm in article_concept_with_id.concepts:
+                results.append(
+                    ArticleConcept(
+                        article_id=article_concept_with_id.article_id,
+                        explanation=article_concept_llm.explanation,
+                        concept_id=concept_map[article_concept_llm.concept].id,
+                    )
+                )
+
+        session.add_all(results)
+        session.commit()
+
+
 async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
     with Session(engine) as session:
         # query db for article
         subquery = select(ArticleConcept.article_id)
-        query = (
-            select(Article).where(
-                ~exists(subquery.where(ArticleConcept.article_id == Article.id))
-            )
-            # NOTE: @seeleng: Help to check if this is correct. I think this won't be needed anymore
-            # .options(selectinload(Analysis.event).selectinload(Event.original_article))
+        query = select(Article).where(
+            ~exists(subquery.where(ArticleConcept.article_id == Article.id))
         )
         if limit:
             query = query.limit(limit)
@@ -94,57 +156,7 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
                 tg.create_task(generate_concept_from_article(article, res, semaphore))
 
         if add_to_db:
-            # first, lowercase all concepts in result
-            concepts: list[str] = []
-            for article_concept_with_id in res:
-                for concept in article_concept_with_id.concepts:
-                    concept.concept = concept.concept.lower()
-                    concepts.append(concept.concept)
-
-            # query concepts that match
-            existing_concepts = session.scalars(
-                select(Concept).where(Concept.name.in_(concepts))
-            ).all()
-
-            concept_map = {
-                existing_concept.name: existing_concept
-                for existing_concept in existing_concepts
-            }
-
-            # add concept to db if not exist
-            existing_concept_names = [concept.name for concept in existing_concepts]
-
-            missing_concepts_string = set()
-            for article_concept_with_id in res:
-                for concept in article_concept_with_id.concepts:
-                    concept_name = concept.concept
-                    if concept_name not in existing_concept_names:
-                        missing_concepts_string.add(concept_name)
-
-            missing_concepts = [
-                Concept(name=concept) for concept in missing_concepts_string
-            ]
-            session.add_all(missing_concepts)
-            session.commit()
-
-            for concept in missing_concepts:
-                session.refresh(concept)
-                concept_map[concept.name] = concept
-
-            # add new models to db
-            results = []
-            for article_concept_with_id in res:
-                for article_concept_llm in article_concept_with_id.concepts:
-                    results.append(
-                        ArticleConcept(
-                            article_id=article_concept_with_id.article_id,
-                            explanation=article_concept_llm.explanation,
-                            concept_id=concept_map[article_concept_llm.concept].id,
-                        )
-                    )
-
-            session.add_all(results)
-            session.commit()
+            add_concepts_to_db(res)
 
         # return json in case you need it for something
         with open(CONCEPTS_FILE_PATH, "w") as json_file:
@@ -154,4 +166,4 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 
 if __name__ == "__main__":
     # TODO(marcus): probably remove/change this
-    asyncio.run(generate_concepts(5))
+    asyncio.run(generate_concepts())
