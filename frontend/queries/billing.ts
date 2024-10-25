@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { createCheckoutSessionBillingCreateCheckoutSessionPost } from "@/client/services.gen";
+import { createCheckoutSessionBillingCreateCheckoutSessionPost, createCustomerPortalSessionBillingCreateCustomerPortalSessionPost } from "@/client/services.gen";
 import { useRouter } from "next/navigation";
 
 export const useCreateStripeCheckoutSession = () => {
@@ -30,6 +30,31 @@ export const useCreateStripeCheckoutSession = () => {
       console.error("Error creating Stripe checkout session: ", error);
       // Redirect to checkout failed page
       router.push("/billing/?error=checkout_failed");
+    },
+  });
+};
+
+export const useCreateStripeCustomerPortalSession = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: () => {
+      return createCustomerPortalSessionBillingCreateCustomerPortalSessionPost({}).then(response => {
+        return { data: response.data as { url?: string } };
+      });
+    },
+    onSuccess: (response: { data?: { url?: string } }) => {
+      if (response.data?.url) {
+        // Response contains the Stripe customer portal session URL from backend
+        router.push(response.data.url);
+      } else {
+        console.error("No URL found in the response data");
+      }
+    },
+    onError: (error) => {
+      console.error("Error creating Stripe customer portal session: ", error);
+      // Redirect to customer portal failed page
+      router.push("/billing/?error=customer_portal_failed");
     },
   });
 };
