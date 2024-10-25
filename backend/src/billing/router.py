@@ -66,6 +66,29 @@ async def create_checkout_session(
         }
     except Exception as e:
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
+    
+@routerWithAuth.post("/create-customer-portal-session")
+async def create_customer_portal_session(
+    user: Annotated[User, Depends(get_current_user)],
+):
+    if not user.subscription:
+        print(f"""ERROR: User with ID {user.id} does not have an existing subscription""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="User does not have an existing subscription",
+        )
+    try:
+        stripe_customer_id: str = user.subscription.customer_id
+        # Create a new customer portal session
+        portal_session = stripe.billing_portal.Session.create(
+            customer=stripe_customer_id,
+            return_url=f"""{FRONTEND_URL}/{FRONTEND_BILLING_URL_PATH}""",
+        )
+        return {
+            "url": portal_session.url if portal_session.url else "",
+        }
+    except Exception as e:
+        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.post("/webhook")
