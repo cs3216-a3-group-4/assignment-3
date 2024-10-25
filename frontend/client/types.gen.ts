@@ -513,6 +513,12 @@ export type CreateCheckoutSessionBillingCreateCheckoutSessionPostResponse = (unk
 
 export type CreateCheckoutSessionBillingCreateCheckoutSessionPostError = (HTTPValidationError);
 
+export type CreateCustomerPortalSessionBillingCreateCustomerPortalSessionPostData = unknown;
+
+export type CreateCustomerPortalSessionBillingCreateCustomerPortalSessionPostResponse = (unknown);
+
+export type CreateCustomerPortalSessionBillingCreateCustomerPortalSessionPostError = (HTTPValidationError);
+
 export type GetCategoriesCategoriesGetData = unknown;
 
 export type GetCategoriesCategoriesGetResponse = (Array<CategoryDTO>);
