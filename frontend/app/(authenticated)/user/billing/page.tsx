@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import PricingTable from "@/components/billing/pricing-table";
 import Chip from "@/components/display/chip";
 import { useToast } from "@/hooks/use-toast";
-import { useCreateStripeCheckoutSession } from "@/queries/billing";
+import { useCreateStripeCheckoutSession, useCreateStripeCustomerPortalSession } from "@/queries/billing";
 import { useUserStore } from "@/store/user/user-store-provider";
 import {
   JippyTier,
@@ -14,6 +14,7 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
+import { Button } from "@/components/ui/button";
 
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
@@ -25,6 +26,7 @@ const toPascalCase = (string: string) => {
 const Page = () => {
   const user = useUserStore((store) => store.user);
   const stripeCheckoutMutation = useCreateStripeCheckoutSession();
+  const stripeCustomerPortalMutation = useCreateStripeCustomerPortalSession();
 
   const billingPath = usePathname();
   const searchParams = useSearchParams();
@@ -74,6 +76,10 @@ const Page = () => {
       ],
     },
   ];
+
+  const onClickManageSubscription = () => {
+    stripeCustomerPortalMutation.mutate();
+  }
 
   useEffect(() => {
     if (isSuccess && stripeSessionId) {
@@ -140,6 +146,13 @@ const Page = () => {
                 variant="primary"
               />
             </div>
+            {user?.subscription && (
+              <Button
+                onClick={onClickManageSubscription}
+                variant="default">
+                Manage Subscription
+              </Button>
+            )}
           </div>
           <div className="flex flex-col w-auto gap-4 mx-4 md:mx-16 xl:mx-56 pb-4">
             <h2 className="text-2xl 2xl:text-3xl font-bold">Our Tiers</h2>
