@@ -183,6 +183,18 @@ def handle_payment_success(event, session):
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail="Error processing invoice.paid event due to empty subscription ID in invoice",
         )
+    
+    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
+    if stripe_subscription["status"] == "active":
+        # Check whether the given subscription is already saved in database
+        subscription_to_save = session.scalars(
+            select(Subscription).where(Subscription.id == subscription_id)
+        ).one_or_none()
+        if subscription_to_save is not None:
+            subscription_to_save.status = stripe_subscription["status"]
+            session.add(subscription_to_save)
+            session.commit()
+            session.refresh(subscription_to_save)
 
     # Upgrade user's tier after successful payment
     do_tier_upgrade(subscription_id, session)
