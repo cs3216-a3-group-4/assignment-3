@@ -456,6 +456,16 @@ export type AuthGoogleAuthGoogleGetResponse = (Token);
 
 export type AuthGoogleAuthGoogleGetError = (HTTPValidationError);
 
+export type StripeWebhookBillingWebhookPostData = {
+    headers?: {
+        'Stripe-Signature'?: string;
+    };
+};
+
+export type StripeWebhookBillingWebhookPostResponse = (unknown);
+
+export type StripeWebhookBillingWebhookPostError = (HTTPValidationError);
+
 export type GetUserAuthSessionGetData = unknown;
 
 export type GetUserAuthSessionGetResponse = (UserPublic);
@@ -502,16 +512,6 @@ export type CreateCheckoutSessionBillingCreateCheckoutSessionPostData = {
 export type CreateCheckoutSessionBillingCreateCheckoutSessionPostResponse = (unknown);
 
 export type CreateCheckoutSessionBillingCreateCheckoutSessionPostError = (HTTPValidationError);
-
-export type StripeWebhookBillingWebhookPostData = {
-    headers?: {
-        'stripe-signature'?: string;
-    };
-};
-
-export type StripeWebhookBillingWebhookPostResponse = (unknown);
-
-export type StripeWebhookBillingWebhookPostError = (HTTPValidationError);
 
 export type GetCategoriesCategoriesGetData = unknown;
 
@@ -730,13 +730,17 @@ export type GetArticlesArticlesGetResponse = (IndexResponse_MiniArticleDTO_);
 
 export type GetArticlesArticlesGetError = (HTTPValidationError);
 
-export type GetArticleArticlesIdGetData = {
-    path: {
-        id: number;
+export type GetTopArticlesArticlesTopGetData = {
+    query: {
+        singapore_only: boolean;
     };
 };
 
-export type GetSubscriptionSubscriptionsIdGetData = {
+export type GetTopArticlesArticlesTopGetResponse = (Array<MiniArticleDTO>);
+
+export type GetTopArticlesArticlesTopGetError = (HTTPValidationError);
+
+export type GetArticleArticlesIdGetData = {
     path: {
         id: number;
     };
@@ -747,16 +751,6 @@ export type GetArticleArticlesIdGetResponse = (ArticleDTO);
 export type GetArticleArticlesIdGetError = (HTTPValidationError);
 
 export type AddBookmarkArticlesIdBookmarksPostData = {
-    path: {
-        id: number;
-    };
-};
-
-export type GetSubscriptionSubscriptionsIdGetResponse = (SubscriptionDTO);
-
-export type GetSubscriptionSubscriptionsIdGetError = (HTTPValidationError);
-
-export type GetSubscriptionStatusSubscriptionsIdStatusGetData = {
     path: {
         id: number;
     };
@@ -775,6 +769,32 @@ export type DeleteBookmarkArticlesIdBookmarksDeleteData = {
 export type DeleteBookmarkArticlesIdBookmarksDeleteResponse = (unknown);
 
 export type DeleteBookmarkArticlesIdBookmarksDeleteError = (HTTPValidationError);
+
+export type ReadArticleArticlesIdReadPostData = {
+    path: {
+        id: number;
+    };
+};
+
+export type ReadArticleArticlesIdReadPostResponse = (unknown);
+
+export type ReadArticleArticlesIdReadPostError = (HTTPValidationError);
+
+export type GetSubscriptionSubscriptionsIdGetData = {
+    path: {
+        id: number;
+    };
+};
+
+export type GetSubscriptionSubscriptionsIdGetResponse = (SubscriptionDTO);
+
+export type GetSubscriptionSubscriptionsIdGetError = (HTTPValidationError);
+
+export type GetSubscriptionStatusSubscriptionsIdStatusGetData = {
+    path: {
+        id: number;
+    };
+};
 
 export type GetSubscriptionStatusSubscriptionsIdStatusGetResponse = (SubscriptionStatusType);
 
