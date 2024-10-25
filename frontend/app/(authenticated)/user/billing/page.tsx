@@ -5,8 +5,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import PricingTable from "@/components/billing/pricing-table";
 import Chip from "@/components/display/chip";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useCreateStripeCheckoutSession, useCreateStripeCustomerPortalSession, useDowngradeSubscription } from "@/queries/billing";
+import {
+  useCreateStripeCheckoutSession,
+  useCreateStripeCustomerPortalSession,
+  useDowngradeSubscription,
+} from "@/queries/billing";
 import { useUserStore } from "@/store/user/user-store-provider";
 import {
   JippyTier,
@@ -14,14 +19,13 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import { Button } from "@/components/ui/button";
 
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
 
 const toPascalCase = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
+};
 
 const Page = () => {
   const user = useUserStore((store) => store.user);
@@ -36,8 +40,8 @@ const Page = () => {
   const isCancelled = searchParams.get("cancelled") === "true";
   const router = useRouter();
 
-  const [ userTier, setUserTier ] = useState<string>("");
-  const [ userTierStatus, setUserTierStatus ] = useState<string>("");
+  const [userTier, setUserTier] = useState<string>("");
+  const [userTierStatus, setUserTierStatus] = useState<string>("");
 
   const { toast } = useToast();
   // Display payment status toast for 5 secs
@@ -45,11 +49,11 @@ const Page = () => {
 
   const onClickDowngradeSubscription = () => {
     downgradeSubscription.mutate();
-  }
+  };
 
   const onClickManageSubscription = () => {
     stripeCustomerPortalMutation.mutate();
-  }
+  };
 
   const jippyTiers = [
     {
@@ -141,9 +145,7 @@ const Page = () => {
           <div className="flex flex-col gap-4 w-auto mx-4 md:mx-16 xl:mx-56 pb-4">
             <h2 className="text-2xl 2xl:text-3xl font-bold">Your Tier</h2>
             <div className="flex items-center gap-2">
-              <h3 className="text-center">
-                {userTier} Tier:
-              </h3>
+              <h3 className="text-center">{userTier} Tier:</h3>
               <Chip
                 className="w-fit"
                 label={toPascalCase(userTierStatus)}
@@ -155,7 +157,8 @@ const Page = () => {
               <Button
                 className="w-fit"
                 onClick={onClickManageSubscription}
-                variant="default">
+                variant="default"
+              >
                 Manage Subscription
               </Button>
             )}
