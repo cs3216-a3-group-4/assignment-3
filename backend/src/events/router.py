@@ -6,7 +6,13 @@ from sqlalchemy.orm import selectinload, aliased
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.events.dependencies import retrieve_event
-from src.events.models import Article, Bookmark, Category, Event, UserReadEvent
+from src.events.models import (
+    Article,
+    Bookmark,
+    Category,
+    Event,
+    UserReadEvent,
+)
 from src.common.dependencies import get_session
 from src.events.schemas import EventDTO, EventIndexResponse
 from src.notes.models import Note, NoteType
@@ -30,7 +36,11 @@ def get_events(
     bookmarks: bool = False,
     singapore_only: bool = False,
 ) -> EventIndexResponse:
-    query = select(Event.id).distinct()
+    query = (
+        select(Event.id)
+        .distinct()
+        .where(Event.original_article.has(Article.useless == False))  # noqa: E712
+    )  # noqa: E712
     if start_date is not None:
         query = query.where(Event.original_article.has(Article.date >= start_date))
     if end_date is not None:

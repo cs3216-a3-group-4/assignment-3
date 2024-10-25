@@ -42,11 +42,11 @@ const EssayFeedbackPage = () => {
     gpQuestion: z
       .string()
       .min(10, "GP question must be at least 10 characters")
-      .max(120, "GP question must be at most 120 characters"),
+      .max(200, "GP question must be at most 200 characters"),
     essay: z
       .string()
-      .min(500, "GP question must be at least 500 characters")
-      .max(20000, "GP question must be at most 20000 characters"),
+      .min(500, "Essay must be at least 500 characters")
+      .max(20000, "Essay must be at most 20000 characters"),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({

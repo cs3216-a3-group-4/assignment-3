@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { CategoryDTO, MiniEventDTO } from "@/client";
@@ -22,10 +23,16 @@ import { getCategories } from "@/queries/category";
 import { getEventsForCategory } from "@/queries/event";
 
 const Page = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const categoryId = parseInt(params.id);
   const [categoryName, setCategoryName] = useState<string>("");
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
-  const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
+
+  const initialSingaporeOnly = searchParams.get("singaporeOnly") === "true";
+  const [singaporeOnly, setSingaporeOnly] =
+    useState<boolean>(initialSingaporeOnly);
 
   const { page, pageCount, getPageUrl } = usePagination({ totalCount });
   const { data: events, isSuccess: isEventsLoaded } = useQuery(
@@ -49,6 +56,12 @@ const Page = ({ params }: { params: { id: string } }) => {
     }
   }, [categories, isCategoriesLoaded, categoryId]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("singaporeOnly", singaporeOnly.toString());
+    router.push(`?${params.toString()}`);
+  });
+
   return (
     <div className="relative w-full h-full">
       <div
@@ -69,7 +82,7 @@ const Page = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="flex items-center w-fit px-1 md:px-5 xl:px-9">
             <Select
-              defaultValue="global"
+              defaultValue={singaporeOnly ? "singapore-only" : "global"}
               onValueChange={(value) =>
                 setSingaporeOnly(value === "singapore-only")
               }

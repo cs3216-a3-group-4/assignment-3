@@ -34,8 +34,7 @@ def create_essay(
     essay = Essay(question=data.question, user_id=user.id)
 
     paragraphs = []
-    for index, paragraph in enumerate(data.paragraphs):
-        # TODO: Categorise the paragraph?
+    for paragraph in data.paragraphs:
         paragraph_orm = Paragraph(type=paragraph.type, content=paragraph.content)
 
         comments = get_comments(paragraph, data.question)
@@ -71,48 +70,40 @@ def get_essay(
         .where(Essay.id == id)
         .where(Essay.user_id == user.id)
         .options(
-            selectinload(
-                Essay.paragraphs,
-                Paragraph.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
-                Analysis.category,
-            ),
-            selectinload(
-                Essay.paragraphs,
-                Paragraph.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
-                Analysis.event,
-            ),
-            selectinload(
-                Essay.paragraphs,
-                Paragraph.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
+            selectinload(Essay.paragraphs)
+            .selectinload(Paragraph.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(Analysis.category),
+            selectinload(Essay.paragraphs)
+            .selectinload(Paragraph.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(Analysis.event),
+            selectinload(Essay.paragraphs)
+            .selectinload(Paragraph.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(
                 Analysis.likes.and_(Like.point_id.is_(None)).and_(
                     Like.user_id == user.id
                 ),
             ),
-            selectinload(
-                Essay.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
-                Analysis.category,
-            ),
-            selectinload(
-                Essay.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
-                Analysis.event,
-            ),
-            selectinload(
-                Essay.comments,
-                Comment.comment_analysises,
-                CommentAnalysis.analysis,
+            selectinload(Essay.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(Analysis.category),
+            selectinload(Essay.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(Analysis.event),
+            selectinload(Essay.comments)
+            .selectinload(Comment.comment_analysises)
+            .selectinload(CommentAnalysis.analysis)
+            .selectinload(
                 Analysis.likes.and_(Like.point_id.is_(None)).and_(
                     Like.user_id == user.id
-                ),
+                )
             ),
         )
     )

@@ -1,7 +1,7 @@
-from sqlalchemy import ForeignKey, and_
+from sqlalchemy import ForeignKey, ForeignKeyConstraint, and_
 from src.common.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship, foreign
-from src.events.models import Analysis
+from src.events.models import Analysis, ArticleConcept
 from src.notes.models import Note
 
 
@@ -42,14 +42,17 @@ class Point(Base):
     )
     positive: Mapped[bool]
 
-    # analysises = relationship("Analysis", secondary="point_analysis")
     point_analysises: Mapped[list["PointAnalysis"]] = relationship(
         back_populates="point"
     )
 
+    point_article_concepts: Mapped[list["PointArticleConcept"]] = relationship(
+        back_populates="point"
+    )
     fallback: Mapped["Fallback"] = relationship(back_populates="point")
 
 
+# TODO: deprecate PointAnalysis
 class PointAnalysis(Base):
     __tablename__ = "point_analysis"
 
@@ -61,6 +64,28 @@ class PointAnalysis(Base):
 
     point: Mapped[Point] = relationship(back_populates="point_analysises")
     analysis: Mapped[Analysis] = relationship(backref="point_analysises")
+
+
+class PointArticleConcept(Base):
+    __tablename__ = "point_article_concept"
+
+    article_id: Mapped[int]
+    concept_id: Mapped[int]
+
+    point_id: Mapped[int] = mapped_column(ForeignKey("point.id"), primary_key=True)
+    elaboration: Mapped[str]
+
+    point: Mapped[Point] = relationship(back_populates="point_article_concepts")
+    article_concept: Mapped[ArticleConcept] = relationship(
+        backref="point_article_concepts"
+    )
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["article_id", "concept_id"],
+            ["article_concept.article_id", "article_concept.concept_id"],
+        ),
+    )
 
 
 class Fallback(Base):

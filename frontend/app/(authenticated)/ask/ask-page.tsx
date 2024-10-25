@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/card";
 import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
 
-const MAX_GP_QUESTION_LEN: number = 120; // max character count
+const MAX_GP_QUESTION_LEN: number = 200; // max character count
 
 // TODO: fix this
 const EXAMPLE_GP_QUESTIONS: string[] = [

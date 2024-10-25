@@ -12,6 +12,7 @@ from src.user_questions.router import router as user_questions_router
 from src.notes.router import router as notes_router, points_router
 from src.likes.router import router as likes_router
 from src.essays.router import router as essays_router
+from src.articles.router import router as articles_router
 
 
 from contextlib import asynccontextmanager
@@ -30,7 +31,7 @@ async def lifespan(app: FastAPI):
     # Run after server stops
 
 
-server = FastAPI(lifespan=lifespan)
+server = FastAPI(title="Jippy 🐸 Backend", lifespan=lifespan)
 
 origins = [FRONTEND_URL]
 
@@ -54,5 +55,6 @@ authenticated_router.include_router(notes_router)
 authenticated_router.include_router(points_router)
 authenticated_router.include_router(likes_router)
 authenticated_router.include_router(essays_router)
+authenticated_router.include_router(articles_router)
 
 server.include_router(authenticated_router)

@@ -1,8 +1,8 @@
 from enum import Enum
-from sqlalchemy import ForeignKey, and_
+from sqlalchemy import ForeignKey, ForeignKeyConstraint, and_
 from src.common.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship, foreign
-from src.events.models import Analysis
+from src.events.models import Analysis, ArticleConcept
 
 
 class CommentParentType(str, Enum):
@@ -29,6 +29,9 @@ class Comment(Base):
     comment_analysises: Mapped[list["CommentAnalysis"]] = relationship(
         back_populates="comment"
     )
+    comment_article_concepts: Mapped[list["CommentArticleConcept"]] = relationship(
+        back_populates="comment"
+    )
 
     __mapper_args__ = {
         "polymorphic_on": "parent_type",
@@ -50,6 +53,7 @@ class ParagraphComment(Comment):
     }
 
 
+# TODO: deprecate CommentAnalysis
 class CommentAnalysis(Base):
     __tablename__ = "comment_analysis"
 
@@ -61,6 +65,27 @@ class CommentAnalysis(Base):
 
     comment: Mapped[Comment] = relationship(back_populates="comment_analysises")
     analysis: Mapped[Analysis] = relationship(backref="comment_analysises")
+
+
+class CommentArticleConcept(Base):
+    __tablename__ = "comment_article_concept"
+
+    comment_id: Mapped[int] = mapped_column(ForeignKey("comment.id"), primary_key=True)
+    skill_issue: Mapped[str]
+    article_id: Mapped[int]
+    concept_id: Mapped[int]
+
+    comment: Mapped[Comment] = relationship(back_populates="comment_article_concepts")
+    article_concept: Mapped[ArticleConcept] = relationship(
+        backref="comment_article_concepts"
+    )
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["article_id", "concept_id"],
+            ["article_concept.article_id", "article_concept.concept_id"],
+        ),
+    )
 
 
 class Essay(Base):
