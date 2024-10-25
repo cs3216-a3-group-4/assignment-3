@@ -236,6 +236,31 @@ def handle_subscription_canceled(event, session):
 def handle_subscription_paused(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
     update_subscription_for(subscription, session)
+
+    subscription_id: str = subscription["id"]
+    # Find user id for the given subscription using stripe_session table
+    stripe_session = session.scalars(
+        select(StripeSession).where(StripeSession.subscription_id == subscription_id)
+    ).one_or_none()
+    if stripe_session is None:
+        print(
+            f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}"""
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""",
+        )
+    if not stripe_session.user_id:
+        print(
+            f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}"""
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""",
+        )
+    # Reset user tier to free tier
+    reset_user_tier(stripe_session.user_id, session)
+
     # TODO: Consider how to notify the frontend about this
 
 
