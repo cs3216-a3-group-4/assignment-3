@@ -259,6 +259,7 @@ def handle_subscription_paused(event, session):
             detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""",
         )
     # Reset user tier to free tier
+    ## TODO: Don't downgrade user's tier but just detect that the subscription is paused
     reset_user_tier(stripe_session.user_id, session)
 
     # TODO: Consider how to notify the frontend about this
