@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import PricingTable from "@/components/billing/pricing-table";
 import Chip from "@/components/display/chip";
 import { useToast } from "@/hooks/use-toast";
-import { useCreateStripeCheckoutSession, useCreateStripeCustomerPortalSession } from "@/queries/billing";
+import { useCreateStripeCheckoutSession, useCreateStripeCustomerPortalSession, useDowngradeSubscription } from "@/queries/billing";
 import { useUserStore } from "@/store/user/user-store-provider";
 import {
   JippyTier,
@@ -27,6 +27,7 @@ const Page = () => {
   const user = useUserStore((store) => store.user);
   const stripeCheckoutMutation = useCreateStripeCheckoutSession();
   const stripeCustomerPortalMutation = useCreateStripeCustomerPortalSession();
+  const downgradeSubscription = useDowngradeSubscription();
 
   const billingPath = usePathname();
   const searchParams = useSearchParams();
@@ -42,11 +43,19 @@ const Page = () => {
   // Display payment status toast for 5 secs
   const PAYMENT_TOAST_DURATION = 5000;
 
+  const onClickDowngradeSubscription = () => {
+    downgradeSubscription.mutate();
+  }
+
+  const onClickManageSubscription = () => {
+    stripeCustomerPortalMutation.mutate();
+  }
+
   const jippyTiers = [
     {
       tierName: JippyTier.Free,
       isPurchased: user?.tier_id == JippyTierID.Free,
-      onClickBuy: () => {},
+      onClickBuy: onClickDowngradeSubscription,
       price: TierPrice.Free,
       tierDescription: "Basic features for GP revision",
       tierFeatures: [
@@ -76,10 +85,6 @@ const Page = () => {
       ],
     },
   ];
-
-  const onClickManageSubscription = () => {
-    stripeCustomerPortalMutation.mutate();
-  }
 
   useEffect(() => {
     if (isSuccess && stripeSessionId) {
