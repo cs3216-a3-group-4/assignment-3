@@ -66,13 +66,16 @@ async def create_checkout_session(
         }
     except Exception as e:
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
-    
+
+
 @routerWithAuth.post("/create-customer-portal-session")
 async def create_customer_portal_session(
     user: Annotated[User, Depends(get_current_user)],
 ):
     if not user.subscription:
-        print(f"""ERROR: User with ID {user.id} does not have an existing subscription""")
+        print(
+            f"""ERROR: User with ID {user.id} does not have an existing subscription"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail="User does not have an existing subscription",
@@ -97,7 +100,9 @@ async def downgrade_subscription(
     user: Annotated[User, Depends(get_current_user)],
 ):
     if not user.subscription:
-        print(f"""ERROR: User with ID {user.id} does not have an existing subscription, nothing to downgrade""")
+        print(
+            f"""ERROR: User with ID {user.id} does not have an existing subscription, nothing to downgrade"""
+        )
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
             detail="User does not have an existing subscription to downgrade",
@@ -116,6 +121,7 @@ async def downgrade_subscription(
     except Exception as e:
         traceback.print_exception(e)
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
+
 
 @router.post("/webhook")
 async def stripe_webhook(
@@ -232,7 +238,7 @@ def handle_payment_success(event, session):
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail="Error processing invoice.paid event due to empty subscription ID in invoice",
         )
-    
+
     stripe_subscription = stripe.Subscription.retrieve(subscription_id)
     if stripe_subscription["status"] == "active":
         # Check whether the given subscription is already saved in database
@@ -246,7 +252,10 @@ def handle_payment_success(event, session):
             session.refresh(subscription_to_save)
 
     billing_reason = invoice["billing_reason"]
-    if billing_reason == "subscription_create" or billing_reason == "subscription_update":
+    if (
+        billing_reason == "subscription_create"
+        or billing_reason == "subscription_update"
+    ):
         # Subscription has changed(i.e. new tier), upgrade user's tier after successful payment
         do_tier_upgrade(subscription_id, session)
 
@@ -271,7 +280,7 @@ def handle_subscription_canceled(event, session):
         # Delete cancelled subscription from database
         session.delete(subscription_to_delete)
         session.commit()
-        
+
     # Find user id for the given subscription using stripe_session table
     stripe_session = session.scalars(
         select(StripeSession).where(StripeSession.subscription_id == subscription_id)
@@ -293,7 +302,7 @@ def handle_subscription_canceled(event, session):
             detail=f"""ERROR: Cannot identify corresponding user for subscription with ID {subscription_id}""",
         )
     # Reset user tier to free tier
-    reset_user_tier(stripe_session.user_id, session)   
+    reset_user_tier(stripe_session.user_id, session)
 
 
 def handle_subscription_paused(event, session):
@@ -333,7 +342,7 @@ def handle_subscription_resumed(event, session):
     update_subscription_for(subscription, session)
 
     subscription_id: str = subscription["id"]
-    # Upgrade tier here since invoice.paid event might not be triggered, but we 
+    # Upgrade tier here since invoice.paid event might not be triggered, but we
     #   downgrade the user tier when subscription is paused
     do_tier_upgrade(subscription_id, session)
 
@@ -512,17 +521,15 @@ def do_tier_upgrade(subscription_id: str, session):
     session.commit()
     session.refresh(user)
 
+
 def reset_user_tier(user_id: int, session):
     set_user_tier(user_id, FREE_TIER_ID, session)
 
+
 def set_user_tier(user_id: int, tier_id: int, session):
-    user = session.scalars(
-        select(User).where(User.id == user_id)
-    ).one_or_none()
+    user = session.scalars(select(User).where(User.id == user_id)).one_or_none()
     if user is None:
-        print(
-            f"""ERROR: Cannot find user with ID {user_id} to update tier"""
-        )
+        print(f"""ERROR: Cannot find user with ID {user_id} to update tier""")
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail="ERROR: Cannot find corresponding user for subscription",
