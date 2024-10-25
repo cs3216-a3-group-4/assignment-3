@@ -88,6 +88,7 @@ async def create_customer_portal_session(
             "url": portal_session.url if portal_session.url else "",
         }
     except Exception as e:
+        traceback.print_exception(e)
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
 
 
