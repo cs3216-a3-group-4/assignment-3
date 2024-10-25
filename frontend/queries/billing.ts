@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { createCheckoutSessionBillingCreateCheckoutSessionPost, createCustomerPortalSessionBillingCreateCustomerPortalSessionPost } from "@/client/services.gen";
+import { createCheckoutSessionBillingCreateCheckoutSessionPost, createCustomerPortalSessionBillingCreateCustomerPortalSessionPost, downgradeSubscriptionBillingDowngradeSubscriptionPut } from "@/client/services.gen";
 import { useRouter } from "next/navigation";
 
 export const useCreateStripeCheckoutSession = () => {
@@ -55,6 +55,25 @@ export const useCreateStripeCustomerPortalSession = () => {
       console.error("Error creating Stripe customer portal session: ", error);
       // Redirect to customer portal failed page
       router.push("/billing/?error=customer_portal_failed");
+    },
+  });
+};
+
+export const useDowngradeSubscription = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: () => {
+      return downgradeSubscriptionBillingDowngradeSubscriptionPut({});
+    },
+    onSuccess: () => {
+      // Redirect to the billing page
+      router.push("/billing/?event=cnl_subs&status=success");
+    },
+    onError: (error) => {
+      console.error("Error cancelling subscription: ", error);
+      // Redirect to subscription cancellation failed page
+      router.push("/billing/?event=cnl_subs&status=error&error=cancellation_failed");
     },
   });
 };
