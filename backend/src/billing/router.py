@@ -92,6 +92,31 @@ async def create_customer_portal_session(
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
 
 
+@routerWithAuth.put("/downgrade-subscription")
+async def downgrade_subscription(
+    user: Annotated[User, Depends(get_current_user)],
+):
+    if not user.subscription:
+        print(f"""ERROR: User with ID {user.id} does not have an existing subscription, nothing to downgrade""")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="User does not have an existing subscription to downgrade",
+        )
+    try:
+        # Call stripe API to cancel subscription immediately
+        stripe_subscription_id: str = user.subscription.id
+        stripe_subscription = stripe.Subscription.retrieve(stripe_subscription_id)
+        stripe_subscription.delete(prorate=False)
+
+        return Response(
+            content='{"status": "success"}',
+            media_type="application/json",
+            status_code=HTTPStatus.OK,
+        )
+    except Exception as e:
+        traceback.print_exception(e)
+        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e))
+
 @router.post("/webhook")
 async def stripe_webhook(
     request: Request,
@@ -237,8 +262,8 @@ def handle_subscription_created(event, session):
 
 
 def handle_subscription_canceled(event, session):
-    subscription: stripe.Subscription = event["data"]["object"]
-    subscription_id: str = subscription["id"]
+    # Stripe event object is a stripe.Subscription, get its ID
+    subscription_id = event["data"]["object"]["id"]
     subscription_to_delete = session.scalars(
         select(Subscription).where(Subscription.id == subscription_id)
     ).one_or_none()
