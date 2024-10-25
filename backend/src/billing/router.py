@@ -509,6 +509,7 @@ def update_subscription_for(subscription: stripe.Subscription, session, is_new_s
     stripe_subscription = stripe.Subscription.retrieve(subscription_id)
     subscription_data = stripe_subscription["items"]["data"][0]
     price_id: str = subscription_data["price"]["id"]
+    subscription_status = stripe_subscription["status"]
 
     if is_new_subscription:
         # Delete all existing subscriptions for this user from our database
@@ -554,7 +555,7 @@ def update_subscription_for(subscription: stripe.Subscription, session, is_new_s
         subscription_to_save.subscription_cancelled_date = datetime.fromtimestamp(
             stripe_subscription["canceled_at"]
         )
-    subscription_to_save.status = stripe_subscription["status"]
+    subscription_to_save.status = subscription_status
 
     stripe_session = session.scalars(
         select(StripeSession).where(StripeSession.subscription_id == subscription_id)
@@ -568,6 +569,10 @@ def update_subscription_for(subscription: stripe.Subscription, session, is_new_s
     session.add(subscription_to_save)
     session.commit()
     session.refresh(subscription_to_save)
+
+    if subscription_status != "active" and stripe_session.user_id:
+        # Reset user tier to free tier if subscription update is a cancellation or the like
+        reset_user_tier(stripe_session.user_id, session)
 
 
 def do_tier_upgrade(subscription_id: str, session):
