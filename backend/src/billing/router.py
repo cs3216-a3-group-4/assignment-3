@@ -271,7 +271,9 @@ def handle_payment_failure(event):
 
 def handle_subscription_created(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
-    update_subscription_for(subscription, session)
+    # Insert subscription data into our database
+    ## But check and delete all existing subscriptions for this user first
+    update_subscription_for(subscription, session, True)
 
 
 def handle_subscription_canceled(event, session):
@@ -484,7 +486,7 @@ def update_session(checkout_session: stripe.checkout.Session, session):
         session.refresh(stripe_session)
 
 
-def update_subscription_for(subscription: stripe.Subscription, session):
+def update_subscription_for(subscription: stripe.Subscription, session, is_new_subscription: bool = False):
     if not subscription["id"]:
         print(
             f"""ERROR: Invalid subscription ID received when processing subscription update: {subscription["id"]}"""
@@ -507,6 +509,21 @@ def update_subscription_for(subscription: stripe.Subscription, session):
     stripe_subscription = stripe.Subscription.retrieve(subscription_id)
     subscription_data = stripe_subscription["items"]["data"][0]
     price_id: str = subscription_data["price"]["id"]
+
+    if is_new_subscription:
+        # Delete all existing subscriptions for this user from our database
+        ## This prevents duplicate subscriptions for the same user
+        other_subscriptions = session.scalars(
+            select(Subscription).where(Subscription.customer_id == customer_id).where(Subscription.id != subscription_id)
+        ).all()
+        for other_subscription in other_subscriptions:
+            if other_subscription.status == "active":
+                # Cancel existing subscription if it's still active
+                stripe.Subscription.delete(other_subscription.id)
+            # Delete subscription only after it's no longer active
+            session.delete(other_subscription)
+        session.commit()
+
     # Check whether the given subscription is already saved in database
     subscription_to_save = session.scalars(
         select(Subscription).where(Subscription.id == subscription_id)
