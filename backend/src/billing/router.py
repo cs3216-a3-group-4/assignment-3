@@ -196,8 +196,10 @@ def handle_payment_success(event, session):
             session.commit()
             session.refresh(subscription_to_save)
 
-    # Upgrade user's tier after successful payment
-    do_tier_upgrade(subscription_id, session)
+    billing_reason = invoice["billing_reason"]
+    if billing_reason == "subscription_create" or billing_reason == "subscription_update":
+        # Subscription has changed(i.e. new tier), upgrade user's tier after successful payment
+        do_tier_upgrade(subscription_id, session)
 
 
 def handle_payment_failure(event):
@@ -285,7 +287,7 @@ def handle_subscription_resumed(event, session):
     # Upgrade tier here since invoice.paid event might not be triggered, but we 
     #   downgrade the user tier when subscription is paused
     do_tier_upgrade(subscription_id, session)
-    
+
     # TODO: Consider how to notify the frontend about this
 
 
