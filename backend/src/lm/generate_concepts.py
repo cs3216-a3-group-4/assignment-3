@@ -185,6 +185,7 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 
 
 if __name__ == "__main__":
+    pass
     # TODO(marcus): probably remove/change this
     # pass
     asyncio.run(generate_concepts(4000))

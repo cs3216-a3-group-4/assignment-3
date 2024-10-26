@@ -46,9 +46,9 @@ export type ArticleDTO = {
     date: string;
     image_url: string;
     categories: Array<CategoryDTO>;
+    bookmarks: Array<BookmarkDTO>;
     article_concepts: Array<ArticleConceptDTO>;
     original_events: Array<EventWithoutArticleDTO>;
-    bookmarks: Array<BookmarkDTO>;
     notes: Array<NoteDTO>;
 };
 
@@ -244,6 +244,7 @@ export type MiniArticleDTO = {
     date: string;
     image_url: string;
     categories: Array<CategoryDTO>;
+    bookmarks: Array<BookmarkDTO>;
 };
 
 export type MiniEventDTO = {
@@ -691,6 +692,16 @@ export type GetArticlesArticlesGetResponse = (IndexResponse_MiniArticleDTO_);
 
 export type GetArticlesArticlesGetError = (HTTPValidationError);
 
+export type GetTopArticlesArticlesTopGetData = {
+    query: {
+        singapore_only: boolean;
+    };
+};
+
+export type GetTopArticlesArticlesTopGetResponse = (Array<MiniArticleDTO>);
+
+export type GetTopArticlesArticlesTopGetError = (HTTPValidationError);
+
 export type GetArticleArticlesIdGetData = {
     path: {
         id: number;
@@ -720,3 +731,13 @@ export type DeleteBookmarkArticlesIdBookmarksDeleteData = {
 export type DeleteBookmarkArticlesIdBookmarksDeleteResponse = (unknown);
 
 export type DeleteBookmarkArticlesIdBookmarksDeleteError = (HTTPValidationError);
+
+export type ReadArticleArticlesIdReadPostData = {
+    path: {
+        id: number;
+    };
+};
+
+export type ReadArticleArticlesIdReadPostResponse = (unknown);
+
+export type ReadArticleArticlesIdReadPostError = (HTTPValidationError);

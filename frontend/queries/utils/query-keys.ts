@@ -7,4 +7,5 @@ export enum QueryKeys {
   Points = "points",
   Notes = "notes",
   Essays = "essays",
+  Articles = "articles",
 }
