@@ -32,12 +32,19 @@ def retrieve_article(
             selectinload(Article.article_concepts)
             .selectinload(ArticleConcept.concept)
             .selectinload(Concept.notes),
+            selectinload(Article.article_concepts)
+            .selectinload(ArticleConcept.concept)
+            .selectinload(
+                Concept.likes.and_(Like.point_id.is_(None))
+                .and_(Like.analysis_id.is_(None))
+                .and_(Like.user_id == user.id)
+            ),
             selectinload(Article.original_events)
             .selectinload(Event.analysises)
             .selectinload(
-                Analysis.likes.and_(Like.point_id.is_(None)).and_(
-                    Like.user_id == user.id
-                )
+                Analysis.likes.and_(Like.point_id.is_(None))
+                .and_(Like.concept_id.is_(None))
+                .and_(Like.user_id == user.id)
             ),
             selectinload(Article.original_events)
             .selectinload(Event.analysises)

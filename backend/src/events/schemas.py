@@ -86,6 +86,7 @@ class ConceptMiniDTO(BaseModel):
 
     id: int
     name: str
+    likes: list[LikeDTO]
 
 
 class ConceptDTO(ConceptMiniDTO):

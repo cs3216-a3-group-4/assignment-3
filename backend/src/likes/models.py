@@ -21,4 +21,5 @@ class Like(Base):
     # relationships
     point = relationship("Point", backref="likes")
     analysis = relationship("Analysis", backref="likes")
+    concept = relationship("Concept", backref="likes")
     user = relationship("User", backref="likes")
