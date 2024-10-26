@@ -1,4 +1,4 @@
-export { createClient } from "./core/";
+export { createClient } from './core/';
 export type {
   Client,
   Config,
@@ -6,10 +6,10 @@ export type {
   RequestOptions,
   RequestOptionsBase,
   RequestResult,
-} from "./core/types";
+} from './core/types';
 export {
   createConfig,
   formDataBodySerializer,
   jsonBodySerializer,
   urlSearchParamsBodySerializer,
-} from "./core/utils";
+} from './core/utils';

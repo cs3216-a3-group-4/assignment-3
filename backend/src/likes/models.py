@@ -14,6 +14,7 @@ class Like(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     point_id: Mapped[int] = mapped_column(ForeignKey("point.id"), nullable=True)
     analysis_id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), nullable=True)
+    concept_id: Mapped[int] = mapped_column(ForeignKey("concept.id"), nullable=True)
     type: Mapped[LikeType]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 

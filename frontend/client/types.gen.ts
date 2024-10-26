@@ -231,6 +231,7 @@ export type LikeDTO = {
 export type LikeData = {
   point_id?: number | null;
   analysis_id?: number | null;
+  concept_id?: number | null;
   type: LikeType;
 };
 

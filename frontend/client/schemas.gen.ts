@@ -1044,6 +1044,17 @@ export const LikeDataSchema = {
       ],
       title: "Analysis Id",
     },
+    concept_id: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Concept Id",
+    },
     type: {
       $ref: "#/components/schemas/LikeType",
     },
