@@ -43,6 +43,9 @@ const CONCEPT_ID_PREFIX = "concept-";
 
 const ArticleConcepts = ({ article, showAnnotations }: Props) => {
   const user = useUserStore((state) => state.user);
+  const conceptIdStrs = article.article_concepts.map((article_concept) =>
+    article_concept.concept.id.toString(),
+  );
 
   const [highlightSelection, setHighlightSelection] =
     useState<HighlightSelection | null>(null);
@@ -147,7 +150,11 @@ const ArticleConcepts = ({ article, showAnnotations }: Props) => {
           AI-powered topical analysis
         </span>
       </div>
-      <Accordion className="flex flex-col gap-y-6" type="multiple">
+      <Accordion
+        className="flex flex-col gap-y-6"
+        defaultValue={conceptIdStrs}
+        type="multiple"
+      >
         {article.article_concepts.map((article_concept) => {
           const content = article_concept.explanation;
           const concept = article_concept.concept;
@@ -193,7 +200,7 @@ const ArticleConcepts = ({ article, showAnnotations }: Props) => {
               )}
               id={"concept-" + concept.id}
               key={concept.id}
-              value={concept.name}
+              value={concept.id.toString()}
             >
               <AccordionTrigger
                 chevronClassName="h-6 w-6 stroke-[2.5]"
