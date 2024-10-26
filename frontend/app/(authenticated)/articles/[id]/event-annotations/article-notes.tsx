@@ -4,23 +4,23 @@ import { useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { NotebookIcon } from "lucide-react";
 
-import { EventDTO } from "@/client";
+import { ArticleDTO } from "@/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAddEventNote, useEditEventNote } from "@/queries/note";
+import { useAddArticleNote, useEditArticleNote } from "@/queries/note";
 
 import NoteForm, { NoteFormType } from "./note-form";
 import NoteItem from "./note-item";
 
 interface Props {
-  event: EventDTO;
+  article: ArticleDTO;
 }
 
-const EventNotes = ({ event }: Props) => {
-  const addNoteMutation = useAddEventNote(event.id);
-  const editNoteMutation = useEditEventNote(event.id);
+const ArticleNotes = ({ article }: Props) => {
+  const addNoteMutation = useAddArticleNote(article.id);
+  const editNoteMutation = useEditArticleNote(article.id);
   const [activeTab, setActiveTab] = useState<string>("saved");
-  const numNotes = event?.notes ? event.notes.length : 0;
+  const numNotes = article?.notes ? article.notes.length : 0;
 
   const handleAddNote: SubmitHandler<NoteFormType> = ({
     content,
@@ -68,15 +68,15 @@ const EventNotes = ({ event }: Props) => {
               </TabsTrigger>
             </TabsList>
             <TabsContent className="flex flex-col gap-y-8" value="saved">
-              {event.notes.map((note) => (
+              {article.notes.map((note) => (
                 <NoteItem
-                  eventId={event.id}
+                  articleId={article.id}
                   handleEditNote={handleEditNote}
                   key={note.id}
                   note={note}
                 />
               ))}
-              {event.notes.length === 0 && (
+              {article.notes.length === 0 && (
                 <div className="bg-gray-200/40 text-gray-700 px-8 py-4 text-lg rounded">
                   No notes yet.{" "}
                   <Button
@@ -100,4 +100,4 @@ const EventNotes = ({ event }: Props) => {
   );
 };
 
-export default EventNotes;
+export default ArticleNotes;

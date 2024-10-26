@@ -5,7 +5,7 @@ import { QueryKeys } from "@/queries/utils/query-keys";
 
 export const getArticle = (id: number) =>
   queryOptions({
-    queryKey: [QueryKeys.Events, id],
+    queryKey: [QueryKeys.Articles, id],
     queryFn: () =>
       getArticleArticlesIdGet({
         withCredentials: true,

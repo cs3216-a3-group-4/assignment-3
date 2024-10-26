@@ -13,6 +13,34 @@ import {
 
 import { QueryKeys } from "./utils/query-keys";
 
+export const useAddArticleNote = (article_id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      category_id,
+      content,
+    }: {
+      category_id: number;
+      content: string;
+    }) => {
+      return createNoteNotesPost({
+        body: {
+          content,
+          parent_id: article_id,
+          parent_type: "article",
+          category_id,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Articles, article_id],
+      });
+    },
+  });
+};
+
+// TODO: deprecate
 export const useAddEventNote = (event_id: number) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -71,6 +99,37 @@ export const useAddAnalysisNote = (event_id: number) => {
   });
 };
 
+export const useEditArticleNote = (article_id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      id,
+      content,
+      category_id,
+    }: {
+      id: number;
+      content: string;
+      category_id?: number;
+    }) => {
+      return updateNoteNotesIdPut({
+        body: {
+          content,
+          category_id,
+        },
+        path: {
+          id,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Articles, article_id],
+      });
+    },
+  });
+};
+
+// TODO: depcreate
 export const useEditEventNote = (event_id: number) => {
   const queryClient = useQueryClient();
   return useMutation({
