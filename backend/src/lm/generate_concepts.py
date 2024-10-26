@@ -187,7 +187,7 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 if __name__ == "__main__":
     # TODO(marcus): probably remove/change this
     # pass
-    asyncio.run(generate_concepts(20))
+    asyncio.run(generate_concepts(4000))
 
     # res_2 = {
     #     "summary": "Thailand's Constitutional Court is set to deliver a verdict on August 7 regarding the potential dissolution of the opposition party Move Forward, following a petition from the election commission. The case centers around the party's past campaign to amend the royal insult law, a deeply sensitive issue tied to the monarchy's protection in Thailand. Move Forward, which gained significant urban and youth support during last year's elections, has denied any wrongdoing and asserts that their intentions were to strengthen the constitutional monarchy. The impending decision comes amid other political controversies, adding to the uncertainties within Thailand's political landscape.",
