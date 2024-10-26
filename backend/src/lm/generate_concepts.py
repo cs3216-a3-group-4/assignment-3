@@ -186,12 +186,25 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 
 if __name__ == "__main__":
     # TODO(marcus): probably remove/change this
-    pass
-    # parser = JsonOutputParser(pydantic_object=ArticleConceptsWithId)
-    # res = """{
-    #     "summary": null,
-    #     "concepts": null,
-    #     "article_id": null
+    # pass
+    asyncio.run(generate_concepts(4000))
+
+    # res_2 = """{
+    #     "summary": "Thailand's Constitutional Court is set to deliver a verdict on August 7 regarding the potential dissolution of the opposition party Move Forward, following a petition from the election commission. The case centers around the party's past campaign to amend the royal insult law, a deeply sensitive issue tied to the monarchy's protection in Thailand. Move Forward, which gained significant urban and youth support during last year's elections, has denied any wrongdoing and asserts that their intentions were to strengthen the constitutional monarchy. The impending decision comes amid other political controversies, adding to the uncertainties within Thailand's political landscape.",
+    #     "concepts": [
+    #         {
+    #             "concept": "Political Legitimacy and Governance",
+    #             "explanation": "The interplay between political legitimacy and governance becomes evident in the context of Thailand's opposition parties and the legal structures that regulate them. In a system where the monarchy holds significant sway, political entities like Move Forward emerge as challengers to traditional norms, seeking to redefine the boundaries of acceptable governance. The attempt to amend the royal insult law reflects a broader trend where citizens engage in civic discourse against established authorities, raising significant questions about the nature and limits of political engagement within a monarchy. This situation illustrates how political movements can be both a reaction to and a catalyst for systemic governance changes, leading to shifts in public perception and engagement with governmental structures.",
+    #         },
+    #         {
+    #             "concept": "Youth Activism and Political Change",
+    #             "explanation": "The rise of youth-led movements signals a transformative shift in political dynamics, particularly in regions with entrenched political structures. In Thailand, the emergence of Move Forward, supported predominantly by urban youth, epitomizes a broader global trend where younger generations challenge established political norms and advocate for reform. This phenomenon often manifests in demanding more transparency, accountability, and responsiveness from governments. The relationship between youth activism and political change is critical, as it shapes not only the immediate political landscape but also the long-term implications for governance and civil society. The ongoing uncertainties within Thailand's political arena illustrate the potential for youth movements to disrupt traditional power balances and promote progressive ideologies.",
+    #         },
+    #         {
+    #             "concept": "Judicial Independence and Political Influence",
+    #             "explanation": "The role of the judiciary in mediating political disputes often reveals the extent of political influence within a legal framework. The ongoing legal challenges faced by Move Forward underscore the complex relationship between judicial independence and political power. In scenarios where courts become arbiters in politically charged cases, the judicial system's integrity is tested, raising concerns about the impartiality of legal proceedings. Moreover, the tension between the ruling elite and opposition parties can lead to judicial actions that appear to favor one side, impacting public trust in the legal system. The anticipation surrounding the court's verdict reflects broader societal anxieties about the balancing act between maintaining legal order and protecting democratic principles against political maneuvering.",
+    #         },
+    #     ],
     # }"""
     # print(json.dumps(res_2))
     # parser = JsonOutputParser(pydantic_object=ArticleConcepts)
