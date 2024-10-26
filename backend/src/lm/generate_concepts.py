@@ -149,7 +149,7 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
         query = select(Article).where(
             ~exists(subquery.where(ArticleConcept.article_id == Article.id))
         )
-        if limit:
+        if limit is not None:
             query = query.limit(limit)
         articles = session.scalars(query).all()
 
@@ -172,7 +172,7 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 if __name__ == "__main__":
     # TODO(marcus): probably remove/change this
     pass
-    # asyncio.run(generate_concepts())
+    asyncio.run(generate_concepts(5))
     # parser = JsonOutputParser(pydantic_object=ArticleConceptsWithId)
     # res = """{
     #     "summary": null,
