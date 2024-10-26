@@ -26,7 +26,7 @@ const TopArticleList = () => {
   const { data, isLoading } = useQuery(getTopArticles(false));
   const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
   return (
-    <div>
+    <div className="w-full">
       <h2 className="flex text-3xl font-semibold">
         This week&apos;s top articles
       </h2>
