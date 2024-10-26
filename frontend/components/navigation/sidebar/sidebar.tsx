@@ -8,6 +8,7 @@ import {
   HistoryIcon,
   HomeIcon,
   MessageCircleQuestionIcon,
+  NewspaperIcon,
   NotebookIcon,
 } from "lucide-react";
 
@@ -37,6 +38,12 @@ const Sidebar = () => {
           isActive={pathname === "/"}
           label="Home"
           path="/"
+        />
+        <SidebarItemWithIcon
+          Icon={NewspaperIcon}
+          isActive={pathname === "/articles"}
+          label="Articles"
+          path="/articles"
         />
         <SidebarItemWithIcon
           Icon={BookmarkIcon}
