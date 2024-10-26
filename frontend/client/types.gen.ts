@@ -46,9 +46,9 @@ export type ArticleDTO = {
     date: string;
     image_url: string;
     categories: Array<CategoryDTO>;
+    bookmarks: Array<BookmarkDTO>;
     article_concepts: Array<ArticleConceptDTO>;
     original_events: Array<EventWithoutArticleDTO>;
-    bookmarks: Array<BookmarkDTO>;
     notes: Array<NoteDTO>;
 };
 
@@ -244,6 +244,7 @@ export type MiniArticleDTO = {
     date: string;
     image_url: string;
     categories: Array<CategoryDTO>;
+    bookmarks: Array<BookmarkDTO>;
 };
 
 export type MiniEventDTO = {

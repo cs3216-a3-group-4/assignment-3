@@ -20,12 +20,12 @@ class BaseArticleDTO(BaseModel):
 
 class MiniArticleDTO(BaseArticleDTO):
     categories: list[CategoryDTO]
+    bookmarks: list["BookmarkDTO"]
 
 
 class ArticleDTO(MiniArticleDTO):
     article_concepts: list["ArticleConceptDTO"]
     original_events: list["EventWithoutArticleDTO"]
-    bookmarks: list["BookmarkDTO"]
     notes: list[NoteDTO]
 
 

@@ -191,6 +191,13 @@ export const ArticleDTOSchema = {
             type: 'array',
             title: 'Categories'
         },
+        bookmarks: {
+            items: {
+                '$ref': '#/components/schemas/BookmarkDTO'
+            },
+            type: 'array',
+            title: 'Bookmarks'
+        },
         article_concepts: {
             items: {
                 '$ref': '#/components/schemas/ArticleConceptDTO'
@@ -205,13 +212,6 @@ export const ArticleDTOSchema = {
             type: 'array',
             title: 'Original Events'
         },
-        bookmarks: {
-            items: {
-                '$ref': '#/components/schemas/BookmarkDTO'
-            },
-            type: 'array',
-            title: 'Bookmarks'
-        },
         notes: {
             items: {
                 '$ref': '#/components/schemas/NoteDTO'
@@ -221,7 +221,7 @@ export const ArticleDTOSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'title', 'summary', 'url', 'source', 'date', 'image_url', 'categories', 'article_concepts', 'original_events', 'bookmarks', 'notes'],
+    required: ['id', 'title', 'summary', 'url', 'source', 'date', 'image_url', 'categories', 'bookmarks', 'article_concepts', 'original_events', 'notes'],
     title: 'ArticleDTO'
 } as const;
 
@@ -1016,10 +1016,17 @@ export const MiniArticleDTOSchema = {
             },
             type: 'array',
             title: 'Categories'
+        },
+        bookmarks: {
+            items: {
+                '$ref': '#/components/schemas/BookmarkDTO'
+            },
+            type: 'array',
+            title: 'Bookmarks'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'summary', 'url', 'source', 'date', 'image_url', 'categories'],
+    required: ['id', 'title', 'summary', 'url', 'source', 'date', 'image_url', 'categories', 'bookmarks'],
     title: 'MiniArticleDTO'
 } as const;
 

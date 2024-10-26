@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
+  addBookmarkArticlesIdBookmarksPost,
   addBookmarkEventsIdBookmarksPost,
+  deleteBookmarkArticlesIdBookmarksDelete,
   deleteBookmarkEventsIdBookmarksDelete,
   LikeType,
   upsertLikeLikesPost,
@@ -56,6 +58,42 @@ export const useRemoveBookmark = (event_id: number) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.Events, event_id] });
+    },
+  });
+};
+
+export const useAddBookmarkArticle = (article_id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => {
+      return addBookmarkArticlesIdBookmarksPost({
+        path: { id: article_id },
+      });
+    },
+    onSuccess: () => {
+      // TODO: maybe don't refetch EVERY article to update one bookmark?
+      // don't have enough sanity to fix it properly atm
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Articles],
+      });
+    },
+  });
+};
+
+export const useRemoveBookmarkArticle = (article_id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => {
+      return deleteBookmarkArticlesIdBookmarksDelete({
+        path: { id: article_id },
+      });
+    },
+    onSuccess: () => {
+      // TODO: maybe don't refetch EVERY article to update one bookmark?
+      // don't have enough sanity to fix it properly atm
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Articles],
+      });
     },
   });
 };

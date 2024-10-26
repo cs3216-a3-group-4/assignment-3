@@ -2,12 +2,11 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { BookmarkIcon } from "lucide-react";
 
+import ArticleBookmarkButton from "@/app/(authenticated)/articles/article-bookmark-button";
 import { CategoryDTO, MiniArticleDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import PlaceholderImage from "@/components/icons/placeholder-image";
-import { Button } from "@/components/ui/button";
 import {
   categoriesToDisplayName,
   categoriesToIconsMap,
@@ -36,7 +35,7 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
 
   return (
     <div
-      className="flex flex-col py-4 w-full lg:py-6 px-4 md:px-8 xl:px-12 xl:py-10 gap-x-28 border-y-[1px] lg:border-y-[0px] hover:bg-primary-alt-foreground/[2.5%] lg:rounded-md cursor-pointer"
+      className="flex h-full flex-col py-4 w-full lg:py-6 px-4 md:px-8 xl:px-12 xl:py-10 gap-x-28 border-y-[1px] lg:border-y-[0px] hover:bg-primary-alt-foreground/[2.5%] lg:rounded-md cursor-pointer"
       onClick={onClick}
     >
       <div className="hidden sm:flex w-full justify-between text-text-muted/90 mt-2">
@@ -44,11 +43,13 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
         <span>{parseDate(newsArticle.date)}</span>
       </div>
       <div className="flex gap-4 items-stretch">
-        <div className="flex flex-col w-full lg:w-8/12 2xl:w-9/12 3xl:w-10/12">
+        <div className="flex flex-col w-full lg:w-8/12 2xl:w-9/12 3xl:w-10/12 grow justify-between">
           <h2 className="text-md sm:text-2xl font-semibold mt-2 mb-3 text-primary-900">
             {newsArticle.title}
           </h2>
-          <p className="text-sm sm:text-md">{newsArticle.summary}</p>
+          <p className="text-sm sm:text-md line-clamp-3">
+            {newsArticle.summary}
+          </p>
           <div className="hidden sm:flex flex-wrap gap-x-2 gap-y-2 mt-8">
             {categories?.map((category: Category, index: number) => (
               <Chip
@@ -75,7 +76,7 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
             ))}
           </div>
         </div>
-        <div className="mt-2 flex flex-col justify-between h-full w-4/12 2xl:w-3/12 3xl:w-2/12 mb-6 items-end gap-4">
+        <div className="mt-2 flex flex-col justify-between grow w-4/12 2xl:w-3/12 3xl:w-2/12 items-end gap-4">
           {newsArticle.image_url ? (
             <Image
               alt=""
@@ -93,14 +94,12 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
               <PlaceholderImage />
             </div>
           )}
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            variant={"ghost"}
-          >
-            {<BookmarkIcon />}
-          </Button>
+          <ArticleBookmarkButton
+            articleId={newsArticle.id}
+            articleTitle={newsArticle.title}
+            isBookmarked={newsArticle.bookmarks.length > 0}
+            variant="ghost"
+          />
         </div>
       </div>
     </div>
