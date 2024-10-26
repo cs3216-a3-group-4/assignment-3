@@ -43,14 +43,14 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
         <span>{parseDate(newsArticle.date)}</span>
       </div>
       <div className="flex gap-4 items-stretch">
-        <div className="flex flex-col w-full lg:w-8/12 2xl:w-9/12 3xl:w-10/12 grow justify-between">
+        <div className="flex flex-col w-full lg:w-8/12 2xl:w-9/12 3xl:w-10/12 grow">
           <h2 className="text-md sm:text-2xl font-semibold mt-2 mb-3 text-primary-900">
             {newsArticle.title}
           </h2>
           <p className="text-sm sm:text-md line-clamp-3">
             {newsArticle.summary}
           </p>
-          <div className="hidden sm:flex flex-wrap gap-x-2 gap-y-2 mt-8">
+          <div className="hidden sm:flex flex-wrap gap-x-2 gap-y-2 mt-8 place-end">
             {categories?.map((category: Category, index: number) => (
               <Chip
                 Icon={categoriesToIconsMap[category]}
