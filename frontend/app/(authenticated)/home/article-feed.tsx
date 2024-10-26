@@ -55,13 +55,12 @@ const ArticleFeed = () => {
                   <Link href={`/articles/${article.id}`}>
                     <h4 className="text-lg font-medium hover:underline">
                       {article.title}{" "}
-                      <span className="text-sm font-light">
-                        {parseDateNoYear(article.date)}
-                      </span>
                     </h4>
                   </Link>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {" "}
+                    <span className="text-sm font-light mr-2">
+                      {parseDateNoYear(article.date)}
+                    </span>{" "}
                     {article.categories
                       ?.map((category) => getCategoryFor(category.name))
                       .map((category: Category, index: number) => (
@@ -70,7 +69,7 @@ const ArticleFeed = () => {
                           key={index}
                           label={categoriesToDisplayName[category]}
                           size="sm"
-                          variant="primary"
+                          variant="nobg"
                         />
                       ))}
                   </div>

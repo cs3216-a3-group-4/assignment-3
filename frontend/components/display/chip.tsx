@@ -15,6 +15,7 @@ export const chipVariants = cva(
           "bg-primary-alt/20 text-primary-alt-800/80 hover:bg-primary-alt/15",
         secondary: "bg-secondary/10 text-secondary-700",
         accent: "bg-accent/10 text-accent-700",
+        nobg: "text-text/60 hover:bg-primary-alt/15",
       },
       size: {
         default: "h-6 px-2 py-2",
