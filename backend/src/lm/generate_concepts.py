@@ -18,7 +18,7 @@ from pydantic import ValidationError
 
 import asyncio
 
-CONCEPTS_FILE_PATH = "backend/src/scripts/concepts_output.json"
+CONCEPTS_FILE_PATH = "src/scripts/concepts_output.json"
 
 
 class ArticleConceptLM(BaseModel):
