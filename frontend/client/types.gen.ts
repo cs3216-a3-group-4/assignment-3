@@ -125,6 +125,7 @@ export type CommentDTO = {
 export type ConceptDTO = {
   id: number;
   name: string;
+  likes: Array<LikeDTO>;
   notes: Array<NoteDTO>;
 };
 
