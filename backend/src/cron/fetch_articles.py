@@ -164,9 +164,6 @@ async def run(limit: int = 30):
     event_ids = populate("lm_events_output.json")
     analyses = get_analyses(event_ids)
 
-    # NOTE: newly added: Generate concepts from articles that have never had concepts generated before
-    await generate_concepts()
-
     store_documents(analyses)
     print(analyses)
 
