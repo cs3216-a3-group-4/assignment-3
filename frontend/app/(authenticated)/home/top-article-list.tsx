@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Select,
   SelectContent,
@@ -63,9 +64,11 @@ const TopArticleList = () => {
         <div className="flex flex-col gap-2 mt-4">
           {data?.map((article) => (
             <div className="py-2" key={article.id}>
-              <h4 className="text-lg font-medium hover:underline">
-                {article.title}
-              </h4>
+              <Link href={`/articles/${article.id}`}>
+                <h4 className="text-lg font-medium hover:underline">
+                  {article.title}
+                </h4>
+              </Link>
               <div className="flex flex-wrap gap-2 mt-2">
                 {" "}
                 {article.categories

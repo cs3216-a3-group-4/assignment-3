@@ -53,7 +53,9 @@ const ArticleFeed = () => {
               <div className="py-2 flex gap-2 justify-between" key={article.id}>
                 <div>
                   <Link href={`/articles/${article.id}`}>
-                    <h4 className="text-xl font-medium">{article.title}</h4>
+                    <h4 className="text-xl font-medium hover:underline">
+                      {article.title}
+                    </h4>
                   </Link>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {" "}
