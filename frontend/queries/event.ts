@@ -7,7 +7,6 @@ import {
 } from "@/client/services.gen";
 
 import { QueryKeys } from "./utils/query-keys";
-import { boolean } from "zod";
 
 export const NUM_EVENTS_PER_PAGE = 10;
 

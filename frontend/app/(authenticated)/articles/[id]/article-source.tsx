@@ -1,6 +1,6 @@
 import { NewspaperIcon } from "lucide-react";
 
-import { BaseArticleDTO } from "@/client";
+import { ArticleDTO } from "@/client";
 import Link from "@/components/navigation/link";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -11,12 +11,12 @@ import {
 import { parseDate } from "@/utils/date";
 
 interface EventSourceProps {
-  originalSource: BaseArticleDTO;
+  article: ArticleDTO;
 }
 
 // TODO: Ugly workaround, currently assumes one event only one source
-const EventSource = ({ originalSource }: EventSourceProps) => {
-  const SourceIcon = articleSourceToIconMap[originalSource.source];
+const ArticleSource = ({ article }: EventSourceProps) => {
+  const SourceIcon = articleSourceToIconMap[article.source];
   return (
     <div className="flex flex-col px-6 gap-y-8">
       <div className="flex flex-col gap-y-1">
@@ -25,23 +25,21 @@ const EventSource = ({ originalSource }: EventSourceProps) => {
           Event source
         </span>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-4">
-          <Card className="col-span-1" key={originalSource.title}>
+          <Card className="col-span-1" key={article.title}>
             <div className="flex flex-col items-center h-fit p-6 gap-y-4">
               <SourceIcon />
               <div className="flex flex-col gap-y-4">
                 <Link
                   className="font-medium no-underline hover:underline"
-                  href={originalSource.url}
+                  href={article.url}
                   isExternal
                 >
-                  {originalSource.title}
+                  {article.title}
                 </Link>
                 <div className="flex items-center text-muted-foreground gap-x-4">
-                  <span>
-                    {articleSourceToDisplayNameMap[originalSource.source]}
-                  </span>
+                  <span>{articleSourceToDisplayNameMap[article.source]}</span>
                   <Separator className="h-5" orientation="vertical" />
-                  <span>{parseDate(originalSource.date)}</span>
+                  <span>{parseDate(article.date)}</span>
                 </div>
               </div>
             </div>
@@ -52,4 +50,4 @@ const EventSource = ({ originalSource }: EventSourceProps) => {
   );
 };
 
-export default EventSource;
+export default ArticleSource;
