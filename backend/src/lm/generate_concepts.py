@@ -171,6 +171,7 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 
 if __name__ == "__main__":
     # TODO(marcus): probably remove/change this
+    pass
     # asyncio.run(generate_concepts())
     # parser = JsonOutputParser(pydantic_object=ArticleConceptsWithId)
     # res = """{
