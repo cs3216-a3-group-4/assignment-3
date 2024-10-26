@@ -9,7 +9,7 @@ import { Bookmark } from "lucide-react";
 import { MiniEventDTO } from "@/client";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
-import NewsArticle from "@/components/news/news-article";
+import NewsEvent from "@/components/news/news-event";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -106,7 +106,7 @@ const Page = () => {
             {isEventsLoaded &&
               events!.data &&
               events!.data.map((newsEvent: MiniEventDTO, index: number) => (
-                <NewsArticle key={index} newsEvent={newsEvent} />
+                <NewsEvent key={index} newsEvent={newsEvent} />
               ))}
           </div>
           {isEventsLoaded && events!.data.length !== 0 && (

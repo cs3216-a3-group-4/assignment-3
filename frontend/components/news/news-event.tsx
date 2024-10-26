@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { CategoryDTO, MiniArticleDTO } from "@/client";
+import { CategoryDTO, MiniEventDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import PlaceholderImage from "@/components/icons/placeholder-image";
 import {
@@ -15,21 +16,31 @@ import {
 import { articleSourceToDisplayNameMap } from "@/types/events";
 import { parseDate } from "@/utils/date";
 
-const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
+const NewsEvent = (props: { newsEvent: MiniEventDTO }) => {
+  const newsEvent = props.newsEvent;
+  const newsArticle = newsEvent.original_article;
   const router = useRouter();
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const ASPECT_RATIO = 273 / 154;
   const IMG_WIDTH = 200;
   const IMG_HEIGHT = IMG_WIDTH / ASPECT_RATIO;
 
-  const newsArticle = props.newsArticle;
-
-  const categories = newsArticle.categories.map((category: CategoryDTO) =>
-    getCategoryFor(category.name),
-  );
+  useEffect(() => {
+    try {
+      setCategories(
+        newsEvent.categories.map((category: CategoryDTO) =>
+          getCategoryFor(category.name),
+        ),
+      );
+    } catch (error) {
+      console.log(error);
+      setCategories([Category.Others]);
+    }
+  }, [newsEvent]);
 
   const onClick = () => {
-    router.push(`/articles/${newsArticle.id}`);
+    router.push(`/events/${newsEvent.id}`);
   };
 
   return (
@@ -40,12 +51,12 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
       <div className="flex flex-col w-full lg:w-8/12 2xl:w-9/12 3xl:w-10/12">
         <div className="flex w-full justify-between text-text-muted/90">
           <span>{articleSourceToDisplayNameMap[newsArticle.source]}</span>
-          <span>{parseDate(newsArticle.date)}</span>
+          <span>{parseDate(newsEvent.date)}</span>
         </div>
         <h2 className="text-2xl font-semibold mt-2 mb-3 text-primary-900">
-          {newsArticle.title}
+          {newsEvent.title}
         </h2>
-        <p>{newsArticle.summary}</p>
+        <p>{newsEvent.description}</p>
         <div className="flex flex-wrap gap-x-2 gap-y-2 mt-8">
           {categories?.map((category: Category, index: number) => (
             <Chip
@@ -81,4 +92,4 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
   );
 };
 
-export default NewsArticle;
+export default NewsEvent;

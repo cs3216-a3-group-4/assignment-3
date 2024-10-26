@@ -1,15 +1,17 @@
-import { IndexResponse_MiniEventDTO_ } from "@/client";
+// Modified from events-list.tsx
+
+import { IndexResponse_MiniArticleDTO_ } from "@/client";
 import ArticleLoading from "@/components/news/article-loading";
-import NewsEvent from "@/components/news/news-event";
+import NewsArticle from "@/components/news/news-article";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-interface EventsListProps {
-  isEventsLoaded: boolean;
-  events?: IndexResponse_MiniEventDTO_;
+interface ArticleListProps {
+  isArticlesLoaded: boolean;
+  articles?: IndexResponse_MiniArticleDTO_;
 }
 
-const EventsList = ({ isEventsLoaded, events }: EventsListProps) => {
-  if (!isEventsLoaded) {
+const ArticlesList = ({ isArticlesLoaded, articles }: ArticleListProps) => {
+  if (!isArticlesLoaded) {
     return (
       <div className="flex flex-col w-full">
         <ArticleLoading />
@@ -19,12 +21,12 @@ const EventsList = ({ isEventsLoaded, events }: EventsListProps) => {
     );
   }
 
-  if (events === undefined || events.total_count === 0) {
+  if (articles === undefined || articles.total_count === 0) {
     return (
       <div className="flex flex-col w-full px-4 md:px-8 xl:px-12 mt-4">
         <Alert className="bg-gray-200/40 text-gray-700 border-none px-8 py-4">
           <AlertTitle className="text-xl font-semibold">
-            Uh oh... Jippy couldn&apos;t find any events
+            Uh oh... Jippy couldn&apos;t find any articles.
           </AlertTitle>
           <AlertDescription className="text-base">
             Jippy&apos;s probably busy reading newspapers to find more events.
@@ -37,11 +39,11 @@ const EventsList = ({ isEventsLoaded, events }: EventsListProps) => {
 
   return (
     <div className="flex flex-col w-full">
-      {events.data.map((newsEvent, index) => (
-        <NewsEvent key={index} newsEvent={newsEvent} />
+      {articles.data.map((newsArticle) => (
+        <NewsArticle key={newsArticle.id} newsArticle={newsArticle} />
       ))}
     </div>
   );
 };
 
-export default EventsList;
+export default ArticlesList;

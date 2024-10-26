@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
-import { CategoryDTO, MiniEventDTO } from "@/client";
+import DateRangeSelector, { Period } from "@/app/_home/date-range-selector";
 import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
-import ArticleLoading from "@/components/news/article-loading";
-import NewsEvent from "@/components/news/news-event";
 import {
   Select,
   SelectContent,
@@ -19,48 +17,68 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import usePagination from "@/hooks/use-pagination";
-import { getCategories } from "@/queries/category";
-import { getEventsForCategory } from "@/queries/event";
+import { getArticlesPage } from "@/queries/article";
+import { useUserStore } from "@/store/user/user-store-provider";
+import { parseDate, toQueryDate } from "@/utils/date";
 
-const Page = ({ params }: { params: { id: string } }) => {
+import ArticlesList from "./articles-list";
+
+const DEFAULT_EVENT_PERIOD = Period.Week;
+
+/* This component should only be rendered to authenticated users */
+const Articles = () => {
+  const user = useUserStore((state) => state.user);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const categoryId = parseInt(params.id);
-  const [categoryName, setCategoryName] = useState<string>("");
+  const eventPeriod = user?.top_events_period
+    ? user.top_events_period
+    : DEFAULT_EVENT_PERIOD;
+
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
 
+  const { page, pageCount, getPageUrl } = usePagination({
+    totalCount,
+  });
+
+  const eventStartDate = useMemo(() => {
+    const eventStartDate = new Date();
+    eventStartDate.setDate(eventStartDate.getDate() - eventPeriod);
+    return eventStartDate;
+  }, [eventPeriod]);
+
   const initialSingaporeOnly = searchParams.get("singaporeOnly") === "true";
+
   const [singaporeOnly, setSingaporeOnly] =
     useState<boolean>(initialSingaporeOnly);
 
-  const { page, pageCount, getPageUrl } = usePagination({ totalCount });
-  const { data: events, isSuccess: isEventsLoaded } = useQuery(
-    getEventsForCategory(categoryId, page, singaporeOnly),
+  const { data: articles, isSuccess: isArticlesLoaded } = useQuery(
+    getArticlesPage(
+      toQueryDate(eventStartDate),
+      page,
+      singaporeOnly,
+      user?.categories.map((category) => category.id),
+    ),
   );
-  const { data: categories, isSuccess: isCategoriesLoaded } =
-    useQuery(getCategories());
 
   useEffect(() => {
-    setTotalCount(events?.total_count);
-  }, [events?.total_count]);
-
-  // Very inefficient, but is there a better way to do this? New StoreProvider for CategoryDTO[]?
-  useEffect(() => {
-    if (isCategoriesLoaded && categories!.length > 0) {
-      categories!.forEach((category: CategoryDTO) => {
-        if (category.id == categoryId) {
-          setCategoryName(category.name);
-        }
-      });
-    }
-  }, [categories, isCategoriesLoaded, categoryId]);
+    setTotalCount(articles?.total_count);
+  }, [articles?.total_count]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
     params.set("singaporeOnly", singaporeOnly.toString());
+
     router.push(`?${params.toString()}`);
-  });
+  }, [singaporeOnly, router, searchParams]);
+
+  if (!user) {
+    return;
+  }
+
+  if (!user!.categories.length) {
+    router.push("/onboarding");
+  }
 
   return (
     <div className="relative w-full h-full">
@@ -71,14 +89,18 @@ const Page = ({ params }: { params: { id: string } }) => {
         <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
           {/* TODO: x-padding here is tied to the news article */}
           <div
-            className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
+            className="flex flex-col mb-2 gap-y-2 px-4 md:px-8 xl:px-12"
             id="homePage"
           >
-            <div className="flex">
+            <div>
               <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-                Top events from {categoryName}
+                What happened this&nbsp;
               </span>
+              <DateRangeSelector selectedPeriod={eventPeriod} />
             </div>
+            <span className="text-primary text-lg">
+              {parseDate(eventStartDate)} - {parseDate(new Date())}
+            </span>
           </div>
           <div className="flex items-center w-fit px-1 md:px-5 xl:px-9">
             <Select
@@ -109,20 +131,12 @@ const Page = ({ params }: { params: { id: string } }) => {
             </Select>
           </div>
 
-          <div className="flex flex-col w-full">
-            {!isEventsLoaded ? (
-              <div className="flex flex-col w-full">
-                <ArticleLoading />
-                <ArticleLoading />
-                <ArticleLoading />
-              </div>
-            ) : (
-              events?.data.map((newsEvent: MiniEventDTO, index: number) => (
-                <NewsEvent key={index} newsEvent={newsEvent} />
-              ))
-            )}
-          </div>
-          {isEventsLoaded && (
+          <ArticlesList
+            articles={articles}
+            isArticlesLoaded={isArticlesLoaded}
+          />
+
+          {isArticlesLoaded && (
             <Pagination
               getPageUrl={getPageUrl}
               page={page}
@@ -131,7 +145,6 @@ const Page = ({ params }: { params: { id: string } }) => {
           )}
         </div>
       </div>
-
       <ScrollToTopButton
         className="absolute right-4 bottom-4"
         minHeight={200}
@@ -141,4 +154,4 @@ const Page = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default Page;
+export default Articles;

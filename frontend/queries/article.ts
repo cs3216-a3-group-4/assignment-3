@@ -21,7 +21,7 @@ export const getArticlesPage = (
   categoryIds?: number[],
 ) =>
   queryOptions({
-    queryKey: [QueryKeys.Articles, isSingapore, page, categoryIds],
+    queryKey: [QueryKeys.Articles, startDate, isSingapore, page, categoryIds],
     queryFn: () =>
       getArticlesArticlesGet({
         query: {
