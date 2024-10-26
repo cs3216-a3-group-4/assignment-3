@@ -162,7 +162,11 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
         # query db for article
         subquery = select(ArticleConcept.article_id)
         query = select(Article).where(
-            ~exists(subquery.where(ArticleConcept.article_id == Article.id))
+            ~exists(
+                subquery.where(ArticleConcept.article_id == Article.id).where(
+                    Article.useless == False  # noqa: E712
+                )
+            )
         )
         if limit is not None:
             query = query.limit(limit)
