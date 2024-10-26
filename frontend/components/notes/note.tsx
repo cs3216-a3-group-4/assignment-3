@@ -21,15 +21,25 @@ type Props = {
 const extractUrl = (note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO) => {
   if (note.parent_type === "event") {
     const eventNote = note as EventNoteDTO;
+    const article = eventNote.event.original_article;
     return {
-      article: eventNote.event.original_article,
-      url: `/articles/${eventNote.event.id}`,
+      article,
+      url: `/articles/${article.id}`,
+    };
+  } else if (note.parent_type === "analysis") {
+    const analysisNote = note as AnalysisNoteDTO;
+    const article = analysisNote.analysis.event.original_article;
+    return {
+      article: article,
+      url: `/articles/${article}#analysis-${analysisNote.analysis.id}`,
     };
   } else {
-    const analysisNote = note as AnalysisNoteDTO;
+    const articleNote = note as ArticleNoteDTO;
+    const article = articleNote.article;
+    console.log({ articleNote });
     return {
-      article: analysisNote.analysis.event.original_article,
-      url: `/articles/${analysisNote.analysis.event.id}#analysis-${analysisNote.analysis.id}`,
+      article,
+      url: `/articles/${article.id}`,
     };
   }
 };
@@ -42,11 +52,6 @@ const Note = ({ data, handleDelete }: Props) => {
   const [noteContent, setNoteContent] = useState(data.content);
   const invalidCategory = { id: -1, name: Category.Others };
   const router = useRouter();
-
-  // TODO: temporarily stop crash from article notes... by hiding them completely
-  if (data.parent_type === "article") {
-    return <></>;
-  }
 
   const { article, url: source } = extractUrl(data);
 
