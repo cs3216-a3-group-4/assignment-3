@@ -55,7 +55,12 @@ async def generate_concept_from_article(
                 result = await lm_model.ainvoke(messages)
                 parser = JsonOutputParser(pydantic_object=ArticleConcepts)
                 concepts = parser.invoke(result)
-                print(f"Model temp: {lm_model.temperature}")
+
+                # NOTE: concepts might be None if the LM hallucinates in a certain way
+                if concepts is None:
+                    print("Parser invoke returned None, skipping article ", article.id)
+                    return
+                # print(f"Model temp: {lm_model.temperature}")
                 break
             except Exception as e:  # noqa: E722
                 print(e)
@@ -64,8 +69,8 @@ async def generate_concept_from_article(
 
     res.append(
         ArticleConceptsWithId(
-            concepts=concepts["concepts"],
-            summary=concepts["summary"],
+            concepts=concepts.get("concepts", []),
+            summary=concepts.get("summary", ""),
             article_id=article.id,
         )
     )
@@ -166,4 +171,13 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 
 if __name__ == "__main__":
     # TODO(marcus): probably remove/change this
-    asyncio.run(generate_concepts())
+    # asyncio.run(generate_concepts())
+    # parser = JsonOutputParser(pydantic_object=ArticleConceptsWithId)
+    # res = """{
+    #     "summary": null,
+    #     "concepts": null,
+    #     "article_id": null
+    # }"""
+    # result = parser.invoke(res)
+
+    # print("done w/ ", result)

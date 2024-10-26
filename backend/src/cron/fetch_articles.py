@@ -165,7 +165,7 @@ async def run(limit: int = 30):
     analyses = get_analyses(event_ids)
 
     # NOTE: newly added: Generate concepts from articles that have never had concepts generated before
-    generate_concepts()
+    await generate_concepts()
 
     store_documents(analyses)
     print(analyses)
