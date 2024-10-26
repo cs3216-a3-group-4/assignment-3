@@ -10,7 +10,7 @@ const Home = () => {
       <ActionBar />
       <div className="grid grid-cols-2 my-8">
         <Tabs className="col-span-2" defaultValue="week">
-          <TabsList className="grid w-full grid-cols-2 mb-4 font-semibold text-lg shadow-md">
+          <TabsList className="grid w-full grid-cols-2 mb-10 border-t font-medium text-lg shadow-md">
             <TabsTrigger
               className="aria-selected:border-b-2 border-primary-500 py-2"
               value="week"
