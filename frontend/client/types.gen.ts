@@ -278,7 +278,7 @@ export type NoteDTO = {
   updated_at: string;
 };
 
-export type NoteType = "event" | "article" | "point" | "analysis";
+export type NoteType = "event" | "article" | "point" | "analysis" | "concept";
 
 export type NoteUpdate = {
   content: string;
@@ -699,6 +699,16 @@ export type GetArticlesArticlesGetResponse = IndexResponse_MiniArticleDTO_;
 
 export type GetArticlesArticlesGetError = HTTPValidationError;
 
+export type GetTopArticlesArticlesTopGetData = {
+  query: {
+    singapore_only: boolean;
+  };
+};
+
+export type GetTopArticlesArticlesTopGetResponse = Array<MiniArticleDTO>;
+
+export type GetTopArticlesArticlesTopGetError = HTTPValidationError;
+
 export type GetArticleArticlesIdGetData = {
   path: {
     id: number;
@@ -728,3 +738,13 @@ export type DeleteBookmarkArticlesIdBookmarksDeleteData = {
 export type DeleteBookmarkArticlesIdBookmarksDeleteResponse = unknown;
 
 export type DeleteBookmarkArticlesIdBookmarksDeleteError = HTTPValidationError;
+
+export type ReadArticleArticlesIdReadPostData = {
+  path: {
+    id: number;
+  };
+};
+
+export type ReadArticleArticlesIdReadPostResponse = unknown;
+
+export type ReadArticleArticlesIdReadPostError = HTTPValidationError;
