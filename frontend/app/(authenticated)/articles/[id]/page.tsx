@@ -25,6 +25,7 @@ import ArticleDetails from "./article-details";
 import ArticleSource from "./article-source";
 import ArticleSummary from "./article-summary";
 import EventBookmarkButton from "./event-bookmark-button";
+import ArticlePageLoading from "./article-page-loading";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
@@ -64,11 +65,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   }, [data, first, showPanelAsSheet]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center w-full">
-        <LoadingSpinner className="w-24 h-24" />
-      </div>
-    );
+    return <ArticlePageLoading />;
   }
 
   if (data === undefined) {
@@ -79,7 +76,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             Uh oh... something went wrong
           </h1>
           <p className="text-xl mt-3 mb-2">
-            Jippy ran into an error fetching the event you requested.
+            Jippy ran into an error fetching the article you requested.
           </p>
           <p>
             If this error persists, please let us know at{" "}
