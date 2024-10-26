@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
-import { CategoryDTO, MiniEventDTO } from "@/client";
+import { CategoryDTO, MiniArticleDTO } from "@/client";
 import Pagination from "@/components/navigation/pagination";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
-import NewsEvent from "@/components/news/news-event";
+import NewsArticle from "@/components/news/news-article";
 import {
   Select,
   SelectContent,
@@ -19,8 +19,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import usePagination from "@/hooks/use-pagination";
+import { getArticlesForCategory } from "@/queries/article";
 import { getCategories } from "@/queries/category";
-import { getEventsForCategory } from "@/queries/event";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -35,15 +35,15 @@ const Page = ({ params }: { params: { id: string } }) => {
     useState<boolean>(initialSingaporeOnly);
 
   const { page, pageCount, getPageUrl } = usePagination({ totalCount });
-  const { data: events, isSuccess: isEventsLoaded } = useQuery(
-    getEventsForCategory(categoryId, page, singaporeOnly),
+  const { data: articles, isSuccess: isArticlesLoaded } = useQuery(
+    getArticlesForCategory(categoryId, page, singaporeOnly),
   );
   const { data: categories, isSuccess: isCategoriesLoaded } =
     useQuery(getCategories());
 
   useEffect(() => {
-    setTotalCount(events?.total_count);
-  }, [events?.total_count]);
+    setTotalCount(articles?.total_count);
+  }, [articles?.total_count]);
 
   // Very inefficient, but is there a better way to do this? New StoreProvider for CategoryDTO[]?
   useEffect(() => {
@@ -76,7 +76,7 @@ const Page = ({ params }: { params: { id: string } }) => {
           >
             <div className="flex">
               <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-                Top events from {categoryName}
+                Top articles from {categoryName}
               </span>
             </div>
           </div>
@@ -110,19 +110,21 @@ const Page = ({ params }: { params: { id: string } }) => {
           </div>
 
           <div className="flex flex-col w-full">
-            {!isEventsLoaded ? (
+            {!isArticlesLoaded ? (
               <div className="flex flex-col w-full">
                 <ArticleLoading />
                 <ArticleLoading />
                 <ArticleLoading />
               </div>
             ) : (
-              events?.data.map((newsEvent: MiniEventDTO, index: number) => (
-                <NewsEvent key={index} newsEvent={newsEvent} />
-              ))
+              articles?.data.map(
+                (newsArticle: MiniArticleDTO, index: number) => (
+                  <NewsArticle key={index} newsArticle={newsArticle} />
+                ),
+              )
             )}
           </div>
-          {isEventsLoaded && (
+          {isArticlesLoaded && (
             <Pagination
               getPageUrl={getPageUrl}
               page={page}

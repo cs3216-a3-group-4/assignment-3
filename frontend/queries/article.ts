@@ -66,3 +66,22 @@ export const getBookmarkedArticles = (page: number) =>
         },
       }).then((data) => data.data),
   });
+
+export const getArticlesForCategory = (
+  categoryId: number,
+  page: number,
+  singaporeOnly: boolean,
+) =>
+  queryOptions({
+    queryKey: [QueryKeys.Categories, categoryId, singaporeOnly, page],
+    queryFn: () =>
+      getArticlesArticlesGet({
+        withCredentials: true,
+        query: {
+          singapore_only: singaporeOnly,
+          category_ids: [categoryId],
+          limit: NUM_EVENTS_PER_PAGE,
+          offset: (page - 1) * NUM_EVENTS_PER_PAGE,
+        },
+      }).then((data) => data.data),
+  });
