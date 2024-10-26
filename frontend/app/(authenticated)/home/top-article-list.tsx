@@ -22,12 +22,13 @@ import {
   Category,
   getCategoryFor,
 } from "@/types/categories";
+import { parseDateNoYear } from "@/utils/date";
 
 const TopArticleList = () => {
   const { data, isLoading } = useQuery(getTopArticles(false));
   const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
   return (
-    <div className="w-full">
+    <div className="w-full sm:border-l-2 sm:px-8">
       <h2 className="flex text-3xl font-semibold">
         This week&apos;s top articles
       </h2>
@@ -66,7 +67,10 @@ const TopArticleList = () => {
             <div className="py-2" key={article.id}>
               <Link href={`/articles/${article.id}`}>
                 <h4 className="text-lg font-medium hover:underline">
-                  {article.title}
+                  {article.title}{" "}
+                  <span className="text-sm font-light">
+                    {parseDateNoYear(article.date)}
+                  </span>
                 </h4>
               </Link>
               <div className="flex flex-wrap gap-2 mt-2">

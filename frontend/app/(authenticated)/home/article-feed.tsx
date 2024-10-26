@@ -15,7 +15,7 @@ import {
   Category,
   getCategoryFor,
 } from "@/types/categories";
-import { toQueryDate } from "@/utils/date";
+import { parseDateNoYear, toQueryDate } from "@/utils/date";
 
 const ArticleFeed = () => {
   const user = useUserStore((state) => state.user);
@@ -27,7 +27,7 @@ const ArticleFeed = () => {
   const { data: articles, isLoading } = useQuery(
     getArticles(
       toQueryDate(eventStartDate),
-      15,
+      10,
       false,
       user?.categories.map((category) => category.id),
     ),
@@ -36,8 +36,8 @@ const ArticleFeed = () => {
   return (
     <div className="sm:border-l-2 sm:px-8">
       <h2 className="flex text-3xl font-semibold justify-between align-center">
-        <span>
-          Today&apos;s articles for <span className="italic">you</span> 🐸❤️
+        <span className="flex gap-2 items-baseline">
+          Today&apos;s articles for you
         </span>
         <Link href="/articles">
           <Button className="hidden sm:flex" variant={"outline"}>
@@ -53,8 +53,11 @@ const ArticleFeed = () => {
               <div className="py-2 flex gap-2 justify-between" key={article.id}>
                 <div>
                   <Link href={`/articles/${article.id}`}>
-                    <h4 className="text-xl font-medium hover:underline">
-                      {article.title}
+                    <h4 className="text-lg font-medium hover:underline">
+                      {article.title}{" "}
+                      <span className="text-sm font-light">
+                        {parseDateNoYear(article.date)}
+                      </span>
                     </h4>
                   </Link>
                   <div className="flex flex-wrap gap-2 mt-2">

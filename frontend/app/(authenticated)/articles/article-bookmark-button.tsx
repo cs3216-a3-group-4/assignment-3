@@ -17,6 +17,18 @@ interface ArticleBookmarkButtonProps {
   articleId: number;
   articleTitle: string;
   showLabel?: boolean;
+  variant?:
+    | "default"
+    | "link"
+    | "destructive"
+    | "outline"
+    | "destructive_outline"
+    | "secondary"
+    | "ghost"
+    | "destructive_ghost"
+    | "underlined"
+    | null
+    | undefined;
 }
 
 const ArticleBookmarkButton = ({
@@ -24,6 +36,7 @@ const ArticleBookmarkButton = ({
   articleId,
   articleTitle,
   showLabel = false,
+  variant = "default",
 }: ArticleBookmarkButtonProps) => {
   const toast = useToast();
   const addBookmarkMutation = useAddBookmarkArticle(articleId);
@@ -43,7 +56,7 @@ const ArticleBookmarkButton = ({
           });
         }}
         size="lg"
-        variant="default"
+        variant={variant}
       >
         <BookmarkCheck className="w-5 h-5" /> {showLabel && "Bookmarked"}
       </Button>
@@ -59,11 +72,11 @@ const ArticleBookmarkButton = ({
         toast.toast({
           title: "Added bookmark",
           icon: <BookmarkCheckIcon />,
-          description: `Bookmark added for <b>${articleTitle}</b>`,
+          description: `Bookmark added for ${articleTitle}`,
         });
       }}
       size="lg"
-      variant="outline"
+      variant={variant}
     >
       <Bookmark className="w-5 h-5" /> {showLabel && "Bookmark"}
     </Button>
