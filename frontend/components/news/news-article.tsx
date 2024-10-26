@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import ArticleBookmarkButton from "@/app/(authenticated)/articles/article-bookmark-button";
 import { CategoryDTO, MiniArticleDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import PlaceholderImage from "@/components/icons/placeholder-image";
@@ -50,31 +49,6 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
           <p className="text-sm sm:text-md line-clamp-3">
             {newsArticle.summary}
           </p>
-          <div className="hidden sm:flex flex-wrap gap-x-2 gap-y-2 mt-8 place-end">
-            {categories?.map((category: Category, index: number) => (
-              <Chip
-                Icon={categoriesToIconsMap[category]}
-                key={index}
-                label={categoriesToDisplayName[category]}
-                size="lg"
-                variant="primary"
-              />
-            ))}
-          </div>
-          <div className="flex items-center flex-wrap gap-x-2 gap-y-2 mt-4 sm:hidden">
-            <span className="text-primary-600 text-sm">
-              {parseDateNoYear(newsArticle.date)}
-            </span>
-            {categories?.map((category: Category, index: number) => (
-              <Chip
-                Icon={categoriesToIconsMap[category]}
-                key={index}
-                label={categoriesToDisplayName[category]}
-                size="sm"
-                variant="primary"
-              />
-            ))}
-          </div>
         </div>
         <div className="mt-2 flex flex-col justify-between grow w-4/12 2xl:w-3/12 3xl:w-2/12 items-end gap-4">
           {newsArticle.image_url ? (
@@ -94,13 +68,38 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
               <PlaceholderImage />
             </div>
           )}
-          <ArticleBookmarkButton
+          {/* <ArticleBookmarkButton
             articleId={newsArticle.id}
             articleTitle={newsArticle.title}
             isBookmarked={newsArticle.bookmarks.length > 0}
             variant="ghost"
-          />
+          /> */}
         </div>
+      </div>
+      <div className="hidden sm:flex flex-wrap gap-x-2 gap-y-2 mt-4 place-end">
+        {categories?.map((category: Category, index: number) => (
+          <Chip
+            Icon={categoriesToIconsMap[category]}
+            key={index}
+            label={categoriesToDisplayName[category]}
+            size="lg"
+            variant="primary"
+          />
+        ))}
+      </div>
+      <div className="flex items-center flex-wrap gap-x-2 gap-y-2 mt-4 sm:hidden">
+        <span className="text-primary-600 text-sm">
+          {parseDateNoYear(newsArticle.date)}
+        </span>
+        {categories?.map((category: Category, index: number) => (
+          <Chip
+            Icon={categoriesToIconsMap[category]}
+            key={index}
+            label={categoriesToDisplayName[category]}
+            size="sm"
+            variant="primary"
+          />
+        ))}
       </div>
     </div>
   );
