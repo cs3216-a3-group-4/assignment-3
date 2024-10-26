@@ -4,7 +4,14 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.common.dependencies import get_session
-from src.events.models import Analysis, Article, ArticleBookmark, ArticleConcept, Event
+from src.events.models import (
+    Analysis,
+    Article,
+    ArticleBookmark,
+    ArticleConcept,
+    Concept,
+    Event,
+)
 from src.events.schemas import ArticleDTO
 from src.likes.models import Like
 from src.notes.models import Note
@@ -22,7 +29,9 @@ def retrieve_article(
             selectinload(
                 Article.categories,
             ),
-            selectinload(Article.article_concepts).selectinload(ArticleConcept.concept),
+            selectinload(Article.article_concepts)
+            .selectinload(ArticleConcept.concept)
+            .selectinload(Concept.notes),
             selectinload(Article.original_events)
             .selectinload(Event.analysises)
             .selectinload(
