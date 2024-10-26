@@ -6,7 +6,7 @@ from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
-from src.events.models import Analysis, Article, Category, Event
+from src.events.models import Analysis, Article, Category, Concept, Event
 from src.events.schemas import AnalysisNoteDTO, ArticleNoteDTO, EventNoteDTO
 from src.notes.dependencies import retrieve_note
 from src.notes.models import Note, NoteType
@@ -22,9 +22,10 @@ router = APIRouter(prefix="/notes", tags=["notes"])
 
 NOTE_PARENT_CLASSES = {
     NoteType.ARTICLE: Article,
-    NoteType.EVENT: Event,
+    NoteType.CONCEPT: Concept,
+    NoteType.EVENT: Event,  # TODO: deprecate
     NoteType.POINT: Point,
-    NoteType.ANALYSIS: Analysis,
+    NoteType.ANALYSIS: Analysis,  # TODO: deprecate
 }
 
 

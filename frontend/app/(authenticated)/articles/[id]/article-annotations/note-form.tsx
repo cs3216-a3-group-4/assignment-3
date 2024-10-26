@@ -99,7 +99,7 @@ const NoteForm = ({
             />
           </Box>
           {!hideCategory && categories && (
-            <Box className="flex flex-col gap-y-2.5">
+            <Box className="flex flex-col gap-y-2.5 w-full">
               <FormField
                 control={form.control}
                 name="category_id"
@@ -113,7 +113,7 @@ const NoteForm = ({
                       onValueChange={field.onChange}
                     >
                       <FormControl>
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="bg-white">
                           <SelectValue
                             className={textSize}
                             placeholder="Select a category"

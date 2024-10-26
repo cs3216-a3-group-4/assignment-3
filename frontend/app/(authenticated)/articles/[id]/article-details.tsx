@@ -1,16 +1,16 @@
 import { ClockIcon, LayoutDashboardIcon, NewspaperIcon } from "lucide-react";
 
-import { EventDTO } from "@/client";
+import { ArticleDTO } from "@/client";
 import CategoryChip from "@/components/display/category-chip";
 import { getCategoryFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
 
 interface Props {
-  event: EventDTO;
+  article: ArticleDTO;
 }
 
-const EventDetails = ({ event }: Props) => {
-  const eventCategories = event.categories.map((category) =>
+const ArticleDetails = ({ article }: Props) => {
+  const articleCategories = article.categories.map((category) =>
     getCategoryFor(category.name),
   );
 
@@ -26,7 +26,7 @@ const EventDetails = ({ event }: Props) => {
           Categories
         </span>
         <div className="flex flex-wrap gap-x-3 gap-y-2 col-span-12 md:col-span-8 xl:col-span-9">
-          {eventCategories.map((category) => (
+          {articleCategories.map((category) => (
             <CategoryChip category={category} key={category} />
           ))}
         </div>
@@ -35,19 +35,19 @@ const EventDetails = ({ event }: Props) => {
       <div className="hidden md:grid grid-cols-12 gap-x-4 gap-y-2 place-items-start">
         <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
           <ClockIcon className="inline-flex mr-2" size={16} strokeWidth={2.3} />
-          Event date
+          Article date
         </span>
         <span className="col-span-10  md:col-span-8 xl:col-span-9 text-black font-normal">
-          {parseDate(event.date)}
+          {parseDate(article.date)}
         </span>
       </div>
       <div className="flex gap-2 md:hidden">
         <span className="flex items-center col-span-12 md:col-span-4 xl:col-span-3">
           <ClockIcon className="inline-flex mr-2" size={16} strokeWidth={2.3} />
-          Event date
+          Article date
         </span>
         <span className="col-span-10  md:col-span-8 xl:col-span-9 text-black font-normal">
-          {parseDate(event.date)}
+          {parseDate(article.date)}
         </span>
       </div>
 
@@ -61,8 +61,8 @@ const EventDetails = ({ event }: Props) => {
           News source
         </span>
         <span className="col-span-1 md:col-span-8 xl:col-span-9 text-black font-normal">
-          <a className="underline" href={event.original_article.url}>
-            {event.original_article.source.replace("GUARDIAN", "Guardian")}
+          <a className="underline" href={article.url}>
+            {article.source.replace("GUARDIAN", "Guardian")}
           </a>
         </span>
       </div>
@@ -77,8 +77,8 @@ const EventDetails = ({ event }: Props) => {
           News source
         </span>
         <span className="col-span-1 md:col-span-8 xl:col-span-9 text-black font-normal">
-          <a className="underline" href={event.original_article.url}>
-            {event.original_article.source.replace("GUARDIAN", "Guardian")}
+          <a className="underline" href={article.url}>
+            {article.source.replace("GUARDIAN", "Guardian")}
           </a>
         </span>
       </div>
@@ -86,4 +86,4 @@ const EventDetails = ({ event }: Props) => {
   );
 };
 
-export default EventDetails;
+export default ArticleDetails;

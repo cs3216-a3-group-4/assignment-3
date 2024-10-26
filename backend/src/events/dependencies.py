@@ -40,6 +40,8 @@ def retrieve_event(
             selectinload(Event.notes.and_(Note.user_id == user.id)),
             selectinload(Event.analysises).selectinload(
                 Analysis.likes.and_(Like.point_id.is_(None))
+                .and_(Like.concept_id.is_(None))
+                .and_(Like.user_id == user.id)
             ),
             selectinload(Event.original_article),
             selectinload(Event.bookmarks.and_(Bookmark.user_id == user.id)),

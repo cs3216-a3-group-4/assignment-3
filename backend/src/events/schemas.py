@@ -20,12 +20,12 @@ class BaseArticleDTO(BaseModel):
 
 class MiniArticleDTO(BaseArticleDTO):
     categories: list[CategoryDTO]
+    bookmarks: list["BookmarkDTO"]
 
 
 class ArticleDTO(MiniArticleDTO):
     article_concepts: list["ArticleConceptDTO"]
     original_events: list["EventWithoutArticleDTO"]
-    bookmarks: list["BookmarkDTO"]
     notes: list[NoteDTO]
 
 
@@ -81,11 +81,16 @@ class AnalysisDTO(AnalysisMiniDTO):
     notes: list[NoteDTO]
 
 
-class ConceptDTO(BaseModel):
+class ConceptMiniDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     name: str
+    likes: list[LikeDTO]
+
+
+class ConceptDTO(ConceptMiniDTO):
+    notes: list[NoteDTO]
 
 
 class ArticleConceptDTO(BaseModel):

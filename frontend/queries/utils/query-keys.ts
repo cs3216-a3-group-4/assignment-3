@@ -1,10 +1,11 @@
 export enum QueryKeys {
   UserProfile = "user_profile",
   Categories = "categories",
-  Events = "events",
+  Events = "events", // TODO: deprecate
   Bookmarks = "bookmarks",
   Answers = "answers",
   Points = "points",
   Notes = "notes",
   Essays = "essays",
+  Articles = "articles",
 }

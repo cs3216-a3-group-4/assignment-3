@@ -141,7 +141,7 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                                             Event summary
                                           </span>
                                           <Link
-                                            href={`/events/${point_analysis.analysis.event.id}`}
+                                            href={`/articles/${point_analysis.analysis.event.original_article.id}`}
                                           >
                                             <Button
                                               className="h-8 w-fit text-text-muted mt-2"

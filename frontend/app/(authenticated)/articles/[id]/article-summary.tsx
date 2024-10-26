@@ -5,7 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 interface Props {
   summary: string;
 }
-const EventSummary = ({ summary }: Props) => {
+const ArticleSummary = ({ summary }: Props) => {
   return (
     <div className="px-6">
       <Alert variant="teal">
@@ -23,4 +23,4 @@ const EventSummary = ({ summary }: Props) => {
   );
 };
 
-export default EventSummary;
+export default ArticleSummary;
