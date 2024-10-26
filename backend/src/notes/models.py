@@ -9,7 +9,7 @@ class NoteType(str, Enum):
     ARTICLE = "article"
     POINT = "point"
     ANALYSIS = "analysis"
-    CONCEPT = "concept"
+    ARTICLE_CONCEPT = "article_concept"
 
 
 class Note(Base):
@@ -63,5 +63,5 @@ class AnalysisNote(Note):
 class ConceptNote(Note):
     __mapper_args__ = {
         "polymorphic_on": "parent_type",
-        "polymorphic_identity": "concept",
+        "polymorphic_identity": "article_concept",
     }

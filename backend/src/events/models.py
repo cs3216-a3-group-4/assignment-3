@@ -29,6 +29,14 @@ class ArticleConcept(Base):
     article: Mapped["Article"] = relationship(back_populates="article_concepts")
     concept: Mapped["Concept"] = relationship(back_populates="article_concepts")
 
+    notes = relationship(
+        "Note",
+        primaryjoin=and_(
+            id == foreign(Note.parent_id), Note.parent_type == "article_concept"
+        ),
+        backref="article_concept",
+    )
+
 
 class Article(Base):
     __tablename__ = "article"
@@ -177,12 +185,6 @@ class Concept(Base):
 
     article_concepts: Mapped[list["ArticleConcept"]] = relationship(
         back_populates="concept"
-    )
-
-    notes = relationship(
-        "Note",
-        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "concept"),
-        backref="concept",
     )
 
 
