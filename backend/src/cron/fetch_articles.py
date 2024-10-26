@@ -13,7 +13,6 @@ from src.scrapers.cna.process import process_all_categories
 from src.scrapers.cna.scrape import scrape_from_date
 from src.scrapers.guardian.get_analyses import get_analyses
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
-from src.lm.generate_concepts import generate_concepts
 
 from src.lm.generate_events import generate_events
 from src.scripts.populate import populate
@@ -163,9 +162,6 @@ async def run(limit: int = 30):
 
     event_ids = populate("lm_events_output.json")
     analyses = get_analyses(event_ids)
-
-    # NOTE: newly added: Generate concepts from articles that have never had concepts generated before
-    await generate_concepts()
 
     store_documents(analyses)
     print(analyses)

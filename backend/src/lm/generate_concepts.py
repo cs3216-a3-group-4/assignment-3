@@ -9,14 +9,16 @@ import json
 
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.exceptions import OutputParserException
+from openai import RateLimitError
 
 from src.lm.lm import CONCURRENCY, lm_model_concept as lm_model
 from src.lm.concept_gen_prompt import CONCEPT_GEN_SYSPROMPT as SYSPROMPT
+from pydantic import ValidationError
 
 import asyncio
 
 CONCEPTS_FILE_PATH = "backend/src/scripts/concepts_output.json"
-MAX_RETRIES = 5
 
 
 class ArticleConceptLM(BaseModel):
@@ -36,51 +38,59 @@ class ArticleConceptsWithId(ArticleConcepts):
 async def generate_concept_from_article(
     article: Article, res: list[ArticleConceptsWithId], semaphore: asyncio.Semaphore
 ):
-    for _ in range(MAX_RETRIES):
-        try:
-            async with semaphore:
-                while True:
-                    try:
-                        title: str = article.title  # noqa: F841
-                        content: str = article.body  # noqa: F841
+    try:
+        async with semaphore:
+            while True:
+                try:
+                    title: str = article.title  # noqa: F841
+                    content: str = article.body  # noqa: F841
 
-                        human_message: str = f"""
-                        Article Title: {title}
-                        Article Description: {content}
-                        """
+                    human_message: str = f"""
+                    Article Title: {title}
+                    Article Description: {content}
+                    """
 
-                        messages = [
-                            SystemMessage(content=SYSPROMPT),
-                            HumanMessage(content=human_message),
-                        ]
+                    messages = [
+                        SystemMessage(content=SYSPROMPT),
+                        HumanMessage(content=human_message),
+                    ]
 
-                        result = await lm_model.ainvoke(messages)
-                        parser = JsonOutputParser(pydantic_object=ArticleConcepts)
-                        concepts = parser.invoke(result)
+                    result = await lm_model.ainvoke(messages)
+                    parser = JsonOutputParser(pydantic_object=ArticleConcepts)
+                    concepts = parser.invoke(result)
 
-                        # NOTE: concepts might be None if the LM hallucinates in a certain way
-                        if concepts is None:
-                            print(
-                                "Parser invoke returned None, skipping article ",
-                                article.id,
-                            )
-                            return
-                        break
-                    except Exception as e:  # noqa: E722
-                        print(e)
-                        print("hit the rate limit! waiting 10s for article", article.id)
-                        await asyncio.sleep(10)
+                    # NOTE: concepts might be None if the LM hallucinates in a certain way
+                    if concepts is None:
+                        print(
+                            "Parser invoke returned None, skipping article ",
+                            article.id,
+                        )
+                        return
+                    break
 
-            res.append(
-                ArticleConceptsWithId(
-                    concepts=concepts.get("concepts", []),
-                    summary=concepts.get("summary", ""),
-                    article_id=article.id,
-                )
+                except OutputParserException as e:
+                    print(e)
+                    print("LM generated a bad response, skipping article ", article.id)
+                    break
+                except RateLimitError as e:
+                    print(e)
+                    print("Hit the rate limit! waiting 10s for article", article.id)
+                    await asyncio.sleep(10)
+                except Exception as e:  # noqa: E722
+                    print(e)
+                    print("Something went wrong with article ", article.id)
+                    break
+
+        res.append(
+            ArticleConceptsWithId(
+                concepts=concepts.get("concepts", []),
+                summary=concepts.get("summary", ""),
+                article_id=article.id,
             )
-        except Exception as e:
-            print("Something went wrong with article ", article.id)
-            print(e)
+        )
+    except ValidationError as e:
+        print(e)
+        print("Validation error with article ", article.id)
 
 
 def add_concepts_to_db(article_concepts: list[ArticleConceptsWithId]):
@@ -178,13 +188,19 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
 
 if __name__ == "__main__":
     # TODO(marcus): probably remove/change this
-    pass
-    # asyncio.run(generate_concepts(5))
-    # parser = JsonOutputParser(pydantic_object=ArticleConceptsWithId)
+    # pass
+    asyncio.run(generate_concepts(4000))
+
+    # parser = JsonOutputParser(pydantic_object=ArticleConcepts)
     # res = """{
-    #     "summary": "Summary of the events in the article",
-    #     "concepts": [{"concept": "Economic Resilience',\n            "}],
-    #    "article_id": 1
+    #     "summary": 123,
+    #     "concepts": [
+    #         {
+    #             "concept": "concept1"
+    #             "explanation": "An insightful explanation of the concept1"
+    #         }
+
+    #         ]
     # }"""
 
     # result = parser.invoke(res)
@@ -192,7 +208,7 @@ if __name__ == "__main__":
     # print("done w/ ", result)
 
     # obj = ArticleConceptsWithId(
-    #     concepts=[{"concept": "Economic Resilience',\n            "}],
+    #     concepts=123,
     #     summary="",
     #     article_id=1,
     # )
