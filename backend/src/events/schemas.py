@@ -81,11 +81,16 @@ class AnalysisDTO(AnalysisMiniDTO):
     notes: list[NoteDTO]
 
 
-class ConceptDTO(BaseModel):
+class ConceptMiniDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     name: str
+    likes: list[LikeDTO]
+
+
+class ConceptDTO(ConceptMiniDTO):
+    notes: list[NoteDTO]
 
 
 class ArticleConceptDTO(BaseModel):

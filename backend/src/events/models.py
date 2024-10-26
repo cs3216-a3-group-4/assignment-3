@@ -179,6 +179,12 @@ class Concept(Base):
         back_populates="concept"
     )
 
+    notes = relationship(
+        "Note",
+        primaryjoin=and_(id == foreign(Note.parent_id), Note.parent_type == "concept"),
+        backref="concept",
+    )
+
 
 class Analysis(Base):
     __tablename__ = "analysis"

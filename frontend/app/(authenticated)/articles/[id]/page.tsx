@@ -14,20 +14,21 @@ import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
 import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
-import { getEvent, useReadEvent } from "@/queries/event";
+import { getArticle } from "@/queries/article";
+import { useReadEvent } from "@/queries/event";
 import { MediaBreakpoint } from "@/utils/media";
 
-import EventAnnotations from "./event-annotations/event-annotations";
-import EventNotes from "./event-annotations/event-notes";
-import EventAnalysis from "./event-analysis";
+import ArticleAnnotations from "./article-annotations/article-annotations";
+import ArticleNotes from "./article-annotations/article-notes";
+import ArticleConcepts from "./article-concepts";
+import ArticleDetails from "./article-details";
+import ArticleSource from "./article-source";
+import ArticleSummary from "./article-summary";
 import EventBookmarkButton from "./event-bookmark-button";
-import EventDetails from "./event-details";
-import EventSource from "./event-source";
-import EventSummary from "./event-summary";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
-  const { data, isLoading } = useQuery(getEvent(id));
+  const { data, isLoading } = useQuery(getArticle(id));
   const mediaQuery = useBreakpointMediaQuery();
 
   const readEventMutation = useReadEvent(id);
@@ -56,7 +57,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     if (
       data.notes.length > 0 ||
-      data.analysises.flatMap((analysis) => analysis.notes).length > 0
+      data.article_concepts.flatMap((concept) => concept.concept).length > 0
     ) {
       setIsViewAnnotation(!showPanelAsSheet);
     }
@@ -108,7 +109,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             <Image
               alt={data?.title}
               height={154}
-              src={data.original_article.image_url}
+              src={data.image_url}
               style={{
                 width: "100%",
                 height: "fit-content",
@@ -119,8 +120,8 @@ const Page = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="px-3 md:px-8 flex flex-col gap-y-10">
             <h1 className="text-4xl font-bold px-6">{data.title}</h1>
-            <EventDetails event={data} />
-            <EventSummary summary={data.description} />
+            <ArticleDetails article={data} />
+            <ArticleSummary summary={data.summary} />
             <div className="flex flex-wrap gap-x-4 gap-y-4 px-6">
               <EventBookmarkButton
                 eventId={id}
@@ -144,11 +145,11 @@ const Page = ({ params }: { params: { id: string } }) => {
         </div>
         <div className="md:px-8 flex flex-col pb-8 gap-y-4 lg:gap-y-8">
           <Separator className="my-4 lg:my-8" />
-          <EventAnalysis event={data} showAnnotations={!isViewAnnotation} />
+          <ArticleConcepts article={data} showAnnotations={!isViewAnnotation} />
           <Separator className="my-4 lg:my-8" />
-          <EventNotes event={data} />
+          <ArticleNotes article={data} />
           <Separator className="my-4 lg:my-8" />
-          <EventSource originalSource={data.original_article} />
+          <ArticleSource article={data} />
         </div>
       </div>
       {isViewAnnotation && (
@@ -159,8 +160,8 @@ const Page = ({ params }: { params: { id: string } }) => {
             (showPanelAsSheet ? "absolute right-0 w-full" : "flex w-4/12 ")
           }
         >
-          <EventAnnotations
-            event={data}
+          <ArticleAnnotations
+            article={data}
             hideAnnotationsPanel={() => setIsViewAnnotation(false)}
           />
         </div>

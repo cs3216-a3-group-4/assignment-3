@@ -1,8 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { getArticlesArticlesGet, getTopArticlesArticlesTopGet } from "@/client";
+import {
+  getArticlesArticlesGet,
+  getTopArticlesArticlesTopGet,
+  getArticleArticlesIdGet,
+} from "@/client";
 
-import { QueryKeys } from "./utils/query-keys";
+import { QueryKeys } from "@/queries/utils/query-keys";
 import { NUM_EVENTS_PER_PAGE } from "./event";
 
 export const getTopArticles = (isSingapore: boolean) =>
@@ -82,6 +86,18 @@ export const getArticlesForCategory = (
           category_ids: [categoryId],
           limit: NUM_EVENTS_PER_PAGE,
           offset: (page - 1) * NUM_EVENTS_PER_PAGE,
+        },
+      }).then((data) => data.data),
+  });
+
+export const getArticle = (id: number) =>
+  queryOptions({
+    queryKey: [QueryKeys.Articles, id],
+    queryFn: () =>
+      getArticleArticlesIdGet({
+        withCredentials: true,
+        path: {
+          id,
         },
       }).then((data) => data.data),
   });
