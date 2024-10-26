@@ -557,9 +557,16 @@ export const ConceptDTOSchema = {
       type: "string",
       title: "Name",
     },
+    notes: {
+      items: {
+        $ref: "#/components/schemas/NoteDTO",
+      },
+      type: "array",
+      title: "Notes",
+    },
   },
   type: "object",
-  required: ["id", "name"],
+  required: ["id", "name", "notes"],
   title: "ConceptDTO",
 } as const;
 
