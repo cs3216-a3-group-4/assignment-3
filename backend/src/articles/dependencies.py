@@ -31,7 +31,7 @@ def retrieve_article(
             ),
             selectinload(Article.article_concepts)
             .selectinload(ArticleConcept.concept)
-            .selectinload(Concept.notes),
+            .selectinload(Concept.notes.and_(Note.user_id == user.id)),
             selectinload(Article.article_concepts)
             .selectinload(ArticleConcept.concept)
             .selectinload(
