@@ -56,7 +56,7 @@ async def generate_concept_from_article(
 
                 result = await lm_model.ainvoke(messages)
                 parser = JsonOutputParser(pydantic_object=ArticleConcepts)
-                concepts = parser.invoke(result.content)
+                concepts = parser.invoke(result)
 
                 # NOTE: concepts might be None if the LM hallucinates in a certain way
                 if concepts is None:
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     # pass
     asyncio.run(generate_concepts(4000))
 
-    # res_2 = {
+    # res_2 = """{
     #     "summary": "Thailand's Constitutional Court is set to deliver a verdict on August 7 regarding the potential dissolution of the opposition party Move Forward, following a petition from the election commission. The case centers around the party's past campaign to amend the royal insult law, a deeply sensitive issue tied to the monarchy's protection in Thailand. Move Forward, which gained significant urban and youth support during last year's elections, has denied any wrongdoing and asserts that their intentions were to strengthen the constitutional monarchy. The impending decision comes amid other political controversies, adding to the uncertainties within Thailand's political landscape.",
     #     "concepts": [
     #         {
@@ -205,19 +205,10 @@ if __name__ == "__main__":
     #             "explanation": "The role of the judiciary in mediating political disputes often reveals the extent of political influence within a legal framework. The ongoing legal challenges faced by Move Forward underscore the complex relationship between judicial independence and political power. In scenarios where courts become arbiters in politically charged cases, the judicial system's integrity is tested, raising concerns about the impartiality of legal proceedings. Moreover, the tension between the ruling elite and opposition parties can lead to judicial actions that appear to favor one side, impacting public trust in the legal system. The anticipation surrounding the court's verdict reflects broader societal anxieties about the balancing act between maintaining legal order and protecting democratic principles against political maneuvering.",
     #         },
     #     ],
-    # }
+    # }"""
+    # print(json.dumps(res_2))
     # parser = JsonOutputParser(pydantic_object=ArticleConcepts)
-    # # res = """{
-    # #     "summary": 123,
-    # #     "concepts": [
-    # #         {
-    # #             "concept": "concept1"
-    # #             "explanation": "An insightful explanation of the concept1"
-    # #         }
-
-    # #         ]
-    # # }"""
-    # result = parser.invoke(json.dumps(res_2))
+    # result = parser.invoke(json.dumps(json.loads(res_2)))
 
     # print("done w/ ", result)
 
