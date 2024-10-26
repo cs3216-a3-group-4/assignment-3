@@ -21,12 +21,15 @@ type Props = {
 const extractUrl = (note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO) => {
   if (note.parent_type === "event") {
     const eventNote = note as EventNoteDTO;
-    return { event: eventNote.event, url: `/events/${eventNote.event.id}` };
+    return {
+      article: eventNote.event.original_article,
+      url: `/articles/${eventNote.event.id}`,
+    };
   } else {
     const analysisNote = note as AnalysisNoteDTO;
     return {
-      event: analysisNote.analysis.event,
-      url: `/events/${analysisNote.analysis.event.id}#analysis-${analysisNote.analysis.id}`,
+      article: analysisNote.analysis.event.original_article,
+      url: `/articles/${analysisNote.analysis.event.id}#analysis-${analysisNote.analysis.id}`,
     };
   }
 };
@@ -45,7 +48,7 @@ const Note = ({ data, handleDelete }: Props) => {
     return <></>;
   }
 
-  const { event, url: source } = extractUrl(data);
+  const { article, url: source } = extractUrl(data);
 
   return (
     <Dialog onOpenChange={setNoteOpen} open={noteOpen}>
@@ -76,8 +79,7 @@ const Note = ({ data, handleDelete }: Props) => {
             <p>
               From{" "}
               <span className="underline" onClick={() => router.push(source)}>
-                {event.title}{" "}
-                {formatDate(event.original_article.date, "(dd MMM yyyy)")}
+                {article.title} {formatDate(article.date, "(dd MMM yyyy)")}
               </span>
             </p>
           </div>
