@@ -24,9 +24,9 @@ import {
 
 import AnalysisFragment, {
   ANNOTATION_ACTIONS_BUTTON_ID,
-} from "./event-annotations/analysis-fragment";
-import AnalysisNotes from "./event-annotations/analysis-notes";
-import NoteForm, { NoteFormType } from "./event-annotations/note-form";
+} from "./article-annotations/analysis-fragment";
+import AnalysisNotes from "./article-annotations/analysis-notes";
+import NoteForm, { NoteFormType } from "./article-annotations/note-form";
 
 interface HighlightSelection {
   conceptId: number;
@@ -41,7 +41,7 @@ interface Props {
 
 const CONCEPT_ID_PREFIX = "concept-";
 
-const ArticleAnalysis = ({ article, showAnnotations }: Props) => {
+const ArticleConcepts = ({ article, showAnnotations }: Props) => {
   const user = useUserStore((state) => state.user);
 
   const [highlightSelection, setHighlightSelection] =
@@ -199,7 +199,9 @@ const ArticleAnalysis = ({ article, showAnnotations }: Props) => {
                 chevronClassName="h-6 w-6 stroke-[2.5]"
                 className="text-xl text-cyan-600 font-semibold"
               >
-                <span className="flex items-center">{concept.name}</span>
+                <span className="flex items-center capitalize">
+                  {concept.name}
+                </span>
               </AccordionTrigger>
               <div>
                 <ScrewedUpAccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
@@ -255,7 +257,6 @@ const ArticleAnalysis = ({ article, showAnnotations }: Props) => {
                           <h1 className="font-medium">Add new highlight</h1>
                         </div>
                         <NoteForm
-                          hideCategory
                           highlightSelection={
                             (highlightSelection &&
                               highlightSelection.conceptId === concept.id &&
@@ -296,4 +297,4 @@ const ArticleAnalysis = ({ article, showAnnotations }: Props) => {
   );
 };
 
-export default ArticleAnalysis;
+export default ArticleConcepts;

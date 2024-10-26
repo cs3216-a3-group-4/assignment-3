@@ -18,9 +18,9 @@ import { getArticle } from "@/queries/article";
 import { useReadEvent } from "@/queries/event";
 import { MediaBreakpoint } from "@/utils/media";
 
-import ArticleAnnotations from "./event-annotations/article-annotations";
-import ArticleNotes from "./event-annotations/article-notes";
-import ArticleAnalysis from "./article-analysis";
+import ArticleAnnotations from "./article-annotations/article-annotations";
+import ArticleNotes from "./article-annotations/article-notes";
+import ArticleConcepts from "./article-concepts";
 import ArticleDetails from "./article-details";
 import ArticleSource from "./article-source";
 import ArticleSummary from "./article-summary";
@@ -145,7 +145,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         </div>
         <div className="md:px-8 flex flex-col pb-8 gap-y-4 lg:gap-y-8">
           <Separator className="my-4 lg:my-8" />
-          <ArticleAnalysis article={data} showAnnotations={!isViewAnnotation} />
+          <ArticleConcepts article={data} showAnnotations={!isViewAnnotation} />
           <Separator className="my-4 lg:my-8" />
           <ArticleNotes article={data} />
           <Separator className="my-4 lg:my-8" />
