@@ -86,7 +86,7 @@ const Articles = () => {
         className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
         id="home-page"
       >
-        <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
+        <div className="flex flex-col py-6 lg:py-12 w-full h-fit sm:mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
           {/* TODO: x-padding here is tied to the news article */}
           <div
             className="flex flex-col mb-2 gap-y-2 px-4 md:px-8 xl:px-12"

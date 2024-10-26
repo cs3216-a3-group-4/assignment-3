@@ -4,7 +4,7 @@ import { LucideIcon } from "lucide-react";
 import { Box } from "@/components/ui/box";
 import { cn } from "@/lib/utils";
 
-const chipVariants = cva(
+export const chipVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-xs font-medium transition-colors disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
@@ -51,7 +51,13 @@ const Chip = ({
       className={cn(chipVariants({ variant, size }), className)}
       onClick={onClick}
     >
-      {Icon && <Icon className="mr-2" size={iconSize} strokeWidth={1.6} />}
+      {Icon && (
+        <Icon
+          className={cn({ "mr-2": !!label })}
+          size={iconSize}
+          strokeWidth={1.6}
+        />
+      )}
       {label}
     </Box>
   );
