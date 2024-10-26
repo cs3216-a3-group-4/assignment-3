@@ -6,10 +6,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Bookmark } from "lucide-react";
 
-import { MiniEventDTO } from "@/client";
+import { MiniArticleDTO } from "@/client";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
 import ArticleLoading from "@/components/news/article-loading";
-import NewsEvent from "@/components/news/news-event";
+import NewsArticle from "@/components/news/news-article";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -20,7 +20,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getBookmarkedEvents } from "@/queries/event";
+import { getBookmarkedArticles } from "@/queries/article";
 
 function isNumeric(value: string | null) {
   return value !== null && /^-?\d+$/.test(value);
@@ -36,8 +36,8 @@ const Page = () => {
   const page = isNumeric(pageStr) && pageStr !== "0" ? parseInt(pageStr!) : 1;
   const [pageCount, setPageCount] = useState<number>(0);
 
-  const { data: events, isSuccess: isEventsLoaded } = useQuery(
-    getBookmarkedEvents(page),
+  const { data: articles, isSuccess: isArticlesLoaded } = useQuery(
+    getBookmarkedArticles(page),
   );
 
   const changePage = (page: number) => {
@@ -48,7 +48,7 @@ const Page = () => {
     if (page < 0) {
       changePage(1);
     } else {
-      const items = events?.total_count;
+      const items = articles?.total_count;
       const mPageCount = items !== undefined ? Math.ceil(items / 10) : -1;
       if (mPageCount !== -1) {
         setPageCount(mPageCount);
@@ -58,7 +58,7 @@ const Page = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, isEventsLoaded, events?.total_count, router, searchParams]);
+  }, [page, isArticlesLoaded, articles?.total_count, router, searchParams]);
 
   const getPageUrl = (page: number) => {
     // now you got a read/write object
@@ -90,26 +90,28 @@ const Page = () => {
             <div className="flex items-baseline gap-4">
               <Bookmark className="w-7 h-7" />
               <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
-                Bookmarked events
+                Bookmarked articles
               </span>
             </div>
           </div>
 
           <div className="flex flex-col w-full">
-            {!isEventsLoaded && (
+            {!isArticlesLoaded && (
               <div className="flex flex-col w-full">
                 <ArticleLoading />
                 <ArticleLoading />
                 <ArticleLoading />
               </div>
             )}
-            {isEventsLoaded &&
-              events!.data &&
-              events!.data.map((newsEvent: MiniEventDTO, index: number) => (
-                <NewsEvent key={index} newsEvent={newsEvent} />
-              ))}
+            {isArticlesLoaded &&
+              articles!.data &&
+              articles!.data.map(
+                (newsArticle: MiniArticleDTO, index: number) => (
+                  <NewsArticle key={index} newsArticle={newsArticle} />
+                ),
+              )}
           </div>
-          {isEventsLoaded && events!.data.length !== 0 && (
+          {isArticlesLoaded && articles!.data.length !== 0 && (
             <Pagination className="py-8">
               <PaginationContent>
                 {page !== 1 && (
@@ -160,7 +162,7 @@ const Page = () => {
               </PaginationContent>
             </Pagination>
           )}
-          {isEventsLoaded && events!.data.length === 0 && (
+          {isArticlesLoaded && articles!.data.length === 0 && (
             <Card className="mx-auto my-8 p-8 flex flex-col gap-8 max-w-lg">
               <h2 className="text-xl">
                 You do not have any bookmarks. Return after you bookmark some

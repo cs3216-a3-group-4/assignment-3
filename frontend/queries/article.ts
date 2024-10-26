@@ -52,3 +52,17 @@ export const getArticles = (
         },
       }).then((data) => data.data),
   });
+
+export const getBookmarkedArticles = (page: number) =>
+  queryOptions({
+    queryKey: [QueryKeys.Events, QueryKeys.Bookmarks],
+    queryFn: () =>
+      getArticlesArticlesGet({
+        withCredentials: true,
+        query: {
+          limit: NUM_EVENTS_PER_PAGE,
+          offset: (page - 1) * NUM_EVENTS_PER_PAGE,
+          bookmarks: true,
+        },
+      }).then((data) => data.data),
+  });
