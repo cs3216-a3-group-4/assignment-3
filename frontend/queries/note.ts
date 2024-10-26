@@ -66,6 +66,42 @@ export const useAddEventNote = (event_id: number) => {
   });
 };
 
+export const useAddConceptNote = (article_id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      content,
+      concept_id,
+      start_index,
+      end_index,
+      category_id,
+    }: {
+      content: string;
+      concept_id: number;
+      start_index: number;
+      end_index: number;
+      category_id?: number;
+    }) => {
+      return createNoteNotesPost({
+        body: {
+          content,
+          parent_id: concept_id,
+          parent_type: "concept",
+          start_index,
+          end_index,
+          category_id,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Articles, article_id],
+      });
+    },
+  });
+};
+
+// TODO: deprecate
 export const useAddAnalysisNote = (event_id: number) => {
   const queryClient = useQueryClient();
   return useMutation({

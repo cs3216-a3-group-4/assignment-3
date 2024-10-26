@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { SparklesIcon } from "lucide-react";
 
-import {
-  EventDTO,
-  src__events__schemas__AnalysisDTO as AnalysisDTO,
-} from "@/client";
+import { ArticleDTO } from "@/client";
 import LikeButtons from "@/components/likes/like-buttons";
 import {
   Accordion,
@@ -15,13 +12,11 @@ import {
   AccordionTrigger,
   ScrewedUpAccordionContent,
 } from "@/components/ui/accordion";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-import { useLikeEvent } from "@/queries/like";
-import { useAddAnalysisNote, useDeleteNote } from "@/queries/note";
+import { useLikeArticle } from "@/queries/like";
+import { useAddConceptNote, useDeleteNote } from "@/queries/note";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { HighlightType } from "@/types/annotations";
-import { Category, getCategoryFor, getIconFor } from "@/types/categories";
 import {
   addNotHighlightedRegion,
   addSelectedRegion,
@@ -34,62 +29,45 @@ import AnalysisNotes from "./event-annotations/analysis-notes";
 import NoteForm, { NoteFormType } from "./event-annotations/note-form";
 
 interface HighlightSelection {
-  analysisId: number;
+  conceptId: number;
   startIndex: number;
   endIndex: number;
 }
 
 interface Props {
-  event: EventDTO;
+  article: ArticleDTO;
   showAnnotations: boolean;
 }
 
-const EVENT_ANALYSIS_ID_PREFIX = "event-analysis-";
+const CONCEPT_ID_PREFIX = "concept-";
 
-const EventAnalysis = ({ event, showAnnotations }: Props) => {
+const ArticleAnalysis = ({ article, showAnnotations }: Props) => {
   const user = useUserStore((state) => state.user);
-
-  const eventCategories = event.categories;
-
-  const [activeCategories, setActiveCategories] = useState<string[]>(
-    event.analysises.map((item) => item.category.name),
-  );
-
-  // todo: this should be for each analysis but without knowing what the ui wants, i can't really refactor it
-  const [showAnnotationForm, setShowAnnotationForm] = useState(false);
-
-  // @ts-expect-error deadline doesnt give me time to bother with type errors
-  const analysis: { [key in Category]: AnalysisDTO } = {};
 
   const [highlightSelection, setHighlightSelection] =
     useState<HighlightSelection | null>(null);
+  // todo: this should be for each analysis but without knowing what the ui wants, i can't really refactor it
+  const [showAnnotationForm, setShowAnnotationForm] = useState(false);
 
-  event.analysises.forEach(
-    (item) => (analysis[getCategoryFor(item.category.name)] = item),
-  );
-
-  const likeMutation = useLikeEvent(event.id);
-  const addNoteMutation = useAddAnalysisNote(event.id);
-  const deleteNoteMutation = useDeleteNote(event.id);
+  const likeMutation = useLikeArticle(article.id);
+  const addNoteMutation = useAddConceptNote(article.id);
+  const deleteNoteMutation = useDeleteNote(article.id);
 
   const clearHighlight = () => {
     setShowAnnotationForm(false);
     setHighlightSelection(null);
   };
 
-  const handleAddNote: (
-    analysis_id: number,
-    category_id_num: number,
-  ) => SubmitHandler<NoteFormType> =
-    (analysis_id: number, category_id_num: number) =>
-    ({ content }) => {
+  const handleAddNote: (concept_id: number) => SubmitHandler<NoteFormType> =
+    (concept_id: number) =>
+    ({ content, category_id }) => {
       addNoteMutation.mutate(
         {
           content,
-          analysis_id,
+          concept_id,
           start_index: highlightSelection!.startIndex,
           end_index: highlightSelection!.endIndex,
-          category_id: category_id_num,
+          category_id: category_id ? parseInt(category_id) : undefined,
         },
         {
           onSuccess: clearHighlight,
@@ -141,14 +119,13 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
       const startIndex = startParentStartIndex + startRange.startOffset;
       const endIndex = endParentStartIndex + endRange.endOffset;
 
-      const analysisIdStr = startParent?.parentElement?.id.split(
-        EVENT_ANALYSIS_ID_PREFIX,
-      )[1];
-      if (!analysisIdStr) return;
-      const analysisId = parseInt(analysisIdStr);
+      const conceptIdStr =
+        startParent?.parentElement?.id.split(CONCEPT_ID_PREFIX)[1];
+      if (!conceptIdStr) return;
+      const conceptId = parseInt(conceptIdStr);
 
       setHighlightSelection({
-        analysisId,
+        conceptId,
         startIndex: startIndex,
         endIndex: endIndex - 1,
       });
@@ -169,50 +146,16 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
           <SparklesIcon className="inline-flex mr-3 stroke-offblack fill-muted" />
           AI-powered topical analysis
         </span>
-        <div className="flex w-full">
-          <ToggleGroup
-            className="flex flex-col sm:flex-row flex-wrap lg:flex-row gap-3 w-full lg:w-auto"
-            onValueChange={(value) => setActiveCategories(value)}
-            size="lg"
-            type="multiple"
-            value={activeCategories}
-            variant="outline"
-          >
-            {eventCategories.map((category) => {
-              const categoryName = category.name;
-              const CategoryIcon = getIconFor(categoryName);
-              return (
-                <ToggleGroupItem
-                  aria-label={`Toggle ${categoryName}`}
-                  className="w-full lg:w-auto border-none bg-muted text-muted-foreground data-[state=on]:bg-cyan-400/30 data-[state=on]:text-cyan-600 rounded-lg hover:bg-cyan-200/30 hover:text-cyan-500"
-                  key={category.id}
-                  value={category.name}
-                >
-                  <span className="flex items-center w-full justify-center">
-                    <CategoryIcon className="inline-flex mr-2" size={18} />
-                    {categoryName}
-                  </span>
-                </ToggleGroupItem>
-              );
-            })}
-          </ToggleGroup>
-        </div>
       </div>
-      <Accordion
-        className="flex flex-col gap-y-6"
-        onValueChange={(value) => setActiveCategories(value)}
-        type="multiple"
-        value={activeCategories}
-      >
-        {eventCategories.map((category) => {
-          const eventAnalysis = analysis[getCategoryFor(category.name)];
-          const content = eventAnalysis.content;
-          const likes = eventAnalysis.likes;
+      <Accordion className="flex flex-col gap-y-6" type="multiple">
+        {article.article_concepts.map((article_concept) => {
+          const content = article_concept.explanation;
+          const concept = article_concept.concept;
+          const likes = concept.likes;
           const userLike = likes.filter((like) => like.user_id == user?.id)[0];
           const userLikeValue = userLike ? userLike.type : 0;
-          const CategoryIcon = getIconFor(category.name);
 
-          const highlightStartEnd = eventAnalysis.notes
+          const highlightStartEnd = concept.notes
             .map((notes) => ({
               startIndex: notes.start_index!,
               endIndex: notes.end_index!,
@@ -230,7 +173,7 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
 
           if (
             highlightSelection &&
-            highlightSelection.analysisId == eventAnalysis.id
+            highlightSelection.conceptId == concept.id
           ) {
             highlightStartEndNormalised = addSelectedRegion(
               highlightSelection.startIndex,
@@ -248,18 +191,15 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                   "select-none": hasSelection,
                 },
               )}
-              id={"analysis-" + eventAnalysis.id}
-              key={category.id}
-              value={category.name}
+              id={"concept-" + concept.id}
+              key={concept.id}
+              value={concept.name}
             >
               <AccordionTrigger
                 chevronClassName="h-6 w-6 stroke-[2.5]"
                 className="text-xl text-cyan-600 font-semibold"
               >
-                <span className="flex items-center">
-                  <CategoryIcon className="inline-flex mr-4" />
-                  {category.name}
-                </span>
+                <span className="flex items-center">{concept.name}</span>
               </AccordionTrigger>
               <div>
                 <ScrewedUpAccordionContent className="text-lg pt-2 text-cyan-950 font-[450]">
@@ -271,7 +211,7 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                       }
                     }}
                   >
-                    <div id={`${EVENT_ANALYSIS_ID_PREFIX}${eventAnalysis.id}`}>
+                    <div id={`${CONCEPT_ID_PREFIX}${concept.id}`}>
                       {highlightStartEndNormalised.map(
                         ({
                           startIndex,
@@ -284,8 +224,8 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                             content={content.slice(startIndex, endIndex + 1)}
                             highlighted={highlighted}
                             highlightedNoteId={highlightedNoteId}
-                            id={`analysis${eventAnalysis.id}-${startIndex}`}
-                            key={`analysis${eventAnalysis.id}-${startIndex}`}
+                            id={`concept${concept.id}-${startIndex}`}
+                            key={`concept${concept.id}-${startIndex}`}
                             setShowAnnotationForm={setShowAnnotationForm}
                           />
                         ),
@@ -295,13 +235,13 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                   <LikeButtons
                     onDislike={() =>
                       likeMutation.mutate({
-                        analysis_id: eventAnalysis.id,
+                        concept_id: concept.id,
                         type: -1,
                       })
                     }
                     onLike={() =>
                       likeMutation.mutate({
-                        analysis_id: eventAnalysis.id,
+                        concept_id: concept.id,
                         type: 1,
                       })
                     }
@@ -309,7 +249,7 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                   />
                   {highlightSelection &&
                     showAnnotationForm &&
-                    highlightSelection.analysisId === eventAnalysis.id && (
+                    highlightSelection.conceptId === concept.id && (
                       <div className="p-6 mt-4 border border-primary-500/30 rounded-md">
                         <div className="flex items-center mb-3 text-primary-800">
                           <h1 className="font-medium">Add new highlight</h1>
@@ -318,9 +258,8 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                           hideCategory
                           highlightSelection={
                             (highlightSelection &&
-                              highlightSelection.analysisId ===
-                                eventAnalysis.id &&
-                              eventAnalysis.content.slice(
+                              highlightSelection.conceptId === concept.id &&
+                              content.slice(
                                 highlightSelection.startIndex,
                                 highlightSelection.endIndex + 1,
                               )) ||
@@ -328,24 +267,21 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
                           }
                           isHighlight
                           onCancel={clearHighlight}
-                          onSubmit={handleAddNote(
-                            eventAnalysis.id,
-                            category.id,
-                          )}
+                          onSubmit={handleAddNote(concept.id)}
                         />
                       </div>
                     )}
                   {showAnnotations && (
                     <AnalysisNotes
-                      eventAnalysisContent={eventAnalysis.content}
-                      notes={eventAnalysis.notes}
+                      eventAnalysisContent={content}
+                      notes={concept.notes}
                       onDelete={(noteId: number) =>
                         deleteNoteMutation.mutate(noteId)
                       }
                       showNoteForm={
                         (highlightSelection &&
                           showAnnotationForm &&
-                          highlightSelection.analysisId === eventAnalysis.id) ??
+                          highlightSelection.conceptId === concept.id) ??
                         false
                       }
                     />
@@ -360,4 +296,4 @@ const EventAnalysis = ({ event, showAnnotations }: Props) => {
   );
 };
 
-export default EventAnalysis;
+export default ArticleAnalysis;

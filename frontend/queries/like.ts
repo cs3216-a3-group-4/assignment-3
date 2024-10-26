@@ -4,6 +4,32 @@ import { LikeType, upsertLikeLikesPost } from "@/client";
 
 import { QueryKeys } from "./utils/query-keys";
 
+export const useLikeArticle = (article_id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      concept_id,
+      type,
+    }: {
+      concept_id: number;
+      type: LikeType;
+    }) => {
+      return upsertLikeLikesPost({
+        body: {
+          concept_id,
+          type,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Articles, article_id],
+      });
+    },
+  });
+};
+
+// TODO: deprecate
 export const useLikeEvent = (event_id: number) => {
   const queryClient = useQueryClient();
   return useMutation({

@@ -18,6 +18,9 @@ import { getArticle } from "@/queries/article";
 import { useReadEvent } from "@/queries/event";
 import { MediaBreakpoint } from "@/utils/media";
 
+import ArticleAnnotations from "./event-annotations/article-annotations";
+import ArticleNotes from "./event-annotations/article-notes";
+import ArticleAnalysis from "./article-analysis";
 import ArticleDetails from "./article-details";
 import ArticleSource from "./article-source";
 import ArticleSummary from "./article-summary";
@@ -142,12 +145,9 @@ const Page = ({ params }: { params: { id: string } }) => {
         </div>
         <div className="md:px-8 flex flex-col pb-8 gap-y-4 lg:gap-y-8">
           <Separator className="my-4 lg:my-8" />
-          {data.article_concepts.map((concept) => (
-            <p key={concept.concept.id}>{concept.concept.name}</p>
-          ))}
-          {/* <EventAnalysis event={data} showAnnotations={!isViewAnnotation} /> */}
+          <ArticleAnalysis article={data} showAnnotations={!isViewAnnotation} />
           <Separator className="my-4 lg:my-8" />
-          {/* <EventNotes event={data} /> */}
+          <ArticleNotes article={data} />
           <Separator className="my-4 lg:my-8" />
           <ArticleSource article={data} />
         </div>
@@ -160,10 +160,10 @@ const Page = ({ params }: { params: { id: string } }) => {
             (showPanelAsSheet ? "absolute right-0 w-full" : "flex w-4/12 ")
           }
         >
-          {/* <EventAnnotations
-            event={data}
+          <ArticleAnnotations
+            article={data}
             hideAnnotationsPanel={() => setIsViewAnnotation(false)}
-          /> */}
+          />
         </div>
       )}
     </div>
