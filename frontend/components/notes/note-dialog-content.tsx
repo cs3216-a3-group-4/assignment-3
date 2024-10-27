@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import {
   AnalysisNoteDTO,
+  ArticleConceptNoteDTO,
   ArticleNoteDTO,
   CategoryDTO,
   EventNoteDTO,
@@ -27,7 +28,11 @@ import { parseDate } from "@/utils/date";
 interface Props {
   noteContent: string;
   setNoteContent: Dispatch<SetStateAction<string>>;
-  noteData: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO;
+  noteData:
+    | EventNoteDTO
+    | AnalysisNoteDTO
+    | ArticleNoteDTO
+    | ArticleConceptNoteDTO;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   handleDelete: () => void;
