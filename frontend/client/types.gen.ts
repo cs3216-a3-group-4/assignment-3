@@ -35,7 +35,7 @@ export type AnswerMiniDTO = {
 export type ArticleConceptDTO = {
   explanation: string;
   concept: ConceptDTO;
-  likes: LikeDTO;
+  likes: LikeDTO | null;
   notes: Array<NoteDTO>;
 };
 
