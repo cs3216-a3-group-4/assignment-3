@@ -1,9 +1,10 @@
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions, useMutation } from "@tanstack/react-query";
 
 import {
   getArticleArticlesIdGet,
   getArticlesArticlesGet,
   getTopArticlesArticlesTopGet,
+  readArticleArticlesIdReadPost,
 } from "@/client";
 import { QueryKeys } from "@/queries/utils/query-keys";
 
@@ -101,3 +102,11 @@ export const getArticle = (id: number) =>
         },
       }).then((data) => data.data),
   });
+
+export const useReadArticle = (id: number) => {
+  return useMutation({
+    mutationFn: () => {
+      return readArticleArticlesIdReadPost({ path: { id } });
+    },
+  });
+};
