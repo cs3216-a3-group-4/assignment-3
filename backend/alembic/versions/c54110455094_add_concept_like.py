@@ -1,7 +1,7 @@
 """add_concept_like
 
 Revision ID: c54110455094
-Revises: 61b03cca7e85
+Revises: fe06c24f397a
 Create Date: 2024-10-26 19:22:42.470241
 
 """
@@ -14,7 +14,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = "c54110455094"
-down_revision: Union[str, None] = "61b03cca7e85"
+down_revision: Union[str, None] = "fe06c24f397a"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
