@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { AxiosError } from "axios";
 import axios from "axios";
 
