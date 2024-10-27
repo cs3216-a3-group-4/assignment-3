@@ -1,7 +1,7 @@
 """Add subscription table
 
 Revision ID: 933d84ad4302
-Revises: fe06c24f397a
+Revises: ecef7ecb63d6
 Create Date: 2024-10-19 02:59:02.029442
 
 """
@@ -14,7 +14,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision: str = "933d84ad4302"
-down_revision: Union[str, None] = "fe06c24f397a"
+down_revision: Union[str, None] = "ecef7ecb63d6"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
