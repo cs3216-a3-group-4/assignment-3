@@ -17,7 +17,9 @@ class Subscription(Base):
     __tablename__ = "subscription"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id", name="fk_subscription_user_id"), nullable=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("user.id", name="fk_subscription_user_id"), nullable=True
+    )
     price_id: Mapped[str]
     customer_id: Mapped[str]
     subscription_period_end: Mapped[datetime] = mapped_column(nullable=True)

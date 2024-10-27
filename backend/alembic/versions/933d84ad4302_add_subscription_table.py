@@ -64,7 +64,9 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_foreign_key("fk_subscription_user_id", "subscription", "user", ["user_id"], ["id"])
+    op.create_foreign_key(
+        "fk_subscription_user_id", "subscription", "user", ["user_id"], ["id"]
+    )
     # ### end Alembic commands ###
 
 
