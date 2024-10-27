@@ -35,6 +35,27 @@ export type AnswerMiniDTO = {
 export type ArticleConceptDTO = {
   explanation: string;
   concept: ConceptDTO;
+  likes: LikeDTO | null;
+  notes: Array<NoteDTO>;
+};
+
+export type ArticleConceptNoteDTO = {
+  id: number;
+  content: string;
+  start_index?: number | null;
+  end_index?: number | null;
+  parent_id: number;
+  parent_type: NoteType;
+  category?: CategoryDTO | null;
+  created_at: string;
+  updated_at: string;
+  article_concept: ArticleConceptWithArticleDTO;
+};
+
+export type ArticleConceptWithArticleDTO = {
+  explanation: string;
+  concept: ConceptDTO;
+  article: BaseArticleDTO;
 };
 
 export type ArticleDTO = {
@@ -125,8 +146,6 @@ export type CommentDTO = {
 export type ConceptDTO = {
   id: number;
   name: string;
-  likes: Array<LikeDTO>;
-  notes: Array<NoteDTO>;
 };
 
 export type CreateUserQuestion = {
@@ -231,8 +250,9 @@ export type LikeDTO = {
 
 export type LikeData = {
   point_id?: number | null;
-  analysis_id?: number | null;
   concept_id?: number | null;
+  article_id?: number | null;
+  analysis_id?: number | null;
   type: LikeType;
 };
 
@@ -266,6 +286,7 @@ export type NoteCreate = {
   start_index?: number | null;
   end_index?: number | null;
   parent_id: number;
+  parent_id_two?: number | null;
   parent_type: NoteType;
   category_id?: number | null;
 };
@@ -282,7 +303,12 @@ export type NoteDTO = {
   updated_at: string;
 };
 
-export type NoteType = "event" | "article" | "point" | "analysis" | "concept";
+export type NoteType =
+  | "event"
+  | "article"
+  | "point"
+  | "analysis"
+  | "article_concept";
 
 export type NoteUpdate = {
   content: string;
@@ -615,7 +641,7 @@ export type GetAllNotesNotesGetData = {
 };
 
 export type GetAllNotesNotesGetResponse = Array<
-  EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO
+  EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO | ArticleConceptNoteDTO
 >;
 
 export type GetAllNotesNotesGetError = HTTPValidationError;

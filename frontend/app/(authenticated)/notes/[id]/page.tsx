@@ -6,6 +6,7 @@ import { Notebook } from "lucide-react";
 
 import {
   AnalysisNoteDTO,
+  ArticleConceptNoteDTO,
   ArticleNoteDTO,
   CategoryDTO,
   EventNoteDTO,
@@ -19,7 +20,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const categoryId = parseInt(params.id);
   const [category, setCategory] = useState<CategoryDTO | null>(null);
   const [notes, setNotes] = useState<
-    (EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO)[]
+    (EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO | ArticleConceptNoteDTO)[]
   >([]);
   const { data: categories, isSuccess: isCategoriesLoaded } =
     useQuery(getCategories());
@@ -28,8 +29,8 @@ const Page = ({ params }: { params: { id: string } }) => {
   );
 
   useEffect(() => {
-    if (isNotesLoaded) {
-      setNotes(fetchedNotes!);
+    if (isNotesLoaded && fetchedNotes) {
+      setNotes(fetchedNotes);
     }
   }, [isNotesLoaded, fetchedNotes]);
 

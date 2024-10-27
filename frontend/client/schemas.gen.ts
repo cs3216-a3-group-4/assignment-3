@@ -156,10 +156,121 @@ export const ArticleConceptDTOSchema = {
     concept: {
       $ref: "#/components/schemas/ConceptDTO",
     },
+    likes: {
+      anyOf: [
+        {
+          $ref: "#/components/schemas/LikeDTO",
+        },
+        {
+          type: "null",
+        },
+      ],
+    },
+    notes: {
+      items: {
+        $ref: "#/components/schemas/NoteDTO",
+      },
+      type: "array",
+      title: "Notes",
+    },
   },
   type: "object",
-  required: ["explanation", "concept"],
+  required: ["explanation", "concept", "likes", "notes"],
   title: "ArticleConceptDTO",
+} as const;
+
+export const ArticleConceptNoteDTOSchema = {
+  properties: {
+    id: {
+      type: "integer",
+      title: "Id",
+    },
+    content: {
+      type: "string",
+      title: "Content",
+    },
+    start_index: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Start Index",
+    },
+    end_index: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "End Index",
+    },
+    parent_id: {
+      type: "integer",
+      title: "Parent Id",
+    },
+    parent_type: {
+      $ref: "#/components/schemas/NoteType",
+    },
+    category: {
+      anyOf: [
+        {
+          $ref: "#/components/schemas/CategoryDTO",
+        },
+        {
+          type: "null",
+        },
+      ],
+    },
+    created_at: {
+      type: "string",
+      format: "date-time",
+      title: "Created At",
+    },
+    updated_at: {
+      type: "string",
+      format: "date-time",
+      title: "Updated At",
+    },
+    article_concept: {
+      $ref: "#/components/schemas/ArticleConceptWithArticleDTO",
+    },
+  },
+  type: "object",
+  required: [
+    "id",
+    "content",
+    "parent_id",
+    "parent_type",
+    "created_at",
+    "updated_at",
+    "article_concept",
+  ],
+  title: "ArticleConceptNoteDTO",
+} as const;
+
+export const ArticleConceptWithArticleDTOSchema = {
+  properties: {
+    explanation: {
+      type: "string",
+      title: "Explanation",
+    },
+    concept: {
+      $ref: "#/components/schemas/ConceptDTO",
+    },
+    article: {
+      $ref: "#/components/schemas/BaseArticleDTO",
+    },
+  },
+  type: "object",
+  required: ["explanation", "concept", "article"],
+  title: "ArticleConceptWithArticleDTO",
 } as const;
 
 export const ArticleDTOSchema = {
@@ -557,23 +668,9 @@ export const ConceptDTOSchema = {
       type: "string",
       title: "Name",
     },
-    likes: {
-      items: {
-        $ref: "#/components/schemas/LikeDTO",
-      },
-      type: "array",
-      title: "Likes",
-    },
-    notes: {
-      items: {
-        $ref: "#/components/schemas/NoteDTO",
-      },
-      type: "array",
-      title: "Notes",
-    },
   },
   type: "object",
-  required: ["id", "name", "likes", "notes"],
+  required: ["id", "name"],
   title: "ConceptDTO",
 } as const;
 
@@ -1040,17 +1137,6 @@ export const LikeDataSchema = {
       ],
       title: "Point Id",
     },
-    analysis_id: {
-      anyOf: [
-        {
-          type: "integer",
-        },
-        {
-          type: "null",
-        },
-      ],
-      title: "Analysis Id",
-    },
     concept_id: {
       anyOf: [
         {
@@ -1061,6 +1147,28 @@ export const LikeDataSchema = {
         },
       ],
       title: "Concept Id",
+    },
+    article_id: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Article Id",
+    },
+    analysis_id: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Analysis Id",
     },
     type: {
       $ref: "#/components/schemas/LikeType",
@@ -1224,6 +1332,17 @@ export const NoteCreateSchema = {
       type: "integer",
       title: "Parent Id",
     },
+    parent_id_two: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Parent Id Two",
+    },
     parent_type: {
       $ref: "#/components/schemas/NoteType",
     },
@@ -1318,7 +1437,7 @@ export const NoteDTOSchema = {
 
 export const NoteTypeSchema = {
   type: "string",
-  enum: ["event", "article", "point", "analysis", "concept"],
+  enum: ["event", "article", "point", "analysis", "article_concept"],
   title: "NoteType",
 } as const;
 

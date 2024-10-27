@@ -17,6 +17,7 @@ export const useLikeArticle = (article_id: number) => {
       return upsertLikeLikesPost({
         body: {
           concept_id,
+          article_id,
           type,
         },
       });

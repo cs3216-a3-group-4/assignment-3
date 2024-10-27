@@ -158,11 +158,11 @@ const ArticleConcepts = ({ article, showAnnotations }: Props) => {
         {article.article_concepts.map((article_concept) => {
           const content = article_concept.explanation;
           const concept = article_concept.concept;
-          const likes = concept.likes;
+          const likes = article_concept.likes ? [article_concept.likes] : [];
           const userLike = likes.filter((like) => like.user_id == user?.id)[0];
           const userLikeValue = userLike ? userLike.type : 0;
 
-          const highlightStartEnd = concept.notes
+          const highlightStartEnd = article_concept.notes
             .map((notes) => ({
               startIndex: notes.start_index!,
               endIndex: notes.end_index!,
@@ -282,7 +282,7 @@ const ArticleConcepts = ({ article, showAnnotations }: Props) => {
                   {showAnnotations && (
                     <AnalysisNotes
                       eventAnalysisContent={content}
-                      notes={concept.notes}
+                      notes={article_concept.notes}
                       onDelete={(noteId: number) =>
                         deleteNoteMutation.mutate(noteId)
                       }

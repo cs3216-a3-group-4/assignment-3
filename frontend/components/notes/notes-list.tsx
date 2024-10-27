@@ -1,15 +1,32 @@
 import { Dispatch, SetStateAction } from "react";
 
-import { AnalysisNoteDTO, ArticleNoteDTO, EventNoteDTO } from "@/client";
+import {
+  AnalysisNoteDTO,
+  ArticleConceptNoteDTO,
+  ArticleNoteDTO,
+  EventNoteDTO,
+} from "@/client";
 import Note from "@/components/notes/note";
 import NotesCategories from "@/components/notes/notes-categories";
 import { Filter } from "@/components/notes/notes-selector";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 type Props = {
-  notes: (EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO)[];
+  notes: (
+    | EventNoteDTO
+    | AnalysisNoteDTO
+    | ArticleNoteDTO
+    | ArticleConceptNoteDTO
+  )[];
   setNotes: Dispatch<
-    SetStateAction<(EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO)[]>
+    SetStateAction<
+      (
+        | EventNoteDTO
+        | AnalysisNoteDTO
+        | ArticleNoteDTO
+        | ArticleConceptNoteDTO
+      )[]
+    >
   >;
   isNotesLoaded: boolean;
   filter: string;
@@ -17,7 +34,11 @@ type Props = {
 
 const Notes = ({ notes, setNotes, isNotesLoaded, filter }: Props) => {
   const handleDeleteNote = (
-    note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO,
+    note:
+      | EventNoteDTO
+      | AnalysisNoteDTO
+      | ArticleNoteDTO
+      | ArticleConceptNoteDTO,
   ) => {
     return () => {
       setNotes((prevNotes) => prevNotes.filter((mNote) => mNote !== note));
