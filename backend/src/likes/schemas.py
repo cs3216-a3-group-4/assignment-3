@@ -7,6 +7,7 @@ class LikeData(BaseModel):
     concept_id: int | None = None
     article_id: int | None = None
     analysis_id: int | None = None
+    comment_id: int | None = None
 
     # 1 for Like, -1 for Dislike
     type: LikeType

@@ -5,6 +5,7 @@ from sqlalchemy import select
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
+from src.essays.models import Comment
 from src.events.models import Analysis, ArticleConcept
 from src.likes.models import Like
 from src.likes.schemas import LikeData
@@ -38,8 +39,13 @@ def upsert_like(
         if not point:
             raise HTTPException(HTTPStatus.NOT_FOUND, "point doesn't exist")
         query = query.where(Like.point_id == data.point_id)
+    elif data.comment_id:
+        comment = session.get(Comment, data.comment_id)
+        if not comment:
+            raise HTTPException(HTTPStatus.NOT_FOUND, "comment doesn't exist")
+        query = query.where(Like.comment_id == data.comment_id)
     else:
-        raise HTTPException(HTTPStatus.NOT_FOUND, "point entity doesn't exist")
+        raise HTTPException(HTTPStatus.NOT_FOUND, "like entity doesn't exist")
 
     # 2. check if the like exists
     like = session.scalar(query)
@@ -51,6 +57,7 @@ def upsert_like(
             article_id=data.article_id,
             concept_id=data.concept_id,
             analysis_id=data.analysis_id,
+            comment_id=data.comment_id,
             user_id=user.id,
         )
     like.type = data.type

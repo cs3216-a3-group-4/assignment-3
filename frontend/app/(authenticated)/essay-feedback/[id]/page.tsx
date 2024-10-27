@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { getEssay } from "@/queries/essay";
+import { useLikeComment } from "@/queries/like";
 
 const inclinationToDisplayMap: Record<Inclination, string> = {
   good: "Good",
@@ -61,6 +62,8 @@ const inclinationToTriggerClassNameMap: Record<Inclination, string> = {
 const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
   const essayId = parseInt(params.id);
   const { data, isLoading } = useQuery(getEssay(essayId));
+
+  const likeMutation = useLikeComment(essayId);
 
   if (isLoading) return <></>;
 
@@ -205,9 +208,21 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                                 </Alert>
                               )}
                             <LikeButtons
-                              onDislike={() => {}}
-                              onLike={() => {}}
-                              userLikeValue={0}
+                              onDislike={() =>
+                                likeMutation.mutate({
+                                  comment_id: comment.id,
+                                  type: -1,
+                                })
+                              }
+                              onLike={() =>
+                                likeMutation.mutate({
+                                  comment_id: comment.id,
+                                  type: 1,
+                                })
+                              }
+                              userLikeValue={
+                                comment.likes.length && comment.likes[0].type
+                              }
                             />
                           </div>
                         </AccordionContent>
