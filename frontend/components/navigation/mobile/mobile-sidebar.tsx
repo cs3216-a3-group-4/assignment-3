@@ -11,6 +11,7 @@ import {
   LucideIcon,
   MenuIcon,
   MessageCircleQuestionIcon,
+  NewspaperIcon,
   NotebookIcon,
 } from "lucide-react";
 
@@ -32,6 +33,11 @@ const OPTIONS: SidebarOption[] = [
     icon: HomeIcon,
     label: "Home",
     path: "/",
+  },
+  {
+    icon: NewspaperIcon,
+    label: "Articles",
+    path: "/articles",
   },
   {
     icon: BookmarkIcon,
