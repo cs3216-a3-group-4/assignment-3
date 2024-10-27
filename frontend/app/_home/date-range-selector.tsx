@@ -52,7 +52,7 @@ const DateRangeSelector = ({ selectedPeriod }: DateRangeSelectorProps) => {
         className="flex items-center space-x-2 text-3xl 2xl:text-4xl font-bold hover:underline"
         onClick={() => setShowDropdown(!showDropdown)}
       >
-        <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
+        <span className="text-2xl md:text-4xl 2xl:text-4xl font-bold text-primary-800">
           {getDisplayValueFor(selectedPeriod)}
         </span>
         <ChevronDown className="w-4 h-4" />
