@@ -779,16 +779,6 @@ export type GetTopArticlesArticlesTopGetResponse = (Array<MiniArticleDTO>);
 
 export type GetTopArticlesArticlesTopGetError = (HTTPValidationError);
 
-export type GetTopArticlesArticlesTopGetData = {
-    query: {
-        singapore_only: boolean;
-    };
-};
-
-export type GetTopArticlesArticlesTopGetResponse = (Array<MiniArticleDTO>);
-
-export type GetTopArticlesArticlesTopGetError = (HTTPValidationError);
-
 export type GetArticleArticlesIdGetData = {
     path: {
         id: number;
@@ -830,9 +820,9 @@ export type ReadArticleArticlesIdReadPostResponse = (unknown);
 export type ReadArticleArticlesIdReadPostError = (HTTPValidationError);
 
 export type GetSubscriptionSubscriptionsIdGetData = {
-  path: {
-      id: number;
-  };
+    path: {
+        id: number;
+    };
 };
 
 export type GetSubscriptionSubscriptionsIdGetResponse = (SubscriptionDTO);
@@ -840,9 +830,9 @@ export type GetSubscriptionSubscriptionsIdGetResponse = (SubscriptionDTO);
 export type GetSubscriptionSubscriptionsIdGetError = (HTTPValidationError);
 
 export type GetSubscriptionStatusSubscriptionsIdStatusGetData = {
-  path: {
-      id: number;
-  };
+    path: {
+        id: number;
+    };
 };
 
 export type GetSubscriptionStatusSubscriptionsIdStatusGetResponse = (SubscriptionStatusType);
