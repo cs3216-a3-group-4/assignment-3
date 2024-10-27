@@ -95,8 +95,12 @@ class ArticleConceptBaseDTO(BaseModel):
     concept: ConceptDTO
 
 
-class ArticleConceptDTO(BaseModel):
-    likes: list[LikeDTO]
+class ArticleConceptWithArticleDTO(ArticleConceptBaseDTO):
+    article: BaseArticleDTO
+
+
+class ArticleConceptDTO(ArticleConceptBaseDTO):
+    likes: LikeDTO | None
     notes: list[NoteDTO]
 
 
@@ -139,6 +143,10 @@ class EventNoteDTO(NoteDTO):
 
 class AnalysisNoteDTO(NoteDTO):
     analysis: "AnalysisToEventDTO"
+
+
+class ArticleConceptNoteDTO(NoteDTO):
+    article_concept: "ArticleConceptWithArticleDTO"
 
 
 class ArticleNoteDTO(NoteDTO):

@@ -12,7 +12,7 @@ interface Props {
 
 const ArticleAnnotations = ({ article, hideAnnotationsPanel }: Props) => {
   const conceptAnnotations = article.article_concepts
-    .map((article_concept) => article_concept.concept.notes)
+    .map((article_concept) => article_concept.notes)
     .flat();
   const articleNotes = article.notes;
   const allNotes = conceptAnnotations

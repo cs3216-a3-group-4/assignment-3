@@ -5,7 +5,7 @@ from sqlalchemy import select
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
-from src.events.models import Analysis, Concept
+from src.events.models import Analysis, ArticleConcept
 from src.likes.models import Like
 from src.likes.schemas import LikeData
 from src.user_questions.models import Point
@@ -24,9 +24,9 @@ def upsert_like(
     # the implementation is less than ideal and should be refactored (but we probably never will)
     query = select(Like).where(Like.user_id == user.id)  # only retrieve user's likes
     if data.concept_id:
-        concept = session.get(Concept, data.concept_id)
+        concept = session.get(ArticleConcept, (data.concept_id, data.article_id))
         if not concept:
-            raise HTTPException(HTTPStatus.NOT_FOUND, "concept doesn't exist")
+            raise HTTPException(HTTPStatus.NOT_FOUND, "article concept doesn't exist")
         query = query.where(Like.concept_id == data.concept_id)
     elif data.analysis_id:
         analysis = session.get(Analysis, data.analysis_id)
@@ -48,8 +48,9 @@ def upsert_like(
     if not like:
         like = Like(
             point_id=data.point_id,
-            analysis_id=data.analysis_id,
+            article_id=data.article_id,
             concept_id=data.concept_id,
+            analysis_id=data.analysis_id,
             user_id=user.id,
         )
     like.type = data.type
