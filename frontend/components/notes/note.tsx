@@ -4,7 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "date-fns";
 
-import { AnalysisNoteDTO, ArticleNoteDTO, EventNoteDTO } from "@/client";
+import {
+  AnalysisNoteDTO,
+  ArticleConceptNoteDTO,
+  ArticleNoteDTO,
+  EventNoteDTO,
+} from "@/client";
 import Chip from "@/components/display/chip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Category, getIconFor } from "@/types/categories";
@@ -13,12 +18,14 @@ import { parseDate } from "@/utils/date";
 import NoteDialogContent from "./note-dialog-content";
 
 type Props = {
-  data: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO;
+  data: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO | ArticleConceptNoteDTO;
   handleDelete: () => void;
 };
 
 // TODO: fix this to article url
-const extractUrl = (note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO) => {
+const extractUrl = (
+  note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO | ArticleConceptNoteDTO,
+) => {
   if (note.parent_type === "event") {
     const eventNote = note as EventNoteDTO;
     const article = eventNote.event.original_article;
@@ -33,10 +40,17 @@ const extractUrl = (note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO) => {
       article: article,
       url: `/articles/${article}#analysis-${analysisNote.analysis.id}`,
     };
+  } else if (note.parent_type == "article_concept") {
+    const articleConceptNote = note as ArticleConceptNoteDTO;
+    const article = articleConceptNote.article_concept.article;
+    return {
+      article,
+      url: `/articles/${article.id}`,
+    };
   } else {
     const articleNote = note as ArticleNoteDTO;
     const article = articleNote.article;
-    console.log({ articleNote });
+
     return {
       article,
       url: `/articles/${article.id}`,
@@ -75,6 +89,16 @@ const Note = ({ data, handleDelete }: Props) => {
             {data.parent_type === "analysis" && (
               <div className="border-l-primary-500/50 border-l-4 pl-4">
                 {(data as AnalysisNoteDTO).analysis.content.slice(
+                  data.start_index!,
+                  data.end_index! + 1,
+                )}
+              </div>
+            )}
+            {data.parent_type === "article_concept" && (
+              <div className="border-l-primary-500/50 border-l-4 pl-4">
+                {(
+                  data as ArticleConceptNoteDTO
+                ).article_concept.explanation.slice(
                   data.start_index!,
                   data.end_index! + 1,
                 )}

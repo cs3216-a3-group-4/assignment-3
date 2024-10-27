@@ -29,6 +29,8 @@ class NoteCreate(BaseModel):
     end_index: int | None = None
 
     parent_id: int
+    parent_id_two: int | None = None
+
     parent_type: NoteType
     category_id: int | None = None
 

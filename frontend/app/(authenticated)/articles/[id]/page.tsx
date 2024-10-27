@@ -11,7 +11,6 @@ import {
 
 import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
 import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 import { getArticle } from "@/queries/article";
@@ -22,6 +21,7 @@ import ArticleAnnotations from "./article-annotations/article-annotations";
 import ArticleNotes from "./article-annotations/article-notes";
 import ArticleConcepts from "./article-concepts";
 import ArticleDetails from "./article-details";
+import ArticlePageLoading from "./article-page-loading";
 import ArticleSource from "./article-source";
 import ArticleSummary from "./article-summary";
 import EventBookmarkButton from "./event-bookmark-button";
@@ -57,18 +57,15 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     if (
       data.notes.length > 0 ||
-      data.article_concepts.flatMap((concept) => concept.concept).length > 0
+      data.article_concepts.flatMap((articleConcept) => articleConcept.notes)
+        .length > 0
     ) {
       setIsViewAnnotation(!showPanelAsSheet);
     }
   }, [data, first, showPanelAsSheet]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center w-full">
-        <LoadingSpinner className="w-24 h-24" />
-      </div>
-    );
+    return <ArticlePageLoading />;
   }
 
   if (data === undefined) {
@@ -79,7 +76,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             Uh oh... something went wrong
           </h1>
           <p className="text-xl mt-3 mb-2">
-            Jippy ran into an error fetching the event you requested.
+            Jippy ran into an error fetching the article you requested.
           </p>
           <p>
             If this error persists, please let us know at{" "}

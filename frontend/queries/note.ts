@@ -86,7 +86,8 @@ export const useAddConceptNote = (article_id: number) => {
         body: {
           content,
           parent_id: concept_id,
-          parent_type: "concept",
+          parent_id_two: article_id,
+          parent_type: "article_concept",
           start_index,
           end_index,
           category_id,
