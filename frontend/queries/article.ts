@@ -1,12 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import {
+  getArticleArticlesIdGet,
   getArticlesArticlesGet,
   getTopArticlesArticlesTopGet,
-  getArticleArticlesIdGet,
 } from "@/client";
-
 import { QueryKeys } from "@/queries/utils/query-keys";
+
 import { NUM_EVENTS_PER_PAGE } from "./event";
 
 export const getTopArticles = (isSingapore: boolean) =>
