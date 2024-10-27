@@ -37,7 +37,7 @@ def upsert_like(
         point = session.get(Point, data.point_id)
         if not point:
             raise HTTPException(HTTPStatus.NOT_FOUND, "point doesn't exist")
-        query = query.where(Like.analysis_id == data.analysis_id)
+        query = query.where(Like.point_id == data.point_id)
     else:
         raise HTTPException(HTTPStatus.NOT_FOUND, "point entity doesn't exist")
 
