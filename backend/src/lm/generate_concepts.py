@@ -172,11 +172,11 @@ async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
     with Session(engine) as session:
         # query db for article
         subquery = select(ArticleConcept.article_id)
-        query = select(Article).where(
-            ~exists(
-                subquery.where(ArticleConcept.article_id == Article.id).where(
-                    Article.useless == False  # noqa: E712
-                )
+        query = (
+            select(Article)
+            .where(~exists(subquery.where(ArticleConcept.article_id == Article.id)))
+            .where(
+                Article.useless == False  # noqa: E712
             )
         )
         if limit is not None:
