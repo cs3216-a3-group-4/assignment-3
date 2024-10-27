@@ -57,8 +57,8 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     if (
       data.notes.length > 0 ||
-      data.article_concepts.flatMap((concept) => concept.concept.notes).length >
-        0
+      data.article_concepts.flatMap((articleConcept) => articleConcept.notes)
+        .length > 0
     ) {
       setIsViewAnnotation(!showPanelAsSheet);
     }

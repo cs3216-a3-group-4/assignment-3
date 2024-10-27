@@ -25,7 +25,7 @@ const MiniGenericConceptNote = ({
   const editNoteMutation = useEditArticleNote(articleId);
   const deleteNoteMutation = useDeleteNote(articleId);
   const articleConcept =
-    note.parent_type === "concept" &&
+    note.parent_type === "article_concept" &&
     articleConcepts.find(
       (articleConcept) => articleConcept.concept.id === note.parent_id,
     );
@@ -75,9 +75,9 @@ const MiniGenericConceptNote = ({
       >
         <NoteForm
           defaultValue={note}
-          hideCategory={note.parent_type === "concept"}
+          hideCategory={note.parent_type === "article_concept"}
           highlightSelection={quote || undefined}
-          isHighlight={note.parent_type === "concept"}
+          isHighlight={note.parent_type === "article_concept"}
           onCancel={() => setIsEditing(false)}
           onSubmit={handleEditNote}
           textAreaTextSize="text-base"
