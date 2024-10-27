@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 
+import ArticlesList from "@/app/(authenticated)/articles/articles-list";
 import Chip from "@/components/display/chip";
 import { Button } from "@/components/ui/button";
 import { getArticles } from "@/queries/article";
@@ -33,10 +34,19 @@ const ArticleFeed = () => {
     ),
   );
 
+  const numberArticles = isLoading ? undefined : articles?.count;
+  if (isLoading || articles === undefined || numberArticles === 0) {
+    return (
+      <div className="w-full h-fit py-6 sm:px-8 bg-card border">
+        <ArticlesList isArticlesLoaded={!isLoading} />
+      </div>
+    );
+  }
+
   return (
-    <div className="sm:border-l-2 py-2 sm:px-8">
+    <div className="py-6 sm:px-8 w-full h-fit bg-card border">
       <h2 className="flex text-3xl font-semibold justify-between align-center">
-        <span className="flex gap-2 items-baseline">
+        <span className="flex gap-2 items-baseline text-primary-800">
           Today&apos;s articles for you
         </span>
         <Link href="/articles">
