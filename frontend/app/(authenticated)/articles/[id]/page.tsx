@@ -9,12 +9,12 @@ import {
   RotateCwIcon,
 } from "lucide-react";
 
+import ArticleBookmarkButton from "@/app/(authenticated)/articles/article-bookmark-button";
 import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
-import { getArticle } from "@/queries/article";
-import { useReadEvent } from "@/queries/event";
+import { getArticle, useReadArticle } from "@/queries/article";
 import { MediaBreakpoint } from "@/utils/media";
 
 import ArticleAnnotations from "./article-annotations/article-annotations";
@@ -24,14 +24,13 @@ import ArticleDetails from "./article-details";
 import ArticlePageLoading from "./article-page-loading";
 import ArticleSource from "./article-source";
 import ArticleSummary from "./article-summary";
-import EventBookmarkButton from "./event-bookmark-button";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const id = parseInt(params.id);
   const { data, isLoading } = useQuery(getArticle(id));
   const mediaQuery = useBreakpointMediaQuery();
 
-  const readEventMutation = useReadEvent(id);
+  const readArticleMutation = useReadArticle(id);
   const [sentRead, setSentRead] = useState(false);
   const [first, setFirst] = useState(true);
 
@@ -43,10 +42,10 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (!isLoading && !sentRead) {
-      readEventMutation.mutate();
+      readArticleMutation.mutate();
       setSentRead(true);
     }
-  }, [isLoading, readEventMutation, sentRead]);
+  }, [isLoading, readArticleMutation, sentRead]);
 
   useEffect(() => {
     if (!data || !first) {
@@ -94,6 +93,8 @@ const Page = ({ params }: { params: { id: string } }) => {
     );
   }
 
+  const isBookmarked = data?.bookmarks.length > 0;
+
   return (
     <div
       className={`w-full h-fit min-h-full bg-muted ${isViewAnnotation ? "relative flex" : "sm:px-8 md:px-16 xl:px-56"}`}
@@ -120,10 +121,12 @@ const Page = ({ params }: { params: { id: string } }) => {
             <ArticleDetails article={data} />
             <ArticleSummary summary={data.summary} />
             <div className="flex flex-wrap gap-x-4 gap-y-4 px-6">
-              <EventBookmarkButton
-                eventId={id}
-                eventTitle={data.title}
-                isBookmarked={data?.bookmarks.length}
+              <ArticleBookmarkButton
+                articleId={id}
+                articleTitle={data.title}
+                isBookmarked={isBookmarked}
+                showLabel
+                variant={isBookmarked ? "default" : "outline"}
               />
               <Button
                 className="px-4 flex gap-x-2"

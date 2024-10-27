@@ -20,7 +20,7 @@ const Page = () => {
   const [notes, setNotes] = useState<
     (EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO | ArticleConceptNoteDTO)[]
   >([]);
-  const [filter, setFilter] = useState<string>(Filter.CATEGORY);
+  const [filter, setFilter] = useState<string>(Filter.DATE);
 
   useEffect(() => {
     if (isNotesLoaded && fetchedNotes) {
