@@ -72,3 +72,28 @@ export const useLikePoint = (answer_id: number) => {
     },
   });
 };
+
+export const useLikeComment = (essay_id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      comment_id,
+      type,
+    }: {
+      comment_id: number;
+      type: LikeType;
+    }) => {
+      return upsertLikeLikesPost({
+        body: {
+          comment_id,
+          type,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Essays, essay_id],
+      });
+    },
+  });
+};
