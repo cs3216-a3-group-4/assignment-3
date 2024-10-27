@@ -68,19 +68,19 @@ const Page = ({ params }: { params: { id: string } }) => {
         className="flex bg-muted w-full h-full max-h-full py-8 overflow-y-auto"
         id="home-page"
       >
-        <div className="flex flex-col py-6 lg:py-12 w-full h-fit mx-4 md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
+        <div className="flex flex-col py-6 lg:py-12 w-full h-fit md:mx-8 xl:mx-24 bg-background rounded-lg border border-border px-8">
           {/* TODO: x-padding here is tied to the news article */}
           <div
-            className="flex flex-col mb-4 gap-y-2 px-4 md:px-8 xl:px-12"
+            className="flex flex-col mb-4 gap-y-2 sm:px-4 md:px-8 xl:px-12"
             id="homePage"
           >
             <div className="flex">
-              <span className="text-4xl 2xl:text-4xl font-bold text-primary-800">
+              <span className="text-2xl md:text-4xl 2xl:text-4xl font-bold text-primary-800">
                 Top articles from {categoryName}
               </span>
             </div>
           </div>
-          <div className="flex items-center w-fit px-1 md:px-5 xl:px-9">
+          <div className="flex items-center w-fit sm:px-1 md:px-5 xl:px-9">
             <Select
               defaultValue={singaporeOnly ? "singapore-only" : "global"}
               onValueChange={(value) =>
