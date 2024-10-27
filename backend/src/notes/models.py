@@ -22,6 +22,10 @@ class Note(Base):
     end_index: Mapped[int] = mapped_column(nullable=True)
 
     parent_id: Mapped[int]
+
+    # for models with composite key like ArticleConcept
+    parent_id_two: Mapped[int] = mapped_column(nullable=True)
+
     parent_type: Mapped[str]
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
@@ -60,7 +64,7 @@ class AnalysisNote(Note):
     }
 
 
-class ConceptNote(Note):
+class ArticleConceptNote(Note):
     __mapper_args__ = {
         "polymorphic_on": "parent_type",
         "polymorphic_identity": "article_concept",

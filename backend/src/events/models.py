@@ -32,7 +32,9 @@ class ArticleConcept(Base):
     notes = relationship(
         "Note",
         primaryjoin=and_(
-            id == foreign(Note.parent_id), Note.parent_type == "article_concept"
+            concept_id == foreign(Note.parent_id),
+            article_id == foreign(Note.parent_id_two),
+            Note.parent_type == "article_concept",
         ),
         backref="article_concept",
     )
