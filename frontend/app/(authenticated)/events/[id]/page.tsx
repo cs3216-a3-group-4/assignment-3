@@ -21,7 +21,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     if (isSuccess && articleId !== undefined) {
       router.push(`/articles/${articleId}`);
     }
-  }, [router, isError, isLoading, isSuccess]);
+  }, [router, isError, isLoading, isSuccess, data?.original_article]);
 
   if (
     (!isLoading && isError) ||
