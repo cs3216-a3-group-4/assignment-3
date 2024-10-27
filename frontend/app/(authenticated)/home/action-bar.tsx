@@ -3,52 +3,62 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { useUserStore } from "@/store/user/user-store-provider";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ActionBarItem from "./action-bar-item";
+
+import ArticleSVG from "@/public/features/articles";
+import { useRouter } from "next/navigation";
+import AskQuestionSVG from "@/public/features/ask-question";
+import FeedbackSVG from "@/public/features/feedback";
 
 const ActionBar = () => {
-  const user = useUserStore((state) => state.user);
+  const router = useRouter();
   return (
-    <div className="flex flex-col gap-4 border border-b h-fit shadow-inner p-8 mb-4">
-      <div className="text-primary-600" id="welcome-message">
-        <div className="text-lg">
-          Welcome{" "}
-          <span className="font-medium">{user?.email.split("@")[0]}</span>,
-        </div>
-        <p className="">What do you want Jippy to do today?</p>
-      </div>
-      <div className="grid sm:grid-cols-3 gap-4 items-stretch">
-        <div className="border-green-800/50 border-2 p-4 shadow-sm">
-          <h2 className="font-semibold">Explore articles</h2>
-          <p>
-            Keep up to date with current affairs. Jippy curates articles based
-            on your GP topics.
-          </p>
-          <Link
-            className="flex items-center gap-1 mt-4 underline"
-            href="/articles"
+    <Card className="bg-primary-100/80">
+      <CardHeader>
+        <CardTitle className="text-primary-800">Jump in with Jippy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid lg:grid-cols-3 gap-12 items-stretch">
+          <ActionBarItem
+            title="Explore articles"
+            actionPath="/articles"
+            actionLabel="Explore"
+            description="Get the latest insights from today’s news— summarised and
+                analysed for GP."
           >
-            Explore <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="border-green-800/50 border-2 p-4 shadow-sm">
-          <h2 className="font-semibold">Ask Jippy an essay question</h2>
-          <p>Jippy will come up with points and examples.</p>
-          <Link className="flex items-center gap-1 mt-4 underline" href="/ask">
-            Ask <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="border-green-800/50 border-2 p-4 shadow-sm">
-          <h2 className="font-semibold">Get essay feedback</h2>
-          <p>Jippy will comment on your essay.</p>
-          <Link
-            className="flex items-center gap-1 mt-4 underline"
-            href="/essay-feedback"
+            <ArticleSVG
+              className="max-h-[24vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              onClick={() => router.push("/articles")}
+            />
+          </ActionBarItem>
+
+          <ActionBarItem
+            title="Ask an essay question"
+            actionPath="/ask"
+            actionLabel="Ask"
+            description="Need ideas? Jippy can help you generates key points and examples for your essay."
           >
-            Submit your essay <ArrowRight className="w-4 h-4" />
-          </Link>
+            <AskQuestionSVG
+              className="max-h-[24vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              onClick={() => router.push("/ask")}
+            />
+          </ActionBarItem>
+
+          <ActionBarItem
+            title="Get essay feedback"
+            actionPath="/essay-feedback"
+            actionLabel="Start"
+            description="Get targeted essay feedback based on A-Level marking standards."
+          >
+            <FeedbackSVG
+              className="max-h-[24vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              onClick={() => router.push("/essay-feedback")}
+            />
+          </ActionBarItem>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

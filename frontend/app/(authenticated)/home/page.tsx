@@ -6,7 +6,7 @@ import TopArticleList from "./top-article-list";
 
 const Home = () => {
   return (
-    <div className="w-full p-4 sm:border-l-2 sm:p-8">
+    <div className="w-full p-4 sm:border-l-2 sm:p-8 bg-muted overflow-y-auto">
       <ActionBar />
       <div className="grid grid-cols-2 my-8">
         <Tabs className="col-span-2" defaultValue="week">
