@@ -766,10 +766,20 @@ export const EssayMiniDTOSchema = {
             },
             type: 'array',
             title: 'Paragraphs'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
         }
     },
     type: 'object',
-    required: ['id', 'question', 'comments', 'paragraphs'],
+    required: ['id', 'question', 'comments', 'paragraphs', 'created_at', 'updated_at'],
     title: 'EssayMiniDTO'
 } as const;
 

@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { parseDate } from "@/utils/date";
 
 interface EssayListCardProps {
   essay: EssayMiniDTO;
@@ -42,7 +43,7 @@ const EssayListCard = ({ essay }: EssayListCardProps) => {
         <div className="flex items-center gap-x-4">
           <span className="flex items-center text-sm">
             <Calendar className="w-4 h-4 mr-1.5" />
-            <span>2 Oct 24</span>
+            <span>{parseDate(essay.created_at)}</span>
           </span>
           <span className="flex items-center text-sm">
             <MessageSquare className="w-4 h-4 mr-1.5" />
