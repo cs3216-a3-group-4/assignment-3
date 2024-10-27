@@ -28,7 +28,7 @@ const ActionBar = () => {
                 analysed for GP."
           >
             <ArticleSVG
-              className="max-h-[24vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              className="max-h-[22vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
               onClick={() => router.push("/articles")}
             />
           </ActionBarItem>
@@ -40,7 +40,7 @@ const ActionBar = () => {
             description="Need ideas? Jippy can help you generates key points and examples for your essay."
           >
             <AskQuestionSVG
-              className="max-h-[24vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              className="max-h-[22vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
               onClick={() => router.push("/ask")}
             />
           </ActionBarItem>
@@ -52,7 +52,7 @@ const ActionBar = () => {
             description="Get targeted essay feedback based on A-Level marking standards."
           >
             <FeedbackSVG
-              className="max-h-[24vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              className="max-h-[22vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
               onClick={() => router.push("/essay-feedback")}
             />
           </ActionBarItem>
