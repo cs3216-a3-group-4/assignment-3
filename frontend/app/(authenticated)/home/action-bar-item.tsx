@@ -1,6 +1,6 @@
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 import { ReactNode } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 interface ActionBarItemProps {
   title: string;

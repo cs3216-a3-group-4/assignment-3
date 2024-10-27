@@ -14,8 +14,8 @@ import {
 } from "@radix-ui/react-select";
 import { useQuery } from "@tanstack/react-query";
 
+import ArticlesList from "@/app/(authenticated)/articles/articles-list";
 import Chip from "@/components/display/chip";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { getTopArticles } from "@/queries/article";
 import {
   categoriesToDisplayName,
@@ -24,7 +24,6 @@ import {
   getCategoryFor,
 } from "@/types/categories";
 import { parseDateNoYear } from "@/utils/date";
-import ArticlesList from "../articles/articles-list";
 
 const TopArticleList = () => {
   const { data, isLoading } = useQuery(getTopArticles(false));

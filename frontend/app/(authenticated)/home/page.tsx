@@ -15,7 +15,7 @@ const Home = () => {
               Weekly picks
             </TabsTrigger>
             <TabsTrigger className="w-full text-base" value="yours">
-              Today's news
+              Today&apos;s news
             </TabsTrigger>
           </TabsList>
           <TabsContent value="week">

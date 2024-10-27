@@ -1,15 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ActionBarItem from "./action-bar-item";
-
 import ArticleSVG from "@/public/features/articles";
-import { useRouter } from "next/navigation";
 import AskQuestionSVG from "@/public/features/ask-question";
 import FeedbackSVG from "@/public/features/feedback";
+
+import ActionBarItem from "./action-bar-item";
 
 const ActionBar = () => {
   const router = useRouter();
@@ -21,11 +19,11 @@ const ActionBar = () => {
       <CardContent>
         <div className="grid md:grid-cols-3 gap-12 items-stretch">
           <ActionBarItem
-            title="Explore articles"
-            actionPath="/articles"
             actionLabel="Explore"
+            actionPath="/articles"
             description="Get the latest insights from today’s news— summarised and
                 analysed for GP."
+            title="Explore articles"
           >
             <ArticleSVG
               className="max-h[28vh] mt-6 md:max-h-[22vh] md:mt-4 lg:mt-6 hover:-translate-y-3 transition-all cursor-pointer"
@@ -34,10 +32,10 @@ const ActionBar = () => {
           </ActionBarItem>
 
           <ActionBarItem
-            title="Ask an essay question"
-            actionPath="/ask"
             actionLabel="Ask"
+            actionPath="/ask"
             description="Need ideas? Jippy can help you generate points and examples for your essay."
+            title="Ask an essay question"
           >
             <AskQuestionSVG
               className="max-h[28vh] mt-6 md:max-h-[22vh] md:mt-4 lg:mt-6 hover:-translate-y-3 transition-all cursor-pointer"
@@ -46,10 +44,10 @@ const ActionBar = () => {
           </ActionBarItem>
 
           <ActionBarItem
-            title="Get essay feedback"
-            actionPath="/essay-feedback"
             actionLabel="Start"
+            actionPath="/essay-feedback"
             description="Get targeted essay feedback based on A-Level marking standards."
+            title="Get essay feedback"
           >
             <FeedbackSVG
               className="max-h[28vh] mt-6 md:max-h-[22vh] md:mt-4 lg:mt-6 hover:-translate-y-3 transition-all cursor-pointer"

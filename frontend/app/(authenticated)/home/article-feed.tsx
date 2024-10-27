@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 
+import ArticlesList from "@/app/(authenticated)/articles/articles-list";
 import Chip from "@/components/display/chip";
 import { Button } from "@/components/ui/button";
 import { getArticles } from "@/queries/article";
@@ -16,7 +17,6 @@ import {
   getCategoryFor,
 } from "@/types/categories";
 import { parseDateNoYear, toQueryDate } from "@/utils/date";
-import ArticlesList from "../articles/articles-list";
 
 const ArticleFeed = () => {
   const user = useUserStore((state) => state.user);
