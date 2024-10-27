@@ -562,6 +562,22 @@ export const CategoryDTOSchema = {
     title: 'CategoryDTO'
 } as const;
 
+export const CheckoutRequestDataSchema = {
+    properties: {
+        price_id: {
+            type: 'string',
+            title: 'Price Id'
+        },
+        tier_id: {
+            type: 'integer',
+            title: 'Tier Id'
+        }
+    },
+    type: 'object',
+    required: ['price_id', 'tier_id'],
+    title: 'CheckoutRequestData'
+} as const;
+
 export const CommentAnalysisDTOSchema = {
     properties: {
         skill_issue: {
@@ -1641,6 +1657,87 @@ export const SignUpDataSchema = {
     title: 'SignUpData'
 } as const;
 
+export const SubscriptionDTOSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            title: 'Id'
+        },
+        user_id: {
+            type: 'integer',
+            title: 'User Id'
+        },
+        price_id: {
+            type: 'string',
+            title: 'Price Id'
+        },
+        customer_id: {
+            type: 'string',
+            title: 'Customer Id'
+        },
+        subscription_period_end: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Subscription Period End'
+        },
+        subscription_ended_date: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Subscription Ended Date'
+        },
+        subscription_cancel_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Subscription Cancel At'
+        },
+        subscription_cancelled_date: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Subscription Cancelled Date'
+        },
+        status: {
+            '$ref': '#/components/schemas/SubscriptionStatusType'
+        }
+    },
+    type: 'object',
+    required: ['id', 'user_id', 'price_id', 'customer_id', 'status'],
+    title: 'SubscriptionDTO'
+} as const;
+
+export const SubscriptionStatusTypeSchema = {
+    type: 'string',
+    enum: ['active', 'cancelled', 'paused', 'past_due', 'unpaid'],
+    title: 'SubscriptionStatusType'
+} as const;
+
 export const TokenSchema = {
     properties: {
         access_token: {
@@ -1682,6 +1779,21 @@ export const UserPublicSchema = {
             type: 'integer',
             title: 'Top Events Period',
             default: 7
+        },
+        tier_id: {
+            type: 'integer',
+            title: 'Tier Id',
+            default: 1
+        },
+        subscription: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/SubscriptionDTO'
+                },
+                {
+                    type: 'null'
+                }
+            ]
         }
     },
     type: 'object',
