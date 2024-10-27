@@ -2,48 +2,52 @@ import { useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { EditIcon, TrashIcon } from "lucide-react";
 
-import { NoteDTO, src__events__schemas__AnalysisDTO } from "@/client";
+import { ArticleConceptDTO, NoteDTO } from "@/client";
 import CategoryChip from "@/components/display/category-chip";
 import { Button } from "@/components/ui/button";
-import { useDeleteNote, useEditEventNote } from "@/queries/note";
+import { useDeleteNote, useEditArticleNote } from "@/queries/note";
 import { Category } from "@/types/categories";
 
 import NoteForm, { NoteFormType } from "./note-form";
 
-interface MiniGenericAnalysisNoteProps {
+interface MiniGenericConceptNoteProps {
   note: NoteDTO;
-  eventAnalysis: src__events__schemas__AnalysisDTO[];
-  eventId: number;
+  articleConcepts: ArticleConceptDTO[];
+  articleId: number;
 }
 
-const MiniGenericAnalysisNote = ({
+const MiniGenericConceptNote = ({
   note,
-  eventAnalysis,
-  eventId,
-}: MiniGenericAnalysisNoteProps) => {
+  articleConcepts,
+  articleId,
+}: MiniGenericConceptNoteProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const editNoteMutation = useEditEventNote(eventId);
-  const deleteNoteMutation = useDeleteNote(eventId);
-  const analysis =
-    note.parent_type === "analysis" &&
-    eventAnalysis.find((analysis) => analysis.id === note.parent_id);
+  const editNoteMutation = useEditArticleNote(articleId);
+  const deleteNoteMutation = useDeleteNote(articleId);
+  const articleConcept =
+    note.parent_type === "article_concept" &&
+    articleConcepts.find(
+      (articleConcept) => articleConcept.concept.id === note.parent_id,
+    );
 
   const quote =
-    analysis &&
+    articleConcept &&
     note.start_index !== null &&
     note.end_index !== undefined &&
     note.end_index !== null &&
-    analysis.content.slice(note.start_index, note.end_index + 1);
+    articleConcept.explanation.slice(note.start_index, note.end_index + 1);
 
   const onClick = () => {
-    if (analysis) {
-      document.getElementById("analysis-" + analysis.id)?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "start",
-      });
-    } else if (note.parent_type === "event") {
-      document.getElementById(`event-note-${note.id}`)?.scrollIntoView({
+    if (articleConcept) {
+      document
+        .getElementById("concept-" + articleConcept.concept.id)
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
+        });
+    } else if (note.parent_type === "article") {
+      document.getElementById(`article-note-${note.id}`)?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
         inline: "start",
@@ -71,9 +75,9 @@ const MiniGenericAnalysisNote = ({
       >
         <NoteForm
           defaultValue={note}
-          hideCategory={note.parent_type === "analysis"}
+          hideCategory={note.parent_type === "article_concept"}
           highlightSelection={quote || undefined}
-          isHighlight={note.parent_type === "analysis"}
+          isHighlight={note.parent_type === "article_concept"}
           onCancel={() => setIsEditing(false)}
           onSubmit={handleEditNote}
           textAreaTextSize="text-base"
@@ -127,4 +131,4 @@ const MiniGenericAnalysisNote = ({
   );
 };
 
-export default MiniGenericAnalysisNote;
+export default MiniGenericConceptNote;

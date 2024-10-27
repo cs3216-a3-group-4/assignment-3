@@ -1,13 +1,8 @@
-import { queryOptions, useMutation } from "@tanstack/react-query";
+import { queryOptions } from "@tanstack/react-query";
 
-import {
-  getEventEventsIdGet,
-  getEventsEventsGet,
-  readEventEventsIdReadPost,
-} from "@/client/services.gen";
+import { getEventEventsIdGet, getEventsEventsGet } from "@/client/services.gen";
 
 import { QueryKeys } from "./utils/query-keys";
-import { boolean } from "zod";
 
 export const NUM_EVENTS_PER_PAGE = 10;
 
@@ -22,14 +17,6 @@ export const getEvent = (id: number) =>
         },
       }).then((data) => data.data),
   });
-
-export const useReadEvent = (id: number) => {
-  return useMutation({
-    mutationFn: () => {
-      return readEventEventsIdReadPost({ path: { id } });
-    },
-  });
-};
 
 export const getHomeEvents = (
   startDate: string,

@@ -13,6 +13,7 @@ from src.scrapers.cna.process import process_all_categories
 from src.scrapers.cna.scrape import scrape_from_date
 from src.scrapers.guardian.get_analyses import get_analyses
 from src.scrapers.guardian.process import GuardianArticle, GuardianArticleFields
+from src.lm.generate_concepts import generate_concepts
 
 from src.lm.generate_events import generate_events
 from src.scripts.populate import populate
@@ -149,10 +150,7 @@ def process_new_articles():
         return articles
 
 
-# NOTE: this method should work with no issue as long as the number of calls is less than 500 which is the rate limit by OpenAI
-# This should not be an issue as long as we ensure the 25k articles in the database have already been processed
-
-
+# NOTE: this is the existing cron job that adds new articles, generates events, stores them in database, and generate vector embeddings all in one go
 async def run(limit: int = 30):
     # Add new articles to database
     await populate_daily_articles_cna()
@@ -166,7 +164,11 @@ async def run(limit: int = 30):
     event_ids = populate("lm_events_output.json")
     analyses = get_analyses(event_ids)
 
+    # NOTE: this is the part to generate concepts from articles without concepts generated
+
     store_documents(analyses)
+
+    await generate_concepts()
     print(analyses)
 
 

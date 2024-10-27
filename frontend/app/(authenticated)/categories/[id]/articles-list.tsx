@@ -2,7 +2,7 @@
 
 import { MiniEventDTO } from "@/client";
 import ArticleLoading from "@/components/news/article-loading";
-import NewsArticle from "@/components/news/news-article";
+import NewsEvent from "@/components/news/news-event";
 
 interface Props {
   eventData: MiniEventDTO[] | undefined;
@@ -31,7 +31,7 @@ const Articles = ({ eventData, isEventsLoaded }: Props) => {
   }
 
   return eventData!.map((newsEvent: MiniEventDTO, index: number) => (
-    <NewsArticle key={index} newsEvent={newsEvent} />
+    <NewsEvent key={index} newsEvent={newsEvent} />
   ));
 };
 

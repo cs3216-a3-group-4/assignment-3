@@ -166,7 +166,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                                                   Event summary
                                                 </span>
                                                 <Link
-                                                  href={`/events/${analysis.analysis.event_id}`}
+                                                  href={`/articles/${analysis.analysis.event.original_article.id}`}
                                                 >
                                                   <Button
                                                     className="h-8 w-fit text-text-muted mt-2"

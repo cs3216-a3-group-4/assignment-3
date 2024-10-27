@@ -12,18 +12,18 @@ import NoteForm, { NoteFormType } from "./note-form";
 
 interface NoteItemProps {
   note: NoteDTO;
-  eventId: number;
+  articleId: number;
   handleEditNote: (id: number) => SubmitHandler<NoteFormType>;
 }
 
-const NoteItem = ({ note, eventId, handleEditNote }: NoteItemProps) => {
+const NoteItem = ({ note, articleId, handleEditNote }: NoteItemProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const deleteNoteMutation = useDeleteNote(eventId);
+  const deleteNoteMutation = useDeleteNote(articleId);
 
   return (
     <div
       className="flex flex-col p-6 rounded bg-teal-50/30 border border-teal-600/40"
-      id={`event-note-${note.id}`}
+      id={`article-note-${note.id}`}
       key={note.id}
     >
       {isEditing ? (

@@ -59,7 +59,10 @@ def get_articles(
 
     article_query = (
         select(Article)
-        .options(selectinload(Article.categories))
+        .options(
+            selectinload(Article.categories),
+            selectinload(Article.bookmarks.and_(ArticleBookmark.user_id == user.id)),
+        )
         .where(Article.id.in_(relevant_ids))
     )
     if limit is not None:

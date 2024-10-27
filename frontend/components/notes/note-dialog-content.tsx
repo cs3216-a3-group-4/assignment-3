@@ -1,12 +1,12 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { Trash2Icon } from "lucide-react";
 import { z } from "zod";
 
 import {
   AnalysisNoteDTO,
+  ArticleConceptNoteDTO,
   ArticleNoteDTO,
   CategoryDTO,
   EventNoteDTO,
@@ -28,7 +28,11 @@ import { parseDate } from "@/utils/date";
 interface Props {
   noteContent: string;
   setNoteContent: Dispatch<SetStateAction<string>>;
-  noteData: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO;
+  noteData:
+    | EventNoteDTO
+    | AnalysisNoteDTO
+    | ArticleNoteDTO
+    | ArticleConceptNoteDTO;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   handleDelete: () => void;
@@ -60,16 +64,11 @@ const NoteDialogContent = ({
   const editNoteMutation = useEditEventNote(noteData.parent_id);
   const [pendingNoteContent, setPendingNoteContent] =
     useState<string>(noteContent);
-  const router = useRouter();
 
   const onClickDelete = () => {
     deleteNoteMutation.mutate(noteData.id);
     setOpen(false);
     handleDelete();
-  };
-
-  const onClickNoteSource = () => {
-    router.push(`/${noteData.parent_type}s/${noteData.parent_id}`);
   };
 
   const handleDoubleClick = () => {
@@ -142,9 +141,7 @@ const NoteDialogContent = ({
       <div className="flex w-full">
         <span className="text-text-muted/90">Note is for&nbsp;</span>
         {noteData.parent_type === "event" ? (
-          <button className="hover:underline" onClick={onClickNoteSource}>
-            this {noteData.parent_type}
-          </button>
+          <span>this {noteData.parent_type}</span>
         ) : (
           <span className="text-text-muted/90">
             {getWordFor(noteData.parent_type)} {noteData.parent_type}

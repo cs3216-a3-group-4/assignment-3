@@ -4,7 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "date-fns";
 
-import { AnalysisNoteDTO, ArticleNoteDTO, EventNoteDTO } from "@/client";
+import {
+  AnalysisNoteDTO,
+  ArticleConceptNoteDTO,
+  ArticleNoteDTO,
+  EventNoteDTO,
+} from "@/client";
 import Chip from "@/components/display/chip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Category, getIconFor } from "@/types/categories";
@@ -13,20 +18,42 @@ import { parseDate } from "@/utils/date";
 import NoteDialogContent from "./note-dialog-content";
 
 type Props = {
-  data: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO;
+  data: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO | ArticleConceptNoteDTO;
   handleDelete: () => void;
 };
 
 // TODO: fix this to article url
-const extractUrl = (note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO) => {
+const extractUrl = (
+  note: EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO | ArticleConceptNoteDTO,
+) => {
   if (note.parent_type === "event") {
     const eventNote = note as EventNoteDTO;
-    return { event: eventNote.event, url: `/events/${eventNote.event.id}` };
-  } else {
-    const analysisNote = note as AnalysisNoteDTO;
+    const article = eventNote.event.original_article;
     return {
-      event: analysisNote.analysis.event,
-      url: `/events/${analysisNote.analysis.event.id}#analysis-${analysisNote.analysis.id}`,
+      article,
+      url: `/articles/${article.id}`,
+    };
+  } else if (note.parent_type === "analysis") {
+    const analysisNote = note as AnalysisNoteDTO;
+    const article = analysisNote.analysis.event.original_article;
+    return {
+      article: article,
+      url: `/articles/${article.id}#analysis-${analysisNote.analysis.id}`,
+    };
+  } else if (note.parent_type == "article_concept") {
+    const articleConceptNote = note as ArticleConceptNoteDTO;
+    const article = articleConceptNote.article_concept.article;
+    return {
+      article,
+      url: `/articles/${article.id}`,
+    };
+  } else {
+    const articleNote = note as ArticleNoteDTO;
+    const article = articleNote.article;
+
+    return {
+      article,
+      url: `/articles/${article.id}`,
     };
   }
 };
@@ -40,12 +67,7 @@ const Note = ({ data, handleDelete }: Props) => {
   const invalidCategory = { id: -1, name: Category.Others };
   const router = useRouter();
 
-  // TODO: temporarily stop crash from article notes... by hiding them completely
-  if (data.parent_type === "article") {
-    return <></>;
-  }
-
-  const { event, url: source } = extractUrl(data);
+  const { article, url: source } = extractUrl(data);
 
   return (
     <Dialog onOpenChange={setNoteOpen} open={noteOpen}>
@@ -72,12 +94,21 @@ const Note = ({ data, handleDelete }: Props) => {
                 )}
               </div>
             )}
+            {data.parent_type === "article_concept" && (
+              <div className="border-l-primary-500/50 border-l-4 pl-4">
+                {(
+                  data as ArticleConceptNoteDTO
+                ).article_concept.explanation.slice(
+                  data.start_index!,
+                  data.end_index! + 1,
+                )}
+              </div>
+            )}
             <p>{noteContent}</p>
             <p>
               From{" "}
               <span className="underline" onClick={() => router.push(source)}>
-                {event.title}{" "}
-                {formatDate(event.original_article.date, "(dd MMM yyyy)")}
+                {article.title} {formatDate(article.date, "(dd MMM yyyy)")}
               </span>
             </p>
           </div>

@@ -6,8 +6,13 @@ from sqlalchemy.orm import selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
-from src.events.models import Analysis, Article, Category, Event
-from src.events.schemas import AnalysisNoteDTO, ArticleNoteDTO, EventNoteDTO
+from src.events.models import Analysis, Article, ArticleConcept, Category, Event
+from src.events.schemas import (
+    AnalysisNoteDTO,
+    ArticleConceptNoteDTO,
+    ArticleNoteDTO,
+    EventNoteDTO,
+)
 from src.notes.dependencies import retrieve_note
 from src.notes.models import Note, NoteType
 from src.notes.schemas import (
@@ -22,9 +27,10 @@ router = APIRouter(prefix="/notes", tags=["notes"])
 
 NOTE_PARENT_CLASSES = {
     NoteType.ARTICLE: Article,
-    NoteType.EVENT: Event,
+    NoteType.ARTICLE_CONCEPT: ArticleConcept,
+    NoteType.EVENT: Event,  # TODO: deprecate
     NoteType.POINT: Point,
-    NoteType.ANALYSIS: Analysis,
+    NoteType.ANALYSIS: Analysis,  # TODO: deprecate
 }
 
 
@@ -33,15 +39,17 @@ def get_all_notes(
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
     category_id: Annotated[int | None, Query()] = None,
-) -> list[EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO]:
+) -> list[EventNoteDTO | AnalysisNoteDTO | ArticleNoteDTO | ArticleConceptNoteDTO]:
     notes_query = (
         select(Note)
         .where(Note.user_id == user.id)
         .options(
             selectinload(Note.category),
-            selectinload(Note.analysis, Analysis.event, Event.original_article),
-            selectinload(Note.event, Event.original_article),
-            selectinload(Note.article),
+            selectinload(Note.analysis)
+            .selectinload(Analysis.event)
+            .selectinload(Event.original_article),
+            selectinload(Note.event).selectinload(Event.original_article),
+            selectinload(Note.article_concept).selectinload(ArticleConcept.article),
         )
     )
     if category_id:
@@ -58,7 +66,10 @@ def create_note(
     session=Depends(get_session),
 ) -> NoteDTO:
     parent_class = NOTE_PARENT_CLASSES[data.parent_type]
-    parent_model = session.get(parent_class, data.parent_id)
+    if data.parent_type == NoteType.ARTICLE_CONCEPT:
+        parent_model = session.get(parent_class, (data.parent_id, data.parent_id_two))
+    else:
+        parent_model = session.get(parent_class, data.parent_id)
     if not parent_model:
         raise HTTPException(HTTPStatus.NOT_FOUND)
 

@@ -1,5 +1,6 @@
 backend/src/scrapers/cna/articles
 backend/src/scrapers/guardian/*.json
+backend/src/scripts/concepts_output.json
 .DS_Store
 .ruff_cache
 .venv
