@@ -14,8 +14,7 @@ import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
-import { getArticle } from "@/queries/article";
-import { useReadEvent } from "@/queries/event";
+import { getArticle, useReadArticle } from "@/queries/article";
 import { MediaBreakpoint } from "@/utils/media";
 
 import ArticleAnnotations from "./article-annotations/article-annotations";
@@ -31,7 +30,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const { data, isLoading } = useQuery(getArticle(id));
   const mediaQuery = useBreakpointMediaQuery();
 
-  const readEventMutation = useReadEvent(id);
+  const readArticleMutation = useReadArticle(id);
   const [sentRead, setSentRead] = useState(false);
   const [first, setFirst] = useState(true);
 
@@ -43,10 +42,10 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (!isLoading && !sentRead) {
-      readEventMutation.mutate();
+      readArticleMutation.mutate();
       setSentRead(true);
     }
-  }, [isLoading, readEventMutation, sentRead]);
+  }, [isLoading, readArticleMutation, sentRead]);
 
   useEffect(() => {
     if (!data || !first) {
