@@ -72,6 +72,9 @@ def get_essay(
         .options(
             selectinload(Essay.paragraphs)
             .selectinload(Paragraph.comments)
+            .selectinload(Comment.likes),
+            selectinload(Essay.paragraphs)
+            .selectinload(Paragraph.comments)
             .selectinload(Comment.comment_analysises)
             .selectinload(CommentAnalysis.analysis)
             .selectinload(Analysis.category),

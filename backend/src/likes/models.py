@@ -2,6 +2,7 @@ from enum import Enum
 from sqlalchemy import ForeignKey, ForeignKeyConstraint
 from src.common.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from src.essays.models import Comment  # noqa: F401
 
 
 class LikeType(int, Enum):
@@ -16,6 +17,7 @@ class Like(Base):
     analysis_id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), nullable=True)
     article_id: Mapped[int] = mapped_column(nullable=True)
     concept_id: Mapped[int] = mapped_column(nullable=True)
+    comment_id: Mapped[int] = mapped_column(ForeignKey("comment.id"), nullable=True)
     type: Mapped[LikeType]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
@@ -32,6 +34,7 @@ class Like(Base):
         backref="likes",
         uselist=True,
     )
+    comment = relationship("Comment", backref="likes")
 
     __table_args__ = (
         ForeignKeyConstraint(

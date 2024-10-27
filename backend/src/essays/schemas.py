@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field
 from src.essays.models import Inclination, ParagraphType
 from src.events.schemas import AnalysisToEventDTO
+from src.likes.schemas import LikeDTO
 
 
 class ParagraphDTO(BaseModel):
@@ -37,6 +38,7 @@ class CommentDTO(BaseModel):
     lack_example: bool
     inclination: Inclination
     content: str
+    likes: list[LikeDTO]
 
     comment_analysises: list[CommentAnalysisDTO]
 
