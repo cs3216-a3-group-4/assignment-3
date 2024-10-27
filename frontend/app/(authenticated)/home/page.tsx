@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import ActionBar from "./action-bar";
 import ArticleFeed from "./article-feed";
@@ -6,22 +6,16 @@ import TopArticleList from "./top-article-list";
 
 const Home = () => {
   return (
-    <div className="w-full p-4 sm:border-l-2 sm:p-8 bg-muted overflow-y-auto">
+    <div className="w-full p-4 sm:p-8 bg-muted overflow-y-auto">
       <ActionBar />
-      <div className="grid grid-cols-2 my-8">
-        <Tabs className="col-span-2" defaultValue="week">
-          <TabsList className="grid w-full grid-cols-2 mb-10 border-t font-medium text-lg shadow-md">
-            <TabsTrigger
-              className="aria-selected:border-b-2 border-primary-500 py-2"
-              value="week"
-            >
-              Top picks
+      <div className="flex w-full my-8">
+        <Tabs className="w-full" defaultValue="week">
+          <TabsList className="flex w-full font-medium h-12 bg-primary-100/80 text-primary-700">
+            <TabsTrigger className="w-full text-lg" value="week">
+              Weekly picks
             </TabsTrigger>
-            <TabsTrigger
-              className="aria-selected:border-b-2 border-primary-500"
-              value="yours"
-            >
-              Curated reads
+            <TabsTrigger className="w-full text-base" value="yours">
+              Today's news
             </TabsTrigger>
           </TabsList>
           <TabsContent value="week">
