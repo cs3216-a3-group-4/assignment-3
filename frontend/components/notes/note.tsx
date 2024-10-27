@@ -38,7 +38,7 @@ const extractUrl = (
     const article = analysisNote.analysis.event.original_article;
     return {
       article: article,
-      url: `/articles/${article}#analysis-${analysisNote.analysis.id}`,
+      url: `/articles/${article.id}#analysis-${analysisNote.analysis.id}`,
     };
   } else if (note.parent_type == "article_concept") {
     const articleConceptNote = note as ArticleConceptNoteDTO;
