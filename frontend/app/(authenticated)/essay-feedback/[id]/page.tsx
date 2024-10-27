@@ -80,7 +80,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
               </span>
             </div>
             <div className="w-full border border-primary rounded-b-lg rounded-tr-lg px-12 py-8 bg-card text-justify">
-              <p className="text-xl leading-normal text-text">
+              <p className="text-xl leading-normal text-text text-pretty break-words bg-card">
                 {paragraph.content}
               </p>
               <Separator className="my-6" />
