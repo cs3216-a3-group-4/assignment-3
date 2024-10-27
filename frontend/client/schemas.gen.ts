@@ -630,6 +630,29 @@ export const CommentDTOSchema = {
     title: 'CommentDTO'
 } as const;
 
+export const CommentMiniDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        lack_example: {
+            type: 'boolean',
+            title: 'Lack Example'
+        },
+        inclination: {
+            '$ref': '#/components/schemas/Inclination'
+        },
+        content: {
+            type: 'string',
+            title: 'Content'
+        }
+    },
+    type: 'object',
+    required: ['id', 'lack_example', 'inclination', 'content'],
+    title: 'CommentMiniDTO'
+} as const;
+
 export const ConceptDTOSchema = {
     properties: {
         id: {
@@ -702,14 +725,14 @@ export const EssayDTOSchema = {
         },
         comments: {
             items: {
-                '$ref': '#/components/schemas/CommentDTO'
+                '$ref': '#/components/schemas/CommentMiniDTO'
             },
             type: 'array',
             title: 'Comments'
         },
         paragraphs: {
             items: {
-                '$ref': '#/components/schemas/ParagraphDTO-Output'
+                '$ref': '#/components/schemas/src__essays__schemas__ParagraphDTO__2'
             },
             type: 'array',
             title: 'Paragraphs'
@@ -729,10 +752,24 @@ export const EssayMiniDTOSchema = {
         question: {
             type: 'string',
             title: 'Question'
+        },
+        comments: {
+            items: {
+                '$ref': '#/components/schemas/CommentDTO'
+            },
+            type: 'array',
+            title: 'Comments'
+        },
+        paragraphs: {
+            items: {
+                '$ref': '#/components/schemas/src__essays__schemas__ParagraphDTO__1'
+            },
+            type: 'array',
+            title: 'Paragraphs'
         }
     },
     type: 'object',
-    required: ['id', 'question'],
+    required: ['id', 'question', 'comments', 'paragraphs'],
     title: 'EssayMiniDTO'
 } as const;
 
@@ -1429,29 +1466,6 @@ export const ParagraphDTO_InputSchema = {
     title: 'ParagraphDTO'
 } as const;
 
-export const ParagraphDTO_OutputSchema = {
-    properties: {
-        content: {
-            type: 'string',
-            title: 'Content'
-        },
-        type: {
-            type: 'string',
-            title: 'Type'
-        },
-        comments: {
-            items: {
-                '$ref': '#/components/schemas/CommentDTO'
-            },
-            type: 'array',
-            title: 'Comments'
-        }
-    },
-    type: 'object',
-    required: ['content', 'type', 'comments'],
-    title: 'ParagraphDTO'
-} as const;
-
 export const ParagraphTypeSchema = {
     type: 'string',
     enum: ['introduction', 'paragraph', 'conclusion'],
@@ -1883,6 +1897,44 @@ export const ValidationResultSchema = {
     type: 'object',
     required: ['is_valid', 'error_message'],
     title: 'ValidationResult'
+} as const;
+
+export const src__essays__schemas__ParagraphDTO__1Schema = {
+    properties: {
+        content: {
+            type: 'string',
+            title: 'Content'
+        },
+        type: {
+            '$ref': '#/components/schemas/ParagraphType'
+        }
+    },
+    type: 'object',
+    required: ['content', 'type'],
+    title: 'ParagraphDTO'
+} as const;
+
+export const src__essays__schemas__ParagraphDTO__2Schema = {
+    properties: {
+        content: {
+            type: 'string',
+            title: 'Content'
+        },
+        type: {
+            type: 'string',
+            title: 'Type'
+        },
+        comments: {
+            items: {
+                '$ref': '#/components/schemas/CommentDTO'
+            },
+            type: 'array',
+            title: 'Comments'
+        }
+    },
+    type: 'object',
+    required: ['content', 'type', 'comments'],
+    title: 'ParagraphDTO'
 } as const;
 
 export const src__events__schemas__AnalysisDTOSchema = {

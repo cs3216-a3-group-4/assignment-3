@@ -1,53 +1,40 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 import {
   Calendar,
   Download,
   Ellipsis,
   Link2,
   MessageSquare,
-  Plus,
   Trash,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 
-const EssayListCard = () => {
+import { EssayMiniDTO } from "@/client/types.gen";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+
+interface EssayListCardProps {
+  essay: EssayMiniDTO;
+}
+
+const EssayListCard = ({ essay }: EssayListCardProps) => {
   const router = useRouter();
   return (
     <div className="flex flex-col w-full bg-card border px-4 py-4 rounded-sm text-pretty break-words">
       <div
         className="cursor-pointer"
-        onClick={() => router.push("/essay-feedback/1")}
+        onClick={() => router.push(`/essay-feedback/${essay.id}`)}
       >
-        <h1 className="text-text font-medium text-lg">
-          Is our pursuit of beauty justifiable?
-        </h1>
+        <h1 className="text-text font-medium text-lg">{essay.question}</h1>
         <p className="text-text-muted line-clamp-4 text-pretty break-words mt-2">
-          Since time immemorial, the human race has had an inexplicable, yet
-          innate desire for beauty and aesthetic perfection. While notions of
-          beauty have changed overtime, our desire for it has not waned, and in
-          fact has arguably gotten more ferventin a world pervaded by social
-          media and idealised beauty standards. In this light,the human pursuit
-          of beauty, especially that of physical beauty, seems to havegained a
-          bad reputation, perpetuating unrealistic standards and leading to
-          negativeimpacts on self-worth, especially for teenagers. However, if
-          we expand ourhorizons, we may realise that beauty is present in
-          everything, across spheres ofsport, art and music, and that our
-          pursuit of beauty not only has positive impactson character, but is
-          also innate to us humans, and can serve real purposes incommunities.
-          Given this renewed understanding, our pursuit of beauty is not
-          onlyjustified, but also vital to human survival and development.
+          {essay.paragraphs[0].content}
         </p>
       </div>
       <Separator className="my-4" />
@@ -59,7 +46,7 @@ const EssayListCard = () => {
           </span>
           <span className="flex items-center text-sm">
             <MessageSquare className="w-4 h-4 mr-1.5" />
-            <span>3 comments</span>
+            <span>{essay.comments.length} comments</span>
           </span>
         </div>
         <span>

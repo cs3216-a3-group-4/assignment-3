@@ -55,7 +55,13 @@ def get_essays(
     user: Annotated[User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ) -> list[EssayMiniDTO]:
-    essays = session.scalars(select(Essay).where(Essay.user_id == user.id))
+    essays = session.scalars(
+        select(Essay)
+        .where(Essay.user_id == user.id)
+        .options(
+            selectinload(Essay.paragraphs).selectinload(Paragraph.comments),
+        )
+    )
     return essays
 
 
