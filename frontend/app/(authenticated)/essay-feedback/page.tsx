@@ -144,7 +144,7 @@ const EssayFeedbackPage = () => {
                   {paragraph.type}
                 </span>
               </div>
-              <div className="w-full border border-primary rounded-b-lg rounded-tr-lg px-4 py-4 text-lg">
+              <div className="w-full max-w-full border border-primary rounded-b-lg rounded-tr-lg px-4 py-4 text-lg text-pretty break-words bg-card">
                 {paragraph.content}
               </div>
             </div>
