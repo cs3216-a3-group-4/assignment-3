@@ -1,14 +1,13 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getEvent } from "@/queries/event";
-import { useQuery } from "@tanstack/react-query";
-import ArticlePageLoading from "@/app/(authenticated)/articles/[id]/article-page-loading";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
 import { RotateCwIcon } from "lucide-react";
+
+import ArticlePageLoading from "@/app/(authenticated)/articles/[id]/article-page-loading";
+import { Button } from "@/components/ui/button";
+import { getEvent } from "@/queries/event";
 
 const Page = ({ params }: { params: { id: string } }) => {
   // Redirect events path to new articles page to support legacy URLs
