@@ -9,7 +9,6 @@ from src.events.models import (
     Article,
     ArticleBookmark,
     ArticleConcept,
-    Concept,
     Event,
 )
 from src.events.schemas import ArticleDTO
@@ -29,13 +28,11 @@ def retrieve_article(
             selectinload(
                 Article.categories,
             ),
-            selectinload(Article.article_concepts)
-            .selectinload(ArticleConcept.concept)
-            .selectinload(Concept.notes.and_(Note.user_id == user.id)),
-            selectinload(Article.article_concepts)
-            .selectinload(ArticleConcept.concept)
-            .selectinload(
-                Concept.likes.and_(Like.point_id.is_(None))
+            selectinload(Article.article_concepts).selectinload(
+                ArticleConcept.notes.and_(Note.user_id == user.id)
+            ),
+            selectinload(Article.article_concepts).selectinload(
+                ArticleConcept.likes.and_(Like.point_id.is_(None))
                 .and_(Like.analysis_id.is_(None))
                 .and_(Like.user_id == user.id)
             ),
