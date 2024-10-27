@@ -370,6 +370,7 @@ def handle_charge_dispute_closed(event):
     # Update user subscription status based on whether customer won or we won
     pass
 
+
 def handle_stripe_price_event(event, session):
     stripe_price: stripe.Price = event["data"]["object"]
     stripe_price_id: str = stripe_price["id"]
@@ -409,14 +410,19 @@ def handle_stripe_price_event(event, session):
     session.commit()
     session.refresh(price_to_save)
 
+
 def handle_stripe_product_event(event, session):
     stripe_product: stripe.Product = event["data"]["object"]
     stripe_product_id: str = stripe_product["id"]
     stripe_product_name: str = stripe_product["name"]
     stripe_product_description: str = stripe_product["description"]
-    stripe_product_image_url: str = stripe_product["images"][0] if stripe_product["images"] else ""
+    stripe_product_image_url: str = (
+        stripe_product["images"][0] if stripe_product["images"] else ""
+    )
     stripe_product_is_active: bool = stripe_product["active"]
-    stripe_product_features: list[str] = get_list_of_feature_strings_for(stripe_product["marketing_features"])
+    stripe_product_features: list[str] = get_list_of_feature_strings_for(
+        stripe_product["marketing_features"]
+    )
 
     # Check whether the given stripe product is already saved in database
     product_to_save = session.scalars(
@@ -486,7 +492,9 @@ def update_session(checkout_session: stripe.checkout.Session, session):
         session.refresh(stripe_session)
 
 
-def update_subscription_for(subscription: stripe.Subscription, session, is_new_subscription: bool = False):
+def update_subscription_for(
+    subscription: stripe.Subscription, session, is_new_subscription: bool = False
+):
     if not subscription["id"]:
         print(
             f"""ERROR: Invalid subscription ID received when processing subscription update: {subscription["id"]}"""
@@ -515,7 +523,9 @@ def update_subscription_for(subscription: stripe.Subscription, session, is_new_s
         # Delete all existing subscriptions for this user from our database
         ## This prevents duplicate subscriptions for the same user
         other_subscriptions = session.scalars(
-            select(Subscription).where(Subscription.customer_id == customer_id).where(Subscription.id != subscription_id)
+            select(Subscription)
+            .where(Subscription.customer_id == customer_id)
+            .where(Subscription.id != subscription_id)
         ).all()
         for other_subscription in other_subscriptions:
             if other_subscription.status == "active":

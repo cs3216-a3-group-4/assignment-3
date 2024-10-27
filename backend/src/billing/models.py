@@ -8,6 +8,7 @@ class StripePaymentInterval(str, Enum):
     MONTHLY = "month"
     ANNUAL = "year"
 
+
 class StripeSession(Base):
     __tablename__ = "stripe_session"
 
@@ -19,6 +20,7 @@ class StripeSession(Base):
     # TODO: Update this to be a foreign key to the tier table
     tier_id: Mapped[int]
 
+
 class StripeProduct(Base):
     __tablename__ = "stripe_product"
 
@@ -28,6 +30,7 @@ class StripeProduct(Base):
     image_url: Mapped[str]
     is_active: Mapped[bool]
     features: Mapped[list[str]] = mapped_column(ARRAY(String))
+
 
 class StripePrice(Base):
     __tablename__ = "stripe_price"
