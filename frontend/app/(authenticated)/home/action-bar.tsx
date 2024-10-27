@@ -19,7 +19,7 @@ const ActionBar = () => {
         <CardTitle className="text-primary-800">Jump in with Jippy</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid lg:grid-cols-3 gap-12 items-stretch">
+        <div className="grid md:grid-cols-3 gap-12 items-stretch">
           <ActionBarItem
             title="Explore articles"
             actionPath="/articles"
@@ -28,7 +28,7 @@ const ActionBar = () => {
                 analysed for GP."
           >
             <ArticleSVG
-              className="max-h-[22vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              className="max-h[28vh] mt-6 md:max-h-[22vh] md:mt-4 lg:mt-6 hover:-translate-y-3 transition-all cursor-pointer"
               onClick={() => router.push("/articles")}
             />
           </ActionBarItem>
@@ -37,10 +37,10 @@ const ActionBar = () => {
             title="Ask an essay question"
             actionPath="/ask"
             actionLabel="Ask"
-            description="Need ideas? Jippy can help you generates key points and examples for your essay."
+            description="Need ideas? Jippy can help you generate points and examples for your essay."
           >
             <AskQuestionSVG
-              className="max-h-[22vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              className="max-h[28vh] mt-6 md:max-h-[22vh] md:mt-4 lg:mt-6 hover:-translate-y-3 transition-all cursor-pointer"
               onClick={() => router.push("/ask")}
             />
           </ActionBarItem>
@@ -52,7 +52,7 @@ const ActionBar = () => {
             description="Get targeted essay feedback based on A-Level marking standards."
           >
             <FeedbackSVG
-              className="max-h-[22vh] mt-6 hover:-translate-y-3 transition-all cursor-pointer"
+              className="max-h[28vh] mt-6 md:max-h-[22vh] md:mt-4 lg:mt-6 hover:-translate-y-3 transition-all cursor-pointer"
               onClick={() => router.push("/essay-feedback")}
             />
           </ActionBarItem>
