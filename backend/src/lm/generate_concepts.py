@@ -20,6 +20,9 @@ import asyncio
 
 CONCEPTS_FILE_PATH = "src/scripts/concepts_output.json"
 
+type ArticleId = int
+type ConceptId = int
+
 
 class ArticleConceptLM(BaseModel):
     concept: str
@@ -143,8 +146,15 @@ def add_concepts_to_db(article_concepts: list[ArticleConceptsWithId]):
 
         # add new models to db
         results = []
+        article_concept_ids: set[tuple[ArticleId, ConceptId]] = set()
         for article_concept_with_id in article_concepts:
             for article_concept_llm in article_concept_with_id.concepts:
+                ids = (
+                    article_concept_with_id.article_id,
+                    concept_map[article_concept_llm.concept].id,
+                )
+                if ids in article_concept_ids:
+                    continue
                 results.append(
                     ArticleConcept(
                         article_id=article_concept_with_id.article_id,
@@ -152,6 +162,7 @@ def add_concepts_to_db(article_concepts: list[ArticleConceptsWithId]):
                         concept_id=concept_map[article_concept_llm.concept].id,
                     )
                 )
+                article_concept_ids.add(ids)
 
         session.add_all(results)
         session.commit()
