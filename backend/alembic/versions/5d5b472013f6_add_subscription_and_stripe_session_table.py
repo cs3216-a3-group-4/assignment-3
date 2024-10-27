@@ -44,6 +44,7 @@ def downgrade() -> None:
         "id",
         existing_type=sa.String(),
         type_=sa.INTEGER(),
+        postgresql_using="id::integer",
         existing_nullable=False,
     )
     # ### end Alembic commands ###
