@@ -41,12 +41,10 @@ export const tierIDToTierFeature: Record<JippyTierID, string[]> = {
     "Unlimited notes with annotation and highlighting",
     "View up to 20 event analyses per week",
     "3 GP essay content generation per week",
-    "1 content regeneration permitted per week",
   ],
   [JippyTierID.Premium]: [
     "All of the Free features",
     "10 GP essay content generation per week",
-    "5 content regeneration permitted per week",
     "3 free essay feedback per week",
   ],
   [JippyTierID.Enterprise]: ["Coming soon"],
