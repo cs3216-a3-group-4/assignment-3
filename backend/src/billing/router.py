@@ -108,10 +108,11 @@ async def downgrade_subscription(
             detail="User does not have an existing subscription to downgrade",
         )
     try:
-        # Call stripe API to cancel subscription immediately
+        # Get subscription ID from user's associated Subscription object
         stripe_subscription_id: str = user.subscription.id
-        stripe_subscription = stripe.Subscription.retrieve(stripe_subscription_id)
-        stripe_subscription.delete(prorate=False)
+        # Cancel subscription at the end of the current billing period
+        ## This allows user to continue to enjoy the current tier's benefits until the subscription expires
+        stripe.Subscription.modify(id=stripe_subscription_id, cancel_at_period_end=True)
 
         return Response(
             content='{"status": "success"}',
