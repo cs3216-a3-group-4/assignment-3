@@ -13,6 +13,7 @@ from src.lm.essay_grader_prompts import (
 from src.lm.essay_grader_prompts import (
     BODY_GRADER_SYSPROMPT as BODY_SYSPROMPT,
     INTRO_GRADER_PROMPT as INTRO_SYSPROMPT,
+    CONCLUSION_GRADER_PROMPT as CONCLUSION_SYSPROMPT,
 )
 from src.lm.essay_grader_prompts import (
     POINT_EXTRACTION_PROMPT as POINT_EXTRACTION_PROMPT,
@@ -44,8 +45,10 @@ def generate_paragraph_comments(
     sysprompt = ""
     if paragraph_type == ParagraphType.INTRODUCTION:
         sysprompt = INTRO_SYSPROMPT
-    elif paragraph_type == ParagraphType.BODY:
+    elif paragraph_type == ParagraphType.PARAGRAPH:
         sysprompt = BODY_SYSPROMPT
+    elif paragraph_type == ParagraphType.CONCLUSION:
+        sysprompt = CONCLUSION_SYSPROMPT
 
     prompt = f"""
     Question: {question}
@@ -177,24 +180,18 @@ if __name__ == "__main__":
     # print(comments)
 
     paragraph_to_grade = """
-    “We are the 99%”
-. This was the rallying cry behind the Occupy Wall Street protests that
-swept the United States in 2011, a bitter outcry of frustration against the growing gaps of
-inequality between the ultra rich, and the working class in the US. Ensuring economic growth
-has been widely accepted as a key responsibility of the government, after all, economic
-growth serves as a good proxy in measuring the welfare of its citizens. Countless have been
-rescued from poverty by economic prosperity- and it is an established fact that economic
-growth is indeed largely desirable. Yet, the relentless pursuit of continuous economic growth
-has proven largely problematic. T aken against the backdrop of growing income disparity,
-environmental degradation, and rising stress levels, I believe that the pursuit of continuous
-economic growth is largely undesirable, especially in economies already facing severe
-income inequality, rampant breaches in environmental controls and protection, or achieving
-economic success at the expense of the mental well-being of its citizens.
+    While the economy is central to the government and any nation, I believe that the
+unrelenting desire for continuous economic growth, especially when in economies that face
+significant income disparity, adopting exploitative measures that aggravate environmental
+issues, and without regard for the mental wellbeing of its people is not worthwhile. The
+government needs to balance its economic priorities with other factors in its economy, such
+as to ensure that economic growth can continue to be progressive, inclusive, sustainable, for
+it to ultimately, improve the living standards of its people and be truly desirable
     """
     question = (
         "To what extent is the pursuit of continuous economic growth a desirable goal?"
     )
     comments = generate_paragraph_comments(
-        paragraph_to_grade, question, ParagraphType.INTRODUCTION
+        paragraph_to_grade, question, ParagraphType.CONCLUSION
     )
     print(json.dumps(comments, indent=4))

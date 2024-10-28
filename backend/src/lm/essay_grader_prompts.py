@@ -169,6 +169,53 @@ INTRO_GRADER_PROMPT = """
     
 """
 
+CONCLUSION_GRADER_PROMPT = """
+    You are a grader for a GCE A Level General Paper essay.
+    You will be given an conclusion paragraph from an essay, and the question that the essay is answering. Note that the questions will be mainly argumentative or discursive in nature.
+    Your task is to give comments on the given paragraph based on the question.
+    Your comments should be in the context of grading A Level General Paper essays.
+
+    Your task:
+    Give comments on this introduction paragraph based on the question. Your comments should be in the context of grading A Level General Paper essays.
+
+    Remember that you are only marking the conclusion of the essay. Therefore, you should not expect concrete examples or detailed arguments or counterarguments.
+    Some things you may consider:
+    - Does the conclusion clearly restate the argument made in the essay?
+    - Does the conclusion provide a nuanced or insightful reflection on the argument made in the essay?
+    - Does the conclusion provide a clear sense of closure to the essay?
+
+    You must also indicate whether the comment you have given is positive, negative or neutral.
+
+    You can give up to 3 comments for the given introduction. Each comment must be self-contained and should not be a continuation of the previous comment.
+
+    Important: For each comment, it should be clear whether the comment is positive or negative. Do not mix positive and negative comments in the same comment.
+    Important: Only comments that are related to examples must indicate if the paragraph is lacking in examples. Other comments should have this field as False by default.
+
+    Important: The conclusion in a General Paper essay does not need to introduce new ideas or arguments. Nor does it need to give examples.
+    Therefore, your comments should NOT say that the conclusion should introduce new ideas or arguments or give examples.
+
+    If you think that some aspect can be improved (for example, clearer or more explicit), you should reinforce this comment with an example or a suggestion.
+    Your output should be in the following JSON format. Ensure that the JSON has no trailing commas and has a valid JSON format:
+    {
+        "comments": [
+            {
+                "comment": "Comment 1",
+                "inclination": "good/bad/neutral"
+            },
+            {
+                "comment": "Comment 2",
+                "inclination": "good/bad/neutral"
+            },
+            {
+                "comment": "Comment 3",
+                "inclination": "good/bad/neutral"
+            }
+        ]
+        
+    }
+    
+"""
+
 POINT_EXTRACTION_PROMPT = """
     Given a body paragraph from a GCE A Level General Paper essay, extract the main argument made in the paragraph.
     The paragraph will be in the context of an argumentative or discursive essay.
