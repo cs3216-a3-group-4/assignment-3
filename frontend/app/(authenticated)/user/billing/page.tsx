@@ -35,9 +35,9 @@ const Page = () => {
 
   const billingPath = usePathname();
   const searchParams = useSearchParams();
-  const isSuccess = searchParams.get("success") === "true";
-  const stripeSessionId = searchParams.get("session_id");
-  const isCancelled = searchParams.get("cancelled") === "true";
+  let isSuccess = searchParams.get("success") === "true";
+  let stripeSessionId = searchParams.get("session_id");
+  let isCancelled = searchParams.get("cancelled") === "true";
   const router = useRouter();
 
   const [userTier, setUserTier] = useState<string>("");
@@ -100,6 +100,8 @@ const Page = () => {
 
       // Remove query parameters from the URL after showing the toast
       const timeout = setTimeout(() => {
+        isSuccess = false;
+        stripeSessionId = "";
         // Remove the 'success' and 'session_id' query string from the URL
         router.replace(billingPath, { scroll: false });
         // TODO: Add callback to server to check whether user tier is upgraded successfully/fetch new user tier
@@ -116,6 +118,7 @@ const Page = () => {
 
       // Remove query parameters from the URL after showing the toast
       const timeout = setTimeout(() => {
+        isCancelled = false;
         // Remove the 'cancelled' query string from the URL
         router.replace(billingPath, { scroll: false });
       }, PAYMENT_TOAST_DURATION);
