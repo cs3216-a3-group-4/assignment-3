@@ -23,3 +23,7 @@ def send_email(
         msg.set_content(message)
 
         server.sendmail(GOOGLE_EMAIL, receiving_email_addr, msg.as_string())
+
+
+def send_error_email(error_message: str):
+    send_email(GOOGLE_EMAIL, "500 error, oh no!", error_message)
