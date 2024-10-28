@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 from src.categories.schemas import CategoryDTO
@@ -9,6 +10,7 @@ class UserPublic(BaseModel):
 
     id: int
     email: EmailStr
+    last_accessed: datetime
 
     categories: list[CategoryDTO]
     top_events_period: int = 7

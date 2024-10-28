@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 from typing import Annotated
 from uuid import uuid4
@@ -141,8 +142,17 @@ routerWithAuth = APIRouter(
 
 
 @routerWithAuth.get("/session")
-def get_user(user: Annotated[User, Depends(get_current_user)]) -> UserPublic:
-    return user
+def get_user(
+    current_user: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
+) -> UserPublic:
+    user = session.get(User, current_user.id)
+    if user:
+        user.last_accessed = datetime.now()
+        session.add(user)
+        session.commit()
+
+    return current_user
 
 
 @routerWithAuth.get("/logout")
