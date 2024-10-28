@@ -1,5 +1,6 @@
+from datetime import datetime
 from enum import Enum
-from sqlalchemy import Column, ForeignKey, Integer, Table
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Table, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.common.base import Base
 from src.events.models import Bookmark, Category
@@ -32,6 +33,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
     account_type: Mapped[AccountType]
+    last_accessed: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     role: Mapped[Role] = mapped_column(server_default="NORMAL")
 
