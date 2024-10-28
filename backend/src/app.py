@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, FastAPI
+from fastapi import APIRouter, Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from src.auth.dependencies import add_current_user
 from src.auth.router import (
     router as auth_router,
@@ -23,8 +24,10 @@ from src.subscriptions.router import router as subscriptions_router
 from contextlib import asynccontextmanager
 
 import logging
+import traceback
 
-from src.common.constants import FRONTEND_URL
+from src.common.constants import EMAIL_ALERTS_ENABLED, FRONTEND_URL
+from src.utils.mail import send_error_email
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
@@ -47,6 +50,25 @@ server.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@server.exception_handler(500)
+async def internal_server_error_handler(request: Request, exc: Exception):
+    """Custom handler for 500 errors."""
+    # Extract traceback and request information
+    error_message = "".join(traceback.format_exception(None, exc, exc.__traceback__))
+    message = f"An error occurred:\n\nURL: {request.url}\n\n{error_message}"
+
+    # Send an email alert
+    if EMAIL_ALERTS_ENABLED:
+        send_error_email(message)
+
+    # Return a JSON response to the user
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error"},
+    )
+
 
 server.include_router(auth_router)
 server.include_router(billing_router)
