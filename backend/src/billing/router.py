@@ -280,7 +280,7 @@ def handle_subscription_created(event, session):
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail="Error processing subscription created stripe event due to empty subscription ID provided",
         )
-    
+
     # Insert subscription data into our database
     ## But check and delete all existing subscriptions for this user first
     update_subscription_for(subscription, session, True)
@@ -299,7 +299,7 @@ def handle_subscription_canceled(event, session):
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail="Error processing subscription cancelled stripe event due to empty subscription ID provided",
         )
-    
+
     subscription_to_delete = session.scalars(
         select(Subscription).where(Subscription.id == subscription_id)
     ).one_or_none()
@@ -345,7 +345,7 @@ def handle_subscription_paused(event, session):
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail="Error processing subscription paused stripe event due to empty subscription ID provided",
         )
-    
+
     update_subscription_for(subscription, session)
 
     # Find user id for the given subscription using stripe_session table
@@ -388,7 +388,7 @@ def handle_subscription_resumed(event, session):
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail="Error processing subscription resumed stripe event due to empty subscription ID provided",
         )
-    
+
     update_subscription_for(subscription, session)
 
     # Upgrade tier here since invoice.paid event might not be triggered, but we
@@ -647,7 +647,7 @@ def do_tier_upgrade(subscription_id: str, session):
             status_code=HTTPStatus.BAD_REQUEST,
             detail="Invalid subscription ID received",
         )
-    
+
     stripe_session = session.scalars(
         select(StripeSession).where(StripeSession.subscription_id == subscription_id)
     ).one_or_none()
