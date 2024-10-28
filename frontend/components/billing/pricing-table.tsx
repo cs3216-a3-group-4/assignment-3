@@ -13,7 +13,8 @@ const PricingTable = ({ tiers }: PricingTiers) => {
         tiers.map((tier, index) => {
           return (
             <PricingTier
-              isPurchased={tier.isPurchased}
+              buttonText={tier.buttonText}
+              isButtonDisabled={tier.isButtonDisabled}
               key={index}
               onClickBuy={tier.onClickBuy}
               price={tier.price}

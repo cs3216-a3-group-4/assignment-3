@@ -108,10 +108,11 @@ async def downgrade_subscription(
             detail="User does not have an existing subscription to downgrade",
         )
     try:
-        # Call stripe API to cancel subscription immediately
+        # Get subscription ID from user's associated Subscription object
         stripe_subscription_id: str = user.subscription.id
-        stripe_subscription = stripe.Subscription.retrieve(stripe_subscription_id)
-        stripe_subscription.delete(prorate=False)
+        # Cancel subscription at the end of the current billing period
+        ## This allows user to continue to enjoy the current tier's benefits until the subscription expires
+        stripe.Subscription.modify(id=stripe_subscription_id, cancel_at_period_end=True)
 
         return Response(
             content='{"status": "success"}',
@@ -271,6 +272,15 @@ def handle_payment_failure(event):
 
 def handle_subscription_created(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
+    if not subscription["id"]:
+        print(
+            "ERROR: Cannot process subscription created stripe event since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing subscription created stripe event due to empty subscription ID provided",
+        )
+
     # Insert subscription data into our database
     ## But check and delete all existing subscriptions for this user first
     update_subscription_for(subscription, session, True)
@@ -279,6 +289,17 @@ def handle_subscription_created(event, session):
 def handle_subscription_canceled(event, session):
     # Stripe event object is a stripe.Subscription, get its ID
     subscription_id = event["data"]["object"]["id"]
+    # Check whether subscription ID is blank
+    if not subscription_id:
+        # Don't proceed if subscription ID is empty
+        print(
+            "ERROR: Cannot process subscription cancelled stripe event since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing subscription cancelled stripe event due to empty subscription ID provided",
+        )
+
     subscription_to_delete = session.scalars(
         select(Subscription).where(Subscription.id == subscription_id)
     ).one_or_none()
@@ -313,9 +334,20 @@ def handle_subscription_canceled(event, session):
 
 def handle_subscription_paused(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
+    subscription_id: str = subscription["id"]
+    # Check whether subscription ID is blank
+    if not subscription_id:
+        # Don't proceed if subscription ID is empty
+        print(
+            "ERROR: Cannot process subscription paused stripe event since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing subscription paused stripe event due to empty subscription ID provided",
+        )
+
     update_subscription_for(subscription, session)
 
-    subscription_id: str = subscription["id"]
     # Find user id for the given subscription using stripe_session table
     stripe_session = session.scalars(
         select(StripeSession).where(StripeSession.subscription_id == subscription_id)
@@ -345,9 +377,20 @@ def handle_subscription_paused(event, session):
 
 def handle_subscription_resumed(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
+    subscription_id: str = subscription["id"]
+    # Check whether subscription ID is blank
+    if not subscription_id:
+        # Don't proceed if subscription ID is empty
+        print(
+            "ERROR: Cannot process subscription resumed stripe event since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing subscription resumed stripe event due to empty subscription ID provided",
+        )
+
     update_subscription_for(subscription, session)
 
-    subscription_id: str = subscription["id"]
     # Upgrade tier here since invoice.paid event might not be triggered, but we
     #   downgrade the user tier when subscription is paused
     do_tier_upgrade(subscription_id, session)
@@ -357,6 +400,16 @@ def handle_subscription_resumed(event, session):
 
 def handle_subscription_updated(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
+    # Check whether subscription ID is blank
+    if not subscription["id"]:
+        # Don't proceed if subscription ID is empty
+        print(
+            "ERROR: Cannot update subscription data in database since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error parsing updated subscription data due to empty subscription ID provided",
+        )
     update_subscription_for(subscription, session)
     # TODO: Update user tier_id if needed
 
@@ -462,8 +515,8 @@ def update_session(checkout_session: stripe.checkout.Session, session):
             f"""ERROR: Invalid session mode received when processing checkout session: {checkout_session["mode"]}"""
         )
         raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"""Invalid mode received in checkout handler: {checkout_session["mode"]}""",
+            status_code=HTTPStatus.NOT_IMPLEMENTED,
+            detail=f"""Unrecognised mode received in checkout handler: {checkout_session["mode"]}""",
         )
     if not checkout_session["subscription"]:
         print(
@@ -586,6 +639,15 @@ def update_subscription_for(
 
 
 def do_tier_upgrade(subscription_id: str, session):
+    # Validation check for subscription ID
+    if not subscription_id:
+        # Unable to continue without subscription ID
+        print("ERROR: Invalid subscription ID received")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="Invalid subscription ID received",
+        )
+
     stripe_session = session.scalars(
         select(StripeSession).where(StripeSession.subscription_id == subscription_id)
     ).one_or_none()
@@ -597,6 +659,18 @@ def do_tier_upgrade(subscription_id: str, session):
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""",
         )
+
+    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
+    if stripe_subscription["status"] != "active":
+        if stripe_session.user_id:
+            print(
+                f"""WARNING: Tried to upgrade user tier associated with subscription with ID {subscription_id} that is not active"""
+            )
+        else:
+            print(
+                f"""WARNING: Tried to upgrade user tier of user with ID {stripe_session.user_id} who has subscription with ID {subscription_id} that is not active"""
+            )
+        return
 
     if not stripe_session.user_id:
         print(
@@ -618,16 +692,6 @@ def do_tier_upgrade(subscription_id: str, session):
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail=f"""ERROR: No corresponding user found for subscription with ID {subscription_id}""",
-        )
-
-    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
-    if stripe_subscription["status"] != "active":
-        print(
-            f"""ERROR: Subscription with ID {subscription_id} is not active even after payment"""
-        )
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""Subscription with ID {subscription_id} is not active even after payment""",
         )
 
     # Upgrade user tier now that subscription is paid for and active

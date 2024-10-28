@@ -6,13 +6,15 @@ export interface PricingTierInfo {
   price: number;
   tierDescription: string;
   tierFeatures: string[];
-  isPurchased?: boolean;
+  isButtonDisabled?: boolean;
+  buttonText?: string;
   onClickBuy?: () => void;
 }
 
 const PricingTier = ({
   tierName,
-  isPurchased,
+  isButtonDisabled,
+  buttonText,
   onClickBuy,
   price,
   tierDescription,
@@ -29,13 +31,13 @@ const PricingTier = ({
             <span className="text-slate-500 font-medium">/month</span>
           </div>
           <div className="text-sm text-slate-500">{tierDescription}</div>
-          {onClickBuy && isPurchased !== undefined && (
+          {onClickBuy && buttonText && (
             <Button
               className="w-full inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring transition-colors duration-150 mt-5"
-              disabled={isPurchased}
+              disabled={isButtonDisabled}
               onClick={onClickBuy}
             >
-              {isPurchased ? "Bought" : "Buy"}
+              {buttonText}
             </Button>
           )}
         </div>

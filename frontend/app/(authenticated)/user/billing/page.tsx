@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { UserPublic } from "@/client";
 import PricingTable from "@/components/billing/pricing-table";
 import Chip from "@/components/display/chip";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,22 @@ import {
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
 
+const getPriceButtonText = (
+  priceTierId: number,
+  user: UserPublic | undefined,
+) => {
+  const userTierId = user?.tier_id || 1;
+  if (priceTierId == userTierId) {
+    return "Current";
+  } else if (priceTierId > userTierId) {
+    return "Upgrade";
+  } else if (priceTierId < userTierId) {
+    return "Downgrade";
+  } else {
+    return "Buy";
+  }
+};
+
 const toPascalCase = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -37,9 +54,9 @@ const Page = () => {
 
   const billingPath = usePathname();
   const searchParams = useSearchParams();
-  const isSuccess = searchParams.get("success") === "true";
-  const stripeSessionId = searchParams.get("session_id");
-  const isCancelled = searchParams.get("cancelled") === "true";
+  let isSuccess = searchParams.get("success") === "true";
+  let stripeSessionId = searchParams.get("session_id");
+  let isCancelled = searchParams.get("cancelled") === "true";
   const router = useRouter();
 
   const [userTier, setUserTier] = useState<string>("");
@@ -60,7 +77,8 @@ const Page = () => {
   const jippyTiers = [
     {
       tierName: JippyTier.Free,
-      isPurchased: user?.tier_id == JippyTierID.Free,
+      isButtonDisabled: user?.tier_id == JippyTierID.Free,
+      buttonText: getPriceButtonText(JippyTierID.Free, user),
       onClickBuy: onClickDowngradeSubscription,
       price: TierPrice.Free,
       tierDescription: tierIDToTierDescription[JippyTierID.Free],
@@ -68,7 +86,8 @@ const Page = () => {
     },
     {
       tierName: JippyTier.Premium,
-      isPurchased: user?.tier_id == JippyTierID.Premium,
+      isButtonDisabled: user?.tier_id == JippyTierID.Premium,
+      buttonText: getPriceButtonText(JippyTierID.Premium, user),
       onClickBuy: () => {
         stripeCheckoutMutation.mutate({
           price_id: process.env.NEXT_PUBLIC_STRIPE_PREMIUM_TIER_PRICE_ID || "",
@@ -91,6 +110,8 @@ const Page = () => {
 
       // Remove query parameters from the URL after showing the toast
       const timeout = setTimeout(() => {
+        isSuccess = false;
+        stripeSessionId = "";
         // Remove the 'success' and 'session_id' query string from the URL
         router.replace(billingPath, { scroll: false });
         // TODO: Add callback to server to check whether user tier is upgraded successfully/fetch new user tier
@@ -107,6 +128,7 @@ const Page = () => {
 
       // Remove query parameters from the URL after showing the toast
       const timeout = setTimeout(() => {
+        isCancelled = false;
         // Remove the 'cancelled' query string from the URL
         router.replace(billingPath, { scroll: false });
       }, PAYMENT_TOAST_DURATION);
@@ -114,7 +136,7 @@ const Page = () => {
       // Cleanup timeout on unmount of the page
       return () => clearTimeout(timeout);
     }
-  }, [isSuccess, isCancelled, stripeSessionId, toast, router]);
+  }, [isSuccess, isCancelled, stripeSessionId]);
 
   useEffect(() => {
     if (user?.subscription) {
