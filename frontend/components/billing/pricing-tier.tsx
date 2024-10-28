@@ -1,5 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { PricingTierInfo } from "@/types/billing";
+
+export interface PricingTierInfo {
+  tierName: string;
+  // Montly price in dollars
+  price: number;
+  tierDescription: string;
+  tierFeatures: string[];
+  isPurchased?: boolean;
+  onClickBuy?: () => void;
+}
 
 const PricingTier = ({
   tierName,
@@ -19,16 +28,16 @@ const PricingTier = ({
             <span className="text-slate-900 font-bold text-4xl">{price}</span>
             <span className="text-slate-500 font-medium">/month</span>
           </div>
-          <div className="text-sm text-slate-500 h-16 mb-5">
-            {tierDescription}
-          </div>
-          <Button
-            className="w-full inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring transition-colors duration-150"
-            disabled={isPurchased}
-            onClick={onClickBuy}
-          >
-            {isPurchased ? "Bought" : "Buy"}
-          </Button>
+          <div className="text-sm text-slate-500">{tierDescription}</div>
+          {onClickBuy && isPurchased !== undefined && (
+            <Button
+              className="w-full inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring transition-colors duration-150 mt-5"
+              disabled={isPurchased}
+              onClick={onClickBuy}
+            >
+              {isPurchased ? "Bought" : "Buy"}
+            </Button>
+          )}
         </div>
         <div className="text-slate-900 font-medium mb-3">Includes:</div>
         <ul className="text-slate-600 text-sm space-y-3 grow">
