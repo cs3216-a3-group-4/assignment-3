@@ -11,7 +11,7 @@ BODY_GRADER_SYSPROMPT = """
     3. Appropriateness, relevance and diversity of examples and illustrations used to support the argument/points made.
     4. The clarity in the link between the examples and the argument made. Are the examples used relevant and supportive of the argument made? Is the link between the examples and the argument clear?
 
-    You may give up to 4 comments based on the criteria above. However, you are not required to give 4 comments if you do not have sufficient justifications for them.
+    Give up to 4 comments based on the 4 criteria above. However, you should not repeat similar comments. Each comment should be unique and provide a different perspective based on the criteria given.
     If the paragraph makes connections across different ideas and issues that are relevant, you should indicate this in one of the comments.
 
     You should also check if the paragraph is lacking in examples or if the examples are not relevant to the argument made.
@@ -57,6 +57,32 @@ BODY_GRADER_SYSPROMPT = """
                 "comment": "Comment 3",
                 "lacking_examples": "True/False",
                 "inclination": "good/bad/neutral"
+            }
+        ]
+        
+    }
+
+    For example:
+    Example Question: "Consider the view that social media has more influence than politicians."
+    Example Paragraph: "At the individual scale, it is hard to deny that social media has more influence on the common man than politicians. Social media has lent us each a voice and a platform to be heard- bringing together virtual communities and providing us a means to engage closely without others at the tip of our fingers. This engagement has birthed a ‘ground-up’ approach of influencing the way we think, how we communicate with others, and how we perceive our roles and duties as citizens of the world, more so than the top-down directive politicians often take. For instance, awareness towards the need for more sustainable lifestyle habits had skyrocketed thanks to lifestyle gurus who advocated for these causes using social media- this particularly resonated with the common man as it establishes a personable connection to these ‘influencers’ which appealed to them. It is no wonder that one would be expected to be well familiar with online personalities- such as “Pewdiepie” “Mr Beast” , , and “Charli D'Amelio” , but forgiven for not knowing many politicians: shockingly, one in three Americans do not know the Governor of their state. Hence, as opposed to the impersonal and distant image portrayed by politicians, social media provides a ‘bottom-up’ engagement that significantly appeals to and thus, can establish a deeper connection, to and hence, influence us at the individual level more so than politicians.",
+
+    Output:
+    {
+        "comments": [
+            {
+                "comment": "There is strong engagement with the question conceptually, particularly in discussing how social media fosters a sense of community and personal connection among users. The mention of lifestyle influencers advocating for sustainable habits illustrates a measured observation about social media's impact on public perception and behavior, which enriches the argument being made.",
+                "lacking_examples": "False",
+                "inclination": "good"
+            },
+            {
+                "comment": "The link between the examples and the argument is generally clear; however, it could be strengthened by explicitly connecting how these influencers shape public opinion or behaviors in specific ways. For instance, elaborating on how their advocacy leads to tangible changes in lifestyle choices would reinforce the reasoning behind social media's greater influence over politics at an individual level.",
+                "lacking_examples": "False",
+                "inclination": "neutral"
+            },
+            {
+                "comment": "The paragraph gives an explicit explanation of why politicians have the "impersonal and distant image" compared to online personalities like Pewdiepie and Charli D'Amelio, which strengthens the argument presented that social media has more influence than politicians.",
+                "lacking_examples": "False",
+                "inclination": "good"
             }
         ]
         
