@@ -5,11 +5,9 @@ import { useRouter } from "next/navigation";
 import {
   ArrowUpRight,
   Calendar,
-  Download,
   Ellipsis,
   Link2,
   MessageSquare,
-  Trash,
 } from "lucide-react";
 
 import { EssayMiniDTO } from "@/client/types.gen";
@@ -73,6 +71,7 @@ const EssayListCard = ({ essay }: EssayListCardProps) => {
                 >
                   <Link2 className="w-4 h-4 mr-1.5" /> Copy link
                 </DropdownMenuItem>
+                {/* TODO: implement these */}
                 {/* <DropdownMenuItem>
                   <Download className="w-4 h-4 mr-1.5" /> Download
                 </DropdownMenuItem>
