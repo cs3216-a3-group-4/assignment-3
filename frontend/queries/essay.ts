@@ -1,6 +1,16 @@
 import { queryOptions } from "@tanstack/react-query";
+
+import { getEssayEssaysIdGet, getEssaysEssaysGet } from "@/client";
 import { QueryKeys } from "@/queries/utils/query-keys";
-import { getEssayEssaysIdGet } from "@/client";
+
+export const getEssays = () =>
+  queryOptions({
+    queryKey: [QueryKeys.Essays],
+    queryFn: () =>
+      getEssaysEssaysGet({
+        withCredentials: true,
+      }).then((data) => data.data),
+  });
 
 export const getEssay = (id: number) =>
   queryOptions({

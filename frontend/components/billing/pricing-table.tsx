@@ -1,5 +1,6 @@
-import PricingTier from "@/components/billing/pricing-tier";
-import { PricingTierInfo } from "@/types/billing";
+import PricingTier, {
+  PricingTierInfo,
+} from "@/components/billing/pricing-tier";
 
 interface PricingTiers {
   tiers: PricingTierInfo[];

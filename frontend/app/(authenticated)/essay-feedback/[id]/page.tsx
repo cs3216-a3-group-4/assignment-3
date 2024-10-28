@@ -71,7 +71,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="flex flex-col bg-muted w-full h-full max-h-full py-8 overflow-y-auto px-4 md:px-12 xl:px-44 ">
-      <h1 className="text-4xl font-semibold mt-4 mb-8 text-primary-800">
+      <h1 className="text-4xl text-pretty break-words font-semibold mt-4 mb-8 text-primary-800">
         {data.question}
       </h1>
       <div className="flex flex-col gap-y-12">
@@ -83,7 +83,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
               </span>
             </div>
             <div className="w-full border border-primary rounded-b-lg rounded-tr-lg px-12 py-8 bg-card text-justify">
-              <p className="text-xl leading-normal text-text">
+              <p className="text-xl leading-normal text-text text-pretty break-words bg-card">
                 {paragraph.content}
               </p>
               <Separator className="my-6" />
