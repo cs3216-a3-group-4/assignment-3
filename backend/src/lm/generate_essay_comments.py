@@ -184,5 +184,7 @@ if __name__ == "__main__":
         "Consider the view that social media has more influence than politicians."
     )
 
-    comments = generate_essay_comments(paragraphs, question)
+    comments = generate_paragraph_comments(
+        paragraphs[2], question, ParagraphType.PARAGRAPH
+    )
     print(json.dumps(comments, indent=4))
