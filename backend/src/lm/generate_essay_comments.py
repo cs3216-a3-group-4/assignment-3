@@ -1,22 +1,29 @@
 import asyncio
+import json
 from typing import List
 from pydantic import BaseModel
 from src.lm.lm import lm_model_essay as lm_model
 
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.messages import HumanMessage, SystemMessage
-from src.lm.essay_grader_prompts import GRADER_SYSPROMPT as SYSPROMPT
+from src.lm.essay_grader_prompts import WHOLE_ESSAY_GRADER_SYSPROMPT
 from src.lm.essay_grader_prompts import (
-    WHOLE_ESSAY_GRADER_HUMAN_PROMPT as ESSAY_HUMAN_PROMPT,
-    WHOLE_ESSAY_GRADER_SYSPROMPT as ESSAY_SYSPROMPT,
+    BODY_GRADER_SYSPROMPT as BODY_SYSPROMPT,
+    INTRO_GRADER_PROMPT as INTRO_SYSPROMPT,
+    CONCLUSION_GRADER_PROMPT as CONCLUSION_SYSPROMPT,
 )
-from src.lm.essay_grader_prompts import GRADER_HUMAN_PROMPT as HUMAN_PROMPT
 from src.lm.essay_grader_prompts import (
     POINT_EXTRACTION_PROMPT as POINT_EXTRACTION_PROMPT,
 )
 from src.embeddings.vector_store import get_similar_results
 
-from src.essays.models import Comment, CommentAnalysis, CommentParentType, Inclination
+from src.essays.models import (
+    Comment,
+    CommentAnalysis,
+    CommentParentType,
+    Inclination,
+    ParagraphType,
+)
 
 
 class LMComment(BaseModel):
@@ -29,19 +36,38 @@ class Comments(BaseModel):
     comments: List[LMComment]
 
 
-def generate_paragraph_comments(content: str, question: str):
+def generate_paragraph_comments(
+    content: str, question: str, paragraph_type: ParagraphType
+):
+    sysprompt = ""
+    if paragraph_type == ParagraphType.INTRODUCTION:
+        sysprompt = INTRO_SYSPROMPT
+    elif paragraph_type == ParagraphType.PARAGRAPH:
+        sysprompt = BODY_SYSPROMPT
+    elif paragraph_type == ParagraphType.CONCLUSION:
+        sysprompt = CONCLUSION_SYSPROMPT
+
     prompt = f"""
     Question: {question}
-    Paragraph: {content}
-    """
 
-    human_message = HUMAN_PROMPT + prompt
-    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
+    Paragraph to grade: {content}
+    """
+    print("Prompt: \n", prompt)
+
+    messages = [SystemMessage(content=sysprompt), HumanMessage(content=prompt)]
 
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=Comments)
     comments = parser.invoke(result.content)
-    print("COMMENT: ", comments)
+    # print("COMMENT: ", comments)
+    if (
+        paragraph_type == ParagraphType.CONCLUSION
+        or paragraph_type == ParagraphType.INTRODUCTION
+    ):
+        comment_list = comments.get("comments")
+        for comment in comment_list:
+            comment["lacking_examples"] = "False"
+
     return comments
 
 
@@ -84,8 +110,10 @@ def extract_point(content: str, question: str):
     Paragraph: {content}
     """
 
-    human_message = POINT_EXTRACTION_PROMPT + prompt
-    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
+    messages = [
+        SystemMessage(content=POINT_EXTRACTION_PROMPT),
+        HumanMessage(content=prompt),
+    ]
 
     result = lm_model.invoke(messages)
     parser = JsonOutputParser()
@@ -103,8 +131,8 @@ async def generate_comment_with_example(content: str, question: str):
     return examples
 
 
-def get_comments(content: str, question: str):
-    comments = generate_paragraph_comments(content, question)
+def get_paragraph_comments(content: str, question: str, paragraph_type: ParagraphType):
+    comments = generate_paragraph_comments(content, question, paragraph_type)
     comment_orm = generate_comment_orm(comments, content, question)
     return comment_orm
 
@@ -118,10 +146,9 @@ def generate_essay_comments(paragraphs: list[str], question: str):
 
     print("Prompt: ", prompt)
 
-    human_message = ESSAY_HUMAN_PROMPT + prompt
     messages = [
-        SystemMessage(content=ESSAY_SYSPROMPT),
-        HumanMessage(content=human_message),
+        SystemMessage(content=WHOLE_ESSAY_GRADER_SYSPROMPT),
+        HumanMessage(content=prompt),
     ]
 
     result = lm_model.invoke(messages)
@@ -152,7 +179,10 @@ if __name__ == "__main__":
         "However, simply concluding that social media is more influential than politicians solely based on the impact it has at the individualistic level would be too narrow a view. Some may argue that social media has a greater influence in shaping social change and it is not difficult to understand why. After all, social causes like #MeT oo, BlackLivesMatter and HeforShe have all been born from social media platforms like Instagram and it is these online activists who are leading the fight towards a more progressive society. However, I believe that this is often too sweeping an argument to assert- while social media has been crucial to the fight towards social change, the influence of politicians cannot be dismissed. With the nature of the internet and its ‘short-attention span’ , online movements and causes often meet their inevitable ‘death’ and fizzle out from the interest of netizens. Here, politicians need to step in as they can enact concrete, and permanent legislation, policies and structures that are essential to bring about change, which social media cannot do. Hence, the relationship between politicians and social media becomes intertwined and they both need to work together to bring about any change in society- implying that not, one, but both are equally influential given the symbiotic relationship they share. Essentially, social media that can provide the marginalised a voice, acts as the ‘vessel’ that helps activists reach out to the wider community and governments who can then implement policies and laws to bring about concrete change.",
         "Furthermore, in the political realm, while it may appear straightforwardly true that politicians would have the larger influence in politics, I believe that social media also has an equally heavy influence on politics. Certainly, politicians are ultimately the ones with vested power to make political decisions, and can do so without regard for social media influences. For instance, Brazilian president, Jair Bolsano has been the forefront of heavy criticism for recklessly accelerating the deforestation of the Amazon and ignoring the medical advice of doctors in his handling of the COVID-19 pandemic on social media platforms like Twitter, Facebook and Instagram. Yet, has continued on, and disregarded these remarks- highlighting how it may seem that political decisions are largely influenced by politicians rather than social media. However, I believe that social media still has an undeniable influence on politics, especially when it comes to elections. Going back to the earlier example, where it may have seem that social media has little influence on political developments, it should also be pointed out how social media had been weaponized by the then-presidential candidate Jair Bolzano who had benefited from a powerful and coordinated disinformation campaign, deliberately aimed to discredit his rivals by blasting an onslaught doctored images and manipulated audio clips via social media platforms which experts point to be a key factor to his success at the polls. This observation is not anomalous, but is part of a trend that sees social media heavily influencing electoral results, and how politicians behave- often tapping on social media outlets to connect with their electorate that would allow them to entrench their power, and attract greater support. The “online” pandemic elections in Singapore is also testament to this, where political powerhouse the People’s Action Party (PAP) saw one of their worst showings at the polls, partly because of their failure to capitalise on social media as well as their oppositions did, like the Worker’s Party and Progress Singapore Party (PSP) who engaged well with the online netizens. Hence, this highlights that though it may appear that politicians may be more influential in the political sphere due to their power in setting laws, and regulations, social media is also equally influential due to their immense leverage it has over electoral results, and has also affected the way politicians govern.",
     ]
-    question = "To what extent do you agree that social media has more influence than politicians?"
+
+    question = (
+        "Consider the view that social media has more influence than politicians."
+    )
 
     comments = generate_essay_comments(paragraphs, question)
-    print(comments)
+    print(json.dumps(comments, indent=4))

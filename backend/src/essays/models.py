@@ -109,7 +109,7 @@ class Essay(Base):
 
 class ParagraphType(str, Enum):
     INTRODUCTION = "introduction"
-    PARAGRAPH = "paragraph"
+    PARAGRAPH = "body"
     CONCLUSION = "conclusion"
 
 
