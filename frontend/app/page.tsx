@@ -1,10 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import Home from "@/app/(authenticated)/home/page";
 import Landing from "@/app/landing";
 import { useUserStore } from "@/store/user/user-store-provider";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 const RootPage = () => {
   const router = useRouter();
