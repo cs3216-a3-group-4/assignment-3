@@ -271,6 +271,15 @@ def handle_payment_failure(event):
 
 def handle_subscription_created(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
+    if not subscription["id"]:
+        print(
+            "ERROR: Cannot process subscription created stripe event since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing subscription created stripe event due to empty subscription ID provided",
+        )
+    
     # Insert subscription data into our database
     ## But check and delete all existing subscriptions for this user first
     update_subscription_for(subscription, session, True)
@@ -279,6 +288,17 @@ def handle_subscription_created(event, session):
 def handle_subscription_canceled(event, session):
     # Stripe event object is a stripe.Subscription, get its ID
     subscription_id = event["data"]["object"]["id"]
+    # Check whether subscription ID is blank
+    if not subscription_id:
+        # Don't proceed if subscription ID is empty
+        print(
+            "ERROR: Cannot process subscription cancelled stripe event since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing subscription cancelled stripe event due to empty subscription ID provided",
+        )
+    
     subscription_to_delete = session.scalars(
         select(Subscription).where(Subscription.id == subscription_id)
     ).one_or_none()
@@ -313,9 +333,20 @@ def handle_subscription_canceled(event, session):
 
 def handle_subscription_paused(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
+    subscription_id: str = subscription["id"]
+    # Check whether subscription ID is blank
+    if not subscription_id:
+        # Don't proceed if subscription ID is empty
+        print(
+            "ERROR: Cannot process subscription paused stripe event since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing subscription paused stripe event due to empty subscription ID provided",
+        )
+    
     update_subscription_for(subscription, session)
 
-    subscription_id: str = subscription["id"]
     # Find user id for the given subscription using stripe_session table
     stripe_session = session.scalars(
         select(StripeSession).where(StripeSession.subscription_id == subscription_id)
@@ -345,9 +376,20 @@ def handle_subscription_paused(event, session):
 
 def handle_subscription_resumed(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
+    subscription_id: str = subscription["id"]
+    # Check whether subscription ID is blank
+    if not subscription_id:
+        # Don't proceed if subscription ID is empty
+        print(
+            "ERROR: Cannot process subscription resumed stripe event since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error processing subscription resumed stripe event due to empty subscription ID provided",
+        )
+    
     update_subscription_for(subscription, session)
 
-    subscription_id: str = subscription["id"]
     # Upgrade tier here since invoice.paid event might not be triggered, but we
     #   downgrade the user tier when subscription is paused
     do_tier_upgrade(subscription_id, session)
@@ -357,6 +399,16 @@ def handle_subscription_resumed(event, session):
 
 def handle_subscription_updated(event, session):
     subscription: stripe.Subscription = event["data"]["object"]
+    # Check whether subscription ID is blank
+    if not subscription["id"]:
+        # Don't proceed if subscription ID is empty
+        print(
+            "ERROR: Cannot update subscription data in database since given subscription ID is empty"
+        )
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="Error parsing updated subscription data due to empty subscription ID provided",
+        )
     update_subscription_for(subscription, session)
     # TODO: Update user tier_id if needed
 
