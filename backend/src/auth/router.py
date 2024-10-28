@@ -146,7 +146,6 @@ def get_user(
     current_user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
 ) -> UserPublic:
-    raise ValueError("testing 500 error email notification")
     user = session.get(User, current_user.id)
     if user:
         user.last_accessed = datetime.now()
