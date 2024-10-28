@@ -462,8 +462,8 @@ def update_session(checkout_session: stripe.checkout.Session, session):
             f"""ERROR: Invalid session mode received when processing checkout session: {checkout_session["mode"]}"""
         )
         raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"""Invalid mode received in checkout handler: {checkout_session["mode"]}""",
+            status_code=HTTPStatus.NOT_IMPLEMENTED,
+            detail=f"""Unrecognised mode received in checkout handler: {checkout_session["mode"]}""",
         )
     if not checkout_session["subscription"]:
         print(
