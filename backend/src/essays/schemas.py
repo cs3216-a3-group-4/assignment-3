@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 from src.essays.models import Inclination, ParagraphType
 from src.events.schemas import AnalysisToEventDTO
@@ -18,11 +19,19 @@ class EssayCreateDTO(BaseModel):
     essay_id: int
 
 
-class EssayMiniDTO(BaseModel):
+class EssayBaseDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     question: str
+
+
+class EssayMiniDTO(EssayBaseDTO):
+    comments: list["CommentDTO"]
+    paragraphs: list[ParagraphDTO]
+
+    created_at: datetime
+    updated_at: datetime
 
 
 class CommentAnalysisDTO(BaseModel):
@@ -32,12 +41,15 @@ class CommentAnalysisDTO(BaseModel):
     analysis: AnalysisToEventDTO
 
 
-class CommentDTO(BaseModel):
+class CommentMiniDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     lack_example: bool
     inclination: Inclination
     content: str
+
+
+class CommentDTO(CommentMiniDTO):
     likes: list[LikeDTO]
 
     comment_analysises: list[CommentAnalysisDTO]
@@ -51,6 +63,6 @@ class ParagraphDTO(BaseModel):
     comments: list[CommentDTO]
 
 
-class EssayDTO(EssayMiniDTO):
-    comments: list[CommentDTO]
+class EssayDTO(EssayBaseDTO):
+    comments: list[CommentMiniDTO]
     paragraphs: list[ParagraphDTO]

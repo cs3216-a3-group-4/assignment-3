@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
   BookOpenCheckIcon,
+  FileClockIcon,
   HistoryIcon,
   HomeIcon,
   MessageCircleQuestionIcon,
@@ -62,6 +63,12 @@ const Sidebar = () => {
           isActive={pathname === "/essay-feedback"}
           label="Essay feedback"
           path="/essay-feedback"
+        />
+        <SidebarItemWithIcon
+          Icon={FileClockIcon}
+          isActive={pathname === "/essay-feedback/history"}
+          label="My essays"
+          path="/essay-feedback/history"
         />
         <SidebarItemWithIcon
           Icon={MessageCircleQuestionIcon}

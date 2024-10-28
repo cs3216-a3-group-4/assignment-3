@@ -1,19 +1,19 @@
 const JippyClown = () => {
   return (
     <svg
-      width="150"
+      fill="none"
       height="140"
       viewBox="0 0 446 416"
-      fill="none"
+      width="150"
       xmlns="http://www.w3.org/2000/svg"
     >
       <g clip-path="url(#clip0_244_1378)">
         <ellipse
           cx="201.079"
           cy="363.945"
+          fill="#3B5249"
           rx="196.067"
           ry="45.728"
-          fill="#3B5249"
         />
         <path
           d="M202.772 312.565C202.772 351.312 140.827 384.602 93.7765 384.602C46.7263 384.602 32.3882 351.312 32.3882 312.565C32.3882 273.817 70.5299 242.406 117.58 242.406C164.63 242.406 202.772 273.817 202.772 312.565Z"
@@ -22,10 +22,10 @@ const JippyClown = () => {
         <ellipse
           cx="115.782"
           cy="226.708"
+          fill="#7CCCAC"
           rx="57.0034"
           ry="140.125"
           transform="rotate(27.8036 115.782 226.708)"
-          fill="#7CCCAC"
         />
         <path
           d="M368.809 78.2636C384.478 115.759 335.914 171.757 260.34 203.337C184.766 234.918 110.799 230.123 95.1301 192.627C79.4616 155.132 131.988 104.596 203.599 67.5538C279.174 35.9731 353.141 40.768 368.809 78.2636Z"
@@ -42,9 +42,9 @@ const JippyClown = () => {
         <path
           d="M206.716 393.386C224.882 390.045 256.932 377.154 251.818 349.538C245.554 315.711 282.512 389.001 288.15 387.749C293.787 386.496 212.354 399.024 206.716 393.386Z"
           stroke="#3B5249"
-          strokeWidth="12"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="12"
         />
         <path
           d="M368.771 75.155C402.597 120.256 377.541 200.787 334.318 253.682C244.742 363.304 200.639 308.579 162.173 265.937C123.706 223.296 139.516 146.336 197.484 94.0436C255.453 41.7509 339.956 31.9323 368.771 75.155Z"
@@ -61,68 +61,68 @@ const JippyClown = () => {
         <ellipse
           cx="229.708"
           cy="348.896"
+          fill="#7CCCAC"
           rx="14.4075"
           ry="28.8149"
-          fill="#7CCCAC"
         />
         <path
           d="M131.548 119.018C92.0837 153.471 77.1365 176.715 59.9508 211.086C42.765 245.457 34.2479 283.676 32.3888 306.3C28.9395 348.277 47.3494 375.847 78.7436 383.976C107.744 391.485 207.97 406.541 236.158 375.847C264.347 345.153 236.158 280.006 190.871 255.561C153.387 235.328 119.019 253.697 105.679 271.863C93.4118 288.568 95.8422 306.3 105.679 320.708C115.516 335.115 134.68 340.768 155.978 340.768"
           stroke="#3B5249"
-          strokeWidth="12"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="12"
         />
         <path
           d="M287.337 48.8454C300.492 45.0869 350.842 44.3941 376.473 90.2032C405.914 142.822 323.855 275.621 300.492 290.014C321.975 309.447 347.844 356.443 355.175 375.847"
           stroke="#3B5249"
-          strokeWidth="12"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="12"
         />
         <ellipse
           cx="241.13"
           cy="73.1053"
+          fill="white"
           rx="52.3517"
           ry="50.3061"
-          transform="rotate(-21.1712 241.13 73.1053)"
-          fill="white"
           stroke="#3B5249"
           strokeWidth="12"
+          transform="rotate(-21.1712 241.13 73.1053)"
         />
         <ellipse
           cx="248.686"
           cy="72.6638"
+          fill="#3B5249"
           rx="19.4188"
           ry="17.5395"
-          fill="#3B5249"
         />
         <path
           d="M266.797 168.082C282.731 173.612 306.096 174.974 326.301 170.61C346.507 166.246 377.239 151.278 381.88 125.282"
           stroke="#3B5249"
-          strokeWidth="12"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="12"
         />
         <path
           d="M243.048 318.843C249.312 342.647 281.789 378.295 291.282 383.99C300.775 389.686 351.417 393.386 355.176 375.847"
           stroke="#3B5249"
-          strokeWidth="12"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="12"
         />
         <path
           d="M93.3359 387.122C145.328 397.771 342.021 404.035 354.549 378.352"
           stroke="#3B5249"
-          strokeWidth="12"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="12"
         />
         <ellipse
           cx="201.079"
           cy="363.945"
+          fill="#3B5249"
           rx="196.067"
           ry="45.728"
-          fill="#3B5249"
         />
         <path
           d="M202.772 312.565C202.772 351.312 140.827 384.602 93.7765 384.602C46.7263 384.602 32.3882 351.312 32.3882 312.565C32.3882 273.817 70.5299 242.406 117.58 242.406C164.63 242.406 202.772 273.817 202.772 312.565Z"
@@ -131,10 +131,10 @@ const JippyClown = () => {
         <ellipse
           cx="115.782"
           cy="226.708"
+          fill="#7CCCAC"
           rx="57.0034"
           ry="140.125"
           transform="rotate(27.8036 115.782 226.708)"
-          fill="#7CCCAC"
         />
         <path
           d="M368.809 78.2636C384.478 115.759 335.914 171.757 260.34 203.337C184.766 234.918 110.799 230.123 95.1301 192.627C79.4616 155.132 131.988 104.596 203.599 67.5538C279.174 35.9731 353.141 40.768 368.809 78.2636Z"
@@ -151,9 +151,9 @@ const JippyClown = () => {
         <path
           d="M206.716 393.386C224.882 390.045 256.932 377.154 251.818 349.538C245.554 315.711 282.512 389.001 288.15 387.749C293.787 386.496 212.354 399.024 206.716 393.386Z"
           stroke="#3B5249"
-          strokeWidth="12"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="12"
         />
         <path
           d="M368.771 75.155C402.597 120.256 377.541 200.787 334.318 253.682C244.742 363.304 200.639 308.579 162.173 265.937C123.706 223.296 139.516 146.336 197.484 94.0436C255.453 41.7509 339.956 31.9323 368.771 75.155Z"
@@ -170,74 +170,74 @@ const JippyClown = () => {
         <ellipse
           cx="229.708"
           cy="348.896"
+          fill="#7CCCAC"
           rx="14.4075"
           ry="28.8149"
-          fill="#7CCCAC"
         />
         <path
           d="M131.548 119.018C92.0837 153.471 77.1365 176.715 59.9508 211.086C42.765 245.457 34.2479 283.676 32.3888 306.3C28.9395 348.277 47.3494 375.847 78.7436 383.976C107.744 391.485 207.97 406.541 236.158 375.847C264.347 345.153 236.158 280.006 190.871 255.561C153.387 235.328 119.019 253.697 105.679 271.863C93.4118 288.568 95.8422 306.3 105.679 320.708C115.516 335.115 134.68 340.768 155.978 340.768"
           stroke="#3B5249"
-          strokeWidth="16"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="16"
         />
         <path
           d="M287.337 48.8454C300.492 45.0869 350.842 44.3941 376.473 90.2032C405.914 142.822 323.855 275.621 300.492 290.014C321.975 309.447 347.844 356.443 355.175 375.847"
           stroke="#3B5249"
-          strokeWidth="16"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="16"
         />
         <ellipse
           cx="241.13"
           cy="73.1053"
+          fill="white"
           rx="52.3517"
           ry="50.3061"
-          transform="rotate(-21.1712 241.13 73.1053)"
-          fill="white"
           stroke="#3B5249"
           strokeWidth="16"
+          transform="rotate(-21.1712 241.13 73.1053)"
         />
         <ellipse
           cx="248.686"
           cy="72.6638"
+          fill="#3B5249"
           rx="19.4188"
           ry="17.5395"
-          fill="#3B5249"
         />
         <path
           d="M290.207 177.74C298.085 168.79 312.056 157.68 326.123 149.725C340.19 141.77 364.571 132.157 376.757 137.786"
           stroke="#3B5249"
-          strokeWidth="16"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="16"
         />
         <path
           d="M243.048 318.843C249.312 342.647 281.789 378.295 291.282 383.99C300.775 389.686 351.417 393.386 355.176 375.847"
           stroke="#3B5249"
-          strokeWidth="16"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="16"
         />
         <path
           d="M93.3359 387.122C145.328 397.771 342.021 404.035 354.549 378.352"
           stroke="#3B5249"
-          strokeWidth="16"
-          strokeLinecap="round"
           stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeWidth="16"
         />
         <circle
           cx="373"
           cy="81"
-          r="22.5"
           fill="#D45858"
+          r="22.5"
           stroke="#761212"
           strokeWidth="7"
         />
       </g>
       <defs>
         <clipPath id="clip0_244_1378">
-          <rect width="445.16" height="415.037" fill="white" />
+          <rect fill="white" height="415.037" width="445.16" />
         </clipPath>
       </defs>
     </svg>
