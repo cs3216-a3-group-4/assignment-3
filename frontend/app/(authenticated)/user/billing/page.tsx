@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { UserPublic } from "@/client";
 import PricingTable from "@/components/billing/pricing-table";
 import Chip from "@/components/display/chip";
 import { Button } from "@/components/ui/button";
@@ -19,12 +20,14 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import { UserPublic } from "@/client";
 
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
 
-const getPriceButtonText = (priceTierId: number, user: UserPublic | undefined) => {
+const getPriceButtonText = (
+  priceTierId: number,
+  user: UserPublic | undefined,
+) => {
   const userTierId = user?.tier_id || 1;
   if (priceTierId == userTierId) {
     return "Current";
@@ -35,7 +38,7 @@ const getPriceButtonText = (priceTierId: number, user: UserPublic | undefined) =
   } else {
     return "Buy";
   }
-}
+};
 
 const toPascalCase = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
