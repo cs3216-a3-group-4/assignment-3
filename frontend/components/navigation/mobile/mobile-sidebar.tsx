@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
   BookOpenCheckIcon,
+  FileClockIcon,
   HistoryIcon,
   HomeIcon,
   LucideIcon,
@@ -53,6 +54,11 @@ const OPTIONS: SidebarOption[] = [
     icon: BookOpenCheckIcon,
     label: "Essay feedback",
     path: "/essay-feedback",
+  },
+  {
+    icon: FileClockIcon,
+    label: "My essays",
+    path: "/essay-feedback/history",
   },
   { icon: MessageCircleQuestionIcon, label: "Ask a question", path: "/ask" },
   { icon: HistoryIcon, label: "Past questions", path: "/questions" },

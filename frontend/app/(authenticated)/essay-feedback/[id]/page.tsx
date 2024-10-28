@@ -71,7 +71,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="flex flex-col bg-muted w-full h-full max-h-full py-8 overflow-y-auto px-4 md:px-12 xl:px-44 ">
-      <h1 className="text-4xl font-semibold mt-4 mb-8 text-primary-800">
+      <h1 className="text-4xl text-pretty break-words font-semibold mt-4 mb-8 text-primary-800">
         {data.question}
       </h1>
       <div className="flex flex-col gap-y-12">
