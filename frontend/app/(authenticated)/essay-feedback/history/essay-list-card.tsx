@@ -1,13 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  ArrowUpRight,
   Calendar,
-  Download,
   Ellipsis,
   Link2,
   MessageSquare,
-  Trash,
 } from "lucide-react";
 
 import { EssayMiniDTO } from "@/client/types.gen";
@@ -57,15 +57,27 @@ const EssayListCard = ({ essay }: EssayListCardProps) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent side="right">
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <Download className="w-4 h-4 mr-1.5" /> Download
-                </DropdownMenuItem>
-                <DropdownMenuItem>
+                <Link href={`/essay-feedback/${essay.id}`}>
+                  <DropdownMenuItem>
+                    <ArrowUpRight className="w-4 h-4 mr-1.5" /> Open
+                  </DropdownMenuItem>
+                </Link>
+                <DropdownMenuItem
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      window.location.host + "/essay-feedback/" + essay.id,
+                    );
+                  }}
+                >
                   <Link2 className="w-4 h-4 mr-1.5" /> Copy link
+                </DropdownMenuItem>
+                {/* TODO: implement these */}
+                {/* <DropdownMenuItem>
+                  <Download className="w-4 h-4 mr-1.5" /> Download
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-destructive focus:text-destructive focus:bg-destructive/5">
                   <Trash className="w-4 h-4 mr-1.5" /> Delete
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
