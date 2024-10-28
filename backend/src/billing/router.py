@@ -586,6 +586,15 @@ def update_subscription_for(
 
 
 def do_tier_upgrade(subscription_id: str, session):
+    # Validation check for subscription ID
+    if not subscription_id:
+        # Unable to continue without subscription ID
+        print("ERROR: Invalid subscription ID received")
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="Invalid subscription ID received",
+        )
+    
     stripe_session = session.scalars(
         select(StripeSession).where(StripeSession.subscription_id == subscription_id)
     ).one_or_none()
@@ -597,6 +606,18 @@ def do_tier_upgrade(subscription_id: str, session):
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail=f"""ERROR: Cannot identify corresponding stripe checkout session for subscription with ID {subscription_id}""",
         )
+
+    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
+    if stripe_subscription["status"] != "active":
+        if stripe_session.user_id:
+            print(
+                f"""WARNING: Tried to upgrade user tier associated with subscription with ID {subscription_id} that is not active"""
+            )
+        else:
+            print(
+                f"""WARNING: Tried to upgrade user tier of user with ID {stripe_session.user_id} who has subscription with ID {subscription_id} that is not active"""
+            )
+        return
 
     if not stripe_session.user_id:
         print(
@@ -618,16 +639,6 @@ def do_tier_upgrade(subscription_id: str, session):
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail=f"""ERROR: No corresponding user found for subscription with ID {subscription_id}""",
-        )
-
-    stripe_subscription = stripe.Subscription.retrieve(subscription_id)
-    if stripe_subscription["status"] != "active":
-        print(
-            f"""ERROR: Subscription with ID {subscription_id} is not active even after payment"""
-        )
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"""Subscription with ID {subscription_id} is not active even after payment""",
         )
 
     # Upgrade user tier now that subscription is paid for and active
