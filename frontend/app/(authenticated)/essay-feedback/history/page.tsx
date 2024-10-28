@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 
@@ -16,9 +17,11 @@ const EssayFeedbackHistoryPage = () => {
         <h1 className="text-2xl text-primary-800 font-semibold">My essays</h1>
         <div className="flex justify-between mt-2 items-center">
           <h2 className="text-primary-600">{data?.length ?? 0} notes</h2>
-          <Button size="sm" variant="ghost">
-            New essay feedback <Plus className="h-4 w-4 ml-2" />
-          </Button>
+          <Link href="/essay-feedback">
+            <Button size="sm" variant="ghost">
+              New essay feedback <Plus className="h-4 w-4 ml-2" />
+            </Button>
+          </Link>
         </div>
       </span>
 
