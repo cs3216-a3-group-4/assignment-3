@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 
 export interface PricingTierInfo {
+  className?: string;
   tierName: string;
   // Montly price in dollars
   price: number;
@@ -12,6 +13,7 @@ export interface PricingTierInfo {
 }
 
 const PricingTier = ({
+  className,
   tierName,
   isButtonDisabled,
   buttonText,
@@ -21,7 +23,7 @@ const PricingTier = ({
   tierFeatures,
 }: PricingTierInfo) => {
   return (
-    <div className="h-full">
+    <div className={`h-full ${className}`}>
       <div className="relative flex flex-col h-full p-6 rounded-2xl border border-slate-200 shadow ">
         <div className="mb-5">
           <div className="text-slate-900 font-semibold mb-1">{tierName}</div>
@@ -30,7 +32,7 @@ const PricingTier = ({
             <span className="text-slate-900 font-bold text-4xl">{price}</span>
             <span className="text-slate-500 font-medium">/month</span>
           </div>
-          <div className="text-sm text-slate-500">{tierDescription}</div>
+          <div className="text-sm text-slate-500 text-wrap">{tierDescription}</div>
           {onClickBuy && buttonText && (
             <Button
               className="w-full inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring transition-colors duration-150 mt-5"
