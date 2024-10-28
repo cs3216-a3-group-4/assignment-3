@@ -19,9 +19,23 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
+import { UserPublic } from "@/client";
 
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
+
+const getPriceButtonText = (priceTierId: number, user: UserPublic | undefined) => {
+  const userTierId = user?.tier_id || 1;
+  if (priceTierId == userTierId) {
+    return "Current";
+  } else if (priceTierId > userTierId) {
+    return "Upgrade";
+  } else if (priceTierId < userTierId) {
+    return "Downgrade";
+  } else {
+    return "Buy";
+  }
+}
 
 const toPascalCase = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -58,7 +72,8 @@ const Page = () => {
   const jippyTiers = [
     {
       tierName: JippyTier.Free,
-      isPurchased: user?.tier_id == JippyTierID.Free,
+      isButtonDisabled: user?.tier_id == JippyTierID.Free,
+      buttonText: getPriceButtonText(JippyTierID.Free, user),
       onClickBuy: onClickDowngradeSubscription,
       price: TierPrice.Free,
       tierDescription: "Basic features for GP revision",
@@ -72,7 +87,8 @@ const Page = () => {
     },
     {
       tierName: JippyTier.Premium,
-      isPurchased: user?.tier_id == JippyTierID.Premium,
+      isButtonDisabled: user?.tier_id == JippyTierID.Premium,
+      buttonText: getPriceButtonText(JippyTierID.Premium, user),
       onClickBuy: () => {
         stripeCheckoutMutation.mutate({
           price_id: process.env.NEXT_PUBLIC_STRIPE_PREMIUM_TIER_PRICE_ID || "",
