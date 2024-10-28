@@ -1,6 +1,7 @@
 export interface PricingTierInfo {
     tierName: string;
-    isPurchased: boolean;
+    isButtonDisabled?: boolean;
+    buttonText: string;
     onClickBuy: () => void;
     // Montly price in dollars
     price: number;

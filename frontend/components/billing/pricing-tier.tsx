@@ -3,7 +3,8 @@ import { PricingTierInfo } from "@/types/billing";
 
 const PricingTier = ({
   tierName,
-  isPurchased,
+  isButtonDisabled = false,
+  buttonText,
   onClickBuy,
   price,
   tierDescription,
@@ -24,10 +25,10 @@ const PricingTier = ({
           </div>
           <Button
             className="w-full inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring transition-colors duration-150"
-            disabled={isPurchased}
+            disabled={isButtonDisabled}
             onClick={onClickBuy}
           >
-            {isPurchased ? "Bought" : "Buy"}
+            {buttonText}
           </Button>
         </div>
         <div className="text-slate-900 font-medium mb-3">Includes:</div>
