@@ -12,7 +12,7 @@ from src.essays.models import (
     Paragraph,
 )
 from src.lm.generate_essay_comments import (
-    get_comments,
+    get_paragraph_comments,
     get_essay_comments,
 )
 
@@ -37,7 +37,7 @@ def create_essay(
     for paragraph in data.paragraphs:
         paragraph_orm = Paragraph(type=paragraph.type, content=paragraph.content)
 
-        comments = get_comments(paragraph, data.question, paragraph.type)
+        comments = get_paragraph_comments(paragraph, data.question, paragraph.type)
         paragraph_orm.comments = comments
 
         paragraphs.append(paragraph.content)
