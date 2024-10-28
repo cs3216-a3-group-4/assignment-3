@@ -126,7 +126,7 @@ const Page = () => {
       // Cleanup timeout on unmount of the page
       return () => clearTimeout(timeout);
     }
-  }, [isSuccess, isCancelled, stripeSessionId, toast, router]);
+  }, [isSuccess, isCancelled, stripeSessionId]);
 
   useEffect(() => {
     if (user?.subscription) {
