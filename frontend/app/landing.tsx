@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AccordionContent } from "@radix-ui/react-accordion";
 import { Wand2 } from "lucide-react";
 
-import Chip from "@/components/display/chip";
+import PricingTier from "@/components/billing/pricing-tier";
 import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import {
   Accordion,
@@ -16,6 +16,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  JippyTierID,
+  tierIDToTierDescription,
+  tierIDToTierFeature,
+  tierIDToTierName,
+  TierPrice,
+} from "@/types/billing";
 
 const Landing = () => {
   return (
@@ -137,51 +144,18 @@ const Landing = () => {
             We strive to keep Jippy accessible for everyone.
           </h2>
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-8 bg-card gap-y-4">
-            <div className="rounded-lg p-16 flex flex-col items-center justify-center border shadow-muted-foreground/30 shadow-2xl bg-card">
-              <h1 className="text-4xl font-semibold">Free</h1>
-              <h1 className="text-2xl mt-4">$0.00 / month</h1>
-              <div className="text-lg mt-8 flex flex-col space-y-6 w-full">
-                <div className="flex flex-row">
-                  See all events and summaries
-                </div>
-                <div className="flex flex-row">
-                  Up to 10 event analyses per week
-                </div>
-                <div className="flex flex-row">
-                  1 GP essay content generation per week, backed with updated
-                  news and analyses
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg p-16 flex flex-col items-center justify-center shadow-muted-foreground/30 shadow-2xl bg-card">
-              <h1 className="text-3xl font-medium">Premium</h1>
-              <h1 className="text-2xl mt-4 line-through text-text-muted/70">
-                $3.49 / month
-              </h1>
-              <div className="flex flex-col max-w-full justify-center">
-                <span className="text-2xl mt-4">$1.99 / month</span>
-                <Chip
-                  className="mt-3"
-                  label="Early bird discount"
-                  size="lg"
-                  variant="accent"
-                />
-              </div>
-
-              <div className="text-lg mt-8 flex flex-col space-y-6 w-full">
-                <div className="flex flex-row">
-                  See all events and summaries
-                </div>
-                <div className="flex flex-row">
-                  Unlimited event analyses per week
-                </div>
-                <div className="flex flex-row">
-                  1 GP essay content generation per week, backed with updated
-                  news and analyses
-                </div>
-              </div>
-            </div>
+            <PricingTier
+              price={TierPrice.Free}
+              tierDescription={tierIDToTierDescription[JippyTierID.Free]}
+              tierFeatures={tierIDToTierFeature[JippyTierID.Free]}
+              tierName={tierIDToTierName(JippyTierID.Free)}
+            />
+            <PricingTier
+              price={TierPrice.Premium}
+              tierDescription={tierIDToTierDescription[JippyTierID.Premium]}
+              tierFeatures={tierIDToTierFeature[JippyTierID.Premium]}
+              tierName={tierIDToTierName(JippyTierID.Premium)}
+            />
           </div>
         </div>
 

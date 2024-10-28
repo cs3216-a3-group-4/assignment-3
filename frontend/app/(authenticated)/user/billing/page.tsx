@@ -16,6 +16,8 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import {
   JippyTier,
   JippyTierID,
+  tierIDToTierDescription,
+  tierIDToTierFeature,
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
@@ -61,14 +63,8 @@ const Page = () => {
       isPurchased: user?.tier_id == JippyTierID.Free,
       onClickBuy: onClickDowngradeSubscription,
       price: TierPrice.Free,
-      tierDescription: "Basic features for GP revision",
-      tierFeatures: [
-        "See all events and summaries",
-        "Unlimited notes with annotation and highlighting",
-        "View up to 20 event analyses per week",
-        "3 GP essay content generation per week",
-        "1 content regeneration permitted per week",
-      ],
+      tierDescription: tierIDToTierDescription[JippyTierID.Free],
+      tierFeatures: tierIDToTierFeature[JippyTierID.Free],
     },
     {
       tierName: JippyTier.Premium,
@@ -80,13 +76,8 @@ const Page = () => {
         });
       },
       price: TierPrice.Premium,
-      tierDescription: "Enhanced features to bolster your GP revision",
-      tierFeatures: [
-        "All of the Free features",
-        "10 GP essay content generation per week",
-        "5 content regeneration permitted per week",
-        "3 free essay feedback per week",
-      ],
+      tierDescription: tierIDToTierDescription[JippyTierID.Premium],
+      tierFeatures: tierIDToTierFeature[JippyTierID.Premium],
     },
   ];
 
