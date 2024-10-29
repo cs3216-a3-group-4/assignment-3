@@ -20,6 +20,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
+import { useUserStore } from "@/store/user/user-store-provider";
+import { getNextMonday, toQueryDateFriendly } from "@/utils/date";
 
 const MAX_GP_QUESTION_LEN: number = 200; // max character count
 
@@ -40,6 +42,17 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
   const [questionInput, setQuestionInput] = useState<string>("");
   // Whether there are any errors
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const user = useUserStore((store) => store.user);
+  const setLoggedIn = useUserStore((store) => store.setLoggedIn);
+
+  if (!user) {
+    // This should be impossible.
+    return;
+  }
+
+  const triesLeft =
+    user.tier.gp_question_limit - (user.usage?.gp_question_asked || 0);
+  const hasTriesLeft = triesLeft !== 0;
 
   const handleAskQuestion = async (): Promise<void> => {
     setIsLoading(true);
@@ -83,6 +96,13 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
             setIsLoading(false);
             return;
           }
+          setLoggedIn({
+            ...user,
+            usage: {
+              ...user.usage,
+              gp_question_asked: (user.usage?.gp_question_asked || 0) + 1,
+            },
+          });
           router.push(`../answers/${response.data.id}`);
         }
       }
@@ -104,15 +124,52 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
             <h1 className="font-medium mb-2 text-text-muted">
               Ask Jippy a General Paper exam question
             </h1>
+            {hasTriesLeft ? (
+              <Alert
+                className="my-2 flex items-center space-x-2"
+                variant="teal"
+              >
+                <div className="flex items-center">
+                  <CircleAlert className="h-5 w-5 stroke-teal-700" />
+                </div>
+                <AlertDescription className="text-teal-700 font-medium">
+                  You have {triesLeft}{" "}
+                  {triesLeft === 1 ? "question" : "questions"} left. It will
+                  reset on 4 Nov 2024 12:00AM.
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <Alert
+                className="my-2 flex items-center space-x-2 bg-red-50"
+                variant="destructive"
+              >
+                <div className="flex items-center">
+                  <CircleAlert className="h-5 w-5" />
+                </div>
+                <AlertDescription className="font-medium">
+                  You&apos;ve reached the question limit. It will reset on{" "}
+                  {toQueryDateFriendly(getNextMonday())} 12:00AM.
+                </AlertDescription>
+              </Alert>
+            )}
+
             {errorMsg && (
-              <Alert className="my-2 bg-red-50" variant="destructive">
-                <CircleAlert className="h-5 w-5" />
-                <AlertDescription>{errorMsg}</AlertDescription>
+              <Alert
+                className="my-2 bg-red-50 flex items-center space-x-2"
+                variant="destructive"
+              >
+                <div className="flex items-center">
+                  <CircleAlert className="h-5 w-5" />
+                </div>
+                <AlertDescription className="font-medium">
+                  {errorMsg}
+                </AlertDescription>
               </Alert>
             )}
             <div className="w-full flex items-center gap-x-4 gap-y-6 flex-col md:flex-row">
               <AutosizeTextarea
                 className="md:text-lg px-4 py-4 resize-none"
+                disabled={!hasTriesLeft}
                 maxHeight={200}
                 maxLength={MAX_GP_QUESTION_LEN}
                 onChange={(event) => setQuestionInput(event.target.value)}
@@ -121,6 +178,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
               />
               <Button
                 className="w-full md:px-4 md:w-auto"
+                disabled={!hasTriesLeft}
                 onClick={handleAskQuestion}
                 size="lg"
               >
