@@ -1,3 +1,9 @@
+"use client";
+
+import { useState } from "react";
+
+import { DOWNGRADE_TEXT } from "@/app/(authenticated)/user/billing/page";
+import Dialog from "@/components/dialog/Dialog";
 import { Button } from "@/components/ui/button";
 
 export interface PricingTierInfo {
@@ -23,7 +29,8 @@ const PricingTier = ({
   tierFeatures,
 }: PricingTierInfo) => {
   const hasButton = onClickBuy && buttonText;
-
+  const isDowngrade = buttonText === DOWNGRADE_TEXT;
+  const [downgradeDialogOpen, setDowngradeDialogOpen] = useState(false);
   return (
     <div className={`h-full ${className}`}>
       <div className="relative flex flex-col h-full p-6 rounded-2xl border border-slate-200 shadow">
@@ -38,11 +45,20 @@ const PricingTier = ({
           <div className={`text-sm text-slate-500 min-h-10`}>
             {tierDescription}
           </div>
+          {isDowngrade && downgradeDialogOpen && (
+            <Dialog
+              action="downgrade your account"
+              onClose={() => setDowngradeDialogOpen(false)}
+              onDelete={onClickBuy!}
+            />
+          )}
           {hasButton && (
             <Button
               className="w-full inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring transition-colors duration-150 mt-5"
               disabled={isButtonDisabled}
-              onClick={onClickBuy}
+              onClick={
+                isDowngrade ? () => setDowngradeDialogOpen(true) : onClickBuy
+              }
             >
               {buttonText}
             </Button>

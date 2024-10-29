@@ -3,7 +3,7 @@ import { SubmitHandler } from "react-hook-form";
 import { EditIcon, TrashIcon } from "lucide-react";
 
 import { ArticleConceptDTO, NoteDTO } from "@/client";
-import DeleteDialog from "@/components/dialog/DeleteDialog";
+import Dialog from "@/components/dialog/Dialog";
 import CategoryChip from "@/components/display/category-chip";
 import { Button } from "@/components/ui/button";
 import { useDeleteNote, useEditArticleNote } from "@/queries/note";
@@ -96,8 +96,8 @@ const MiniGenericConceptNote = ({
       id={`annotation-${note.id}`}
     >
       {deleteDialogOpen && (
-        <DeleteDialog
-          label="note"
+        <Dialog
+          action="delete this"
           onClose={() => setDeleteDialogOpen(false)}
           onDelete={() => {
             deleteNoteMutation.mutate(note.id);
