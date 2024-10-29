@@ -97,7 +97,7 @@ const MiniGenericConceptNote = ({
     >
       {deleteDialogOpen && (
         <Dialog
-          action="delete this"
+          action="delete this note"
           onClose={() => setDeleteDialogOpen(false)}
           onDelete={() => {
             deleteNoteMutation.mutate(note.id);
