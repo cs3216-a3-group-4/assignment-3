@@ -71,7 +71,7 @@ const Landing = () => {
           </h3>
           <div className={`flex w-full ${mediaBreakpoint === MediaBreakpoint.Sm ? "px-12" : ""}`}>
             <Carousel className="w-full" opts={{align: "center", loop: true}}>
-              <CarouselContent className="gap-y-8 mt-8 lg:mt-16">
+              <CarouselContent className="mt-8 lg:mt-16">
                 <CarouselItem className="basis-full md:basis-7/12">
                   <div className="p-1">
                     <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
@@ -168,10 +168,10 @@ const Landing = () => {
 
         <div className="flex flex-col items-center justify-center bg-background w-full py-16 md:py-24 px-8 md:px-24 place-items-start">
           <h1 className="text-5xl font-bold text-primary">Plans & pricing</h1>
-          <h2 className="mb-16 text-2xl text-text-muted mt-4">
+          <h2 className="text-2xl text-text-muted mt-4">
             We strive to keep Jippy accessible for everyone.
           </h2>
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-8 bg-card gap-y-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 mt-8 lg:mt-16 gap-x-8 bg-card gap-y-4">
             <PricingTier
               price={TierPrice.Free}
               tierDescription={tierIDToTierDescription[JippyTierID.Free]}
