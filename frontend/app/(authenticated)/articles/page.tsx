@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -18,12 +19,18 @@ import {
 } from "@/components/ui/select";
 import usePagination from "@/hooks/use-pagination";
 import { getArticlesPage } from "@/queries/article";
+import { getCategories } from "@/queries/category";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { parseDate, toQueryDate } from "@/utils/date";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import ArticlesList from "./articles-list";
-import { getCategories } from "@/queries/category";
-import Link from "next/link";
 
 const DEFAULT_EVENT_PERIOD = Period.Week;
 
@@ -149,9 +156,25 @@ const Articles = () => {
               <SelectContent className="min-w-[16rem]">
                 <SelectGroup>
                   <SelectLabel className="text-sm">Category filter</SelectLabel>
-                  <SelectItem className="mb-3" value="my">
-                    My GP categories ({user?.categories.length})
-                  </SelectItem>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SelectItem className="mb-3" value="my">
+                          My GP categories ({user?.categories.length})
+                        </SelectItem>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className="flex max-w-[14rem]"
+                        side="bottom"
+                      >
+                        <div className="flex text-wrap">
+                          {user.categories
+                            .map((category) => category.name)
+                            .join(", ")}
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </SelectGroup>
                 <SelectGroup>
                   <SelectLabel className="text-sm">
@@ -159,8 +182,8 @@ const Articles = () => {
                   </SelectLabel>
                   {categories?.map((category) => (
                     <SelectItem
-                      value={category.id.toString()}
                       key={category.id}
+                      value={category.id.toString()}
                     >
                       {category.name}
                     </SelectItem>

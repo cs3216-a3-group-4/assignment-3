@@ -23,6 +23,13 @@ import { getArticlesForCategory } from "@/queries/article";
 import { getCategories } from "@/queries/category";
 import { useUserStore } from "@/store/user/user-store-provider";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -129,9 +136,25 @@ const Page = ({ params }: { params: { id: string } }) => {
               <SelectContent className="min-w-[16rem]">
                 <SelectGroup>
                   <SelectLabel className="text-sm">Category filter</SelectLabel>
-                  <SelectItem className="mb-3" value="my">
-                    My GP categories ({user?.categories.length})
-                  </SelectItem>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SelectItem className="mb-3" value="my">
+                          My GP categories ({user?.categories.length})
+                        </SelectItem>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className="flex max-w-[14rem]"
+                        side="bottom"
+                      >
+                        <div className="flex text-wrap">
+                          {user?.categories
+                            .map((category) => category.name)
+                            .join(", ")}
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </SelectGroup>
                 <SelectGroup>
                   <SelectLabel className="text-sm">
@@ -139,8 +162,8 @@ const Page = ({ params }: { params: { id: string } }) => {
                   </SelectLabel>
                   {categories?.map((category) => (
                     <SelectItem
-                      value={category.id.toString()}
                       key={category.id}
+                      value={category.id.toString()}
                     >
                       {category.name}
                     </SelectItem>

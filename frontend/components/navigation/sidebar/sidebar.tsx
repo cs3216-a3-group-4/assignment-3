@@ -13,11 +13,11 @@ import {
   NotebookIcon,
 } from "lucide-react";
 
+import { Separator } from "@/components/ui/separator";
 import { getCategories } from "@/queries/category";
 import { useUserStore } from "@/store/user/user-store-provider";
 
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
-import { Separator } from "@/components/ui/separator";
 
 /* Assumption: This component is only rendered if the user is logged in */
 const Sidebar = () => {
@@ -60,7 +60,7 @@ const Sidebar = () => {
           path="/ask"
         />
       </div>
-      <Separator className="bg-text-muted" />
+      <Separator className="bg-text-muted/20" />
       <div className="flex flex-col space-y-2 w-full">
         <SidebarItemWithIcon
           Icon={BookmarkIcon}
