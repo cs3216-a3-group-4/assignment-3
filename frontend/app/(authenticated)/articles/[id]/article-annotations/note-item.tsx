@@ -3,7 +3,7 @@ import { SubmitHandler } from "react-hook-form";
 import { EditIcon, TrashIcon } from "lucide-react";
 
 import { NoteDTO } from "@/client";
-import DeleteDialog from "@/components/dialog/DeleteDialog";
+import Dialog from "@/components/dialog/Dialog";
 import CategoryChip from "@/components/display/category-chip";
 import { Button } from "@/components/ui/button";
 import { useDeleteNote } from "@/queries/note";
@@ -29,8 +29,8 @@ const NoteItem = ({ note, articleId, handleEditNote }: NoteItemProps) => {
       key={note.id}
     >
       {deleteDialogOpen && (
-        <DeleteDialog
-          label="note"
+        <Dialog
+          action="delete this note"
           onClose={() => setDeleteDialogOpen(false)}
           onDelete={() => {
             deleteNoteMutation.mutate(note.id);

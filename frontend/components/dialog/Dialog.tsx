@@ -13,11 +13,11 @@ import {
 
 interface OwnProps {
   onDelete: () => void;
-  label: string;
+  action: string;
   onClose: () => void;
 }
 
-const DeleteDialog = ({ onDelete, label, onClose }: OwnProps) => {
+const Dialog = ({ onDelete, action: label, onClose }: OwnProps) => {
   return (
     <AlertDialog
       onOpenChange={() => {
@@ -30,8 +30,7 @@ const DeleteDialog = ({ onDelete, label, onClose }: OwnProps) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. Are you sure you want to delete this{" "}
-            {label}?
+            This action cannot be undone. Are you sure you want to {label}?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -43,4 +42,4 @@ const DeleteDialog = ({ onDelete, label, onClose }: OwnProps) => {
   );
 };
 
-export default DeleteDialog;
+export default Dialog;

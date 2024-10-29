@@ -36,6 +36,8 @@ const getPriceButtonText = (
   } else if (priceTierId > userTierId) {
     return "Upgrade";
   } else if (priceTierId < userTierId) {
+    // Used by pricing-tier to figure out if it is a downgrade.
+    // Changing this text will break the dialog.
     return "Downgrade";
   } else {
     return "Buy";
