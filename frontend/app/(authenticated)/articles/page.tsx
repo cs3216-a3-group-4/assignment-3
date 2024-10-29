@@ -22,6 +22,8 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import { parseDate, toQueryDate } from "@/utils/date";
 
 import ArticlesList from "./articles-list";
+import { getCategories } from "@/queries/category";
+import Link from "next/link";
 
 const DEFAULT_EVENT_PERIOD = Period.Week;
 
@@ -52,6 +54,7 @@ const Articles = () => {
   const [singaporeOnly, setSingaporeOnly] =
     useState<boolean>(initialSingaporeOnly);
 
+  const { data: categories } = useQuery(getCategories());
   const { data: articles, isSuccess: isArticlesLoaded } = useQuery(
     getArticlesPage(
       toQueryDate(eventStartDate),
@@ -126,6 +129,42 @@ const Articles = () => {
                   <SelectItem className="text-base" value="singapore-only">
                     Singapore
                   </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <Select
+              defaultValue="my"
+              onValueChange={(categoryId) => {
+                categoryId !== "my" && router.push(`/categories/${categoryId}`);
+              }}
+            >
+              <SelectTrigger
+                className={
+                  "border-none focus:ring-0 focus:ring-offset-0 font-medium hover:bg-gray-200/40 rounded-2xl text-primary-900 text-base"
+                }
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="min-w-[16rem]">
+                <SelectGroup>
+                  <SelectLabel className="text-sm">Category filter</SelectLabel>
+                  <SelectItem className="mb-3" value="my">
+                    My GP categories ({user?.categories.length})
+                  </SelectItem>
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel className="text-sm">
+                    Individual categories
+                  </SelectLabel>
+                  {categories?.map((category) => (
+                    <SelectItem
+                      value={category.id.toString()}
+                      key={category.id}
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
