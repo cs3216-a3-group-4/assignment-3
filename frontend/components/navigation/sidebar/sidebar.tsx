@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import {
   BlocksIcon,
   BookmarkIcon,
@@ -14,21 +13,12 @@ import {
 } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
-import { getCategories } from "@/queries/category";
-import { useUserStore } from "@/store/user/user-store-provider";
 
 import SidebarItemWithIcon from "./sidebar-item-with-icon";
 
 /* Assumption: This component is only rendered if the user is logged in */
 const Sidebar = () => {
   const pathname = usePathname();
-
-  const { data: categories, isSuccess } = useQuery(getCategories());
-  const user = useUserStore((state) => state.user);
-  const userCategoryIds = user?.categories.map((category) => category.id) || [];
-  // const otherCategories = categories?.filter(
-  //   (category) => !userCategoryIds.includes(category.id),
-  // );
 
   return (
     <div className="sticky flex flex-col h-[calc(100vh_-_72px)] w-full px-4 py-6 bg-primary-100/20 space-y-4 overflow-y-auto">
@@ -87,12 +77,6 @@ const Sidebar = () => {
           path="/questions"
         />
       </div>
-      {isSuccess && (
-        <>
-          {/* <SidebarTopics categories={user!.categories} label={"Your topics"} />
-          <SidebarTopics categories={otherCategories!} label={"Other topics"} /> */}
-        </>
-      )}
     </div>
   );
 };

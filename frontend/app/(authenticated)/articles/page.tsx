@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -17,18 +16,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import usePagination from "@/hooks/use-pagination";
-import { getArticlesPage } from "@/queries/article";
-import { getCategories } from "@/queries/category";
-import { useUserStore } from "@/store/user/user-store-provider";
-import { parseDate, toQueryDate } from "@/utils/date";
-
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import usePagination from "@/hooks/use-pagination";
+import { getArticlesPage } from "@/queries/article";
+import { getCategories } from "@/queries/category";
+import { useUserStore } from "@/store/user/user-store-provider";
+import { parseDate, toQueryDate } from "@/utils/date";
 
 import ArticlesList from "./articles-list";
 
@@ -143,7 +141,10 @@ const Articles = () => {
             <Select
               defaultValue="my"
               onValueChange={(categoryId) => {
-                categoryId !== "my" && router.push(`/categories/${categoryId}`);
+                if (categoryId !== "my") {
+                  router.push(`/categories/${categoryId}`);
+                }
+                return categoryId;
               }}
             >
               <SelectTrigger

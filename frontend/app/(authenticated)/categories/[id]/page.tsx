@@ -18,17 +18,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import usePagination from "@/hooks/use-pagination";
-import { getArticlesForCategory } from "@/queries/article";
-import { getCategories } from "@/queries/category";
-import { useUserStore } from "@/store/user/user-store-provider";
-
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import usePagination from "@/hooks/use-pagination";
+import { getArticlesForCategory } from "@/queries/article";
+import { getCategories } from "@/queries/category";
+import { useUserStore } from "@/store/user/user-store-provider";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -120,10 +119,12 @@ const Page = ({ params }: { params: { id: string } }) => {
             <Select
               defaultValue={categoryId.toString()}
               onValueChange={(catId) => {
-                catId !== categoryId.toString() &&
+                if (catId !== categoryId.toString()) {
                   router.push(
                     catId === "my" ? "/articles" : `/categories/${catId}`,
                   );
+                }
+                return catId;
               }}
             >
               <SelectTrigger
