@@ -60,7 +60,7 @@ export const getArticles = (
 
 export const getBookmarkedArticles = (page: number) =>
   queryOptions({
-    queryKey: [QueryKeys.Events, QueryKeys.Bookmarks],
+    queryKey: [QueryKeys.Articles, QueryKeys.Bookmarks],
     queryFn: () =>
       getArticlesArticlesGet({
         withCredentials: true,

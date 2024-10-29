@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -8,9 +9,11 @@ import {
   Ellipsis,
   Link2,
   MessageSquare,
+  Trash,
 } from "lucide-react";
 
 import { EssayMiniDTO } from "@/client/types.gen";
+import DeleteDialog from "@/components/dialog/DeleteDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { useDeleteEssay } from "@/queries/essay";
 import { parseDate } from "@/utils/date";
 
 interface EssayListCardProps {
@@ -27,8 +31,20 @@ interface EssayListCardProps {
 
 const EssayListCard = ({ essay }: EssayListCardProps) => {
   const router = useRouter();
+  const deleteEssayMutation = useDeleteEssay();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   return (
     <div className="flex flex-col w-full bg-card border px-4 py-4 rounded-sm text-pretty break-words">
+      {deleteDialogOpen && (
+        <DeleteDialog
+          label="essay"
+          onClose={() => setDeleteDialogOpen(false)}
+          onDelete={() => {
+            deleteEssayMutation.mutate(essay.id);
+          }}
+        />
+      )}
       <div
         className="cursor-pointer"
         onClick={() => router.push(`/essay-feedback/${essay.id}`)}
@@ -74,10 +90,16 @@ const EssayListCard = ({ essay }: EssayListCardProps) => {
                 {/* TODO: implement these */}
                 {/* <DropdownMenuItem>
                   <Download className="w-4 h-4 mr-1.5" /> Download
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive focus:text-destructive focus:bg-destructive/5">
+                </DropdownMenuItem>*/}
+
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive focus:bg-destructive/5"
+                  onClick={() => {
+                    setDeleteDialogOpen(true);
+                  }}
+                >
                   <Trash className="w-4 h-4 mr-1.5" /> Delete
-                </DropdownMenuItem> */}
+                </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>

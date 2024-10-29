@@ -3,6 +3,7 @@ import { SubmitHandler } from "react-hook-form";
 import { EditIcon, TrashIcon } from "lucide-react";
 
 import { NoteDTO } from "@/client";
+import DeleteDialog from "@/components/dialog/DeleteDialog";
 import CategoryChip from "@/components/display/category-chip";
 import { Button } from "@/components/ui/button";
 import { useDeleteNote } from "@/queries/note";
@@ -19,6 +20,7 @@ interface NoteItemProps {
 const NoteItem = ({ note, articleId, handleEditNote }: NoteItemProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const deleteNoteMutation = useDeleteNote(articleId);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   return (
     <div
@@ -26,6 +28,15 @@ const NoteItem = ({ note, articleId, handleEditNote }: NoteItemProps) => {
       id={`article-note-${note.id}`}
       key={note.id}
     >
+      {deleteDialogOpen && (
+        <DeleteDialog
+          label="note"
+          onClose={() => setDeleteDialogOpen(false)}
+          onDelete={() => {
+            deleteNoteMutation.mutate(note.id);
+          }}
+        />
+      )}
       {isEditing ? (
         <NoteForm
           defaultValue={note}
@@ -48,7 +59,7 @@ const NoteItem = ({ note, articleId, handleEditNote }: NoteItemProps) => {
             <div className="flex gap-x-2">
               <Button
                 className="h-6 w-6"
-                onClick={() => deleteNoteMutation.mutate(note.id)}
+                onClick={() => setDeleteDialogOpen(true)}
                 size="icon"
                 variant="destructive_ghost"
               >

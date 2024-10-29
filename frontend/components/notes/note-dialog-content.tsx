@@ -21,7 +21,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { useDeleteNote, useEditEventNote } from "@/queries/note";
+import { useEditEventNote } from "@/queries/note";
 import { Category, getIconFor } from "@/types/categories";
 import { parseDate } from "@/utils/date";
 
@@ -52,7 +52,6 @@ const NoteDialogContent = ({
   setNoteContent,
   noteData,
   open,
-  setOpen,
   handleDelete,
   categoryData,
 }: Props) => {
@@ -60,16 +59,10 @@ const NoteDialogContent = ({
   const Icon = getIconFor(categoryName);
   const dateCreated = new Date(noteData.created_at);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const deleteNoteMutation = useDeleteNote(noteData.parent_id);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const editNoteMutation = useEditEventNote(noteData.parent_id);
   const [pendingNoteContent, setPendingNoteContent] =
     useState<string>(noteContent);
-
-  const onClickDelete = () => {
-    deleteNoteMutation.mutate(noteData.id);
-    setOpen(false);
-    handleDelete();
-  };
 
   const handleDoubleClick = () => {
     setIsEditing(true);
@@ -94,16 +87,10 @@ const NoteDialogContent = ({
     });
   };
 
-  const getWordFor = (parentType: string) => {
-    if (parentType === "point") {
-      return "a";
-    }
-    return "an";
-  };
-
   useEffect(() => {
     setPendingNoteContent(noteContent);
     setIsEditing(false);
+    setIsDeleting(false);
   }, [open, noteContent]);
 
   return (
@@ -120,16 +107,18 @@ const NoteDialogContent = ({
             />
           </div>
         </DialogTitle>
-        <DialogDescription>{parseDate(dateCreated)}</DialogDescription>
+        <DialogDescription className="text-left">
+          {parseDate(dateCreated)}
+        </DialogDescription>
       </DialogHeader>
-      {!isEditing ? (
+      {!isEditing && !isDeleting ? (
         <div
           className="flex flex-col gap-4 align-center"
           onDoubleClick={handleDoubleClick}
         >
           <p className="text-text-muted/90">{noteContent}</p>
         </div>
-      ) : (
+      ) : isEditing ? (
         <Textarea
           autoFocus
           className="w-full"
@@ -137,35 +126,63 @@ const NoteDialogContent = ({
           placeholder="Write your notes here..."
           value={pendingNoteContent}
         />
+      ) : (
+        <div
+          className="flex flex-col gap-4 align-center"
+          onDoubleClick={handleDoubleClick}
+        >
+          <p className="text-text-muted/90">
+            Are you sure you want to delete this note?
+          </p>
+        </div>
       )}
-      <div className="flex w-full">
-        <span className="text-text-muted/90">Note is for&nbsp;</span>
-        {noteData.parent_type === "event" ? (
-          <span>this {noteData.parent_type}</span>
-        ) : (
-          <span className="text-text-muted/90">
-            {getWordFor(noteData.parent_type)} {noteData.parent_type}
-          </span>
-        )}
-      </div>
       <DialogFooter>
-        <div className="flex justify-between w-full">
-          <Button onClick={onClickDelete} type="button" variant="outline">
-            <Trash2Icon size={20} strokeWidth={1.7} />
-          </Button>
-          <div className="flex gap-2">
+        {!isDeleting && (
+          <div className="flex justify-between w-full">
             <Button
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                setIsDeleting(true);
+                setIsEditing(false);
+              }}
               type="button"
               variant="outline"
             >
-              Edit
+              <Trash2Icon size={20} strokeWidth={1.7} />
             </Button>
-            <Button onClick={handleSave} type="button">
-              Save
-            </Button>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setIsEditing(true)}
+                type="button"
+                variant="outline"
+              >
+                Edit
+              </Button>
+              <Button onClick={handleSave} type="button">
+                Save
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
+        {isDeleting && (
+          <div className="flex justify-between w-full">
+            <div className="flex gap-2">
+              <Button
+                onClick={() => {
+                  setIsEditing(true);
+                  setIsDeleting(false);
+                }}
+                type="button"
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleDelete} type="button">
+                Yes, delete
+              </Button>
+            </div>
+          </div>
+        )}
       </DialogFooter>
     </DialogContent>
   );

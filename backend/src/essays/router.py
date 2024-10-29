@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
@@ -120,3 +121,22 @@ def get_essay(
         raise HTTPException(HTTPStatus.NOT_FOUND)
 
     return essay
+
+
+@router.delete("/{id}")
+def delete_essay(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
+) -> EssayDTO:
+    essay = session.scalar(
+        select(Essay).where(Essay.id == id).where(Essay.user_id == user.id)
+    )
+    if not essay:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+
+    essay.deleted_at = datetime.now()
+    session.add(essay)
+    session.commit()
+
+    return
