@@ -96,7 +96,13 @@ async def add_current_user(
         id = payload.get("sub")
         with Session(engine) as session:
             user = session.scalar(
-                select(User).where(User.id == id).options(selectinload(User.categories))
+                select(User)
+                .where(User.id == id)
+                .options(
+                    selectinload(User.categories),
+                    selectinload(User.tier),
+                    selectinload(User.usage),
+                )
             )
         if not user:
             raise InvalidTokenError()
