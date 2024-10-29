@@ -72,7 +72,7 @@ const Landing = () => {
           <div className={`flex w-full ${mediaBreakpoint === MediaBreakpoint.Sm ? "px-12" : ""}`}>
             <Carousel className="w-full" opts={{align: "center", loop: true}}>
               <CarouselContent className="gap-y-8 mt-8 lg:mt-16 px-4 md:px-8">
-                <CarouselItem className="md:basis-1/2">
+                <CarouselItem className="basis-full md:basis-7/12">
                   <div className="p-1">
                     <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
                       <CardHeader>
@@ -90,7 +90,7 @@ const Landing = () => {
                   </div>
                 </CarouselItem>
 
-                <CarouselItem className="md:basis-1/2">
+                <CarouselItem className="basis-full md:basis-7/12">
                   <div className="p-1">
                     <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
                       <CardHeader>
@@ -107,7 +107,7 @@ const Landing = () => {
                   </div>
                 </CarouselItem>
 
-                <CarouselItem className="md:basis-1/2">
+                <CarouselItem className="basis-full md:basis-7/12">
                   <div className="p-1">
                     <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
                       <CardHeader>
