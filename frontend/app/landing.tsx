@@ -23,7 +23,7 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPagination, CarouselPrevious } from "@/components/ui/carousel";
 import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
 import { MediaBreakpoint } from "@/utils/media";
 
@@ -130,9 +130,8 @@ const Landing = () => {
                   <CarouselPrevious />
                   <CarouselNext />
                 </>
-              )
-
-              }
+              )}
+              <CarouselPagination />
             </Carousel>
           </div>
         </div>
