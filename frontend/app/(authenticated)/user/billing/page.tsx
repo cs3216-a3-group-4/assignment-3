@@ -26,9 +26,6 @@ import {
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
 
-// Used by pricing-tier to figure out if it is a downgrade
-export const DOWNGRADE_TEXT = "Downgrade";
-
 const getPriceButtonText = (
   priceTierId: number,
   user: UserPublic | undefined,
@@ -39,7 +36,9 @@ const getPriceButtonText = (
   } else if (priceTierId > userTierId) {
     return "Upgrade";
   } else if (priceTierId < userTierId) {
-    return DOWNGRADE_TEXT;
+    // Used by pricing-tier to figure out if it is a downgrade.
+    // Changing this text will break the dialog.
+    return "Downgrade";
   } else {
     return "Buy";
   }
