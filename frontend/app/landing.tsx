@@ -23,11 +23,16 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
+import { MediaBreakpoint } from "@/utils/media";
 
 const Landing = () => {
+  const mediaBreakpoint = useBreakpointMediaQuery();
+  
   return (
     <div className="relative w-full h-full overflow-y-auto">
-      <div className="flex flex-col bg-muted w-full h-fit">
+      <div className="flex flex-col bg-muted min-w-full h-fit">
         <div
           // h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]
           className={`flex flex-col w-full items-center justify-center px-12 md:px-0 py-8 gap-y-8 h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] min-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] max-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)]`}
@@ -64,47 +69,71 @@ const Landing = () => {
           <h3 className="text-xl md:text-2xl lg:text-3xl font-medium mt-3 text-center">
             We&apos;ve been there. Learn how Jippy can help.
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-8 max-w-7xl mt-8 lg:mt-16 md:mx-8">
-            <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
-              <CardHeader>
-                <CardTitle className="text-primary-800 text-3xl">
-                  Saves you time
-                </CardTitle>
-                <CardDescription className="text-xl text-text-muted pt-3">
-                  No more combing through the web for hours to find examples.
-                  Jippy sifts through the mountain of news articles to bring the
-                  most interesting events going on around the world right to
-                  you.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <div className={`flex w-full ${mediaBreakpoint === MediaBreakpoint.Sm ? "px-12" : ""}`}>
+            <Carousel className="w-full" opts={{align: "center", loop: true}}>
+              <CarouselContent className="gap-y-8 mt-8 lg:mt-16 px-4 md:px-8">
+                <CarouselItem className="md:basis-1/2">
+                  <div className="p-1">
+                    <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
+                      <CardHeader>
+                        <CardTitle className="text-primary-800 text-3xl">
+                          Saves you time
+                        </CardTitle>
+                        <CardDescription className="text-xl text-text-muted pt-3">
+                          No more combing through the web for hours to find examples.
+                          Jippy sifts through the mountain of news articles to bring the
+                          most interesting events going on around the world right to
+                          you.
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </div>
+                </CarouselItem>
 
-            <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
-              <CardHeader>
-                <CardTitle className="text-primary-800 text-3xl">
-                  Helps you build your example bank
-                </CardTitle>
-                <CardDescription className="text-xl text-text-muted pt-3">
-                  Keeping up to date with current affairs is important for
-                  scoring well in GP. Jippy is here to encourage everyone to
-                  read the news by making it accessible.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+                <CarouselItem className="md:basis-1/2">
+                  <div className="p-1">
+                    <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
+                      <CardHeader>
+                        <CardTitle className="text-primary-800 text-3xl">
+                          Helps you build your example bank
+                        </CardTitle>
+                        <CardDescription className="text-xl text-text-muted pt-3">
+                          Keeping up to date with current affairs is important for
+                          scoring well in GP. Jippy is here to encourage everyone to
+                          read the news by making it accessible.
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </div>
+                </CarouselItem>
 
-            <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
-              <CardHeader>
-                <CardTitle className="text-primary-800 text-3xl">
-                  Insights and analysis
-                </CardTitle>
-                <CardDescription className="text-xl text-text-muted pt-3">
-                  Ever tried reading the news and forget it immediately? Or
-                  wonder how to even apply the knowledge to your GP essays? Not
-                  anymore. Jippy can intelligently extract relevant GP analysis
-                  and even generate essay points.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+                <CarouselItem className="md:basis-1/2">
+                  <div className="p-1">
+                    <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
+                      <CardHeader>
+                        <CardTitle className="text-primary-800 text-3xl">
+                          Insights and analysis
+                        </CardTitle>
+                        <CardDescription className="text-xl text-text-muted pt-3">
+                          Ever tried reading the news and forget it immediately? Or
+                          wonder how to even apply the knowledge to your GP essays? Not
+                          anymore. Jippy can intelligently extract relevant GP analysis
+                          and even generate essay points.
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              </CarouselContent>
+              { mediaBreakpoint === MediaBreakpoint.Sm && (
+                <>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </>
+              )
+
+              }
+            </Carousel>
           </div>
         </div>
 
