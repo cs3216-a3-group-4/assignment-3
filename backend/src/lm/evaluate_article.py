@@ -19,7 +19,8 @@ async def check_article_title(title: str) -> bool:
             result = await lm_model.ainvoke(messages)
             parser = JsonOutputParser()
             response = parser.invoke(result)
-            return response.get("useful")
+            useful = True if response.get("useful", "True") == "True" else False
+            return useful
         except asyncio.CancelledError as e:
             print(e)
             return True

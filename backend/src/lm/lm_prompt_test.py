@@ -9,8 +9,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from src.common.database import engine
 
-from src.lm.generate_concepts import ArticleConcepts
-
 with Session(engine) as session:
     query = select(Analysis).where(Analysis.event_id == 27593)
     analysis = session.execute(query).scalars().first()
@@ -19,7 +17,7 @@ with Session(engine) as session:
     article = analysis.event.original_article
 
 # title = "What does the colour of your pee say about your health?"
-title = "McLaren right of review over Norris penalty rejected"
+title = "Brazil institute sues social media giants for $525 million over excessive use by minors"
 concept_human = f"""
     Article Title: {title}
 """
@@ -35,9 +33,9 @@ def test_lm_prompt():
         HumanMessage(content=concept_human),
     ]
     result = lm_model.invoke(messages)
-    parser = JsonOutputParser(pydantic_object=ArticleConcepts)
-    concepts = parser.invoke(result.content)
-    print(json.dumps(concepts, indent=2))
+    parser = JsonOutputParser()
+    lm_output = parser.invoke(result)
+    print(json.dumps(lm_output, indent=4))
 
 
 if __name__ == "__main__":
