@@ -136,8 +136,8 @@ const Landing = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 bg-background w-full px-8 py-12 md:px-12 lg:py-24 lg:px-24 gap-x-24">
-          <div className="mb-6 md:col-span-5">
+        <div className="flex flex-col md:flex-row bg-background w-full px-8 py-12 md:px-12 lg:py-24 lg:px-24 md:gap-x-24">
+          <div className="flex-1 mb-6 md:basis-5/12">
             <span className="text-2xl font-medium flex items-center">
               <Wand2 className="inline-flex mr-3 hover:animate-wiggle-more text-text-muted" />
               Learn how Jippy AI works
@@ -147,7 +147,7 @@ const Landing = () => {
             </h1>
           </div>
 
-          <div className="md:col-span-7 p-12 bg-background border rounded-lg shadow-lg">
+          <div className="flex-1 md:basis-7/12 p-12 bg-background border rounded-lg shadow-lg">
             <p className="text-xl md:text-2xl text-text">
               Jippy is after all just an AI frog, and can make mistakes, but
               here are some things made sure to train Jippy on to avoid mistakes
@@ -187,8 +187,8 @@ const Landing = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-12 bg-background w-full py-16 md:py-24 px-8 md:px-24 gap-x-24">
-          <div className="md:col-span-5">
+        <div className="flex flex-col md:flex-row bg-background w-full py-16 md:py-24 px-8 md:px-24 md:gap-x-24">
+          <div className="flex-1 md:basis-5/12">
             <h1 className="text-5xl tracking-tight leading-tight text-primary font-bold">
               Frequently asked questions
             </h1>
@@ -197,7 +197,7 @@ const Landing = () => {
             </span>
           </div>
 
-          <div className="md:col-span-7 md:p-12 gap-y-8 mt-8 md:mt-0">
+          <div className="flex-1 md:basis-7/12 md:p-12 gap-y-8 mt-8 md:mt-0">
             <Accordion type="multiple">
               <AccordionItem
                 className="border rounded-lg px-8 py-2 bg-background text-2xl font-medium text-text"
