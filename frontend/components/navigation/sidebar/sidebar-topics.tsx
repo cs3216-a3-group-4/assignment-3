@@ -15,7 +15,7 @@ type Props = {
 };
 
 const SidebarTopics = ({ label, categories }: Props) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const numTopics = categories?.length;
 
   const pathname = usePathname();

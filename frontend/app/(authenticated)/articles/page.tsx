@@ -16,8 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import usePagination from "@/hooks/use-pagination";
 import { getArticlesPage } from "@/queries/article";
+import { getCategories } from "@/queries/category";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { parseDate, toQueryDate } from "@/utils/date";
 
@@ -52,6 +59,7 @@ const Articles = () => {
   const [singaporeOnly, setSingaporeOnly] =
     useState<boolean>(initialSingaporeOnly);
 
+  const { data: categories } = useQuery(getCategories());
   const { data: articles, isSuccess: isArticlesLoaded } = useQuery(
     getArticlesPage(
       toQueryDate(eventStartDate),
@@ -126,6 +134,61 @@ const Articles = () => {
                   <SelectItem className="text-base" value="singapore-only">
                     Singapore
                   </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <Select
+              defaultValue="my"
+              onValueChange={(categoryId) => {
+                if (categoryId !== "my") {
+                  router.push(`/categories/${categoryId}`);
+                }
+                return categoryId;
+              }}
+            >
+              <SelectTrigger
+                className={
+                  "border-none focus:ring-0 focus:ring-offset-0 font-medium hover:bg-gray-200/40 rounded-2xl text-primary-900 text-base"
+                }
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="min-w-[16rem]">
+                <SelectGroup>
+                  <SelectLabel className="text-sm">Category filter</SelectLabel>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SelectItem className="mb-3" value="my">
+                          My GP categories ({user?.categories.length})
+                        </SelectItem>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className="flex max-w-[14rem]"
+                        side="bottom"
+                      >
+                        <div className="flex text-wrap">
+                          {user.categories
+                            .map((category) => category.name)
+                            .join(", ")}
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel className="text-sm">
+                    Individual categories
+                  </SelectLabel>
+                  {categories?.map((category) => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id.toString()}
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
