@@ -14,3 +14,5 @@ lm_model_essay = ChatOpenAI(
 )
 
 CONCURRENCY = 150
+
+HALLUCINATION_ATTEMPT_LIMIT = 2
