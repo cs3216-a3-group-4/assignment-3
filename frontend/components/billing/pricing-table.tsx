@@ -13,8 +13,8 @@ const PricingTable = ({ tiers }: PricingTiers) => {
         tiers.map((tier, index) => {
           return (
             <PricingTier
-              className="grow basis-80 min-w-80 md:basis-64 md:min-w-64"
               buttonText={tier.buttonText}
+              className="grow basis-80 min-w-80 md:basis-64 md:min-w-64"
               isButtonDisabled={tier.isButtonDisabled}
               key={index}
               onClickBuy={tier.onClickBuy}

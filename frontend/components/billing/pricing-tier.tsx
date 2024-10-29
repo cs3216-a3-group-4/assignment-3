@@ -27,7 +27,7 @@ const PricingTier = ({
   return (
     <div className={`h-full ${className}`}>
       <div className="relative flex flex-col h-full p-6 rounded-2xl border border-slate-200 shadow">
-        <div className={hasButton ? 'mb-5' : 'mb-3'}>
+        <div className={hasButton ? "mb-5" : "mb-3"}>
           <div className="text-slate-900 font-semibold mb-1">{tierName}</div>
           <div className="inline-flex items-baseline mb-2">
             <span className="text-slate-900 font-bold text-3xl">$</span>
@@ -35,9 +35,7 @@ const PricingTier = ({
             <span className="text-slate-500 font-medium">/month</span>
           </div>
           {/* Ensure that tierDescription div is at least 2 lines at all times */}
-          <div
-            className={`text-sm text-slate-500 min-h-10`}
-          >
+          <div className={`text-sm text-slate-500 min-h-10`}>
             {tierDescription}
           </div>
           {hasButton && (
