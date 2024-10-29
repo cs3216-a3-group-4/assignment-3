@@ -17,6 +17,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPagination,
+} from "@/components/ui/carousel";
+import {
   JippyTierID,
   tierIDToTierDescription,
   tierIDToTierFeature,
@@ -27,7 +33,7 @@ import {
 const Landing = () => {
   return (
     <div className="relative w-full h-full overflow-y-auto">
-      <div className="flex flex-col bg-muted w-full h-fit">
+      <div className="flex flex-col bg-muted min-w-full h-fit">
         <div
           // h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]
           className={`flex flex-col w-full items-center justify-center px-12 md:px-0 py-8 gap-y-8 h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] min-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)] max-h-[calc(100vh_-_${NAVBAR_HEIGHT}px)]`}
@@ -64,52 +70,63 @@ const Landing = () => {
           <h3 className="text-xl md:text-2xl lg:text-3xl font-medium mt-3 text-center">
             We&apos;ve been there. Learn how Jippy can help.
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-8 max-w-7xl mt-8 lg:mt-16 md:mx-8">
-            <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
-              <CardHeader>
-                <CardTitle className="text-primary-800 text-3xl">
-                  Saves you time
-                </CardTitle>
-                <CardDescription className="text-xl text-text-muted pt-3">
-                  No more combing through the web for hours to find examples.
-                  Jippy sifts through the mountain of news articles to bring the
-                  most interesting events going on around the world right to
-                  you.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <div className="flex w-full">
+            <Carousel className="w-full" opts={{ align: "center", loop: true }}>
+              <CarouselContent className="flex items-stretch mt-8 lg:mt-16">
+                <CarouselItem className="flex flex-col basis-full md:basis-7/12">
+                  <Card className="flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
+                    <CardHeader>
+                      <CardTitle className="text-primary-800 text-3xl">
+                        Saves you time
+                      </CardTitle>
+                      <CardDescription className="text-xl text-text-muted pt-3">
+                        No more combing through the web for hours to find
+                        examples. Jippy sifts through the mountain of news
+                        articles to bring the most interesting events going on
+                        around the world right to you.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </CarouselItem>
 
-            <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
-              <CardHeader>
-                <CardTitle className="text-primary-800 text-3xl">
-                  Helps you build your example bank
-                </CardTitle>
-                <CardDescription className="text-xl text-text-muted pt-3">
-                  Keeping up to date with current affairs is important for
-                  scoring well in GP. Jippy is here to encourage everyone to
-                  read the news by making it accessible.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+                <CarouselItem className="flex flex-col basis-full md:basis-7/12">
+                  <Card className="flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
+                    <CardHeader>
+                      <CardTitle className="text-primary-800 text-3xl">
+                        Helps you build your example bank
+                      </CardTitle>
+                      <CardDescription className="text-xl text-text-muted pt-3">
+                        Keeping up to date with current affairs is important for
+                        scoring well in GP. Jippy is here to encourage everyone
+                        to read the news by making it accessible.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </CarouselItem>
 
-            <Card className="drop-shadow-sm shadow-background-50 px-4 py-3">
-              <CardHeader>
-                <CardTitle className="text-primary-800 text-3xl">
-                  Insights and analysis
-                </CardTitle>
-                <CardDescription className="text-xl text-text-muted pt-3">
-                  Ever tried reading the news and forget it immediately? Or
-                  wonder how to even apply the knowledge to your GP essays? Not
-                  anymore. Jippy can intelligently extract relevant GP analysis
-                  and even generate essay points.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+                <CarouselItem className="flex flex-col basis-full md:basis-7/12">
+                  <Card className="flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
+                    <CardHeader>
+                      <CardTitle className="text-primary-800 text-3xl">
+                        Insights and analysis
+                      </CardTitle>
+                      <CardDescription className="text-xl text-text-muted pt-3">
+                        Ever tried reading the news and forget it immediately?
+                        Or wonder how to even apply the knowledge to your GP
+                        essays? Not anymore. Jippy can intelligently extract
+                        relevant GP analysis and even generate essay points.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </CarouselItem>
+              </CarouselContent>
+              <CarouselPagination />
+            </Carousel>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 bg-background w-full px-8 py-12 md:px-12 lg:py-24 lg:px-24 gap-x-24">
-          <div className="mb-6 md:col-span-5">
+        <div className="flex flex-col md:flex-row bg-background w-full px-8 py-12 md:px-12 lg:py-24 lg:px-24 md:gap-x-24">
+          <div className="flex-1 mb-6 md:basis-5/12">
             <span className="text-2xl font-medium flex items-center">
               <Wand2 className="inline-flex mr-3 hover:animate-wiggle-more text-text-muted" />
               Learn how Jippy AI works
@@ -119,7 +136,7 @@ const Landing = () => {
             </h1>
           </div>
 
-          <div className="md:col-span-7 p-12 bg-background border rounded-lg shadow-lg">
+          <div className="flex-1 md:basis-7/12 p-12 bg-background border rounded-lg shadow-lg">
             <p className="text-xl md:text-2xl text-text">
               Jippy is after all just an AI frog, and can make mistakes, but
               here are some things made sure to train Jippy on to avoid mistakes
@@ -140,10 +157,10 @@ const Landing = () => {
 
         <div className="flex flex-col items-center justify-center bg-background w-full py-16 md:py-24 px-8 md:px-24 place-items-start">
           <h1 className="text-5xl font-bold text-primary">Plans & pricing</h1>
-          <h2 className="mb-16 text-2xl text-text-muted mt-4">
+          <h2 className="text-2xl text-text-muted mt-4">
             We strive to keep Jippy accessible for everyone.
           </h2>
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-8 bg-card gap-y-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 mt-8 lg:mt-16 gap-x-8 bg-card gap-y-4">
             <PricingTier
               price={TierPrice.Free}
               tierDescription={tierIDToTierDescription[JippyTierID.Free]}
@@ -159,8 +176,8 @@ const Landing = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-12 bg-background w-full py-16 md:py-24 px-8 md:px-24 gap-x-24">
-          <div className="md:col-span-5">
+        <div className="flex flex-col md:flex-row bg-background w-full py-16 md:py-24 px-8 md:px-24 md:gap-x-24">
+          <div className="flex-1 md:basis-5/12">
             <h1 className="text-5xl tracking-tight leading-tight text-primary font-bold">
               Frequently asked questions
             </h1>
@@ -169,7 +186,7 @@ const Landing = () => {
             </span>
           </div>
 
-          <div className="md:col-span-7 md:p-12 gap-y-8 mt-8 md:mt-0">
+          <div className="flex-1 md:basis-7/12 md:p-12 gap-y-8 mt-8 md:mt-0">
             <Accordion type="multiple">
               <AccordionItem
                 className="border rounded-lg px-8 py-2 bg-background text-2xl font-medium text-text"
