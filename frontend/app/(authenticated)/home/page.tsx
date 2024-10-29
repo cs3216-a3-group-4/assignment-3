@@ -1,9 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import ActionBar from "./action-bar";
+import ActionBarMobile from "./action-bar-mobile";
 import ArticleFeed from "./article-feed";
 import TopArticleList from "./top-article-list";
-import ActionBarMobile from "./action-bar-mobile";
 
 const Home = () => {
   return (

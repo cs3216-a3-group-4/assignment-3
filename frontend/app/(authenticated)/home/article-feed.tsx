@@ -54,7 +54,7 @@ const ArticleFeed = () => {
         <>
           <div className="flex flex-col gap-y-2 md:mt-4">
             {articles.data.map((article) => (
-              <ArticleCard article={article} />
+              <ArticleCard article={article} key={article.id} />
             ))}
           </div>
           <Link href="/articles">
