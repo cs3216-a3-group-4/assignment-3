@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 import { NoteDTO } from "@/client";
-import DeleteDialog from "@/components/dialog/DeleteDialog";
+import Dialog from "@/components/dialog/Dialog";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -43,8 +43,8 @@ const AnalysisNotes = ({
   return (
     <div>
       {deleteDialogOpen ? (
-        <DeleteDialog
-          label="note"
+        <Dialog
+          action="delete this note"
           onClose={() => setDeleteDialogOpen(0)}
           onDelete={() => onDelete(deleteDialogOpen)}
         />

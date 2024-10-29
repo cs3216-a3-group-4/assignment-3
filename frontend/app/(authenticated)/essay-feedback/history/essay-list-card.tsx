@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { EssayMiniDTO } from "@/client/types.gen";
-import DeleteDialog from "@/components/dialog/DeleteDialog";
+import Dialog from "@/components/dialog/Dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,8 +37,8 @@ const EssayListCard = ({ essay }: EssayListCardProps) => {
   return (
     <div className="flex flex-col w-full bg-card border px-4 py-4 rounded-sm text-pretty break-words">
       {deleteDialogOpen && (
-        <DeleteDialog
-          label="essay"
+        <Dialog
+          action="delete this essay"
           onClose={() => setDeleteDialogOpen(false)}
           onDelete={() => {
             deleteEssayMutation.mutate(essay.id);

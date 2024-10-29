@@ -97,7 +97,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <div
-      className={`w-full h-fit min-h-full bg-muted ${isViewAnnotation ? "relative flex" : "sm:px-8 md:px-16 xl:px-56"}`}
+      className={`w-full h-fit min-h-full bg-muted ${isViewAnnotation ? "relative flex" : "sm:px-8 md:px-16 xl:px-40"}`}
     >
       <div
         className={`flex flex-col bg-background ${isViewAnnotation ? (showPanelAsSheet ? "hidden" : "w-8/12 h-full mx-16") : ""}`}
