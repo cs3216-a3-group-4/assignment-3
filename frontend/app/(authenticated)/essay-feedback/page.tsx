@@ -170,12 +170,12 @@ const EssayFeedbackPage = () => {
 
   return (
     <div
-      className="flex flex-col bg-muted w-full h-full max-h-full py-8 overflow-y-auto px-4 md:px-8 xl:px-24 "
+      className="flex flex-col bg-muted w-full h-full max-h-full overflow-y-auto py-8 px-4 md:px-8 xl:px-24"
       id="home-page"
     >
-      <div className="mt-4 mb-8">
+      <div className="px-6 mt-4 mb-8">
         <span className="flex items-center text-primary-800">
-          <BookOpenCheckIcon className="w-8 h-8 mr-4" />
+          <BookOpenCheckIcon className="w-12 h-12 mr-6" />
           <h1 className="text-4xl font-semibold">Get essay feedback</h1>
           <Chip className="sm:ml-3" label="Beta" />
         </span>
@@ -185,51 +185,49 @@ const EssayFeedbackPage = () => {
           anything else than providing you feedback.
         </h2>
       </div>
-      <div className="h-full">
-        <div className="flex flex-col py-6 lg:py-12 w-full h-fit min-h-full bg-background rounded-lg border border-border px-28 justify-between">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="flex flex-col h-fit">
-                <FormField
-                  control={form.control}
-                  name="gpQuestion"
-                  render={({ field }) => (
-                    <FormItem className="mb-2">
-                      <FormControl>
-                        <AutosizeTextarea
-                          className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-3xl font-semibold text-primary-700"
-                          placeholder="Type your GP essay question"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="essay"
-                  render={({ field }) => (
-                    <FormItem className="mb-2">
-                      <FormControl>
-                        <AutosizeTextarea
-                          className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-lg overflow-hidden"
-                          placeholder="Type or paste your essay here"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <Button className="mt-16" size="lg" type="submit">
-                <SparklesIcon className="w-6 h-6 mr-3" />
-                Get Jippy&apos;s feedback
-              </Button>
-            </form>
-          </Form>
-        </div>
+      <div className="grow flex flex-col">
+        <Form {...form}>
+          <form className="h-full" onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex flex-col py-6 lg:py-12 w-full bg-background rounded-lg border border-border px-4 md:px-8 xl:px-24 justify-between">
+              <FormField
+                control={form.control}
+                name="gpQuestion"
+                render={({ field }) => (
+                  <FormItem className="mb-2">
+                    <FormControl>
+                      <AutosizeTextarea
+                        className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-3xl font-semibold text-primary-700"
+                        placeholder="Type your GP essay question"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="essay"
+                render={({ field }) => (
+                  <FormItem className="mb-2">
+                    <FormControl>
+                      <AutosizeTextarea
+                        className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-lg overflow-x-hidden"
+                        placeholder="Type or paste your essay here"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button className="mt-4" size="lg" type="submit">
+              <SparklesIcon className="w-6 h-6 mr-3" />
+              Get Jippy&apos;s feedback
+            </Button>
+          </form>
+        </Form>
       </div>
     </div>
   );
