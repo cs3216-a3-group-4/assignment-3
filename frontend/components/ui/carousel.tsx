@@ -271,36 +271,36 @@ const CarouselPagination = React.forwardRef<
 
     setScrollSnaps(api.scrollSnapList());
 
-    api.on('select', onSelect);
+    api.on("select", onSelect);
     // Initialize the selected index
     onSelect();
 
     return () => {
-      api.off('select', onSelect);
+      api.off("select", onSelect);
     };
   }, [api]);
 
   return (
     <div
-      className={cn('flex justify-center space-x-2 mt-4', className)}
+      className={cn("flex justify-center space-x-2 mt-4", className)}
       ref={ref}
       {...props}
     >
       {scrollSnaps.map((_, index) => (
         <button
-          key={index}
-          className={cn(
-            'w-3 h-3 rounded-full',
-            selectedIndex === index ? 'bg-primary' : 'bg-gray-300'
-          )}
-          onClick={() => api && api.scrollTo(index)}
           aria-label={`Go to slide ${index + 1}`}
+          className={cn(
+            "w-3 h-3 rounded-full",
+            selectedIndex === index ? "bg-primary" : "bg-gray-300",
+          )}
+          key={index}
+          onClick={() => api && api.scrollTo(index)}
         />
       ))}
     </div>
   );
 });
-CarouselPagination.displayName = 'CarouselPagination';
+CarouselPagination.displayName = "CarouselPagination";
 
 export {
   Carousel,
@@ -308,6 +308,6 @@ export {
   CarouselContent,
   CarouselItem,
   CarouselNext,
-  CarouselPrevious,
   CarouselPagination,
+  CarouselPrevious,
 };

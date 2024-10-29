@@ -17,16 +17,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPagination,
+} from "@/components/ui/carousel";
+import {
   JippyTierID,
   tierIDToTierDescription,
   tierIDToTierFeature,
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import { Carousel, CarouselContent, CarouselItem, CarouselPagination } from "@/components/ui/carousel";
 
 const Landing = () => {
-  
   return (
     <div className="relative w-full h-full overflow-y-auto">
       <div className="flex flex-col bg-muted min-w-full h-fit">
@@ -67,7 +71,7 @@ const Landing = () => {
             We&apos;ve been there. Learn how Jippy can help.
           </h3>
           <div className="flex w-full">
-            <Carousel className="w-full" opts={{align: "center", loop: true}}>
+            <Carousel className="w-full" opts={{ align: "center", loop: true }}>
               <CarouselContent className="flex items-stretch mt-8 lg:mt-16">
                 <CarouselItem className="flex flex-col basis-full md:basis-7/12">
                   <Card className="flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
@@ -76,10 +80,10 @@ const Landing = () => {
                         Saves you time
                       </CardTitle>
                       <CardDescription className="text-xl text-text-muted pt-3">
-                        No more combing through the web for hours to find examples.
-                        Jippy sifts through the mountain of news articles to bring the
-                        most interesting events going on around the world right to
-                        you.
+                        No more combing through the web for hours to find
+                        examples. Jippy sifts through the mountain of news
+                        articles to bring the most interesting events going on
+                        around the world right to you.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -93,8 +97,8 @@ const Landing = () => {
                       </CardTitle>
                       <CardDescription className="text-xl text-text-muted pt-3">
                         Keeping up to date with current affairs is important for
-                        scoring well in GP. Jippy is here to encourage everyone to
-                        read the news by making it accessible.
+                        scoring well in GP. Jippy is here to encourage everyone
+                        to read the news by making it accessible.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -107,10 +111,10 @@ const Landing = () => {
                         Insights and analysis
                       </CardTitle>
                       <CardDescription className="text-xl text-text-muted pt-3">
-                        Ever tried reading the news and forget it immediately? Or
-                        wonder how to even apply the knowledge to your GP essays? Not
-                        anymore. Jippy can intelligently extract relevant GP analysis
-                        and even generate essay points.
+                        Ever tried reading the news and forget it immediately?
+                        Or wonder how to even apply the knowledge to your GP
+                        essays? Not anymore. Jippy can intelligently extract
+                        relevant GP analysis and even generate essay points.
                       </CardDescription>
                     </CardHeader>
                   </Card>
