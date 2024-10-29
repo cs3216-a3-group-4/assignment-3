@@ -8,12 +8,13 @@ interface PricingTiers {
 
 const PricingTable = ({ tiers }: PricingTiers) => {
   return (
-    <div className="max-w-sm mx-auto grid gap-6 lg:grid-cols-3 items-start lg:max-w-none">
+    <div className="mx-auto px-1 py-2 flex flex-row gap-6 items-start overflow-x-auto w-full max-w-full">
       {tiers?.length > 0 ? (
         tiers.map((tier, index) => {
           return (
             <PricingTier
               buttonText={tier.buttonText}
+              className="grow basis-80 min-w-80 md:basis-64 md:min-w-64"
               isButtonDisabled={tier.isButtonDisabled}
               key={index}
               onClickBuy={tier.onClickBuy}
