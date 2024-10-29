@@ -4,6 +4,7 @@ from sqlalchemy import Column, DateTime, ForeignKey, Integer, Table, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.common.base import Base
 from src.events.models import Bookmark, Category
+from src.limits.models import Tier, Usage
 from src.notes.models import Note
 from src.subscriptions.models import Subscription  # noqa: F401
 
@@ -49,6 +50,9 @@ class User(Base):
     subscription: Mapped[Subscription] = relationship(
         "Subscription", backref="user", lazy="selectin", uselist=False
     )
+
+    tier: Mapped[Tier] = relationship("Tier", backref="user")
+    usage: Mapped[Usage] = relationship("Usage", backref="user")
 
 
 class PasswordReset(Base):

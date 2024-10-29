@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 from src.categories.schemas import CategoryDTO
+from src.limits.schemas import TierDTO, UsageDTO
 from src.subscriptions.schemas import SubscriptionDTO
 
 
@@ -16,6 +17,9 @@ class UserPublic(BaseModel):
     top_events_period: int = 7
     tier_id: int = 1
     subscription: Optional[SubscriptionDTO] = None
+
+    usage: UsageDTO | None = None
+    tier: TierDTO
 
 
 class Token(BaseModel):
