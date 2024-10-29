@@ -206,7 +206,7 @@ const ArticleConcepts = ({ article, showAnnotations }: Props) => {
                 chevronClassName="h-6 w-6 stroke-[2.5]"
                 className="text-xl text-cyan-600 font-semibold"
               >
-                <span className="flex items-center capitalize">
+                <span className="flex items-center capitalize text-left">
                   {concept.name}
                 </span>
               </AccordionTrigger>
