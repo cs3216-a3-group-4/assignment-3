@@ -15,10 +15,13 @@ from openai import RateLimitError
 from src.lm.lm import CONCURRENCY, lm_model_concept as lm_model
 from src.lm.concept_gen_prompt import CONCEPT_GEN_SYSPROMPT as SYSPROMPT
 from pydantic import ValidationError
+from src.lm.lm import HALLUCINATION_ATTEMPT_LIMIT
+
 
 import asyncio
 
 CONCEPTS_FILE_PATH = "src/scripts/concepts_output.json"
+
 
 type ArticleId = int
 type ConceptId = int
@@ -41,8 +44,10 @@ class ArticleConceptsWithId(ArticleConcepts):
 async def generate_concept_from_article(
     article: Article, res: list[ArticleConceptsWithId], semaphore: asyncio.Semaphore
 ):
+    attempts = 0
+
     async with semaphore:
-        while True:
+        while attempts < HALLUCINATION_ATTEMPT_LIMIT:
             try:
                 title: str = article.title  # noqa: F841
                 content: str = article.body  # noqa: F841
@@ -83,7 +88,17 @@ async def generate_concept_from_article(
                 break
             except ValidationError as e:
                 print(e)
-                print("Validation error with article ", article.id)
+                print(
+                    "Validation error. Likely model hallucination at article ",
+                    article.id,
+                )
+                attempts += 1
+                if attempts < HALLUCINATION_ATTEMPT_LIMIT:
+                    print("Retrying article ", article.id)
+                    continue
+                else:
+                    print("Exceeded attempt limit, skipping article ", article.id)
+                    break
             except RateLimitError as e:
                 print(e)
                 print("Hit the rate limit! waiting 10s for article", article.id)
