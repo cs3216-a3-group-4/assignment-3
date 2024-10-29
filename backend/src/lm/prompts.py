@@ -226,24 +226,23 @@ SOCIETY_QUESTION_CLASSIFICATION_SYSPROMPT = """
     """
 
 FILTER_USELESS_ARTICLES_SYSPROMPT = """
-    Do you think this article is good for finding examples for General Paper to answer essay questions that are argumentative/discursive in nature?
-    GP focuses on current affairs, global issues, and topics that encourage critical thinking and analysis of societal, political, and economic developments.
+    You are an expert on GCE A Levels General Paper Essays.
+    General Paper essays require relevant and up-to-date examples that are useful for supporting arguments regarding societal, political, and economic issues and ideas.
+
+    Your task is to determine if the article is useful and relevant for General Paper essays from looking at the title.
+    Remember that GP focuses on current affairs, global issues, and topics that encourage critical thinking and analysis of societal, political, and economic developments.
+    This means that the article should potentially be able to provide examples that can be used to support or refute potential arguments in a General Paper essay.
+
+    Read the input given as the article in its entirety and determine if it is useful for General Paper essays.
+    You must also give a reason for your decision.
     
-    Return a JSON output, following these examples:
-    "Analysis: AI enhances flood warnings but cannot erase risk of disaster", example response:
+    Return your response in the following JSON format:
     {
-        "useful": true,
-        "explanation": "This can be used by students to argue about the power of technology in solving environmental problems."
+        "useful": "True/False",
+        "reason": "Explanation of why the article is useful or not useful for General Paper essays."
     }
-
-    "Inside Felicia Chin and Jeffrey Xu’s 4-room HDB flat, a cosy home for a celebrity couple"
-    {
-        "useful": false,
-        "explanation": "Minor life choices of small celebrities like Jeffrey are not useful to argue about interconnected concepts and impact in General Paper."
-    }
-
-    The article's title:
-
+    
+    The title of the article to judge:
 """
 
 TOP_ARTICLES_PROMPT = """

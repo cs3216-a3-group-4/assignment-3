@@ -2,7 +2,7 @@ import json
 from langchain_core.messages import HumanMessage, SystemMessage
 from src.events.models import Analysis
 from langchain_core.output_parsers import JsonOutputParser
-from src.lm.concept_gen_prompt import CONCEPT_GEN_SYSPROMPT as SYSPROMPT
+from src.lm.prompts import FILTER_USELESS_ARTICLES_SYSPROMPT as SYSPROMPT
 from src.lm.lm import lm_model_concept as lm_model
 
 from sqlalchemy import select
@@ -18,10 +18,11 @@ with Session(engine) as session:
     event = analysis.event.description
     article = analysis.event.original_article
 
+# title = "What does the colour of your pee say about your health?"
+title = "McLaren right of review over Norris penalty rejected"
 concept_human = f"""
-    Article Title: {article.title}
-    Article Description: {article.body}
-    """
+    Article Title: {title}
+"""
 
 print(concept_human)
 
