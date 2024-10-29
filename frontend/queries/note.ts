@@ -191,6 +191,7 @@ export const useEditEventNote = (event_id: number) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.Events, event_id] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Notes] });
     },
   });
 };
