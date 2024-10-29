@@ -66,7 +66,7 @@ def get_is_singapore(event_id):
 def get_analyses_from_useful_articles(limit: int = None):
     with Session(engine) as session:
         # Set of all useful articles
-        article_subquery = select(Article).where(Article.useless == False)
+        article_subquery = select(Article).where(Article.useless == False)  # noqa F4101
 
         # Get all events coming from useful articles
         event_subquery = select(Event).where(
@@ -137,15 +137,15 @@ async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = Fals
 
 
 if __name__ == "__main__":
-    pass
-    # docs = asyncio.run(
-    #     vector_store.asimilarity_search_with_relevance_scores(
-    #         query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
-    #         k=3,
-    #         filter={},
-    #     )
-    # )
-    # print(docs)
+    # pass
+    docs = asyncio.run(
+        vector_store.asimilarity_search_with_relevance_scores(
+            query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
+            k=3,
+            filter={},
+        )
+    )
+    print(docs)
 
     # NOTE: this is for repopulation of the entire database
     # analyses = get_analyses_from_useful_articles()
