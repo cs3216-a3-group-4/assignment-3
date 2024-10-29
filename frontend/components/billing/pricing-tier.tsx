@@ -22,18 +22,25 @@ const PricingTier = ({
   tierDescription,
   tierFeatures,
 }: PricingTierInfo) => {
+  const hasButton = onClickBuy && buttonText;
+
   return (
     <div className={`h-full ${className}`}>
-      <div className="relative flex flex-col h-full p-6 rounded-2xl border border-slate-200 shadow ">
-        <div className="mb-5">
+      <div className="relative flex flex-col h-full p-6 rounded-2xl border border-slate-200 shadow">
+        <div className={hasButton ? 'mb-5' : 'mb-3'}>
           <div className="text-slate-900 font-semibold mb-1">{tierName}</div>
           <div className="inline-flex items-baseline mb-2">
             <span className="text-slate-900 font-bold text-3xl">$</span>
             <span className="text-slate-900 font-bold text-4xl">{price}</span>
             <span className="text-slate-500 font-medium">/month</span>
           </div>
-          <div className="text-sm text-slate-500 text-wrap">{tierDescription}</div>
-          {onClickBuy && buttonText && (
+          {/* Ensure that tierDescription div is at least 2 lines at all times */}
+          <div
+            className={`text-sm text-slate-500 min-h-10`}
+          >
+            {tierDescription}
+          </div>
+          {hasButton && (
             <Button
               className="w-full inline-flex justify-center whitespace-nowrap rounded-lg px-3.5 py-2.5 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring transition-colors duration-150 mt-5"
               disabled={isButtonDisabled}
