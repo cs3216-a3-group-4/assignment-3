@@ -12,7 +12,7 @@ import ActionBarItem from "./action-bar-item";
 const ActionBar = () => {
   const router = useRouter();
   return (
-    <Card className="bg-primary-100/80">
+    <Card className="hidden md:block bg-primary-100/80">
       <CardHeader>
         <CardTitle className="text-primary-800">Jump in with Jippy</CardTitle>
       </CardHeader>
