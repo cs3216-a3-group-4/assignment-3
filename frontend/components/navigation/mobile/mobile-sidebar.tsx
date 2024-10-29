@@ -6,12 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import {
   BookmarkIcon,
   BookOpenCheckIcon,
+  BlocksIcon,
   FileClockIcon,
   HistoryIcon,
   HomeIcon,
   LucideIcon,
   MenuIcon,
-  MessageCircleQuestionIcon,
   NewspaperIcon,
   NotebookIcon,
 } from "lucide-react";
@@ -60,7 +60,7 @@ const OPTIONS: SidebarOption[] = [
     label: "My essays",
     path: "/essay-feedback/history",
   },
-  { icon: MessageCircleQuestionIcon, label: "Ask a question", path: "/ask" },
+  { icon: BlocksIcon, label: "Essay helper", path: "/ask" },
   { icon: HistoryIcon, label: "Past questions", path: "/questions" },
 ];
 
