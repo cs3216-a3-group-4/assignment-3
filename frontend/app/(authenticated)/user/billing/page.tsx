@@ -155,7 +155,7 @@ const Page = () => {
           <h1 className="text-3xl 2xl:text-4xl font-bold">Billing</h1>
         </div>
         <div className="flex flex-col gap-8">
-          <div className="flex flex-col gap-4 w-auto mx-4 md:mx-16 xl:mx-56 pb-4">
+          <div className="flex flex-col gap-4 w-auto mx-8 md:mx-16 xl:mx-56 pb-4">
             <h2 className="text-2xl 2xl:text-3xl font-bold">Your Tier</h2>
             <div className="flex items-center gap-2">
               <h3 className="text-center">{userTier} Tier:</h3>
@@ -176,7 +176,7 @@ const Page = () => {
               </Button>
             )}
           </div>
-          <div className="flex flex-col w-auto gap-4 mx-4 md:mx-16 xl:mx-56 pb-4">
+          <div className="flex flex-col w-auto gap-4 mx-8 md:mx-16 xl:mx-56 pb-4">
             <h2 className="text-2xl 2xl:text-3xl font-bold">Our Tiers</h2>
             <PricingTable tiers={jippyTiers} />
           </div>
