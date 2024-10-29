@@ -6,12 +6,12 @@ from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone, ServerlessSpec
 from langchain_core.documents import Document
 
-from sqlalchemy import select
+from sqlalchemy import exists, select
 from src.common.constants import LANGCHAIN_API_KEY
 from src.common.constants import OPENAI_API_KEY
 from src.common.constants import PINECONE_API_KEY
 
-from src.events.models import Analysis, Event
+from src.events.models import Analysis, Article, Event
 from sqlalchemy.orm import Session
 from src.common.database import engine
 
@@ -27,14 +27,14 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "prod-index-1"  # change to create a new index
+    index_name = "prod-index-embedding-3-model"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
     if index_name not in existing_indexes:
         pc.create_index(
             name=index_name,
-            dimension=1536,
+            dimension=3072,
             metric="cosine",
             spec=ServerlessSpec(cloud="aws", region="us-east-1"),
         )
@@ -45,7 +45,7 @@ def create_vector_store():
 
     print(index)
 
-    embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
     vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
@@ -63,8 +63,31 @@ def get_is_singapore(event_id):
         return "Unknown"
 
 
+def get_analyses_from_useful_articles(limit: int = None):
+    with Session(engine) as session:
+        # Set of all useful articles
+        article_subquery = select(Article).where(Article.useless == False)
+
+        # Get all events coming from useful articles
+        event_subquery = select(Event).where(
+            exists(article_subquery.where(Event.original_article_id == Article.id))
+        )
+
+        # Get all analyses coming from useful articles
+        query = select(Analysis).where(
+            exists(event_subquery.where(Analysis.event_id == Event.id))
+        )
+
+        if limit:
+            query = query.limit(limit)
+
+        analyses = session.scalars(query).all()
+
+        return analyses
+
+
 def store_documents(analysis_list: List[Analysis]):
-    documents = []
+    documents: list[Document] = []
     for analysis in analysis_list:
         document = Document(
             page_content=analysis.content,
@@ -114,11 +137,13 @@ async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = Fals
 
 
 if __name__ == "__main__":
-    docs = asyncio.run(
-        vector_store.asimilarity_search_with_relevance_scores(
-            query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
-            k=3,
-            filter={"is_singapore": True},
-        )
-    )
-    print(docs)
+    # docs = asyncio.run(
+    #     vector_store.asimilarity_search_with_relevance_scores(
+    #         query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
+    #         k=3,
+    #         filter={},
+    #     )
+    # )
+    # print(docs)
+    analyses = get_analyses_from_useful_articles()
+    store_documents(analyses)
