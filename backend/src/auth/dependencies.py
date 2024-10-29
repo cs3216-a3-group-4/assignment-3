@@ -49,7 +49,11 @@ def authenticate_user(email: str, password: str):
         user = session.scalars(
             select(User)
             .where(User.email == email)
-            .options(selectinload(User.categories))
+            .options(
+                selectinload(User.categories),
+                selectinload(User.tier),
+                selectinload(User.usage),
+            )
         ).first()
         if not user:
             return False
