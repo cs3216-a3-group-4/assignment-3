@@ -16,7 +16,7 @@ const ActionBarMobile = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-primary-100/80 aspect-square">
+      <Card className="bg-primary-100/80">
         <CardContent className="p-4">
           <ActionBarItem
             actionLabel="Start"
@@ -28,7 +28,7 @@ const ActionBarMobile = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-primary-100/80 aspect-square">
+      <Card className="bg-primary-100/80">
         <CardContent className="p-4">
           <ActionBarItem
             actionLabel="Grade"
