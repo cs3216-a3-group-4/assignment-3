@@ -26,7 +26,7 @@ const ArticleFeed = () => {
   const user = useUserStore((state) => state.user);
   const [singaporeOnly, setSingaporeOnly] = useState<boolean>(false);
 
-  const eventStartDate = new Date("11 september 2024");
+  const eventStartDate = new Date();
 
   eventStartDate.setDate(eventStartDate.getDate() - 1);
 
