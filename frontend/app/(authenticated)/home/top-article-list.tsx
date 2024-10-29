@@ -31,8 +31,8 @@ const TopArticleList = () => {
   }
 
   return (
-    <div className="w-full h-fit py-6 px-8 bg-card border">
-      <h2 className="flex text-lg md:text-3xl font-semibold justify-between align-center">
+    <div className="w-full h-fit py-1 md:py-6 px-8 bg-card border">
+      <h2 className="hidden md:flex text-lg md:text-3xl font-semibold justify-between align-center">
         This week&apos;s top articles
       </h2>
       <div className="flex items-center w-fit px-1 md:px-5 xl:px-9">
