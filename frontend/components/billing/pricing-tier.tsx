@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { DOWNGRADE_TEXT } from "@/app/(authenticated)/user/billing/page";
 import Dialog from "@/components/dialog/Dialog";
 import { Button } from "@/components/ui/button";
 
@@ -17,6 +16,8 @@ export interface PricingTierInfo {
   buttonText?: string;
   onClickBuy?: () => void;
 }
+
+const DOWNGRADE_TEXT = "Downgrade";
 
 const PricingTier = ({
   className,
