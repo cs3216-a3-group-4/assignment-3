@@ -195,7 +195,7 @@ export const useEditEventNote = (event_id: number) => {
   });
 };
 
-export const useDeleteNote = (event_id: number) => {
+export const useDeleteNote = (article_id: number) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => {
@@ -204,7 +204,9 @@ export const useDeleteNote = (event_id: number) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.Events, event_id] });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.Articles, article_id],
+      });
     },
   });
 };

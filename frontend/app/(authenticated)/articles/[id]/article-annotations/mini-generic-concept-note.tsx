@@ -3,6 +3,7 @@ import { SubmitHandler } from "react-hook-form";
 import { EditIcon, TrashIcon } from "lucide-react";
 
 import { ArticleConceptDTO, NoteDTO } from "@/client";
+import DeleteDialog from "@/components/dialog/DeleteDialog";
 import CategoryChip from "@/components/display/category-chip";
 import { Button } from "@/components/ui/button";
 import { useDeleteNote, useEditArticleNote } from "@/queries/note";
@@ -24,6 +25,8 @@ const MiniGenericConceptNote = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const editNoteMutation = useEditArticleNote(articleId);
   const deleteNoteMutation = useDeleteNote(articleId);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const articleConcept =
     note.parent_type === "article_concept" &&
     articleConcepts.find(
@@ -92,6 +95,15 @@ const MiniGenericConceptNote = ({
       className="flex flex-col border-y py-6 first:pt-2 first:border-t-transparent last:border-b-transparent"
       id={`annotation-${note.id}`}
     >
+      {deleteDialogOpen && (
+        <DeleteDialog
+          label="note"
+          onClose={() => setDeleteDialogOpen(false)}
+          onDelete={() => {
+            deleteNoteMutation.mutate(note.id);
+          }}
+        />
+      )}
       <div className="flex flex-col cursor-pointer" onClick={onClick}>
         {quote && (
           <span className="border-l-primary-500/50 border-l-4 pl-4 text-primary-700 italic text-base mb-4">
@@ -115,7 +127,7 @@ const MiniGenericConceptNote = ({
         <div className="flex gap-x-2">
           <Button
             className="h-6 w-6"
-            onClick={() => deleteNoteMutation.mutate(note.id)}
+            onClick={() => setDeleteDialogOpen(true)}
             size="icon"
             variant="destructive_ghost"
           >
