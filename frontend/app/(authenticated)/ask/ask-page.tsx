@@ -25,9 +25,9 @@ const MAX_GP_QUESTION_LEN: number = 200; // max character count
 
 // TODO: fix this
 const EXAMPLE_GP_QUESTIONS: string[] = [
-  "Discuss the view that prisoners should lose all their rights",
-  "Is news today reliable?",
-  "How realistic is it for countries to implement a national minimum wage for all their workers?",
+  "How far do you agree that the value of work can be assessed by the salary it commands?",
+  "Longer life expectancy creates more problems than benefits. Discuss.",
+  "Assess the view that attempts to control climate change can never be truly effective",
 ];
 
 interface AskPageProps {
