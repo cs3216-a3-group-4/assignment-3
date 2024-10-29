@@ -1,6 +1,14 @@
-import { queryOptions } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-import { getEssayEssaysIdGet, getEssaysEssaysGet } from "@/client";
+import {
+  deleteEssayEssaysIdDelete,
+  getEssayEssaysIdGet,
+  getEssaysEssaysGet,
+} from "@/client";
 import { QueryKeys } from "@/queries/utils/query-keys";
 
 export const getEssays = () =>
@@ -23,3 +31,17 @@ export const getEssay = (id: number) =>
         },
       }).then((data) => data.data),
   });
+
+export const useDeleteEssay = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) =>
+      deleteEssayEssaysIdDelete({
+        withCredentials: true,
+        path: { id },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.Essays] });
+    },
+  });
+};

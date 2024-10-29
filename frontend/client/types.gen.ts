@@ -784,6 +784,16 @@ export type GetEssayEssaysIdGetResponse = (EssayDTO);
 
 export type GetEssayEssaysIdGetError = (HTTPValidationError);
 
+export type DeleteEssayEssaysIdDeleteData = {
+    path: {
+        id: number;
+    };
+};
+
+export type DeleteEssayEssaysIdDeleteResponse = (EssayDTO);
+
+export type DeleteEssayEssaysIdDeleteError = (HTTPValidationError);
+
 export type GetArticlesArticlesGetData = {
     query?: {
         bookmarks?: boolean;
