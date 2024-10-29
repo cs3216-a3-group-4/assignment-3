@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { NoteDTO } from "@/client";
+import DeleteDialog from "@/components/dialog/DeleteDialog";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -32,12 +33,24 @@ const AnalysisNotes = ({
   const numNotes = notes.length;
   const [showHighlights, setShowHighlights] = useState<boolean>(false);
 
+  // This is scuffed, but it's the id of the note so I can use it in onDelete.
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(0);
+
   useEffect(() => {
     if (showNoteForm) setShowHighlights(true);
   }, [showNoteForm]);
 
   return (
     <div>
+      {deleteDialogOpen ? (
+        <DeleteDialog
+          label="note"
+          onClose={() => setDeleteDialogOpen(0)}
+          onDelete={() => onDelete(deleteDialogOpen)}
+        />
+      ) : (
+        <></>
+      )}
       <Separator className="my-4" />
       <div
         className="flex items-center justify-between mb-2 text-cyan-800 cursor-pointer"
@@ -83,7 +96,7 @@ const AnalysisNotes = ({
                     <div className="flex flex-col">
                       <Button
                         className="border-none"
-                        onClick={() => onDelete(note.id)}
+                        onClick={() => setDeleteDialogOpen(note.id)}
                         variant="destructive_outline"
                       >
                         <TrashIcon className="mr-2 h-4 w-4" /> Delete

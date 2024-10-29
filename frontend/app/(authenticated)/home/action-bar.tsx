@@ -12,7 +12,7 @@ import ActionBarItem from "./action-bar-item";
 const ActionBar = () => {
   const router = useRouter();
   return (
-    <Card className="bg-primary-100/80">
+    <Card className="hidden md:block bg-primary-100/80">
       <CardHeader>
         <CardTitle className="text-primary-800">Jump in with Jippy</CardTitle>
       </CardHeader>
@@ -32,10 +32,10 @@ const ActionBar = () => {
           </ActionBarItem>
 
           <ActionBarItem
-            actionLabel="Ask"
+            actionLabel="Start"
             actionPath="/ask"
             description="Need ideas? Jippy can help you generate points and examples for your essay."
-            title="Ask an essay question"
+            title="Get help with your essay"
           >
             <AskQuestionSVG
               className="max-h[28vh] mt-6 md:max-h-[22vh] md:mt-4 lg:mt-6 hover:-translate-y-3 transition-all cursor-pointer"
@@ -44,7 +44,7 @@ const ActionBar = () => {
           </ActionBarItem>
 
           <ActionBarItem
-            actionLabel="Start"
+            actionLabel="Grade"
             actionPath="/essay-feedback"
             description="Get targeted essay feedback based on A-Level marking standards."
             title="Get essay feedback"

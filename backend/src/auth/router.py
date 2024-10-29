@@ -60,6 +60,16 @@ def sign_up(
     session.commit()
     session.refresh(new_user)
 
+    new_user = session.scalar(
+        select(User)
+        .where(User.id == new_user.id)
+        .options(
+            selectinload(User.categories),
+            selectinload(User.tier),
+            selectinload(User.usage),
+        )
+    )
+
     return create_token(new_user, response)
 
 
