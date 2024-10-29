@@ -252,6 +252,56 @@ const CarouselNext = React.forwardRef<
 });
 CarouselNext.displayName = "CarouselNext";
 
+const CarouselPagination = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const { api } = useCarousel();
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
+  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
+
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    const onSelect = () => {
+      setSelectedIndex(api.selectedScrollSnap());
+    };
+
+    setScrollSnaps(api.scrollSnapList());
+
+    api.on('select', onSelect);
+    // Initialize the selected index
+    onSelect();
+
+    return () => {
+      api.off('select', onSelect);
+    };
+  }, [api]);
+
+  return (
+    <div
+      className={cn('flex justify-center space-x-2 mt-4', className)}
+      ref={ref}
+      {...props}
+    >
+      {scrollSnaps.map((_, index) => (
+        <button
+          key={index}
+          className={cn(
+            'w-3 h-3 rounded-full',
+            selectedIndex === index ? 'bg-primary' : 'bg-gray-300'
+          )}
+          onClick={() => api && api.scrollTo(index)}
+          aria-label={`Go to slide ${index + 1}`}
+        />
+      ))}
+    </div>
+  );
+});
+CarouselPagination.displayName = 'CarouselPagination';
+
 export {
   Carousel,
   type CarouselApi,
@@ -259,4 +309,5 @@ export {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselPagination,
 };
