@@ -23,12 +23,9 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPagination, CarouselPrevious } from "@/components/ui/carousel";
-import useBreakpointMediaQuery from "@/hooks/use-breakpoint-media-query";
-import { MediaBreakpoint } from "@/utils/media";
+import { Carousel, CarouselContent, CarouselItem, CarouselPagination } from "@/components/ui/carousel";
 
 const Landing = () => {
-  const mediaBreakpoint = useBreakpointMediaQuery();
   
   return (
     <div className="relative w-full h-full overflow-y-auto">
@@ -69,7 +66,7 @@ const Landing = () => {
           <h3 className="text-xl md:text-2xl lg:text-3xl font-medium mt-3 text-center">
             We&apos;ve been there. Learn how Jippy can help.
           </h3>
-          <div className={`flex w-full ${mediaBreakpoint === MediaBreakpoint.Sm ? "px-12" : ""}`}>
+          <div className="flex w-full">
             <Carousel className="w-full" opts={{align: "center", loop: true}}>
               <CarouselContent className="flex items-stretch mt-8 lg:mt-16">
                 <CarouselItem className="flex flex-col basis-full md:basis-7/12">
@@ -119,12 +116,6 @@ const Landing = () => {
                   </Card>
                 </CarouselItem>
               </CarouselContent>
-              { mediaBreakpoint === MediaBreakpoint.Sm && (
-                <>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </>
-              )}
               <CarouselPagination />
             </Carousel>
           </div>
