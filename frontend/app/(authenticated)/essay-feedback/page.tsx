@@ -8,6 +8,7 @@ import { BookCheckIcon, BookOpenCheckIcon, SparklesIcon } from "lucide-react";
 import { z } from "zod";
 
 import { createEssayEssaysPost, ParagraphType } from "@/client";
+import Chip from "@/components/display/chip";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -176,6 +177,7 @@ const EssayFeedbackPage = () => {
         <span className="flex items-center text-primary-800">
           <BookOpenCheckIcon className="w-8 h-8 mr-4" />
           <h1 className="text-4xl font-semibold">Get essay feedback</h1>
+          <Chip className="sm:ml-3" label="Beta" />
         </span>
         <h2 className="text-lg mt-3 text-gray-700">
           Get feedback on your GP essay at the snap of your fingers. Rest
