@@ -3,12 +3,12 @@
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
+  BlocksIcon,
   BookmarkIcon,
   BookOpenCheckIcon,
   FileClockIcon,
   HistoryIcon,
   HomeIcon,
-  MessageCircleQuestionIcon,
   NewspaperIcon,
   NotebookIcon,
 } from "lucide-react";
@@ -71,9 +71,9 @@ const Sidebar = () => {
           path="/essay-feedback/history"
         />
         <SidebarItemWithIcon
-          Icon={MessageCircleQuestionIcon}
+          Icon={BlocksIcon}
           isActive={pathname === "/ask"}
-          label="Ask a question"
+          label="Essay helper"
           path="/ask"
         />
         <SidebarItemWithIcon
