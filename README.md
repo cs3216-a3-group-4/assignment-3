@@ -1,6 +1,6 @@
 # Jippy
 
-![jippy](frontend/public/og.png)
+![jippy](frontend/public/og-beta.png)
 
 https://jippy.site
 
@@ -8,12 +8,12 @@ Jippy is an AI-powered companion for students aiming to excel in their GCE A-Lev
 
 ## Team Members
 
-| Name              | Matric Number | Github     | Contributions                |
-| ----------------- | ------------- | ---------- | ---------------------------- |
-| Chloe Lim Xinying | A0238609W     | @chloeelim | Frontend + Branding + UI/UX  |
-| Kyal Sin Min Thet | A0258874J     | @marcus-ny | Prompt Engineering + Backend |
-| Leong See Leng    | A0239616X     | @seelengxd | Full stack + DevOps          |
-| Wang Haoyang      | A0234534J     | @haoyangw  | Frontend                     |
+| Name              | Matric Number | Github     | Contributions                                     |
+| ----------------- | ------------- | ---------- | ------------------------------------------------- |
+| Chloe Lim Xinying | A0238609W     | @chloeelim | Full stack (frontend-focused) + Branding, UI/UX   |
+| Kyal Sin Min Thet | A0258874J     | @marcus-ny | Full stack (backend-focused) + Prompt Engineering |
+| Leong See Leng    | A0239616X     | @seelengxd | Full stack (backend-focused) + DevOps             |
+| Wang Haoyang      | A0234534J     | @haoyangw  | Full stack (frontend-focused)                     |
 
 ## Setup instructions
 
