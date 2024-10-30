@@ -145,7 +145,7 @@ function RegisterPage() {
         </div>
       </Box>
 
-      <Box className="bg-primary hidden lg:flex grow bg-[url('/jippy.svg')]" />
+      <Box className="bg-primary hidden lg:flex grow" />
     </Box>
   );
 }
