@@ -488,7 +488,7 @@ export type SignUpAuthSignupPostData = {
     body: SignUpData;
 };
 
-export type SignUpAuthSignupPostResponse = (Token);
+export type SignUpAuthSignupPostResponse = (unknown);
 
 export type SignUpAuthSignupPostError = (HTTPValidationError);
 
@@ -514,6 +514,35 @@ export type AuthGoogleAuthGoogleGetResponse = (Token);
 
 export type AuthGoogleAuthGoogleGetError = (HTTPValidationError);
 
+export type RequestPasswordResetAuthPasswordResetPostData = {
+    body: PasswordResetRequestData;
+};
+
+export type RequestPasswordResetAuthPasswordResetPostResponse = (unknown);
+
+export type RequestPasswordResetAuthPasswordResetPostError = (HTTPValidationError);
+
+export type CompletePasswordResetAuthPasswordResetPutData = {
+    body: PasswordResetCompleteData;
+    query: {
+        code: string;
+    };
+};
+
+export type CompletePasswordResetAuthPasswordResetPutResponse = (unknown);
+
+export type CompletePasswordResetAuthPasswordResetPutError = (HTTPValidationError);
+
+export type CompleteEmailVerificationAuthVerifyEmailPutData = {
+    query: {
+        code: string;
+    };
+};
+
+export type CompleteEmailVerificationAuthVerifyEmailPutResponse = (Token);
+
+export type CompleteEmailVerificationAuthVerifyEmailPutError = (HTTPValidationError);
+
 export type StripeWebhookBillingWebhookPostData = {
     headers?: {
         'Stripe-Signature'?: string;
@@ -535,25 +564,6 @@ export type LogoutAuthLogoutGetData = unknown;
 export type LogoutAuthLogoutGetResponse = (unknown);
 
 export type LogoutAuthLogoutGetError = (HTTPValidationError);
-
-export type RequestPasswordResetAuthPasswordResetPostData = {
-    body: PasswordResetRequestData;
-};
-
-export type RequestPasswordResetAuthPasswordResetPostResponse = (unknown);
-
-export type RequestPasswordResetAuthPasswordResetPostError = (HTTPValidationError);
-
-export type CompletePasswordResetAuthPasswordResetPutData = {
-    body: PasswordResetCompleteData;
-    query: {
-        code: string;
-    };
-};
-
-export type CompletePasswordResetAuthPasswordResetPutResponse = (unknown);
-
-export type CompletePasswordResetAuthPasswordResetPutError = (HTTPValidationError);
 
 export type ChangePasswordAuthChangePasswordPutData = {
     body: PasswordResetMoreCompleteData;

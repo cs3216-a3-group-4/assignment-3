@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleAlert } from "lucide-react";
 import { z } from "zod";
@@ -16,7 +15,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Box } from "@/components/ui/box";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useUserStore } from "@/store/user/user-store-provider";
 
 const registerFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -31,9 +29,8 @@ const registerFormDefault = {
 type RegisterForm = z.infer<typeof registerFormSchema>;
 
 function RegisterPage() {
-  const router = useRouter();
-  const setLoggedIn = useUserStore((state) => state.setLoggedIn);
   const [isError, setIsError] = useState<boolean>(false);
+  const [pendingEmail, setPendingEmail] = useState<boolean>(false);
   const form = useForm<RegisterForm>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: registerFormDefault,
@@ -49,8 +46,9 @@ function RegisterPage() {
       setIsError(true);
     } else {
       setIsError(false);
-      setLoggedIn(response.data.user);
-      router.push("/onboarding");
+      // setLoggedIn(response.data.user);
+      // router.push("/onboarding");
+      setPendingEmail(true);
     }
   };
 
@@ -86,14 +84,27 @@ function RegisterPage() {
         {/* Body */}
         <Box className="space-y-6 pt-0 flex-col w-full">
           {isError && (
-            <Alert variant="destructive">
-              <CircleAlert className="h-5 w-5" />
+            <Alert className="flex items-center gap-2" variant="destructive">
+              <div>
+                <CircleAlert className="h-5 w-5" />
+              </div>
               <AlertDescription>
                 This email is already registered.{" "}
                 <Link href="/login" size="sm">
                   Sign in
                 </Link>{" "}
                 instead?
+              </AlertDescription>
+            </Alert>
+          )}
+          {pendingEmail && (
+            <Alert className="flex items-center gap-2" variant="teal">
+              <div>
+                <CircleAlert className="h-5 w-5" />
+              </div>
+              <AlertDescription>
+                Check your email for the verification link. It&apos;ll be sent
+                shortly.
               </AlertDescription>
             </Alert>
           )}
