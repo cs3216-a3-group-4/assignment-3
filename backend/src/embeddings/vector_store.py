@@ -137,15 +137,14 @@ async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = Fals
 
 
 if __name__ == "__main__":
-    pass
-    # docs = asyncio.run(
-    #     vector_store.asimilarity_search_with_relevance_scores(
-    #         query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
-    #         k=3,
-    #         filter={},
-    #     )
-    # )
-    # print(docs)
+    docs = asyncio.run(
+        vector_store.asimilarity_search_with_relevance_scores(
+            query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
+            k=3,
+            filter={},
+        )
+    )
+    print(docs)
 
     # NOTE: this is for repopulation of the entire database
     # analyses = get_analyses_from_useful_articles()
