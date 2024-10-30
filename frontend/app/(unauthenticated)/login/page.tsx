@@ -41,6 +41,7 @@ function LoginPage() {
   const router = useRouter();
   const setLoggedIn = useUserStore((state) => state.setLoggedIn);
   const [isError, setIsError] = useState<boolean>(false);
+  const [isUnverifiedEmail, setIsUnverifiedEmail] = useState<boolean>(false);
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginFormSchema),
@@ -54,6 +55,8 @@ function LoginPage() {
     });
 
     if (response.error) {
+      console.log({ response });
+      setIsUnverifiedEmail(response.status === 403);
       setIsError(true);
     } else {
       setIsError(false);
@@ -91,14 +94,21 @@ function LoginPage() {
         <CardContent>
           <Box className="space-y-6">
             {isError && (
-              <Alert variant="destructive">
-                <CircleAlert className="h-5 w-5" />
+              <Alert className="flex items-center gap-2" variant="destructive">
+                <div>
+                  <CircleAlert className="h-5 w-5" />
+                </div>
                 <AlertDescription>
-                  Your email or password is incorrect. Please try again, or{" "}
-                  <Link href="/password-reset" size="sm">
-                    reset your password
-                  </Link>
-                  .
+                  {isUnverifiedEmail && "Please validate your email."}
+                  {!isUnverifiedEmail && (
+                    <>
+                      Your email or password is incorrect. Please try again, or{" "}
+                      <Link href="/password-reset" size="sm">
+                        reset your password
+                      </Link>
+                      .
+                    </>
+                  )}
                 </AlertDescription>
               </Alert>
             )}

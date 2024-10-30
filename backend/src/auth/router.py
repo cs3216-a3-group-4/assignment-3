@@ -97,6 +97,10 @@ def log_in(
             status_code=HTTPStatus.UNAUTHORIZED,
             detail="Incorrect username or password.",
         )
+    if not user.verified:
+        raise HTTPException(
+            status_code=HTTPStatus.FORBIDDEN, detail="Email not verified."
+        )
 
     return create_token(user, response)
 
