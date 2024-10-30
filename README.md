@@ -1,6 +1,6 @@
 # Jippy
 
-![jippy](frontend/public/og-beta.png)
+![jippy](frontend/public/og.png)
 
 https://jippy.site
 
