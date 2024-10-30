@@ -37,17 +37,17 @@ const Sidebar = () => {
         />
 
         <SidebarItemWithIcon
-          Icon={BookOpenCheckIcon}
-          isActive={pathname === "/essay-feedback"}
-          label="Essay feedback"
-          path="/essay-feedback"
-        />
-
-        <SidebarItemWithIcon
           Icon={BlocksIcon}
           isActive={pathname === "/ask"}
           label="Essay helper"
           path="/ask"
+        />
+
+        <SidebarItemWithIcon
+          Icon={BookOpenCheckIcon}
+          isActive={pathname === "/essay-feedback"}
+          label="Essay feedback"
+          path="/essay-feedback"
         />
       </div>
       <Separator className="bg-text-muted/20" />
