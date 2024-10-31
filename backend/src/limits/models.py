@@ -15,8 +15,8 @@ class Usage(Base):
     __tablename__ = "usage"
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
-    gp_question_asked: Mapped[int] = mapped_column(server_default="0")
-    essays: Mapped[int] = mapped_column(server_default="0")
+    gp_question_asked: Mapped[int] = mapped_column(default=0, server_default="0")
+    essays: Mapped[int] = mapped_column(default=0, server_default="0")
 
 
 class Tier(Base):
