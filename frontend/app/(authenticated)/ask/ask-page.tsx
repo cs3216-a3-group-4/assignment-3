@@ -37,7 +37,7 @@ interface AskPageProps {
   isLoading: boolean;
 }
 
-const LimitAlert = ({ triesLeft, warningText, isRedAlert }: { triesLeft: number, warningText: string, isRedAlert: boolean }) => {
+const LimitAlert = ({ warningText, isRedAlert }: { warningText: string, isRedAlert: boolean }) => {
   return (
     <Alert
       className={`my-2 flex items-center space-x-2 ${isRedAlert ? "bg-red-50" : ""}`}
@@ -60,6 +60,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const user = useUserStore((store) => store.user);
   const setLoggedIn = useUserStore((store) => store.setLoggedIn);
+  const isUserUnverified = user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
 
   if (!user) {
     // This should be impossible.
@@ -140,35 +141,25 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
             <h1 className="font-medium mb-2 text-text-muted">
               Ask Jippy a General Paper exam question
             </h1>
-            {hasTriesLeft ? (
+            {isUserUnverified ? (
               <LimitAlert
-                triesLeft={triesLeft}
-                warningText={`You have ${triesLeft} ${triesLeft === 1 ? "question" : "questions"} left. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
-                isRedAlert={false} />
-            ) : (
-              <LimitAlert
-                triesLeft={triesLeft}
-                warningText={`You've reached the question limit. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
+                warningText="Verify your email to start asking essay questions."
                 isRedAlert={true} />
-            )}
-
-            {errorMsg && (
-              <Alert
-                className="my-2 bg-red-50 flex items-center space-x-2"
-                variant="destructive"
-              >
-                <div className="flex items-center">
-                  <CircleAlert className="h-5 w-5" />
-                </div>
-                <AlertDescription className="font-medium">
-                  {errorMsg}
-                </AlertDescription>
-              </Alert>
+            ) : (
+              hasTriesLeft ? (
+                <LimitAlert
+                  warningText={errorMsg || `You have ${triesLeft} ${triesLeft === 1 ? "question" : "questions"} left. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
+                  isRedAlert={errorMsg ? true : false} />
+              ) : (
+                <LimitAlert
+                  warningText={`You've reached the question limit. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
+                  isRedAlert={true} />
+              )
             )}
             <div className="w-full flex items-center gap-x-4 gap-y-6 flex-col md:flex-row">
               <AutosizeTextarea
-                className="md:text-lg px-4 py-4 resize-none"
-                disabled={!hasTriesLeft}
+                className={`md:text-lg px-4 py-4 resize-none ${isUserUnverified ? "border-red-400" : ""}`}
+                disabled={isUserUnverified || !hasTriesLeft}
                 maxHeight={200}
                 maxLength={MAX_GP_QUESTION_LEN}
                 onChange={(event) => setQuestionInput(event.target.value)}
@@ -177,7 +168,8 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
               />
               <Button
                 className="w-full md:px-4 md:w-auto"
-                disabled={!hasTriesLeft}
+                variant={isUserUnverified ? "destructive_outline" : "default"}
+                disabled={isUserUnverified || !hasTriesLeft}
                 onClick={handleAskQuestion}
                 size="lg"
               >
