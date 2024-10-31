@@ -15,6 +15,7 @@ import {
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { completeEmailVerificationAuthEmailVerificationPut } from "@/client/services.gen";
+import { HttpStatusCode } from "axios";
 
 export const UNVERIFIED_TIER_ID = 4;
 export const VERIFY_SUCCESS_DELAY = 1;
@@ -25,6 +26,8 @@ export default function VerifyEmail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
+  const isUserUnverified = !user?.verified && user?.tier_id === UNVERIFIED_TIER_ID;
+  const [postVerifyMessage, setPostVerifyMessage] = useState<string>("All done! You'll be redirected to Jippy soon. ");
 
   const redirectAfterVerify = () => {
     if (window.history?.length && window.history.length > 1) {
@@ -38,7 +41,7 @@ export default function VerifyEmail() {
 
   useEffect(() => {
     let timeout: NodeJS.Timeout | null = null;
-    if (code && !user?.verified && user?.tier_id === UNVERIFIED_TIER_ID) {
+    if (code && isUserUnverified) {
       (async () => {
         const response = await completeEmailVerificationAuthEmailVerificationPut({
           query: { code },
@@ -48,10 +51,22 @@ export default function VerifyEmail() {
         if (response.data) {
           setIsLoading(false);
           timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
+        } else if (response.status == HttpStatusCode.Conflict) {
+          // User is already verified
+          setPostVerifyMessage("Relax, you're already verified! :) ");
+          setIsLoading(false);
+          timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
+          console.log("WARNING: User is already verified");
         } else if (response.error) {
           console.error("Error completing email verification: ", response.error);
         }
       })();
+    } else if (!isUserUnverified) {
+      console.log("WARNING: User is already verified");
+      // User is already verified, don't make the backend verify again
+      setPostVerifyMessage("Relax, you're already verified! :) ");
+      setIsLoading(false);
+      timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
     }
 
     return () => {
@@ -83,7 +98,7 @@ export default function VerifyEmail() {
             <span className="max-w-sm">
               {isLoading
                 ? "Hang tight! We're verifying your email. This shouldn't take long."
-                : "All done! You'll be redirected to Jippy soon. "}
+                : postVerifyMessage}
             </span>
             {!isLoading && (
               <span
