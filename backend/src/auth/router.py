@@ -135,6 +135,7 @@ def complete_email_verification(
         )
     )
     user.verified = True
+    user.tier_id = 1
     email_verification.used = True
     session.add(user)
     session.add(email_verification)
