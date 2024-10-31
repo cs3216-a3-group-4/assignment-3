@@ -6,6 +6,7 @@ from sqlalchemy import select
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
+from src.essays.dependencies import has_essay_tries_left
 from src.essays.models import (
     Comment,
     CommentAnalysis,
@@ -31,6 +32,7 @@ def create_essay(
     data: EssayCreate,
     user: Annotated[User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
+    _=Depends(has_essay_tries_left),
 ) -> EssayCreateDTO:
     essay = Essay(question=data.question, user_id=user.id)
 

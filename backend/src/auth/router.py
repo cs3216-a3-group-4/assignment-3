@@ -37,9 +37,18 @@ from src.auth.dependencies import (
     get_password_hash,
     verify_password,
 )
-from .models import AccountType, EmailVerification, PasswordReset, User
+from .models import (
+    UNVERIFIED_TIER_ID,
+    AccountType,
+    EmailVerification,
+    PasswordReset,
+    User,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+routerWithAuth = APIRouter(
+    prefix="/auth", tags=["auth"], dependencies=[Depends(add_current_user)]
+)
 
 #######################
 # username & password #
@@ -64,6 +73,7 @@ def sign_up(
         hashed_password=get_password_hash(data.password),
         account_type=AccountType.NORMAL,
         verified=False,
+        tier_id=UNVERIFIED_TIER_ID,
     )
     session.add(new_user)
     session.commit()
@@ -101,6 +111,55 @@ def log_in(
         )
 
     return create_token(user, response)
+
+
+@router.put("/email-verification")
+def complete_email_verification(
+    code: str,
+    response: Response,
+    session=Depends(get_session),
+) -> Token:
+    email_verification = session.scalars(
+        select(EmailVerification).where(EmailVerification.code == code)
+    ).first()
+    if not email_verification or email_verification.used:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+
+    user = session.scalar(
+        select(User)
+        .where(User.id == email_verification.user_id)
+        .options(
+            selectinload(User.categories),
+            selectinload(User.tier),
+            selectinload(User.usage),
+        )
+    )
+    user.verified = True
+    email_verification.used = True
+    session.add(user)
+    session.add(email_verification)
+    session.commit()
+    session.refresh(user)
+
+    token = create_token(user, response)
+
+    return token
+
+
+@routerWithAuth.post("/email-verification")
+def resend_verification_email(
+    user: Annotated[User, Depends(get_current_user)],
+    background_task: BackgroundTasks,
+    session=Depends(get_session),
+):
+    code = str(uuid4())
+    email_validation = EmailVerification(user_id=user.id, code=code, used=False)
+    session.add(email_validation)
+    session.commit()
+    verification_link = f"{FRONTEND_URL}/verify-email?code={code}"
+    background_task.add_task(send_verification_email, user.email, verification_link)
+
+    return
 
 
 #######################
@@ -162,32 +221,10 @@ def auth_google(
     return token
 
 
-routerWithAuth = APIRouter(
-    prefix="/auth", tags=["auth"], dependencies=[Depends(add_current_user)]
-)
-
-
-@routerWithAuth.get("/session")
-def get_user(
-    current_user: Annotated[User, Depends(get_current_user)],
-    session=Depends(get_session),
-) -> UserPublic:
-    user = session.get(User, current_user.id)
-    if user:
-        user.last_accessed = datetime.now()
-        session.add(user)
-        session.commit()
-
-    return current_user
-
-
-@routerWithAuth.get("/logout")
-def logout(response: Response):
-    response.delete_cookie(key="session")
-    return ""
-
-
-@routerWithAuth.post("/password-reset")
+#######################
+#   password reset    #
+#######################
+@router.post("/password-reset")
 def request_password_reset(
     data: PasswordResetRequestData,
     background_task: BackgroundTasks,
@@ -209,7 +246,7 @@ def request_password_reset(
     background_task.add_task(send_reset_password_email, email, code)
 
 
-@routerWithAuth.put("/password-reset")
+@router.put("/password-reset")
 def complete_password_reset(
     code: str,
     data: PasswordResetCompleteData,
@@ -228,6 +265,26 @@ def complete_password_reset(
     session.add(user)
     session.add(password_reset)
     session.commit()
+
+
+@routerWithAuth.get("/session")
+def get_user(
+    current_user: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
+) -> UserPublic:
+    user = session.get(User, current_user.id)
+    if user:
+        user.last_accessed = datetime.now()
+        session.add(user)
+        session.commit()
+
+    return current_user
+
+
+@routerWithAuth.get("/logout")
+def logout(response: Response):
+    response.delete_cookie(key="session")
+    return ""
 
 
 @routerWithAuth.put("/change-password")
