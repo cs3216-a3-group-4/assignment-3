@@ -29,14 +29,9 @@ export default function VerifyEmail() {
   const isUserUnverified = !user?.verified && user?.tier_id === UNVERIFIED_TIER_ID;
   const [postVerifyMessage, setPostVerifyMessage] = useState<string>("All done! You'll be redirected to Jippy soon. ");
 
-  const redirectAfterVerify = () => {
-    if (window.history?.length && window.history.length > 1) {
-      // Redirect the user to their previously accessed page after successful verification
-      router.back();
-    } else {
-      // User has no previous page in browser history, redirect user to Jippy home page
-      router.replace("/", { scroll: false });
-    }
+  const redirectAfterVerify = async () => {
+    // Redirect user to Jippy home page after verifying email
+    router.replace("/", { scroll: false });
   };
 
   useEffect(() => {
