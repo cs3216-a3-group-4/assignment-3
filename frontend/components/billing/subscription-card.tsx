@@ -1,21 +1,27 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import JippyIconMd from "@/public/jippy-icon/jippy-icon-md";
-import { stripeSubscriptionStatusToTierStatus, SubscriptionPeriod } from "@/types/billing";
+import { JippyTierID, stripeSubscriptionStatusToTierStatus, SubscriptionPeriod, tierIDToPrice, tierIDToTierName } from "@/types/billing";
 import { Button } from "@/components/ui/button";
 import Chip from "@/components/display/chip";
 import { CalendarIcon, CircleDollarSignIcon } from "lucide-react";
+import { UserPublic } from "@/client/types.gen";
+import { useMemo } from "react";
+import { useCreateStripeCustomerPortalSession } from "@/queries/billing";
 
 const MAX_CARD_HEIGHT_PX = 400;
+const TIER_STATUS_ACTIVE = "active";
 
 export interface SubscriptionInfo {
-    currentTierName: string;
-    // Montly price in dollars
-    tierPrice: number;
-    tierStatus: string;
-    tierSubscriptionPeriod: SubscriptionPeriod;
-    tierEndDate?: Date;
-    actionDescription?: string;
-    onClickAction?: () => void;
+    user: UserPublic | undefined;
+};
+
+const getDateFrom = (dateString: string | null | undefined) => {
+    if (dateString) {
+      return new Date(dateString);
+    }
+    return undefined;
 };
 
 const toPascalCase = (string: string) => {
@@ -33,7 +39,29 @@ const SubscriptionDetail = ({DetailIcon, detailDescription}: { DetailIcon: React
     )
 }
 
-const SubscriptionCard = ({currentTierName, tierPrice, tierStatus, tierSubscriptionPeriod, tierEndDate, actionDescription, onClickAction}: SubscriptionInfo) => {
+const SubscriptionCard = ({user}: SubscriptionInfo) => {
+    const currentTierName = useMemo(() => {
+        return tierIDToTierName(user?.tier_id || JippyTierID.Free);
+    }, [user?.tier_id]);
+    const tierEndDate = useMemo(() => {
+        return getDateFrom(user?.subscription?.subscription_ended_date || user?.subscription?.subscription_period_end);
+    }, [user?.subscription]);
+    const tierStatus = useMemo(() => {
+        return toPascalCase(stripeSubscriptionStatusToTierStatus(user?.subscription ? user.subscription.status : TIER_STATUS_ACTIVE));
+    }, [user?.subscription]);
+    const tierPrice = useMemo(() => {
+        return tierIDToPrice(user?.tier_id || JippyTierID.Free);
+    }, [user?.tier_id]);
+    // TODO: Dynamically fetch the subscription period from Stripe if we ever support annual subscriptions
+    const tierSubscriptionPeriod = SubscriptionPeriod.Month;
+    const actionDescription = "Manage Subscription";
+
+    const stripeCustomerPortalMutation = useCreateStripeCustomerPortalSession();
+
+    const onClickManageSubscription = () => {
+        stripeCustomerPortalMutation.mutate();
+    };
+
     return (
         <Card className="flex flex-col items-stretch w-full" style={{ maxWidth: `${MAX_CARD_HEIGHT_PX}px` }}>
             <CardHeader className="gap-y-4">
@@ -47,14 +75,14 @@ const SubscriptionCard = ({currentTierName, tierPrice, tierStatus, tierSubscript
                         <span className="text-lg">{currentTierName} Tier</span>
                         <Chip
                             className="w-fit"
-                            label={toPascalCase(stripeSubscriptionStatusToTierStatus(tierStatus))}
+                            label={tierStatus}
                             size="lg"
                             variant="primary"
                         />
                     </div>
-                    { actionDescription && onClickAction &&
-                        <Button className="w-fit" onClick={onClickAction} variant="default">
-                            Manage Subscription
+                    { user?.subscription &&
+                        <Button className="w-fit" onClick={onClickManageSubscription} variant="default">
+                            {actionDescription}
                         </Button>
                     }
                 </CardDescription>
