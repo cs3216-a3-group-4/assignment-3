@@ -3,6 +3,7 @@ import JippyIconMd from "@/public/jippy-icon/jippy-icon-md";
 import { stripeSubscriptionStatusToTierStatus, SubscriptionPeriod } from "@/types/billing";
 import { Button } from "@/components/ui/button";
 import Chip from "@/components/display/chip";
+import { CalendarIcon, CircleDollarSignIcon } from "lucide-react";
 
 const MAX_CARD_HEIGHT_PX = 400;
 
@@ -20,6 +21,17 @@ export interface SubscriptionInfo {
 const toPascalCase = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+const SubscriptionDetail = ({DetailIcon, detailDescription}: { DetailIcon: React.ComponentType<React.SVGProps<SVGSVGElement>>, detailDescription: string }) => {
+    return (
+        <div className="flex flex-row gap-x-1 justify-start items-center">
+            <DetailIcon className="w-4 h-4" />
+            <div className="flex flex-row">
+                <span>{detailDescription}</span>
+            </div>
+        </div>
+    )
+}
 
 const SubscriptionCard = ({currentTierName, tierPrice, tierStatus, tierSubscriptionPeriod, tierEndDate, actionDescription, onClickAction}: SubscriptionInfo) => {
     return (
@@ -49,16 +61,14 @@ const SubscriptionCard = ({currentTierName, tierPrice, tierStatus, tierSubscript
             </CardHeader>
             <hr />
             <CardContent className="flex flex-col py-2">
-                <div className="flex flex-row justify-start">
-                    <span>${tierPrice}</span>
-                    <span>&nbsp;per&nbsp;</span>
-                    <span>{tierSubscriptionPeriod}</span>
-                </div>
+                <SubscriptionDetail
+                    DetailIcon={CircleDollarSignIcon}
+                    detailDescription={`$${tierPrice} per ${tierSubscriptionPeriod}`} />
                 { tierEndDate &&
-                    <div className="flex flex-row justify-start">
-                        <span>Renews </span>
-                        <span>{tierEndDate.toLocaleDateString()}</span>
-                    </div>
+                    <SubscriptionDetail
+                        DetailIcon={CalendarIcon}
+                        detailDescription={`Renews ${tierEndDate.toLocaleDateString()}`}
+                    />
                 }
             </CardContent>
         </Card>
