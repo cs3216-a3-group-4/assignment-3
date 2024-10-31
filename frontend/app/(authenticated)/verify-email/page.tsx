@@ -18,10 +18,10 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { UNVERIFIED_TIER_ID } from "@/types/billing";
 
-export const VERIFY_SUCCESS_DELAY = 1;
-export const VERIFY_ERROR_DELAY = 5;
-
 export const VerifyEmail = () => {
+  const VERIFY_SUCCESS_DELAY = 1;
+  const VERIFY_ERROR_DELAY = 5;
+
   const user = useUserStore((store) => store.user);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -122,7 +122,7 @@ export const VerifyEmail = () => {
         clearTimeout(timeout);
       }
     };
-  }, [code, user]);
+  }, [code, isUserUnverified, redirectAfterVerify]);
 
   return (
     <Box className="flex flex-col m-auto w-full h-full justify-center items-center gap-y-10">
