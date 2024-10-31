@@ -12,13 +12,23 @@ from alembic import op
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
 from alembic_postgresql_enum import TableReference
-from src.limits.models import Tier
+from src.common.base import Base
+from src.limits.models import TierNames
 
 # revision identifiers, used by Alembic.
 revision: str = "4f9ec96fc98e"
 down_revision: Union[str, None] = "651ed2d244c5"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
+
+
+class Tier(Base):
+    __tablename__ = "tier"
+
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    tier_name: orm.Mapped[TierNames]
+    label: orm.Mapped[str]
+    gp_question_limit: orm.Mapped[int]
 
 
 def upgrade() -> None:
