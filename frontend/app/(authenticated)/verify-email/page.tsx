@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckCircleIcon } from "lucide-react";
+import { CheckCircleIcon, CircleX } from "lucide-react";
 
 import { Box } from "@/components/ui/box";
 import {
@@ -19,6 +19,7 @@ import { HttpStatusCode } from "axios";
 
 export const UNVERIFIED_TIER_ID = 4;
 export const VERIFY_SUCCESS_DELAY = 1;
+export const VERIFY_ERROR_DELAY = 5;
 
 export default function VerifyEmail() {
   const user = useUserStore((store) => store.user);
@@ -27,7 +28,9 @@ export default function VerifyEmail() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const isUserUnverified = !user?.verified && user?.tier_id === UNVERIFIED_TIER_ID;
-  const [postVerifyMessage, setPostVerifyMessage] = useState<string>("All done! You'll be redirected to Jippy soon. ");
+  const [isVerifySuccess, setIsVerifySuccess] = useState<boolean>(false);
+  const [postVerifyTitle, setPostVerifyTitle] = useState<string>("Verified! Redirecting you to Jippy...");
+  const [postVerifySubtitle, setPostVerifySubtitle] = useState<string>("All done! You'll be redirected to Jippy soon. ");
 
   const redirectAfterVerify = async () => {
     // Redirect user to Jippy home page after verifying email
@@ -44,14 +47,24 @@ export default function VerifyEmail() {
         // There is some problem where this function runs twice, causing an error
         // on the second run since the email verification is used.
         if (response.data) {
+          setIsVerifySuccess(true);
           setIsLoading(false);
           timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
         } else if (response.status == HttpStatusCode.Conflict) {
           // User is already verified
-          setPostVerifyMessage("Relax, you're already verified! :) ");
+          setIsVerifySuccess(true);
+          setPostVerifySubtitle("Relax, you're already verified! :) ");
           setIsLoading(false);
           timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
           console.log("WARNING: User is already verified");
+        } else if (response.status == HttpStatusCode.BadRequest) {
+          // Email verification has already been used
+          console.log("ERROR: Reusing old email verification code");
+          setIsVerifySuccess(false);
+          setPostVerifyTitle("Invalid verification link");
+          setPostVerifySubtitle("Check your email again! Please click the latest verification link");
+          setIsLoading(false);
+          timeout = setTimeout(redirectAfterVerify, VERIFY_ERROR_DELAY * 1000);
         } else if (response.error) {
           console.error("Error completing email verification: ", response.error);
         }
@@ -59,7 +72,8 @@ export default function VerifyEmail() {
     } else if (!isUserUnverified) {
       console.log("WARNING: User is already verified");
       // User is already verified, don't make the backend verify again
-      setPostVerifyMessage("Relax, you're already verified! :) ");
+      setIsVerifySuccess(true);
+      setPostVerifySubtitle("Relax, you're already verified! :) ");
       setIsLoading(false);
       timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
     }
@@ -77,7 +91,7 @@ export default function VerifyEmail() {
       <Card className="flex flex-col border-0 md:border shadow-none md:shadow-sm md:max-w-md text-center">
         <CardHeader className="space-y-3">
           <CardTitle>
-            {isLoading ? "Verifying your email" : "Verified! Redirecting you to Jippy..."}
+            {isLoading ? "Verifying your email" : postVerifyTitle}
           </CardTitle>
         </CardHeader>
 
@@ -86,16 +100,16 @@ export default function VerifyEmail() {
             {isLoading ? (
               <LoadingSpinner size={64} />
             ) : (
-              <CheckCircleIcon size={64} />
+              isVerifySuccess ? <CheckCircleIcon size={64} /> : <CircleX size={64} />
             )}
           </Box>
           <CardDescription>
             <span className="max-w-sm">
               {isLoading
                 ? "Hang tight! We're verifying your email. This shouldn't take long."
-                : postVerifyMessage}
+                : postVerifySubtitle}
             </span>
-            {!isLoading && (
+            {!isLoading && isVerifySuccess && (
               <span
                 className="underline cursor-pointer"
                 onClick={redirectAfterVerify}
