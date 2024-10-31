@@ -175,12 +175,8 @@ const Page = () => {
         </div>
         <div className="flex flex-col gap-8 px-8 md:px-16 xl:px-56">
           <div className="flex flex-col gap-4 w-auto pb-4">
-            {isUserUnverified ? (
-              <UnverifiedAlert />
-            ) : (
-              <SubscriptionCard
-                user={user} />
-            )}
+            <SubscriptionCard
+              user={user} />
           </div>
           <div className="flex flex-col gap-4 w-auto pb-4">
             <h2 className="text-2xl 2xl:text-3xl font-bold">Our Tiers</h2>
