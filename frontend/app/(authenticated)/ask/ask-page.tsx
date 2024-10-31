@@ -40,7 +40,7 @@ interface AskPageProps {
 const LimitAlert = ({ warningText, isRedAlert }: { warningText: string, isRedAlert: boolean }) => {
   return (
     <Alert
-      className={`my-2 flex items-center space-x-2 ${isRedAlert ? "bg-red-50" : ""}`}
+      className="my-2 flex items-center space-x-2"
       variant={`${isRedAlert ? "destructive" : "teal"}`}
     >
       <div className="flex items-center">
