@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useUserStore } from "@/store/user/user-store-provider";
+import { completeEmailVerificationAuthEmailVerificationPut } from "@/client/services.gen";
 
 export const UNVERIFIED_TIER_ID = 4;
 export const VERIFY_SUCCESS_DELAY = 1;
@@ -36,24 +37,29 @@ export default function VerifyEmail() {
   };
 
   useEffect(() => {
-    const timeout = null;
-    if (code && user?.tier_id === UNVERIFIED_TIER_ID) {
+    let timeout: NodeJS.Timeout | null = null;
+    if (code && !user?.verified && user?.tier_id === UNVERIFIED_TIER_ID) {
       (async () => {
-        /* const response = await completeEmailVerificationAuthVerifyEmailPut({
+        const response = await completeEmailVerificationAuthEmailVerificationPut({
           query: { code },
         });
         // There is some problem where this function runs twice, causing an error
         // on the second run since the email verification is used.
         if (response.data) {
           setIsLoading(false);
-          const timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
-        } */
+          timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
+        } else if (response.error) {
+          console.error("Error completing email verification: ", response.error);
+        }
       })();
     }
-    if (timeout) {
-      // Cleanup redirect timeout on unmount of the page
-      return () => clearTimeout(timeout);
-    }
+
+    return () => {
+      if (timeout) {
+        // Cleanup redirect timeout on unmount of the page
+        clearTimeout(timeout);
+      }
+    };
   }, [code, user]);
 
   return (
@@ -61,7 +67,7 @@ export default function VerifyEmail() {
       <Card className="flex flex-col border-0 md:border shadow-none md:shadow-sm md:max-w-md text-center">
         <CardHeader className="space-y-3">
           <CardTitle>
-            {isLoading ? "Verifying your email" : "Verified! Logging you in"}
+            {isLoading ? "Verifying your email" : "Verified! Redirecting you to Jippy..."}
           </CardTitle>
         </CardHeader>
 
@@ -76,8 +82,8 @@ export default function VerifyEmail() {
           <CardDescription>
             <span className="max-w-sm">
               {isLoading
-                ? "Hang tight! We're logging you in. This shouldn't take too long."
-                : "All done! You'll be redirected soon. "}
+                ? "Hang tight! We're verifying your email. This shouldn't take long."
+                : "All done! You'll be redirected to Jippy soon. "}
             </span>
             {!isLoading && (
               <span

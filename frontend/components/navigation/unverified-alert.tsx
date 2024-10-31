@@ -1,9 +1,15 @@
 import { CircleAlert } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { resendVerificationEmailAuthEmailVerificationPost } from "@/client";
 
 const UnverifiedAlert = () => {
-  const onClickResendVerification = () => {};
+  const onClickResendVerification = async () => {
+    const response = await resendVerificationEmailAuthEmailVerificationPost();
+    if (response.error) {
+        console.error("Error while sending new verification email: ", response.error);
+    }
+  };
 
   return (
     <Alert
