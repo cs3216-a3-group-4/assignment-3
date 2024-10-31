@@ -40,6 +40,9 @@ from src.auth.dependencies import (
 from .models import AccountType, EmailVerification, PasswordReset, User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+routerWithAuth = APIRouter(
+    prefix="/auth", tags=["auth"], dependencies=[Depends(add_current_user)]
+)
 
 #######################
 # username & password #
@@ -103,7 +106,7 @@ def log_in(
     return create_token(user, response)
 
 
-@router.put("/verify-email")
+@router.put("/email-verification")
 def complete_email_verification(
     code: str,
     response: Response,
@@ -134,6 +137,22 @@ def complete_email_verification(
     token = create_token(user, response)
 
     return token
+
+
+@routerWithAuth.post("/email-verification")
+def resend_verification_email(
+    user: Annotated[User, Depends(get_current_user)],
+    background_task: BackgroundTasks,
+    session=Depends(get_session),
+):
+    code = str(uuid4())
+    email_validation = EmailVerification(user_id=user.id, code=code, used=False)
+    session.add(email_validation)
+    session.commit()
+    verification_link = f"{FRONTEND_URL}/verify-email?code={code}"
+    background_task.add_task(send_verification_email, user.email, verification_link)
+
+    return
 
 
 #######################
@@ -239,11 +258,6 @@ def complete_password_reset(
     session.add(user)
     session.add(password_reset)
     session.commit()
-
-
-routerWithAuth = APIRouter(
-    prefix="/auth", tags=["auth"], dependencies=[Depends(add_current_user)]
-)
 
 
 @routerWithAuth.get("/session")
