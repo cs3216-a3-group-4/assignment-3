@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircleIcon } from "lucide-react";
 
-import Link from "@/components/navigation/link";
 import { Box } from "@/components/ui/box";
 import {
   Card,
