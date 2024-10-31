@@ -63,6 +63,7 @@ def sign_up(
         email=data.email,
         hashed_password=get_password_hash(data.password),
         account_type=AccountType.NORMAL,
+        verified=False,
     )
     session.add(new_user)
     session.commit()
