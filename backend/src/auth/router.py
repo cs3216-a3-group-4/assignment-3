@@ -9,8 +9,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 import httpx
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from src.auth.utils import create_token, send_reset_password_email
+from src.auth.utils import (
+    create_token,
+    send_reset_password_email,
+    send_verification_email,
+)
 from src.common.constants import (
+    FRONTEND_URL,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
     GOOGLE_REDIRECT_URI,
@@ -32,7 +37,7 @@ from src.auth.dependencies import (
     get_password_hash,
     verify_password,
 )
-from .models import AccountType, PasswordReset, User
+from .models import AccountType, EmailVerification, PasswordReset, User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -43,7 +48,10 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/signup")
 def sign_up(
-    data: SignUpData, response: Response, session=Depends(get_session)
+    data: SignUpData,
+    response: Response,
+    background_task: BackgroundTasks,
+    session=Depends(get_session),
 ) -> Token:
     existing_user = session.scalars(
         select(User).where(User.email == data.email)
@@ -55,6 +63,7 @@ def sign_up(
         email=data.email,
         hashed_password=get_password_hash(data.password),
         account_type=AccountType.NORMAL,
+        verified=False,
     )
     session.add(new_user)
     session.commit()
@@ -69,6 +78,13 @@ def sign_up(
             selectinload(User.usage),
         )
     )
+
+    code = str(uuid4())
+    email_validation = EmailVerification(user_id=new_user.id, code=code, used=False)
+    session.add(email_validation)
+    session.commit()
+    verification_link = f"{FRONTEND_URL}/verify-email?code={code}"
+    background_task.add_task(send_verification_email, data.email, verification_link)
 
     return create_token(new_user, response)
 

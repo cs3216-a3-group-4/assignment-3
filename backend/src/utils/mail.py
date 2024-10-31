@@ -11,6 +11,7 @@ def send_email(
     receiving_email_addr: str,
     subject: str,
     message: str,
+    html_message: str | None = None,
 ):
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", PORT, context=context) as server:
@@ -21,6 +22,9 @@ def send_email(
         msg["From"] = GOOGLE_EMAIL
         msg["To"] = receiving_email_addr
         msg.set_content(message)
+
+        if html_message:
+            msg.add_alternative(html_message, subtype="html")
 
         server.sendmail(GOOGLE_EMAIL, receiving_email_addr, msg.as_string())
 
