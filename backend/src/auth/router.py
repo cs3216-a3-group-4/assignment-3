@@ -119,12 +119,16 @@ def complete_email_verification(
     session=Depends(get_session),
 ) -> Token:
     email_verification = session.scalar(
-        select(EmailVerification).where(EmailVerification.code == code).where(EmailVerification.user_id == user.id)  # noqa: E712
+        select(EmailVerification)
+        .where(EmailVerification.code == code)
+        .where(EmailVerification.user_id == user.id)  # noqa: E712
     )
     if not email_verification:
         raise HTTPException(HTTPStatus.NOT_FOUND)
     elif email_verification.used:
-        print(f"""ERROR: Attempt to reuse an old email verification code {code} for user with ID {email_verification.user_id}""")
+        print(
+            f"""ERROR: Attempt to reuse an old email verification code {code} for user with ID {email_verification.user_id}"""
+        )
         raise HTTPException(HTTPStatus.BAD_REQUEST)
 
     user = session.scalar(
@@ -138,7 +142,9 @@ def complete_email_verification(
     )
 
     if user.verified and user.tier_id != UNVERIFIED_TIER_ID:
-        print(f"""ERROR: Attempt to verify email of user with ID {user.id} who is already verified""")
+        print(
+            f"""ERROR: Attempt to verify email of user with ID {user.id} who is already verified"""
+        )
         raise HTTPException(HTTPStatus.CONFLICT)
 
     user.verified = True
@@ -235,52 +241,6 @@ def auth_google(
 
     # TODO: redirect to correct frontend page
     return token
-
-
-#######################
-#   password reset    #
-#######################
-@router.post("/password-reset")
-def request_password_reset(
-    data: PasswordResetRequestData,
-    background_task: BackgroundTasks,
-    session=Depends(get_session),
-):
-    email = data.email
-    user = session.scalars(
-        select(User)
-        .where(User.email == email)
-        .where(User.account_type == AccountType.NORMAL)
-    ).first()
-    if not user:
-        return
-
-    code = str(uuid4())
-    password_reset = PasswordReset(user_id=user.id, code=code, used=False)
-    session.add(password_reset)
-    session.commit()
-    background_task.add_task(send_reset_password_email, email, code)
-
-
-@router.put("/password-reset")
-def complete_password_reset(
-    code: str,
-    data: PasswordResetCompleteData,
-    session=Depends(get_session),
-):
-    # 9b90a1bd-ccab-4dcb-93c9-9ef2367dbcc4
-    password_reset = session.scalars(
-        select(PasswordReset).where(PasswordReset.code == code)
-    ).first()
-    if not password_reset or password_reset.used:
-        raise HTTPException(HTTPStatus.NOT_FOUND)
-
-    user = session.get(User, password_reset.user_id)
-    user.hashed_password = get_password_hash(data.password)
-    password_reset.used = True
-    session.add(user)
-    session.add(password_reset)
-    session.commit()
 
 
 #######################
