@@ -37,6 +37,22 @@ interface AskPageProps {
   isLoading: boolean;
 }
 
+const LimitAlert = ({ triesLeft, warningText, isRedAlert }: { triesLeft: number, warningText: string, isRedAlert: boolean }) => {
+  return (
+    <Alert
+      className={`my-2 flex items-center space-x-2 ${isRedAlert ? "bg-red-50" : ""}`}
+      variant={`${isRedAlert ? "destructive" : "teal"}`}
+    >
+      <div className="flex items-center">
+        <CircleAlert className={`h-5 w-5 ${isRedAlert ? "" : "stroke-teal-700"}`} />
+      </div>
+      <AlertDescription className={`${isRedAlert ? "" : "text-teal-700"} font-medium`}>
+        {warningText}
+      </AlertDescription>
+    </Alert>
+  )
+};
+
 const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
   const router = useRouter();
   const [questionInput, setQuestionInput] = useState<string>("");
@@ -125,32 +141,15 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
               Ask Jippy a General Paper exam question
             </h1>
             {hasTriesLeft ? (
-              <Alert
-                className="my-2 flex items-center space-x-2"
-                variant="teal"
-              >
-                <div className="flex items-center">
-                  <CircleAlert className="h-5 w-5 stroke-teal-700" />
-                </div>
-                <AlertDescription className="text-teal-700 font-medium">
-                  You have {triesLeft}{" "}
-                  {triesLeft === 1 ? "question" : "questions"} left. It will
-                  reset on {toQueryDateFriendly(getNextMonday())} 12:00AM.
-                </AlertDescription>
-              </Alert>
+              <LimitAlert
+                triesLeft={triesLeft}
+                warningText={`You have ${triesLeft} ${triesLeft === 1 ? "question" : "questions"} left. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
+                isRedAlert={false} />
             ) : (
-              <Alert
-                className="my-2 flex items-center space-x-2 bg-red-50"
-                variant="destructive"
-              >
-                <div className="flex items-center">
-                  <CircleAlert className="h-5 w-5" />
-                </div>
-                <AlertDescription className="font-medium">
-                  You&apos;ve reached the question limit. It will reset on{" "}
-                  {toQueryDateFriendly(getNextMonday())} 12:00AM.
-                </AlertDescription>
-              </Alert>
+              <LimitAlert
+                triesLeft={triesLeft}
+                warningText={`You've reached the question limit. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
+                isRedAlert={true} />
             )}
 
             {errorMsg && (
