@@ -17,6 +17,7 @@ export const NavItems: NavItem[] = [];
 
 function MobileNavbar() {
   const { isLoggedIn, user } = useUserStore((state) => state);
+  const isUserVerified = user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
 
   return (
     // min-h-[84px] max-h-[84px]
@@ -56,7 +57,7 @@ function MobileNavbar() {
             ))}
         </div>
       </div>
-      {isLoggedIn && user?.tier_id === UNVERIFIED_TIER_ID && (
+      {isLoggedIn && isUserVerified && (
         <div className="flex flex-col w-full items-stretch">
           <UnverifiedAlert />
         </div>

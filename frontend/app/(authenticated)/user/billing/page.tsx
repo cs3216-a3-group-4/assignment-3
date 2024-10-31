@@ -33,7 +33,8 @@ const getPriceButtonText = (
   user: UserPublic | undefined,
 ) => {
   const userTierId = user?.tier_id || 1;
-  if (userTierId === UNVERIFIED_TIER_ID) {
+  const isUserUnverified = user?.verified === false || userTierId === UNVERIFIED_TIER_ID;
+  if (isUserUnverified) {
     return "Not allowed";
   } else if (priceTierId == userTierId) {
     return "Current";
@@ -60,7 +61,7 @@ const Page = () => {
 
   const billingPath = usePathname();
   const searchParams = useSearchParams();
-  const isUserUnverified = user?.tier_id === UNVERIFIED_TIER_ID;
+  const isUserUnverified = user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
   let isSuccess = searchParams.get("success") === "true";
   let stripeSessionId = searchParams.get("session_id");
   let isCancelled = searchParams.get("cancelled") === "true";
