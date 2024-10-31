@@ -3,7 +3,6 @@
 import { ReactNode, Suspense, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
 import MobileNavbar from "@/components/navigation/mobile/mobile-navbar";
 import Navbar from "@/components/navigation/navbar";
 import UnverifiedAlert from "@/components/navigation/unverified-alert";
@@ -13,6 +12,7 @@ import { getUserProfile } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 
 import ContentLayout from "./content-layout";
+import { UNVERIFIED_TIER_ID } from "@/types/billing";
 
 export const NAVBAR_HEIGHT = 84;
 

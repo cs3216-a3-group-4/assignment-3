@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
 import { UserPublic } from "@/client";
 import PricingTable from "@/components/billing/pricing-table";
 import SubscriptionCard from "@/components/billing/subscription-card";
@@ -20,6 +19,7 @@ import {
   tierIDToTierFeature,
   tierIDToTierName,
   TierPrice,
+  UNVERIFIED_TIER_ID,
 } from "@/types/billing";
 
 const getPriceButtonText = (
