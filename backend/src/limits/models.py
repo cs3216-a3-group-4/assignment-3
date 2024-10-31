@@ -15,7 +15,8 @@ class Usage(Base):
     __tablename__ = "usage"
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
-    gp_question_asked: Mapped[int]
+    gp_question_asked: Mapped[int] = mapped_column(server_default="0")
+    essays: Mapped[int] = mapped_column(server_default="0")
 
 
 class Tier(Base):
@@ -25,3 +26,4 @@ class Tier(Base):
     tier_name: Mapped[TierNames]
     label: Mapped[str]
     gp_question_limit: Mapped[int]
+    essay_limit: Mapped[int] = mapped_column(server_default="0")
