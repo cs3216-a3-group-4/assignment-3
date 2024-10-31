@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { HttpStatusCode } from "axios";
 
 const resetPasswordCompleteFormSchema = z
   .object({
@@ -54,6 +55,7 @@ export default function ResetPasswordCompleteForm({
   onComplete: () => void;
 }) {
   const [isError, setIsError] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>("Your password needs to match.");
 
   const form = useForm<ResetPasswordRequestForm>({
     resolver: zodResolver(resetPasswordCompleteFormSchema),
@@ -74,6 +76,13 @@ export default function ResetPasswordCompleteForm({
 
     if (response.error) {
       setIsError(true);
+      if (response.status === HttpStatusCode.Conflict) {
+        setErrorMsg("Password reset link has expired. Please check your email for the latest link");
+      } else if (response.status === HttpStatusCode.NotFound) {
+        setErrorMsg("Invalid password reset link. Please only click on links sent by us");
+      } else {
+        setErrorMsg("Error while resetting your password. Please try again");
+      }
     } else {
       setIsError(false);
       onComplete();
@@ -94,7 +103,7 @@ export default function ResetPasswordCompleteForm({
               <Alert variant="destructive">
                 <CircleAlert className="h-5 w-5" />
                 <AlertDescription>
-                  Your password needs to match.
+                  {errorMsg}
                 </AlertDescription>
               </Alert>
             )}
