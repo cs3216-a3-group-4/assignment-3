@@ -66,7 +66,21 @@ export default function VerifyEmail() {
           setIsLoading(false);
           timeout = setTimeout(redirectAfterVerify, VERIFY_ERROR_DELAY * 1000);
         } else if (response.error) {
-          console.error("Error completing email verification: ", response.error);
+          if (response.status == HttpStatusCode.NotFound) {
+            console.error("ERROR: Invalid verification code");
+            setIsVerifySuccess(false);
+            setPostVerifyTitle("Invalid verification link");
+            setPostVerifySubtitle("Check whether you entered the correct verification link.\nNote: Never click on a verification link that is not sent by us");
+            setIsLoading(false);
+            timeout = setTimeout(redirectAfterVerify, VERIFY_ERROR_DELAY * 1000);
+          } else {
+            console.error("ERROR while verifying email");
+            setIsVerifySuccess(false);
+            setPostVerifyTitle("Verification error");
+            setPostVerifySubtitle("We're very sorry, something went wrong while verifying you. Please try again later.");
+            setIsLoading(false);
+            timeout = setTimeout(redirectAfterVerify, VERIFY_ERROR_DELAY * 1000);
+          }
         }
       })();
     } else if (!isUserUnverified) {
@@ -104,7 +118,7 @@ export default function VerifyEmail() {
             )}
           </Box>
           <CardDescription>
-            <span className="max-w-sm">
+            <span className="max-w-sm whitespace-pre-line">
               {isLoading
                 ? "Hang tight! We're verifying your email. This shouldn't take long."
                 : postVerifySubtitle}
