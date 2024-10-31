@@ -77,12 +77,10 @@ def sign_up(
 def log_in(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], response: Response
 ) -> Token:
-    user = authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=HTTPStatus.UNAUTHORIZED,
-            detail="Incorrect username or password.",
-        )
+    try:
+        user = authenticate_user(form_data.username, form_data.password)
+    except HTTPException as exc:
+        raise exc
 
     return create_token(user, response)
 
