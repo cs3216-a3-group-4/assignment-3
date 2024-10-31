@@ -151,27 +151,10 @@ routerWithAuth = APIRouter(
 )
 
 
-@routerWithAuth.get("/session")
-def get_user(
-    current_user: Annotated[User, Depends(get_current_user)],
-    session=Depends(get_session),
-) -> UserPublic:
-    user = session.get(User, current_user.id)
-    if user:
-        user.last_accessed = datetime.now()
-        session.add(user)
-        session.commit()
-
-    return current_user
-
-
-@routerWithAuth.get("/logout")
-def logout(response: Response):
-    response.delete_cookie(key="session")
-    return ""
-
-
-@routerWithAuth.post("/password-reset")
+#######################
+# Reset password #
+#######################
+@router.post("/password-reset")
 def request_password_reset(
     data: PasswordResetRequestData,
     background_task: BackgroundTasks,
@@ -193,7 +176,7 @@ def request_password_reset(
     background_task.add_task(send_reset_password_email, email, code)
 
 
-@routerWithAuth.put("/password-reset")
+@router.put("/password-reset")
 def complete_password_reset(
     code: str,
     data: PasswordResetCompleteData,
@@ -212,6 +195,26 @@ def complete_password_reset(
     session.add(user)
     session.add(password_reset)
     session.commit()
+
+
+@routerWithAuth.get("/session")
+def get_user(
+    current_user: Annotated[User, Depends(get_current_user)],
+    session=Depends(get_session),
+) -> UserPublic:
+    user = session.get(User, current_user.id)
+    if user:
+        user.last_accessed = datetime.now()
+        session.add(user)
+        session.commit()
+
+    return current_user
+
+
+@routerWithAuth.get("/logout")
+def logout(response: Response):
+    response.delete_cookie(key="session")
+    return ""
 
 
 @routerWithAuth.put("/change-password")
