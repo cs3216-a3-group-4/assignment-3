@@ -37,7 +37,13 @@ from src.auth.dependencies import (
     get_password_hash,
     verify_password,
 )
-from .models import AccountType, EmailVerification, PasswordReset, User
+from .models import (
+    UNVERIFIED_TIER_ID,
+    AccountType,
+    EmailVerification,
+    PasswordReset,
+    User,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 routerWithAuth = APIRouter(
@@ -67,6 +73,7 @@ def sign_up(
         hashed_password=get_password_hash(data.password),
         account_type=AccountType.NORMAL,
         verified=False,
+        tier_id=UNVERIFIED_TIER_ID,
     )
     session.add(new_user)
     session.commit()

@@ -8,6 +8,7 @@ class TierNames(str, Enum):
     FREE = "FREE"
     ADMIN = "ADMIN"
     PREMIUM = "PREMIUM"
+    UNVERIFIED = "UNVERIFIED"
 
 
 class Usage(Base):

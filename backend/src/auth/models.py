@@ -27,6 +27,10 @@ class Role(str, Enum):
     ADMIN = "admin"
 
 
+# TODO: it's probably safer to check with the db but it'll do for now
+UNVERIFIED_TIER_ID = 4
+
+
 class User(Base):
     __tablename__ = "user"
 
