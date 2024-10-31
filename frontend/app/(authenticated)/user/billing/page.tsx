@@ -19,11 +19,13 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import {
   JippyTier,
   JippyTierID,
+  SubscriptionPeriod,
   tierIDToTierDescription,
   tierIDToTierFeature,
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
+import SubscriptionCard from "@/components/billing/subscription-card";
 
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
@@ -62,6 +64,7 @@ const Page = () => {
   const billingPath = usePathname();
   const searchParams = useSearchParams();
   const isUserUnverified = user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
+  const hasSubscription = user?.tier_id != JippyTierID.Free && user?.tier_id !== 4;
   let isSuccess = searchParams.get("success") === "true";
   let stripeSessionId = searchParams.get("session_id");
   let isCancelled = searchParams.get("cancelled") === "true";
@@ -73,6 +76,13 @@ const Page = () => {
   const { toast } = useToast();
   // Display payment status toast for 5 secs
   const PAYMENT_TOAST_DURATION = 5000;
+
+  const getDateFrom = (dateString: string | null | undefined) => {
+    if (dateString) {
+      return new Date(dateString);
+    }
+    return undefined;
+  }
 
   const onClickDowngradeSubscription = () => {
     downgradeSubscription.mutate();
@@ -165,30 +175,17 @@ const Page = () => {
         </div>
         <div className="flex flex-col gap-8 px-8 md:px-16 xl:px-56">
           <div className="flex flex-col gap-4 w-auto pb-4">
-            <h2 className="text-2xl 2xl:text-3xl font-bold">Your Tier</h2>
             {isUserUnverified ? (
               <UnverifiedAlert />
             ) : (
-              <>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-center">{userTier} Tier:</h3>
-                  <Chip
-                    className="w-fit"
-                    label={toPascalCase(userTierStatus)}
-                    size="lg"
-                    variant="primary"
-                  />
-                </div>
-                {user?.subscription && (
-                  <Button
-                    className="w-fit"
-                    onClick={onClickManageSubscription}
-                    variant="default"
-                  >
-                    Manage Subscription
-                  </Button>
-                )}
-              </>
+              <SubscriptionCard
+                currentTierName={userTier}
+                tierPrice={TierPrice.Free}
+                tierStatus={userTierStatus}
+                tierSubscriptionPeriod={SubscriptionPeriod.Month}
+                tierEndDate={getDateFrom(user?.subscription?.subscription_ended_date || user?.subscription?.subscription_period_end)}
+                actionDescription={hasSubscription ? "Manage Subscription" : ""}
+                onClickAction={onClickManageSubscription} />
             )}
           </div>
           <div className="flex flex-col gap-4 w-auto pb-4">
