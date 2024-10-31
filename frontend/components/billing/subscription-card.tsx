@@ -4,6 +4,8 @@ import { stripeSubscriptionStatusToTierStatus, SubscriptionPeriod } from "@/type
 import { Button } from "@/components/ui/button";
 import Chip from "@/components/display/chip";
 
+const MAX_CARD_HEIGHT_PX = 400;
+
 export interface SubscriptionInfo {
     currentTierName: string;
     // Montly price in dollars
@@ -21,7 +23,7 @@ const toPascalCase = (string: string) => {
 
 const SubscriptionCard = ({currentTierName, tierPrice, tierStatus, tierSubscriptionPeriod, tierEndDate, actionDescription, onClickAction}: SubscriptionInfo) => {
     return (
-        <Card className="flex flex-col items-stretch">
+        <Card className="flex flex-col items-stretch w-full" style={{ maxWidth: `${MAX_CARD_HEIGHT_PX}px` }}>
             <CardHeader className="gap-y-4">
                 <CardTitle className="flex flex-row gap-x-4">
                     <JippyIconMd />
