@@ -7,7 +7,7 @@ from uuid import uuid4
 from fastapi import BackgroundTasks, Depends, APIRouter, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 import httpx
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
 from src.auth.utils import create_token, send_reset_password_email
 from src.common.constants import (
@@ -168,6 +168,10 @@ def request_password_reset(
     ).first()
     if not user:
         return
+
+    # Mark all existing password reset codes for the given user as used to prevent usage of old codes
+    session.execute(update(PasswordReset).where(PasswordReset.user_id == user.id).values(used=True))
+    session.commit()
 
     code = str(uuid4())
     password_reset = PasswordReset(user_id=user.id, code=code, used=False)
