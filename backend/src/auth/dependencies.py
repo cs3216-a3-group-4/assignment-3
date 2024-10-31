@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Annotated, Optional
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
@@ -56,9 +57,15 @@ def authenticate_user(email: str, password: str):
             )
         ).first()
         if not user:
-            return False
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED,
+                detail={"error": "Invalid username.", "error_id": "1"},
+            )
         if not verify_password(password, user.hashed_password):
-            return False
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED,
+                detail={"error": "Incorrect password.", "error_id": "2"},
+            )
         return user
 
 
