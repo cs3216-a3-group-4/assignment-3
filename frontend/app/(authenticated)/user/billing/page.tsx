@@ -22,6 +22,8 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
+import { UNVERIFIED_TIER_ID } from "../../verify-email/page";
+import UnverifiedAlert from "@/components/navigation/unverified-alert";
 
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
@@ -31,7 +33,9 @@ const getPriceButtonText = (
   user: UserPublic | undefined,
 ) => {
   const userTierId = user?.tier_id || 1;
-  if (priceTierId == userTierId) {
+  if (userTierId === UNVERIFIED_TIER_ID) {
+    return "Not allowed";
+  } else if (priceTierId == userTierId) {
     return "Current";
   } else if (priceTierId > userTierId) {
     return "Upgrade";
@@ -56,6 +60,7 @@ const Page = () => {
 
   const billingPath = usePathname();
   const searchParams = useSearchParams();
+  const isUserUnverified = user?.tier_id === UNVERIFIED_TIER_ID;
   let isSuccess = searchParams.get("success") === "true";
   let stripeSessionId = searchParams.get("session_id");
   let isCancelled = searchParams.get("cancelled") === "true";
@@ -79,7 +84,7 @@ const Page = () => {
   const jippyTiers = [
     {
       tierName: JippyTier.Free,
-      isButtonDisabled: user?.tier_id == JippyTierID.Free,
+      isButtonDisabled: isUserUnverified || user?.tier_id == JippyTierID.Free,
       buttonText: getPriceButtonText(JippyTierID.Free, user),
       onClickBuy: onClickDowngradeSubscription,
       price: TierPrice.Free,
@@ -88,7 +93,7 @@ const Page = () => {
     },
     {
       tierName: JippyTier.Premium,
-      isButtonDisabled: user?.tier_id == JippyTierID.Premium,
+      isButtonDisabled: isUserUnverified || user?.tier_id == JippyTierID.Premium,
       buttonText: getPriceButtonText(JippyTierID.Premium, user),
       onClickBuy: () => {
         stripeCheckoutMutation.mutate({
@@ -159,23 +164,29 @@ const Page = () => {
         <div className="flex flex-col gap-8 px-8 md:px-16 xl:px-56">
           <div className="flex flex-col gap-4 w-auto pb-4">
             <h2 className="text-2xl 2xl:text-3xl font-bold">Your Tier</h2>
-            <div className="flex items-center gap-2">
-              <h3 className="text-center">{userTier} Tier:</h3>
-              <Chip
-                className="w-fit"
-                label={toPascalCase(userTierStatus)}
-                size="lg"
-                variant="primary"
-              />
-            </div>
-            {user?.subscription && (
-              <Button
-                className="w-fit"
-                onClick={onClickManageSubscription}
-                variant="default"
-              >
-                Manage Subscription
-              </Button>
+            { isUserUnverified ? (
+              <UnverifiedAlert />
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-center">{userTier} Tier:</h3>
+                  <Chip
+                    className="w-fit"
+                    label={toPascalCase(userTierStatus)}
+                    size="lg"
+                    variant="primary"
+                  />
+                </div>
+                {user?.subscription && (
+                  <Button
+                    className="w-fit"
+                    onClick={onClickManageSubscription}
+                    variant="default"
+                  >
+                    Manage Subscription
+                  </Button>
+                )}
+              </>
             )}
           </div>
           <div className="flex flex-col gap-4 w-auto pb-4">
