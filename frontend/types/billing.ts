@@ -47,6 +47,19 @@ export const stripeSubscriptionStatusToTierStatus = (status: string): JippyTierS
   }
 };
 
+export const tierIDToPrice = (tierID: JippyTierID): number => {
+  switch (tierID) {
+    case JippyTierID.Free:
+      return TierPrice.Free;
+    case JippyTierID.Premium:
+      return TierPrice.Premium;
+    case JippyTierID.Enterprise:
+      return TierPrice.Enterprise;
+    default:
+      return 0;
+  }
+};
+
 export const tierIDToTierName = (tierID: JippyTierID): string => {
   switch (tierID) {
     case JippyTierID.Free:
