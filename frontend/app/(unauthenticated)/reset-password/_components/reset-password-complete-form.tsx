@@ -100,9 +100,11 @@ export default function ResetPasswordCompleteForm({
         <CardContent>
           <Box className="space-y-6">
             {isError && (
-              <Alert variant="destructive">
-                <CircleAlert className="h-5 w-5" />
-                <AlertDescription>
+              <Alert className="flex flex-row items-center gap-x-2" variant="destructive">
+                <div className="flex flex-shrink-0">
+                  <CircleAlert className="h-5 w-5" />
+                </div>
+                <AlertDescription className="grow">
                   {errorMsg}
                 </AlertDescription>
               </Alert>
