@@ -103,6 +103,39 @@ def log_in(
     return create_token(user, response)
 
 
+@router.put("/verify-email")
+def complete_email_verification(
+    code: str,
+    response: Response,
+    session=Depends(get_session),
+) -> Token:
+    email_verification = session.scalars(
+        select(EmailVerification).where(EmailVerification.code == code)
+    ).first()
+    if not email_verification or email_verification.used:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+
+    user = session.scalar(
+        select(User)
+        .where(User.id == email_verification.user_id)
+        .options(
+            selectinload(User.categories),
+            selectinload(User.tier),
+            selectinload(User.usage),
+        )
+    )
+    user.verified = True
+    email_verification.used = True
+    session.add(user)
+    session.add(email_verification)
+    session.commit()
+    session.refresh(user)
+
+    token = create_token(user, response)
+
+    return token
+
+
 #######################
 #     google auth     #
 #######################
