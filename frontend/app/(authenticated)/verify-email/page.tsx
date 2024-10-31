@@ -16,12 +16,12 @@ import {
 } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useUserStore } from "@/store/user/user-store-provider";
+import { UNVERIFIED_TIER_ID } from "@/types/billing";
 
-export const UNVERIFIED_TIER_ID = 4;
 export const VERIFY_SUCCESS_DELAY = 1;
 export const VERIFY_ERROR_DELAY = 5;
 
-export default function VerifyEmail() {
+export const VerifyEmail = () => {
   const user = useUserStore((store) => store.user);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -162,4 +162,6 @@ export default function VerifyEmail() {
       </Card>
     </Box>
   );
-}
+};
+
+export default VerifyEmail;
