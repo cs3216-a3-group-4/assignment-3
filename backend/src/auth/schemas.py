@@ -20,6 +20,7 @@ class UserPublic(BaseModel):
 
     usage: UsageDTO | None = None
     tier: TierDTO
+    verified: bool
 
 
 class Token(BaseModel):
