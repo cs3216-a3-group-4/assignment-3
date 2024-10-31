@@ -179,13 +179,7 @@ const Page = () => {
               <UnverifiedAlert />
             ) : (
               <SubscriptionCard
-                currentTierName={userTier}
-                tierPrice={TierPrice.Free}
-                tierStatus={userTierStatus}
-                tierSubscriptionPeriod={SubscriptionPeriod.Month}
-                tierEndDate={getDateFrom(user?.subscription?.subscription_ended_date || user?.subscription?.subscription_period_end)}
-                actionDescription={hasSubscription ? "Manage Subscription" : ""}
-                onClickAction={onClickManageSubscription} />
+                user={user} />
             )}
           </div>
           <div className="flex flex-col gap-4 w-auto pb-4">
