@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/card";
 import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
 import { useUserStore } from "@/store/user/user-store-provider";
-import { getNextMonday, toQueryDateFriendly } from "@/utils/date";
 import { UNVERIFIED_TIER_ID } from "@/types/billing";
+import { getNextMonday, toQueryDateFriendly } from "@/utils/date";
 
 const MAX_GP_QUESTION_LEN: number = 200; // max character count
 
@@ -160,11 +160,11 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
               />
             ) : hasTriesLeft ? (
               <LimitAlert
+                isRedAlert={errorMsg ? true : false}
                 warningText={
                   errorMsg ||
                   `You have ${triesLeft} ${triesLeft === 1 ? "question" : "questions"} left. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`
                 }
-                isRedAlert={errorMsg ? true : false}
               />
             ) : (
               <LimitAlert

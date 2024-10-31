@@ -15,7 +15,7 @@ import { z } from "zod";
 
 import { createEssayEssaysPost, ParagraphType } from "@/client";
 import Chip from "@/components/display/chip";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

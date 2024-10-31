@@ -1,7 +1,7 @@
 import { CircleAlert } from "lucide-react";
 
 import { resendVerificationEmailAuthEmailVerificationPost } from "@/client";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
 
 const UnverifiedAlert = () => {
@@ -32,7 +32,8 @@ const UnverifiedAlert = () => {
       </div>
       <div className="flex flex-col items-start justify-center w-full">
         <AlertDescription>
-          Verify your email with the link we sent to you. Didn't receive it?{" "}
+          Verify your email with the link we sent to you. Didn&apos;t receive
+          it?{" "}
           <span
             className="underline cursor-pointer"
             onClick={onClickResendVerification}
