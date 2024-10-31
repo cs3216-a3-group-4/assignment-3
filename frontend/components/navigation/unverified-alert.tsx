@@ -19,19 +19,17 @@ const UnverifiedAlert = () => {
 
   return (
     <Alert
-      className="alert alert-warning w-full my-2 flex items-center space-x-2"
+      className="alert alert-warning w-full flex items-center p-2 space-x-2 md:p-4 md:space-x-4 rounded-none border-x-0"
       role="alert"
       variant="destructive"
     >
-    <div className="flex items-center">
-      <CircleAlert className="h-5 w-5 stroke-red-500" />
-    </div>
+      <div className="flex items-center">
+        <CircleAlert className="h-5 w-5 stroke-red-500" />
+      </div>
       <div className="flex flex-col items-start justify-center w-full">
-        <AlertTitle>Email verification</AlertTitle>
         <AlertDescription>
-            Please verify your email address with the link sent
-            to your email. <br />
-            Didn't receive the email?{" "}
+            Verify your email with the link we sent
+            to you. Didn't receive it?{" "}
             <span
             className="underline cursor-pointer"
             onClick={onClickResendVerification}
