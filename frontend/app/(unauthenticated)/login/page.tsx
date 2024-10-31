@@ -58,7 +58,11 @@ function LoginPage() {
     } else {
       setIsError(false);
       setLoggedIn(response.data.user);
-      router.push("/");
+      if (window.history?.length && window.history.length > 1) {
+        router.back();
+      } else {
+        router.replace("/", { scroll: false });
+      }
     }
   };
 

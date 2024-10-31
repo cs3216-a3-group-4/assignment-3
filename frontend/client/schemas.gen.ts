@@ -1783,7 +1783,7 @@ export const TierDTOSchema = {
 
 export const TierNamesSchema = {
     type: 'string',
-    enum: ['FREE', 'ADMIN', 'PREMIUM'],
+    enum: ['FREE', 'ADMIN', 'PREMIUM', 'UNVERIFIED'],
     title: 'TierNames'
 } as const;
 
@@ -1873,10 +1873,14 @@ export const UserPublicSchema = {
         },
         tier: {
             '$ref': '#/components/schemas/TierDTO'
+        },
+        verified: {
+            type: 'boolean',
+            title: 'Verified'
         }
     },
     type: 'object',
-    required: ['id', 'email', 'last_accessed', 'categories', 'tier'],
+    required: ['id', 'email', 'last_accessed', 'categories', 'tier', 'verified'],
     title: 'UserPublic'
 } as const;
 

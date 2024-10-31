@@ -1,3 +1,5 @@
+export const UNVERIFIED_TIER_ID = 4;
+
 export enum JippyTier {
   Free = "Free",
   Premium = "Premium",
@@ -10,11 +12,55 @@ export enum JippyTierID {
   Enterprise = 3,
 }
 
+export enum JippyTierStatus {
+  Active = "active",
+  Paused = "paused",
+  Cancelled = "cancelled",
+  Expired = "expired",
+  Unknown = "",
+}
+
+export enum SubscriptionPeriod {
+  Month = "month",
+  Year = "year",
+}
+
 export enum TierPrice {
   Free = 0,
   Premium = 3.49,
   Enterprise = 26.18,
 }
+
+/**
+ * Parses a Stripe subscription status and returns a user-friendly Jippy tier status string
+ */
+export const stripeSubscriptionStatusToTierStatus = (status: string): JippyTierStatus => {
+  switch (status) {
+    case "active":
+      return JippyTierStatus.Active;
+    case "paused":
+      return JippyTierStatus.Paused;
+    case "canceled":
+      return JippyTierStatus.Cancelled;
+    case "past_due":
+      return JippyTierStatus.Expired;
+    default:
+      return JippyTierStatus.Unknown;
+  }
+};
+
+export const tierIDToPrice = (tierID: JippyTierID): number => {
+  switch (tierID) {
+    case JippyTierID.Free:
+      return TierPrice.Free;
+    case JippyTierID.Premium:
+      return TierPrice.Premium;
+    case JippyTierID.Enterprise:
+      return TierPrice.Enterprise;
+    default:
+      return 0;
+  }
+};
 
 export const tierIDToTierName = (tierID: JippyTierID): string => {
   switch (tierID) {

@@ -6,6 +6,7 @@ import {
 
 import {
   changePasswordAuthChangePasswordPut,
+  completeEmailVerificationAuthEmailVerificationPut,
   getUserAuthSessionGet,
   updateProfileProfilePut,
 } from "@/client/services.gen";
@@ -75,3 +76,18 @@ export const useChangePassword = () => {
     },
   });
 };
+
+export const useCompleteEmailVerification = () => {
+  return useMutation({
+    mutationFn: ({code}: {code: string}) => {
+      return completeEmailVerificationAuthEmailVerificationPut({
+        query: {
+          code
+        },
+      });
+    },
+    onError: (error) => {
+      console.error("Error completing email verification: ", error);
+    }
+  });
+}

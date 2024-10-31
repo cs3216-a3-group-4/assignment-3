@@ -43,21 +43,21 @@ const ContentLayout = ({ isLoading, children }: ContentLayoutProps) => {
   // TODO: fix all loading elements
   if (isLoading)
     return (
-      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto justify-center items-center">
+      <div className="flex flex-1 w-full grow max-h-full !overflow-y-auto justify-center items-center">
         <LoadingSpinner className="w-24 h-24" />
       </div>
     );
 
   if (isOnboarding)
     return (
-      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto justify-center">
+      <div className="flex flex-1 w-full grow max-h-full !overflow-y-auto justify-center">
         {children}
       </div>
     );
 
   if (!isLoggedIn)
     return (
-      <div className="flex flex-1 w-full h-full max-h-full !overflow-y-auto">
+      <div className="flex flex-1 w-full grow max-h-full !overflow-y-auto">
         {children}
       </div>
     );
@@ -116,7 +116,7 @@ const ContentLayout = ({ isLoading, children }: ContentLayoutProps) => {
   // For `sm` and `xs` breakpoints don't render anything
   return (
     <div
-      className="flex flex-1 w-full h-full max-h-full !overflow-y-auto relative"
+      className="flex flex-1 w-full grow max-h-full !overflow-y-auto relative"
       id="main-content"
     >
       {children}

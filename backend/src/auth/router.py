@@ -9,8 +9,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 import httpx
 from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
-from src.auth.utils import create_token, send_reset_password_email
+from src.auth.utils import (
+    create_token,
+    send_reset_password_email,
+    send_verification_email,
+)
 from src.common.constants import (
+    FRONTEND_URL,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
     GOOGLE_REDIRECT_URI,
@@ -32,9 +37,18 @@ from src.auth.dependencies import (
     get_password_hash,
     verify_password,
 )
-from .models import AccountType, PasswordReset, User
+from .models import (
+    UNVERIFIED_TIER_ID,
+    AccountType,
+    EmailVerification,
+    PasswordReset,
+    User,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+routerWithAuth = APIRouter(
+    prefix="/auth", tags=["auth"], dependencies=[Depends(add_current_user)]
+)
 
 #######################
 # username & password #
@@ -43,7 +57,10 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/signup")
 def sign_up(
-    data: SignUpData, response: Response, session=Depends(get_session)
+    data: SignUpData,
+    response: Response,
+    background_task: BackgroundTasks,
+    session=Depends(get_session),
 ) -> Token:
     existing_user = session.scalars(
         select(User).where(User.email == data.email)
@@ -55,6 +72,8 @@ def sign_up(
         email=data.email,
         hashed_password=get_password_hash(data.password),
         account_type=AccountType.NORMAL,
+        verified=False,
+        tier_id=UNVERIFIED_TIER_ID,
     )
     session.add(new_user)
     session.commit()
@@ -70,6 +89,13 @@ def sign_up(
         )
     )
 
+    code = str(uuid4())
+    email_validation = EmailVerification(user_id=new_user.id, code=code, used=False)
+    session.add(email_validation)
+    session.commit()
+    verification_link = f"{FRONTEND_URL}/verify-email?code={code}"
+    background_task.add_task(send_verification_email, data.email, verification_link)
+
     return create_token(new_user, response)
 
 
@@ -83,6 +109,79 @@ def log_in(
         raise exc
 
     return create_token(user, response)
+
+
+@routerWithAuth.put("/email-verification")
+def complete_email_verification(
+    user: Annotated[User, Depends(get_current_user)],
+    code: str,
+    response: Response,
+    session=Depends(get_session),
+) -> Token:
+    email_verification = session.scalar(
+        select(EmailVerification)
+        .where(EmailVerification.code == code)
+        .where(EmailVerification.user_id == user.id)  # noqa: E712
+    )
+    if not email_verification:
+        raise HTTPException(HTTPStatus.NOT_FOUND)
+    elif email_verification.used:
+        print(
+            f"""ERROR: Attempt to reuse an old email verification code {code} for user with ID {email_verification.user_id}"""
+        )
+        raise HTTPException(HTTPStatus.BAD_REQUEST)
+
+    user = session.scalar(
+        select(User)
+        .where(User.id == email_verification.user_id)
+        .options(
+            selectinload(User.categories),
+            selectinload(User.tier),
+            selectinload(User.usage),
+        )
+    )
+
+    if user.verified and user.tier_id != UNVERIFIED_TIER_ID:
+        print(
+            f"""ERROR: Attempt to verify email of user with ID {user.id} who is already verified"""
+        )
+        raise HTTPException(HTTPStatus.CONFLICT)
+
+    user.verified = True
+    user.tier_id = 1
+    email_verification.used = True
+    session.add(user)
+    session.add(email_verification)
+    session.commit()
+    session.refresh(user)
+
+    token = create_token(user, response)
+
+    return token
+
+
+@routerWithAuth.post("/email-verification")
+def resend_verification_email(
+    user: Annotated[User, Depends(get_current_user)],
+    background_task: BackgroundTasks,
+    session=Depends(get_session),
+):
+    existing_email_verifications = session.scalars(
+        select(EmailVerification).where(EmailVerification.user_id == user.id)
+    )
+    for email_verification in existing_email_verifications:
+        email_verification.used = True
+        session.add(email_verification)
+    session.commit()
+
+    code = str(uuid4())
+    email_validation = EmailVerification(user_id=user.id, code=code, used=False)
+    session.add(email_validation)
+    session.commit()
+    verification_link = f"{FRONTEND_URL}/verify-email?code={code}"
+    background_task.add_task(send_verification_email, user.email, verification_link)
+
+    return
 
 
 #######################
@@ -142,11 +241,6 @@ def auth_google(
 
     # TODO: redirect to correct frontend page
     return token
-
-
-routerWithAuth = APIRouter(
-    prefix="/auth", tags=["auth"], dependencies=[Depends(add_current_user)]
-)
 
 
 #######################
