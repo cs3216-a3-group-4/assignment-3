@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
 import { UserPublic } from "@/client";
 import PricingTable from "@/components/billing/pricing-table";
 import Chip from "@/components/display/chip";
+import UnverifiedAlert from "@/components/navigation/unverified-alert";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -22,8 +24,6 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import { UNVERIFIED_TIER_ID } from "../../verify-email/page";
-import UnverifiedAlert from "@/components/navigation/unverified-alert";
 
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
@@ -93,7 +93,8 @@ const Page = () => {
     },
     {
       tierName: JippyTier.Premium,
-      isButtonDisabled: isUserUnverified || user?.tier_id == JippyTierID.Premium,
+      isButtonDisabled:
+        isUserUnverified || user?.tier_id == JippyTierID.Premium,
       buttonText: getPriceButtonText(JippyTierID.Premium, user),
       onClickBuy: () => {
         stripeCheckoutMutation.mutate({
@@ -164,7 +165,7 @@ const Page = () => {
         <div className="flex flex-col gap-8 px-8 md:px-16 xl:px-56">
           <div className="flex flex-col gap-4 w-auto pb-4">
             <h2 className="text-2xl 2xl:text-3xl font-bold">Your Tier</h2>
-            { isUserUnverified ? (
+            {isUserUnverified ? (
               <UnverifiedAlert />
             ) : (
               <>

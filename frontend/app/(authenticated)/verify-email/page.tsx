@@ -81,12 +81,12 @@ export default function VerifyEmail() {
                 : "All done! You'll be redirected soon. "}
             </span>
             {!isLoading && (
-                <span
-                  className="underline cursor-pointer"
-                  onClick={redirectAfterVerify}
-                >
-                  Redirect now
-                </span>
+              <span
+                className="underline cursor-pointer"
+                onClick={redirectAfterVerify}
+              >
+                Redirect now
+              </span>
             )}
           </CardDescription>
         </CardContent>

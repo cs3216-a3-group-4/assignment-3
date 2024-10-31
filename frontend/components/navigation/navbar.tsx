@@ -7,6 +7,7 @@ import {
   NavigationMenuList,
 } from "@radix-ui/react-navigation-menu";
 
+import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
 import UserProfileButton from "@/components/auth/user-profile-button";
 import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import Link from "@/components/navigation/link";
@@ -15,13 +16,13 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
+
 import UnverifiedAlert from "./unverified-alert";
-import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
 
 export const NavItems: NavItem[] = [];
 
 function Navbar() {
-  const {isLoggedIn, user} = useUserStore((state) => state);
+  const { isLoggedIn, user } = useUserStore((state) => state);
 
   return (
     // min-h-[84px] max-h-[84px]
@@ -67,11 +68,11 @@ function Navbar() {
             ))}
         </div>
       </div>
-      { isLoggedIn && user?.tier_id === UNVERIFIED_TIER_ID &&
+      {isLoggedIn && user?.tier_id === UNVERIFIED_TIER_ID && (
         <div className="flex flex-col w-full items-stretch">
           <UnverifiedAlert />
         </div>
-      }
+      )}
     </header>
   );
 }

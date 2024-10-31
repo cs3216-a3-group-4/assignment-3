@@ -1,8 +1,10 @@
 "use client";
 
+import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
 import UserProfileButton from "@/components/auth/user-profile-button";
 import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import Link from "@/components/navigation/link";
+import UnverifiedAlert from "@/components/navigation/unverified-alert";
 import { Button } from "@/components/ui/button";
 import JippyIconSm from "@/public/jippy-icon/jippy-icon-sm";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
@@ -10,13 +12,11 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
 
 import MobileSidebar from "./mobile-sidebar";
-import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
-import UnverifiedAlert from "../unverified-alert";
 
 export const NavItems: NavItem[] = [];
 
 function MobileNavbar() {
-  const {isLoggedIn, user} = useUserStore((state) => state);
+  const { isLoggedIn, user } = useUserStore((state) => state);
 
   return (
     // min-h-[84px] max-h-[84px]
@@ -56,11 +56,11 @@ function MobileNavbar() {
             ))}
         </div>
       </div>
-      { isLoggedIn && user?.tier_id === UNVERIFIED_TIER_ID &&
+      {isLoggedIn && user?.tier_id === UNVERIFIED_TIER_ID && (
         <div className="flex flex-col w-full items-stretch">
           <UnverifiedAlert />
         </div>
-      }
+      )}
     </header>
   );
 }
