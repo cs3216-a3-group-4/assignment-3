@@ -172,7 +172,7 @@ const EssayFeedbackPage = () => {
       className="flex flex-col bg-muted w-full h-full max-h-full overflow-y-auto py-8 px-4 md:px-8 xl:px-24"
       id="home-page"
     >
-      <div className="px-6 mt-4 mb-8">
+      <div className="px-4 md:px-8 mt-4 mb-8">
         <span className="flex items-center text-primary-800">
           <BookOpenCheckIcon className="w-12 h-12 mr-6" />
           <h1 className="text-4xl font-semibold">Get essay feedback</h1>
