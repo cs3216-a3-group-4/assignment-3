@@ -134,6 +134,11 @@ def complete_email_verification(
             selectinload(User.usage),
         )
     )
+
+    if user.verified and user.tier_id != UNVERIFIED_TIER_ID:
+        print(f"""ERROR: Attempt to verify email of user with ID {user.id} who is already verified""")
+        raise HTTPException(HTTPStatus.CONFLICT)
+
     user.verified = True
     user.tier_id = 1
     email_verification.used = True
