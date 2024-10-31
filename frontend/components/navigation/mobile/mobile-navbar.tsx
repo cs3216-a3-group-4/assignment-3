@@ -10,11 +10,13 @@ import { useUserStore } from "@/store/user/user-store-provider";
 import { NavItem } from "@/types/navigation";
 
 import MobileSidebar from "./mobile-sidebar";
+import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
+import UnverifiedAlert from "../unverified-alert";
 
 export const NavItems: NavItem[] = [];
 
 function MobileNavbar() {
-  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const {isLoggedIn, user} = useUserStore((state) => state);
 
   return (
     // min-h-[84px] max-h-[84px]
@@ -54,6 +56,11 @@ function MobileNavbar() {
             ))}
         </div>
       </div>
+      { isLoggedIn && user?.tier_id === UNVERIFIED_TIER_ID &&
+        <div className="flex flex-col w-full items-stretch">
+          <UnverifiedAlert />
+        </div>
+      }
     </header>
   );
 }
