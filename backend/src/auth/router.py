@@ -184,7 +184,8 @@ def request_password_reset(
         .where(User.account_type == AccountType.NORMAL)
     ).first()
     if not user:
-        return
+        print(f"""ERROR: Attempt to reset password for email {email} that doesn't match any existing user""")
+        raise HTTPException(HTTPStatus.NOT_FOUND)
 
     code = str(uuid4())
     password_reset = PasswordReset(user_id=user.id, code=code, used=False)
