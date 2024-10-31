@@ -86,8 +86,13 @@ function RegisterPage() {
         {/* Body */}
         <Box className="space-y-6 pt-0 flex-col w-full">
           {isError && (
-            <Alert variant="destructive">
-              <CircleAlert className="h-5 w-5" />
+            <Alert
+              className="flex flex-row items-center gap-x-2"
+              variant="destructive"
+            >
+              <div className="flex flex-row">
+                <CircleAlert className="h-5 w-5" />
+              </div>
               <AlertDescription>
                 This email is already registered.{" "}
                 <Link href="/login" size="sm">

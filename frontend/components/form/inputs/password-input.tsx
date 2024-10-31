@@ -47,7 +47,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           </div>
 
           {showForgetPassword && (
-            <Link href="/user/password-reset" size="sm">
+            <Link href="/reset-password" size="sm">
               Forgot password?
             </Link>
           )}
