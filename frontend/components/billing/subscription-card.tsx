@@ -26,6 +26,7 @@ const SubscriptionCard = ({currentTierName, tierPrice, tierStatus, tierSubscript
         <Card className="flex flex-col items-stretch w-full" style={{ maxWidth: `${MAX_CARD_HEIGHT_PX}px` }}>
             <CardHeader className="gap-y-4">
                 <CardTitle className="flex flex-row gap-x-4">
+                    {/* TODO: Consider one day making an icon just for Jippy-branded subscriptions */}
                     <JippyIconMd />
                     <span className="grow text-start">Your Jippy</span>
                 </CardTitle>
