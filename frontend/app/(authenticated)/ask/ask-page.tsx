@@ -22,6 +22,7 @@ import {
 import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
 import { useUserStore } from "@/store/user/user-store-provider";
 import { getNextMonday, toQueryDateFriendly } from "@/utils/date";
+import { UNVERIFIED_TIER_ID } from "@/types/billing";
 
 const MAX_GP_QUESTION_LEN: number = 200; // max character count
 
@@ -155,7 +156,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
             {isUserUnverified ? (
               <LimitAlert
                 isRedAlert={true}
-                warningText="Verify your email to start asking essay questions." />
+                warningText="Verify your email to start asking essay questions."
               />
             ) : hasTriesLeft ? (
               <LimitAlert
@@ -168,7 +169,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
             ) : (
               <LimitAlert
                 isRedAlert={true}
-                  warningText={`You've reached the question limit. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`} />
+                warningText={`You've reached the question limit. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
               />
             )}
             <div className="w-full flex items-center gap-x-4 gap-y-6 flex-col md:flex-row">
