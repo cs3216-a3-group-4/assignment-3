@@ -135,7 +135,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
                 <AlertDescription className="text-teal-700 font-medium">
                   You have {triesLeft}{" "}
                   {triesLeft === 1 ? "question" : "questions"} left. It will
-                  reset on 4 Nov 2024 12:00AM.
+                  reset on {toQueryDateFriendly(getNextMonday())} 12:00AM.
                 </AlertDescription>
               </Alert>
             ) : (
