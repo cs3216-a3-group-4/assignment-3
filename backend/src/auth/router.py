@@ -113,17 +113,21 @@ def log_in(
     return create_token(user, response)
 
 
-@router.put("/email-verification")
+@routerWithAuth.put("/email-verification")
 def complete_email_verification(
+    user: Annotated[User, Depends(get_current_user)],
     code: str,
     response: Response,
     session=Depends(get_session),
 ) -> Token:
-    email_verification = session.scalars(
-        select(EmailVerification).where(EmailVerification.code == code)
-    ).first()
-    if not email_verification or email_verification.used:
+    email_verification = session.scalar(
+        select(EmailVerification).where(EmailVerification.code == code).where(EmailVerification.user_id == user.id)  # noqa: E712
+    )
+    if not email_verification:
         raise HTTPException(HTTPStatus.NOT_FOUND)
+    elif email_verification.used:
+        print(f"""ERROR: Attempt to reuse an old email verification code {code} for user with ID {email_verification.user_id}""")
+        raise HTTPException(HTTPStatus.BAD_REQUEST)
 
     user = session.scalar(
         select(User)
@@ -158,6 +162,14 @@ def resend_verification_email(
     background_task: BackgroundTasks,
     session=Depends(get_session),
 ):
+    existing_email_verifications = session.scalars(
+        select(EmailVerification).where(EmailVerification.user_id == user.id)
+    )
+    for email_verification in existing_email_verifications:
+        email_verification.used = True
+        session.add(email_verification)
+    session.commit()
+
     code = str(uuid4())
     email_validation = EmailVerification(user_id=user.id, code=code, used=False)
     session.add(email_validation)
