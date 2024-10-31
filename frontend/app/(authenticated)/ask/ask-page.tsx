@@ -37,20 +37,30 @@ interface AskPageProps {
   isLoading: boolean;
 }
 
-const LimitAlert = ({ warningText, isRedAlert }: { warningText: string, isRedAlert: boolean }) => {
+const LimitAlert = ({
+  warningText,
+  isRedAlert,
+}: {
+  warningText: string;
+  isRedAlert: boolean;
+}) => {
   return (
     <Alert
       className="my-2 flex items-center space-x-2"
       variant={`${isRedAlert ? "destructive" : "teal"}`}
     >
       <div className="flex items-center">
-        <CircleAlert className={`h-5 w-5 ${isRedAlert ? "" : "stroke-teal-700"}`} />
+        <CircleAlert
+          className={`h-5 w-5 ${isRedAlert ? "" : "stroke-teal-700"}`}
+        />
       </div>
-      <AlertDescription className={`${isRedAlert ? "" : "text-teal-700"} font-medium`}>
+      <AlertDescription
+        className={`${isRedAlert ? "" : "text-teal-700"} font-medium`}
+      >
         {warningText}
       </AlertDescription>
     </Alert>
-  )
+  );
 };
 
 const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
@@ -60,7 +70,8 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const user = useUserStore((store) => store.user);
   const setLoggedIn = useUserStore((store) => store.setLoggedIn);
-  const isUserUnverified = user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
+  const isUserUnverified =
+    user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
 
   if (!user) {
     // This should be impossible.
@@ -143,18 +154,22 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
             </h1>
             {isUserUnverified ? (
               <LimitAlert
-                warningText="Verify your email to start asking essay questions."
-                isRedAlert={true} />
+                isRedAlert={true}
+                warningText="Verify your email to start asking essay questions." />
+              />
+            ) : hasTriesLeft ? (
+              <LimitAlert
+                warningText={
+                  errorMsg ||
+                  `You have ${triesLeft} ${triesLeft === 1 ? "question" : "questions"} left. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`
+                }
+                isRedAlert={errorMsg ? true : false}
+              />
             ) : (
-              hasTriesLeft ? (
-                <LimitAlert
-                  warningText={errorMsg || `You have ${triesLeft} ${triesLeft === 1 ? "question" : "questions"} left. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
-                  isRedAlert={errorMsg ? true : false} />
-              ) : (
-                <LimitAlert
-                  warningText={`You've reached the question limit. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
-                  isRedAlert={true} />
-              )
+              <LimitAlert
+                isRedAlert={true}
+                  warningText={`You've reached the question limit. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`} />
+              />
             )}
             <div className="w-full flex items-center gap-x-4 gap-y-6 flex-col md:flex-row">
               <AutosizeTextarea
@@ -168,10 +183,10 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
               />
               <Button
                 className="w-full md:px-4 md:w-auto"
-                variant={isUserUnverified ? "destructive_outline" : "default"}
                 disabled={isUserUnverified || !hasTriesLeft}
                 onClick={handleAskQuestion}
                 size="lg"
+                variant={isUserUnverified ? "destructive_outline" : "default"}
               >
                 <Wand2Icon className="mr-3" />
                 Ask

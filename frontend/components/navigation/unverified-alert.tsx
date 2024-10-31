@@ -1,19 +1,23 @@
 import { CircleAlert } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { resendVerificationEmailAuthEmailVerificationPost } from "@/client";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
 
 const UnverifiedAlert = () => {
   const onClickResendVerification = async () => {
     const response = await resendVerificationEmailAuthEmailVerificationPost();
     if (response.error) {
-        toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Error while resending a new verification email. Please try again"
-        });
-        console.error("Error while sending new verification email: ", response.error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          "Error while resending a new verification email. Please try again",
+      });
+      console.error(
+        "Error while sending new verification email: ",
+        response.error,
+      );
     }
   };
 
@@ -28,14 +32,13 @@ const UnverifiedAlert = () => {
       </div>
       <div className="flex flex-col items-start justify-center w-full">
         <AlertDescription>
-            Verify your email with the link we sent
-            to you. Didn't receive it?{" "}
-            <span
+          Verify your email with the link we sent to you. Didn't receive it?{" "}
+          <span
             className="underline cursor-pointer"
             onClick={onClickResendVerification}
-            >
+          >
             Resend
-            </span>
+          </span>
         </AlertDescription>
       </div>
     </Alert>

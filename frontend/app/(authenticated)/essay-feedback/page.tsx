@@ -4,11 +4,18 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BookCheckIcon, BookOpenCheckIcon, CircleAlert, SparklesIcon } from "lucide-react";
+import { HttpStatusCode } from "axios";
+import {
+  BookCheckIcon,
+  BookOpenCheckIcon,
+  CircleAlert,
+  SparklesIcon,
+} from "lucide-react";
 import { z } from "zod";
 
 import { createEssayEssaysPost, ParagraphType } from "@/client";
 import Chip from "@/components/display/chip";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -20,10 +27,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import JippyIconSm from "@/public/jippy-icon/jippy-icon-sm";
-import { HttpStatusCode } from "axios";
-import { JippyTierID, tierIDToTierName, UNVERIFIED_TIER_ID } from "@/types/billing";
 import { useUserStore } from "@/store/user/user-store-provider";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  JippyTierID,
+  tierIDToTierName,
+  UNVERIFIED_TIER_ID,
+} from "@/types/billing";
 
 interface Paragraph {
   content: string;
@@ -43,7 +52,8 @@ const EssayFeedbackPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const isUserUnverified = user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
+  const isUserUnverified =
+    user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
 
   // TODO: finalise limits
   const formSchema = z.object({
@@ -102,19 +112,27 @@ const EssayFeedbackPage = () => {
       if (response.error) {
         if (response.status === HttpStatusCode.TooManyRequests) {
           if (user?.tier_id == UNVERIFIED_TIER_ID) {
-            setErrorMessage("Verify your email now to gain access to essay feedback.");
+            setErrorMessage(
+              "Verify your email now to gain access to essay feedback.",
+            );
           } else {
-            setErrorMessage(`You have reached your ${tierIDToTierName(user?.tier_id || JippyTierID.Free)} Tier limit for generating essay feedback. Consider upgrading your Tier for more.`);
+            setErrorMessage(
+              `You have reached your ${tierIDToTierName(user?.tier_id || JippyTierID.Free)} Tier limit for generating essay feedback. Consider upgrading your Tier for more.`,
+            );
           }
         } else {
-          setErrorMessage("Error while generating your essay feedback. Please try again.");
+          setErrorMessage(
+            "Error while generating your essay feedback. Please try again.",
+          );
         }
       } else {
         const essayId = response.data.essay_id;
         router.push(`/essay-feedback/${essayId}`);
       }
     } catch (error) {
-      setErrorMessage("Error while generating your essay feedback. Please try again.");
+      setErrorMessage(
+        "Error while generating your essay feedback. Please try again.",
+      );
       console.log("Error fetching response", error);
     } finally {
       setIsLoading(false);
@@ -148,7 +166,10 @@ const EssayFeedbackPage = () => {
             give you accurate and meaningful feedback!
           </h2>
           {errorMessage && (
-            <Alert className="flex flex-row items-center gap-x-2 mt-4" variant="destructive">
+            <Alert
+              className="flex flex-row items-center gap-x-2 mt-4"
+              variant="destructive"
+            >
               <div className="flex items-center flex-shrink-0">
                 <CircleAlert className="h-5 w-5 stroke-red-500" />
               </div>
@@ -208,7 +229,10 @@ const EssayFeedbackPage = () => {
       </div>
       {isUserUnverified && !errorMessage && (
         <div className="pb-4">
-          <Alert className="flex flex-row items-center gap-x-2" variant="destructive">
+          <Alert
+            className="flex flex-row items-center gap-x-2"
+            variant="destructive"
+          >
             <div className="flex items-center flex-shrink-0">
               <CircleAlert className="h-5 w-5 stroke-red-500" />
             </div>
@@ -221,7 +245,9 @@ const EssayFeedbackPage = () => {
       <div className="grow flex flex-col">
         <Form {...form}>
           <form className="h-full" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className={`flex flex-col py-6 lg:py-12 w-full bg-background rounded-lg border px-4 md:px-8 xl:px-24 justify-between ${isUserUnverified ? 'border-red-300' : ''}`}>
+            <div
+              className={`flex flex-col py-6 lg:py-12 w-full bg-background rounded-lg border px-4 md:px-8 xl:px-24 justify-between ${isUserUnverified ? "border-red-300" : ""}`}
+            >
               <FormField
                 control={form.control}
                 name="gpQuestion"
@@ -229,8 +255,8 @@ const EssayFeedbackPage = () => {
                   <FormItem className="mb-2">
                     <FormControl>
                       <AutosizeTextarea
-                        disabled={isUserUnverified}
                         className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-3xl font-semibold text-primary-700"
+                        disabled={isUserUnverified}
                         placeholder="Type your GP essay question"
                         {...field}
                       />
@@ -246,8 +272,8 @@ const EssayFeedbackPage = () => {
                   <FormItem className="mb-2">
                     <FormControl>
                       <AutosizeTextarea
-                        disabled={isUserUnverified}
                         className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-lg overflow-x-hidden"
+                        disabled={isUserUnverified}
                         placeholder="Type or paste your essay here"
                         {...field}
                       />
@@ -257,7 +283,13 @@ const EssayFeedbackPage = () => {
                 )}
               />
             </div>
-            <Button disabled={isUserUnverified} variant={isUserUnverified ? "destructive_outline" : "default"} className="mt-4" size="lg" type="submit">
+            <Button
+              className="mt-4"
+              disabled={isUserUnverified}
+              size="lg"
+              type="submit"
+              variant={isUserUnverified ? "destructive_outline" : "default"}
+            >
               <SparklesIcon className="w-6 h-6 mr-3" />
               Get Jippy&apos;s feedback
             </Button>

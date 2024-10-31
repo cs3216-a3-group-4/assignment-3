@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { HttpStatusCode } from "axios";
 import { CheckCircleIcon, CircleX } from "lucide-react";
 
+import { completeEmailVerificationAuthEmailVerificationPut } from "@/client/services.gen";
 import { Box } from "@/components/ui/box";
 import {
   Card,
@@ -14,8 +16,6 @@ import {
 } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useUserStore } from "@/store/user/user-store-provider";
-import { completeEmailVerificationAuthEmailVerificationPut } from "@/client/services.gen";
-import { HttpStatusCode } from "axios";
 
 export const UNVERIFIED_TIER_ID = 4;
 export const VERIFY_SUCCESS_DELAY = 1;
@@ -27,10 +27,15 @@ export default function VerifyEmail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
-  const isUserUnverified = !user?.verified && user?.tier_id === UNVERIFIED_TIER_ID;
+  const isUserUnverified =
+    !user?.verified && user?.tier_id === UNVERIFIED_TIER_ID;
   const [isVerifySuccess, setIsVerifySuccess] = useState<boolean>(false);
-  const [postVerifyTitle, setPostVerifyTitle] = useState<string>("Verified! Redirecting you to Jippy...");
-  const [postVerifySubtitle, setPostVerifySubtitle] = useState<string>("All done! You'll be redirected to Jippy soon. ");
+  const [postVerifyTitle, setPostVerifyTitle] = useState<string>(
+    "Verified! Redirecting you to Jippy...",
+  );
+  const [postVerifySubtitle, setPostVerifySubtitle] = useState<string>(
+    "All done! You'll be redirected to Jippy soon. ",
+  );
 
   const redirectAfterVerify = async () => {
     // Redirect user to Jippy home page after verifying email
@@ -41,28 +46,37 @@ export default function VerifyEmail() {
     let timeout: NodeJS.Timeout | null = null;
     if (code && isUserUnverified) {
       (async () => {
-        const response = await completeEmailVerificationAuthEmailVerificationPut({
-          query: { code },
-        });
+        const response =
+          await completeEmailVerificationAuthEmailVerificationPut({
+            query: { code },
+          });
         // There is some problem where this function runs twice, causing an error
         // on the second run since the email verification is used.
         if (response.data) {
           setIsVerifySuccess(true);
           setIsLoading(false);
-          timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
+          timeout = setTimeout(
+            redirectAfterVerify,
+            VERIFY_SUCCESS_DELAY * 1000,
+          );
         } else if (response.status == HttpStatusCode.Conflict) {
           // User is already verified
           setIsVerifySuccess(true);
           setPostVerifySubtitle("Relax, you're already verified! :) ");
           setIsLoading(false);
-          timeout = setTimeout(redirectAfterVerify, VERIFY_SUCCESS_DELAY * 1000);
+          timeout = setTimeout(
+            redirectAfterVerify,
+            VERIFY_SUCCESS_DELAY * 1000,
+          );
           console.log("WARNING: User is already verified");
         } else if (response.status == HttpStatusCode.BadRequest) {
           // Email verification has already been used
           console.log("ERROR: Reusing old email verification code");
           setIsVerifySuccess(false);
           setPostVerifyTitle("Invalid verification link");
-          setPostVerifySubtitle("Check your email again! Please click the latest verification link");
+          setPostVerifySubtitle(
+            "Check your email again! Please click the latest verification link",
+          );
           setIsLoading(false);
           timeout = setTimeout(redirectAfterVerify, VERIFY_ERROR_DELAY * 1000);
         } else if (response.error) {
@@ -70,16 +84,26 @@ export default function VerifyEmail() {
             console.error("ERROR: Invalid verification code");
             setIsVerifySuccess(false);
             setPostVerifyTitle("Invalid verification link");
-            setPostVerifySubtitle("Check whether you entered the correct verification link.\nNote: Never click on a verification link that is not sent by us");
+            setPostVerifySubtitle(
+              "Check whether you entered the correct verification link.\nNote: Never click on a verification link that is not sent by us",
+            );
             setIsLoading(false);
-            timeout = setTimeout(redirectAfterVerify, VERIFY_ERROR_DELAY * 1000);
+            timeout = setTimeout(
+              redirectAfterVerify,
+              VERIFY_ERROR_DELAY * 1000,
+            );
           } else {
             console.error("ERROR while verifying email");
             setIsVerifySuccess(false);
             setPostVerifyTitle("Verification error");
-            setPostVerifySubtitle("We're very sorry, something went wrong while verifying you. Please try again later.");
+            setPostVerifySubtitle(
+              "We're very sorry, something went wrong while verifying you. Please try again later.",
+            );
             setIsLoading(false);
-            timeout = setTimeout(redirectAfterVerify, VERIFY_ERROR_DELAY * 1000);
+            timeout = setTimeout(
+              redirectAfterVerify,
+              VERIFY_ERROR_DELAY * 1000,
+            );
           }
         }
       })();
@@ -113,8 +137,10 @@ export default function VerifyEmail() {
           <Box className="flex justify-center">
             {isLoading ? (
               <LoadingSpinner size={64} />
+            ) : isVerifySuccess ? (
+              <CheckCircleIcon size={64} />
             ) : (
-              isVerifySuccess ? <CheckCircleIcon size={64} /> : <CircleX size={64} />
+              <CircleX size={64} />
             )}
           </Box>
           <CardDescription>

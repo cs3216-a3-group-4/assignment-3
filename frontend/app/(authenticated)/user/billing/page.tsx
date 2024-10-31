@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
 import { UserPublic } from "@/client";
 import PricingTable from "@/components/billing/pricing-table";
+import SubscriptionCard from "@/components/billing/subscription-card";
 import Chip from "@/components/display/chip";
 import UnverifiedAlert from "@/components/navigation/unverified-alert";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,6 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import SubscriptionCard from "@/components/billing/subscription-card";
 
 const FREE_TIER_ID = 1;
 const TIER_STATUS_ACTIVE = "active";
@@ -35,7 +35,8 @@ const getPriceButtonText = (
   user: UserPublic | undefined,
 ) => {
   const userTierId = user?.tier_id || 1;
-  const isUserUnverified = user?.verified === false || userTierId === UNVERIFIED_TIER_ID;
+  const isUserUnverified =
+    user?.verified === false || userTierId === UNVERIFIED_TIER_ID;
   if (isUserUnverified) {
     return "Not allowed";
   } else if (priceTierId == userTierId) {
@@ -63,8 +64,10 @@ const Page = () => {
 
   const billingPath = usePathname();
   const searchParams = useSearchParams();
-  const isUserUnverified = user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
-  const hasSubscription = user?.tier_id != JippyTierID.Free && user?.tier_id !== 4;
+  const isUserUnverified =
+    user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
+  const hasSubscription =
+    user?.tier_id != JippyTierID.Free && user?.tier_id !== 4;
   let isSuccess = searchParams.get("success") === "true";
   let stripeSessionId = searchParams.get("session_id");
   let isCancelled = searchParams.get("cancelled") === "true";
@@ -82,7 +85,7 @@ const Page = () => {
       return new Date(dateString);
     }
     return undefined;
-  }
+  };
 
   const onClickDowngradeSubscription = () => {
     downgradeSubscription.mutate();
@@ -175,8 +178,7 @@ const Page = () => {
         </div>
         <div className="flex flex-col gap-8 px-8 md:px-16 xl:px-56">
           <div className="flex flex-col gap-4 w-auto pb-4">
-            <SubscriptionCard
-              user={user} />
+            <SubscriptionCard user={user} />
           </div>
           <div className="flex flex-col gap-4 w-auto pb-4">
             <h2 className="text-2xl 2xl:text-3xl font-bold">Our Tiers</h2>
