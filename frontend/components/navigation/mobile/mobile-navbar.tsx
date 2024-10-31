@@ -1,10 +1,8 @@
 "use client";
 
-import { UNVERIFIED_TIER_ID } from "@/app/(authenticated)/verify-email/page";
 import UserProfileButton from "@/components/auth/user-profile-button";
 import { NAVBAR_HEIGHT } from "@/components/layout/app-layout";
 import Link from "@/components/navigation/link";
-import UnverifiedAlert from "@/components/navigation/unverified-alert";
 import { Button } from "@/components/ui/button";
 import JippyIconSm from "@/public/jippy-icon/jippy-icon-sm";
 import JippyLogo from "@/public/jippy-logo/jippy-logo-sm";
@@ -16,13 +14,12 @@ import MobileSidebar from "./mobile-sidebar";
 export const NavItems: NavItem[] = [];
 
 function MobileNavbar() {
-  const { isLoggedIn, user } = useUserStore((state) => state);
-  const isUserVerified = user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   return (
-    // min-h-[84px] max-h-[84px]
+    /* min-h-[84px] max-h-[84px] */
     <header
-      className={`flex flex-col md:hidden sticky top-0 z-50 w-full border-border backdrop-blur-lg bg-background/60 border-b-[1px] min-h-[${NAVBAR_HEIGHT}px] max-h-[${NAVBAR_HEIGHT}px]`}
+      className={`flex md:hidden sticky top-0 z-50 w-full border-border backdrop-blur-lg bg-background/60 border-b-[1px] min-h-[${NAVBAR_HEIGHT}px] max-h-[${NAVBAR_HEIGHT}px]`}
     >
       <div className="w-full flex items-center justify-between px-8 py-4">
         <div className="flex items-center">
@@ -57,11 +54,6 @@ function MobileNavbar() {
             ))}
         </div>
       </div>
-      {isLoggedIn && isUserVerified && (
-        <div className="flex flex-col w-full items-stretch">
-          <UnverifiedAlert />
-        </div>
-      )}
     </header>
   );
 }
