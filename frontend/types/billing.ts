@@ -1,3 +1,5 @@
+export const UNVERIFIED_TIER_ID = 4;
+
 export enum JippyTier {
   Free = "Free",
   Premium = "Premium",
