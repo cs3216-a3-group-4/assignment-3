@@ -43,7 +43,7 @@ const SubscriptionCard = ({currentTierName, tierPrice, tierStatus, tierSubscript
                     <span className="grow text-start">Your Jippy</span>
                 </CardTitle>
                 <CardDescription className="flex flex-col gap-y-2 items-stretch">
-                    <div className="flex flex-row gap-x-2 justify-start">
+                    <div className="flex flex-row gap-x-2 justify-start items-center">
                         <span className="text-lg">{currentTierName} Tier</span>
                         <Chip
                             className="w-fit"
