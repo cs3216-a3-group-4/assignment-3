@@ -148,7 +148,7 @@ const EssayFeedbackPage = () => {
             give you accurate and meaningful feedback!
           </h2>
           {errorMessage && (
-            <Alert className="flex flex-row items-center gap-x-2" variant="destructive">
+            <Alert className="flex flex-row items-center gap-x-2 mt-4" variant="destructive">
               <div className="flex items-center flex-shrink-0">
                 <CircleAlert className="h-5 w-5 stroke-red-500" />
               </div>
