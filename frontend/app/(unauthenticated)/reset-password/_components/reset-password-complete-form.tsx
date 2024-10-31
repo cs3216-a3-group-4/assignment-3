@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { HttpStatusCode } from "axios";
 import { CircleAlert } from "lucide-react";
 import { z } from "zod";
 
@@ -26,7 +27,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { HttpStatusCode } from "axios";
 
 const resetPasswordCompleteFormSchema = z
   .object({
@@ -55,7 +55,9 @@ export default function ResetPasswordCompleteForm({
   onComplete: () => void;
 }) {
   const [isError, setIsError] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>("Your password needs to match.");
+  const [errorMsg, setErrorMsg] = useState<string>(
+    "Your password needs to match.",
+  );
 
   const form = useForm<ResetPasswordRequestForm>({
     resolver: zodResolver(resetPasswordCompleteFormSchema),
@@ -77,9 +79,13 @@ export default function ResetPasswordCompleteForm({
     if (response.error) {
       setIsError(true);
       if (response.status === HttpStatusCode.Conflict) {
-        setErrorMsg("Password reset link has expired. Please check your email for the latest link");
+        setErrorMsg(
+          "Password reset link has expired. Please check your email for the latest link",
+        );
       } else if (response.status === HttpStatusCode.NotFound) {
-        setErrorMsg("Invalid password reset link. Please only click on links sent by us");
+        setErrorMsg(
+          "Invalid password reset link. Please only click on links sent by us",
+        );
       } else {
         setErrorMsg("Error while resetting your password. Please try again");
       }
@@ -100,13 +106,14 @@ export default function ResetPasswordCompleteForm({
         <CardContent>
           <Box className="space-y-6">
             {isError && (
-              <Alert className="flex flex-row items-center gap-x-2" variant="destructive">
+              <Alert
+                className="flex flex-row items-center gap-x-2"
+                variant="destructive"
+              >
                 <div className="flex flex-shrink-0">
                   <CircleAlert className="h-5 w-5" />
                 </div>
-                <AlertDescription className="grow">
-                  {errorMsg}
-                </AlertDescription>
+                <AlertDescription className="grow">{errorMsg}</AlertDescription>
               </Alert>
             )}
             <Form {...form}>

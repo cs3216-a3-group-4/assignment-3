@@ -86,7 +86,10 @@ function RegisterPage() {
         {/* Body */}
         <Box className="space-y-6 pt-0 flex-col w-full">
           {isError && (
-            <Alert className="flex flex-row items-center gap-x-2" variant="destructive">
+            <Alert
+              className="flex flex-row items-center gap-x-2"
+              variant="destructive"
+            >
               <div className="flex flex-row">
                 <CircleAlert className="h-5 w-5" />
               </div>
