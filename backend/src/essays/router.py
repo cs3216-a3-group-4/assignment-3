@@ -14,8 +14,8 @@ from src.essays.models import (
     Paragraph,
 )
 from src.lm.generate_essay_comments import (
-    get_paragraph_comments,
     get_essay_comments,
+    get_paragraph_comments_async,
 )
 
 from src.essays.schemas import EssayCreate, EssayCreateDTO, EssayDTO, EssayMiniDTO
@@ -28,24 +28,25 @@ router = APIRouter(prefix="/essays", tags=["essays"])
 
 
 @router.post("/")
-def create_essay(
+async def create_essay(
     data: EssayCreate,
     user: Annotated[User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
     _=Depends(has_essay_tries_left),
 ) -> EssayCreateDTO:
+    if len(data.paragraphs) > 20:
+        raise HTTPException(
+            HTTPStatus.BAD_REQUEST,
+            detail="The maximum number of paragraphs is 20",
+        )
     essay = Essay(question=data.question, user_id=user.id)
 
     paragraphs = []
     for paragraph in data.paragraphs:
-        paragraph_orm = Paragraph(type=paragraph.type, content=paragraph.content)
-
-        comments = get_paragraph_comments(paragraph, data.question, paragraph.type)
-        paragraph_orm.comments = comments
-
         paragraphs.append(paragraph.content)
-        essay.paragraphs.append(paragraph_orm)
 
+    paragraph_comments = await get_paragraph_comments_async(data.paragraphs, essay)
+    essay.paragraphs = paragraph_comments
     essay.comments = get_essay_comments(paragraphs, data.question)
 
     session.add(essay)

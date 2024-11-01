@@ -21,9 +21,13 @@ from src.essays.models import (
     Comment,
     CommentAnalysis,
     CommentParentType,
+    Essay,
     Inclination,
+    Paragraph,
     ParagraphType,
 )
+
+CONCURRENCY = 20
 
 
 class LMComment(BaseModel):
@@ -38,7 +42,7 @@ class Comments(BaseModel):
 
 def generate_paragraph_comments(
     content: str, question: str, paragraph_type: ParagraphType
-):
+) -> dict:
     sysprompt = ""
     if paragraph_type == ParagraphType.INTRODUCTION:
         sysprompt = INTRO_SYSPROMPT
@@ -59,7 +63,6 @@ def generate_paragraph_comments(
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=Comments)
     comments = parser.invoke(result.content)
-    # print("COMMENT: ", comments)
     if (
         paragraph_type == ParagraphType.CONCLUSION
         or paragraph_type == ParagraphType.INTRODUCTION
@@ -76,7 +79,7 @@ def generate_comment_orm(
     content: str,
     question: str,
     parent_type: CommentParentType = CommentParentType.PARAGRAPH,
-):
+) -> List[Comment]:
     comment_list = comments.get("comments")
     orm_list = []
     for comment in comment_list:
@@ -131,7 +134,41 @@ async def generate_comment_with_example(content: str, question: str):
     return examples
 
 
-def get_paragraph_comments(content: str, question: str, paragraph_type: ParagraphType):
+async def get_paragraph_comments_async(paragraphs, essay: Essay) -> list[Paragraph]:
+    res: list[Paragraph] = []
+    semaphore = asyncio.Semaphore(CONCURRENCY)
+    async with asyncio.TaskGroup() as tg:
+        for paragraph in paragraphs:
+            tg.create_task(
+                generate_paragraph_comments_async(
+                    paragraph, res, essay.question, semaphore
+                )
+            )
+
+    return res
+
+
+async def generate_paragraph_comments_async(
+    paragraph, res: list[Paragraph], question: str, semaphore: asyncio.Semaphore
+):
+    """
+    Generate comments for a list of paragraphs asynchronously
+    """
+
+    async with semaphore:
+        try:
+            paragraph_orm = Paragraph(type=paragraph.type, content=paragraph.content)
+
+            comments_orm = get_paragraph_comments(paragraph, question, paragraph.type)
+            paragraph_orm.comments = comments_orm
+            res.append(paragraph_orm)
+        except Exception as e:
+            print(e)
+
+
+def get_paragraph_comments(
+    content: str, question: str, paragraph_type: ParagraphType
+) -> List[Comment]:
     comments = generate_paragraph_comments(content, question, paragraph_type)
     comment_orm = generate_comment_orm(comments, content, question)
     return comment_orm

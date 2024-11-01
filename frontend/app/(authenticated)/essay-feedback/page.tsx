@@ -120,6 +120,10 @@ const EssayFeedbackPage = () => {
               `You have reached your ${tierIDToTierName(user?.tier_id || JippyTierID.Free)} Tier limit for generating essay feedback. Consider upgrading your Tier for more.`,
             );
           }
+        } else if (response.status === HttpStatusCode.BadRequest) {
+          setErrorMessage(
+            "Please ensure your essay is no longer than 20 paragraphs.",
+          );
         } else {
           setErrorMessage(
             "Error while generating your essay feedback. Please try again.",
