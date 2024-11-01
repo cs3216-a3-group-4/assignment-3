@@ -27,7 +27,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
 def create_vector_store():
-    index_name = "test-async"  # change to create a new index
+    index_name = "test-concepts"  # change to create a new index
 
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
@@ -117,7 +117,7 @@ async def store_documents_async(
     print(f"Completed storing {len(documents)} documents")
 
 
-async def store_all_documents_async(
+async def store_analyses_embeddings_async(
     analysis_list: List[Analysis], batch_size: int = 100
 ):
     semaphore = asyncio.Semaphore(batch_size)
@@ -129,7 +129,7 @@ async def store_all_documents_async(
 
     await asyncio.gather(*tasks)
 
-    print(f"Stored {len(analysis_list)} documents. Task completed.")
+    print(f"Stored total {len(analysis_list)} documents. Task completed.")
 
 
 def store_documents(analysis_list: List[Analysis]):
