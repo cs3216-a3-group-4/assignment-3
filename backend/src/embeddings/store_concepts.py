@@ -79,7 +79,7 @@ async def store_concept_batch(
     print(f"Completed storing batch of {len(documents)} concepts")
 
 
-async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = False):
+async def get_similar_concepts(query: str, top_k: int = 3, filter_sg: bool = False):
     # NOTE: filter_sg == False means all examples are allowed, not just Singapore examples
     filter_dict = {"is_singapore": True} if filter_sg else {}
 
@@ -95,6 +95,7 @@ async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = Fals
                 "concept_id": document.metadata["concept_id"],
                 "article_id": document.metadata["article_id"],
                 "is_singapore": document.metadata["is_singapore"],
+                "content": document.page_content,
                 "score": score,
             }
         )
@@ -115,7 +116,7 @@ if __name__ == "__main__":
     # concepts = fetch_all_article_concepts()
     # asyncio.run(store_concepts_async(concepts))
     point = "The value of work can indeed be assessed by the salary it commands, as higher salaries often reflect the level of skill, expertise, and responsibility required for a job"
-    results = asyncio.run(get_similar_results(point, top_k=3))
+    results = asyncio.run(get_similar_concepts(point, top_k=3))
     explanations = []
     for result in results:
         explanation = get_concept_explanation(
