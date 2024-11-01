@@ -34,6 +34,11 @@ def create_essay(
     session: Annotated[Session, Depends(get_session)],
     _=Depends(has_essay_tries_left),
 ) -> EssayCreateDTO:
+    if len(data.paragraphs) > 20:
+        raise HTTPException(
+            HTTPStatus.BAD_REQUEST,
+            detail="The maximum number of paragraphs is 20",
+        )
     essay = Essay(question=data.question, user_id=user.id)
 
     paragraphs = []
