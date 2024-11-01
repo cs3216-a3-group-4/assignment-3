@@ -26,9 +26,7 @@ os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
-def create_vector_store():
-    index_name = "test-concepts"  # change to create a new index
-
+def create_vector_store(index_name: str = None):
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
     if index_name not in existing_indexes:
@@ -52,7 +50,7 @@ def create_vector_store():
     return vector_store
 
 
-vector_store = create_vector_store()
+vector_store = create_vector_store("prod-index-embedding-3-model")
 
 
 def get_is_singapore(event_id):
@@ -184,20 +182,20 @@ async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = Fals
 
 if __name__ == "__main__":
     # pass
-    # docs = asyncio.run(
-    #     vector_store.asimilarity_search_with_relevance_scores(
-    #         query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
-    #         k=3,
-    #         filter={},
-    #     )
-    # )
-    # print(docs)
+    docs = asyncio.run(
+        vector_store.asimilarity_search_with_relevance_scores(
+            query="Censorship is necessary in Singapore because it helps to maintain social harmony and prevent racial and religious tensions, which are crucial in a multicultural society where diverse beliefs coexist",
+            k=3,
+            filter={},
+        )
+    )
+    print(docs)
 
     # NOTE: this is for repopulation of the entire database
-    analyses = get_analyses_from_useful_articles(3000)
-    # start timer
-    start = time.time()
-    store_documents(analyses)
-    # end timer
-    end = time.time()
-    print(f"Time taken: {end - start}")
+    # analyses = get_analyses_from_useful_articles(3000)
+    # # start timer
+    # start = time.time()
+    # store_documents(analyses)
+    # # end timer
+    # end = time.time()
+    # print(f"Time taken: {end - start}")
