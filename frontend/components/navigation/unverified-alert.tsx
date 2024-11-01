@@ -6,6 +6,8 @@ import { toast } from "@/hooks/use-toast";
 import { useUserStore } from "@/store/user/user-store-provider";
 
 const UnverifiedAlert = () => {
+  const user = useUserStore((store) => store.user);
+
   const onClickResendVerification = async () => {
     const response = await resendVerificationEmailAuthEmailVerificationPost();
     if (response.error) {
@@ -19,10 +21,14 @@ const UnverifiedAlert = () => {
         "Error while sending new verification email: ",
         response.error,
       );
+    } else {
+      toast({
+        variant: "default",
+        title: "We have resent your verification email!",
+        description: `Please click the link sent to ${user?.email} to gain access to Jippy's AI features.`,
+      });
     }
   };
-
-  const user = useUserStore((store) => store.user);
 
   return (
     <Alert
