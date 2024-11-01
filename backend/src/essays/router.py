@@ -14,7 +14,6 @@ from src.essays.models import (
     Paragraph,
 )
 from src.lm.generate_essay_comments import (
-    get_paragraph_comments,
     get_essay_comments,
     get_paragraph_comments_async,
 )
