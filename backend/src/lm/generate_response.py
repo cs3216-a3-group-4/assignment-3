@@ -5,9 +5,7 @@ from src.lm.prompts import QUESTION_ANALYSIS_GEN_SYSPROMPT_2 as SYSPROMPT
 from src.lm.prompts import (
     QUESTION_ANALYSIS_GEN_FALLBACK_SYSPROMPT as FALLBACK_SYSPROMPT,
 )
-from src.lm.prompts import (
-    SOCIETY_QUESTION_CLASSIFICATION_SYSPROMPT as SOCIETY_SYSPROMPT,
-)
+from src.lm.society_classifier import classify_society_qn
 
 from langchain_core.output_parsers import JsonOutputParser
 from sqlalchemy.orm import Session
@@ -113,22 +111,6 @@ def generate_fallback_response(question: str, point: str):
     result = lm_model.invoke(messages)
     parser = JsonOutputParser()
     return parser.invoke(result)
-
-
-def classify_society_qn(question: str) -> bool:
-    # NOTE: if the words "In your society" are in the question, then there is no doubt
-    if "in your society" in question.lower():
-        return True
-
-    # Otherwise, we let the LM decide
-    messages = [
-        SystemMessage(content=SOCIETY_SYSPROMPT),
-        HumanMessage(content=question),
-    ]
-    result = lm_model.invoke(messages)
-    if result.content == "Yes":
-        return True
-    return False
 
 
 if __name__ == "__main__":
