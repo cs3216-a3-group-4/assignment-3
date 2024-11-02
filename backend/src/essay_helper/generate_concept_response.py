@@ -82,13 +82,14 @@ def format_prompt_input(
     article = articles_map[int(article_id)]
     article_title = article.title
     article_summary = article.summary
+    article_body = article.body
     concept_content = concept.get("content")
 
     return f"""
     Essay Question: {question}
     Point: {point}
     Article_Title: {article_title}
-    Article_Summary: {article_summary}
+    Article_Body: {article_body}
     Concept: {concept_content}
     """
 

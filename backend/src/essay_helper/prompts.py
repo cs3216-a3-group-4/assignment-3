@@ -6,7 +6,16 @@ ESSAY_HELPER_SYSPROMPT_CONCEPTS = """
     You will also be given a major concept from a relevant article that can be used to correspondingly refute or support the argument given in the question.
 
     Your task:
-    Given the article summary and how the article portrays the concept, you should provide a detailed elaboration illustrating how this example from the article can be used to support or refute the argument in the question.
+    Given the article summary and how the article portrays the concept, you must provide an essay paragraph elaboration.
+    The elaboration should have a clear link between its point and how the concept from the article supports or refutes the point.
+    Think step by step like you are writing a paragraph for a General Paper essay. You should include
+    - A clear topic sentence that states the point (this has been given to you)
+    - A brief explanation of the example from the article given to you
+    - A detailed elaboration of the point FOCUSING on the concept given to you
+    - A clear link to strengthen the argument in the point using the concept and example
+
+    Remember that you are writing a paragraph for a General Paper essay. The reader will have no context of the article or the concept.
+    Therefore, you should provide a brief explanation of the events of the given example. Refrain from saying "the article" or "the concept" in your elaboration as it does not provide any context to the reader.
     If the article is relevant to the point, you should provide a coherent and detailed elaboration of the point using the event and the concept as support for the argument.
 
     The elaboration should be specific and tailored to the context of General Paper essays. Provide coherent arguments and insights. Be sure to give a detailed elaboration of 3-4 sentences.
