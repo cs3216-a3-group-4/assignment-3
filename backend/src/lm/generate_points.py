@@ -31,6 +31,9 @@ async def populate_point(
     relevant_results: list,
     is_singapore: bool = False,
 ):
+    """
+    Given a topic sentence, query top k results from vector store and populate the result list.
+    """
     relevant_analyses = await get_similar_results(
         point, top_k=analyses_per_point, filter_sg=is_singapore
     )
@@ -40,7 +43,9 @@ async def populate_point(
 async def get_relevant_analyses(
     question: str, analyses_per_point: int = 5, is_singapore: bool = False
 ) -> dict:
-    print(f"Freq penalty: {lm_model.frequency_penalty}")
+    """
+    Given a question, generate topic sentences and populate them with relevant analyses.
+    """
     points = await generate_points_from_question(question)
 
     for_pts = points.get("for_points", [])
