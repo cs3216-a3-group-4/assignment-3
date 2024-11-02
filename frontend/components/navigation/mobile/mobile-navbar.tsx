@@ -27,7 +27,7 @@ function MobileNavbar() {
             <JippyLogo />
           </Link>
           {!isLoggedIn && (
-            <Link className="flex sm:hidden mr-6 items-center gap-x-2" href="/">
+            <Link className="flex md:hidden mr-6 items-center gap-x-2" href="/">
               <JippyIconSm />
             </Link>
           )}
