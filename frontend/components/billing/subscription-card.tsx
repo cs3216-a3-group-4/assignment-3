@@ -96,7 +96,7 @@ const SubscriptionCard = ({ user }: SubscriptionInfo) => {
 
   return (
     <Card
-      className={`flex flex-col items-stretch w-full ${isUserUnverified && "border-red-500"}`}
+      className={`flex flex-col items-stretch w-full ${isUserUnverified && "opacity-50 border-gray-400"}`}
       style={{ maxWidth: `${MAX_CARD_HEIGHT_PX}px` }}
     >
       <CardHeader className="gap-y-4">
