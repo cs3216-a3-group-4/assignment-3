@@ -39,22 +39,18 @@ const UnverifiedAlert = () => {
       <div className="flex items-center">
         <LucideMail className="h-5 w-5 fill-slate-800 stroke-orange-200" />
       </div>
-      <div className="flex flex-col items-start justify-center w-full">
-        <AlertDescription className="w-full">
-          <div className="flex justify-between w-full">
-            <div>
-              Please verify your email address by clicking the link sent to{" "}
-              <span className="font-semibold">{user?.email}</span>
-            </div>
-            <span
-              className="underline cursor-pointer justify-self-end"
-              onClick={onClickResendVerification}
-            >
-              Resend verification email
-            </span>
-          </div>
-        </AlertDescription>
-      </div>
+      <AlertDescription className="grow flex items-center space-between space-x-4 w-full h-full">
+        <div className="grow">
+          Please verify your email address by clicking the link sent to&nbsp;
+          <span className="font-semibold">{user?.email}</span>
+        </div>
+        <span
+          className="w-fit underline cursor-pointer"
+          onClick={onClickResendVerification}
+        >
+          Resend verification email
+        </span>
+      </AlertDescription>
     </Alert>
   );
 };
