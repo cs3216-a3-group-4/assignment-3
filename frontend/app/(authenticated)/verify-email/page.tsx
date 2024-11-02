@@ -16,13 +16,15 @@ import {
 } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useUserStore } from "@/store/user/user-store-provider";
-import { UNVERIFIED_TIER_ID } from "@/types/billing";
+import { JippyTierID, UNVERIFIED_TIER_ID } from "@/types/billing";
 
 const VerifyEmail = () => {
   const VERIFY_SUCCESS_DELAY = 1;
   const VERIFY_ERROR_DELAY = 5;
 
   const user = useUserStore((store) => store.user);
+  const setIsUserVerified = useUserStore((store) => store.setIsUserVerified);
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const searchParams = useSearchParams();
@@ -59,6 +61,7 @@ const VerifyEmail = () => {
             redirectAfterVerify,
             VERIFY_SUCCESS_DELAY * 1000,
           );
+          setIsUserVerified(true, JippyTierID.Free);
         } else if (response.status == HttpStatusCode.Conflict) {
           // User is already verified
           setIsVerifySuccess(true);
@@ -68,6 +71,7 @@ const VerifyEmail = () => {
             redirectAfterVerify,
             VERIFY_SUCCESS_DELAY * 1000,
           );
+          setIsUserVerified(true, JippyTierID.Free);
           console.log("WARNING: User is already verified");
         } else if (response.status == HttpStatusCode.BadRequest) {
           // Email verification has already been used

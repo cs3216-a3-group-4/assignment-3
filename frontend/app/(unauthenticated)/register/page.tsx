@@ -55,8 +55,8 @@ function RegisterPage() {
   };
 
   return (
-    <Box className="flex w-full gap-x-24 justify-center items-center bg-primary">
-      <Box className="flex flex-col space-y-8 justify-center items-center bg-card text-card-foreground py-12 px-12 md:px-20 w-full lg:w-6/12 max-w-3xl h-fit">
+    <Box className="flex flex-col m-auto w-full justify-center items-center gap-y-6 md:bg-primary min-h-full">
+      <Box className="flex flex-col space-y-8 justify-center items-center bg-card text-card-foreground px-6 sm:px-12 py-3 md:py-8 md:max-w-lg border-0 md:border rounded-lg shadow-sm">
         {/* Header */}
         <Box className="flex flex-col space-y-3">
           <h3 className="text-2xl font-semibold leading-none tracking-tight">
