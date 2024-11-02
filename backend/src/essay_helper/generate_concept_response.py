@@ -81,7 +81,6 @@ def format_prompt_input(
     article_id = concept.get("article_id")
     article = articles_map[int(article_id)]
     article_title = article.title
-    article_summary = article.summary
     article_body = article.body
     concept_content = concept.get("content")
 
