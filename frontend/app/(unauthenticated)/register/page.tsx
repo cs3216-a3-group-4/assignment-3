@@ -55,7 +55,7 @@ function RegisterPage() {
   };
 
   return (
-    <Box className="flex w-full gap-x-24">
+    <Box className="flex w-full gap-x-24 justify-center items-center bg-primary">
       <Box className="flex flex-col space-y-8 justify-center items-center bg-card text-card-foreground py-12 px-12 md:px-20 w-full lg:w-6/12 max-w-3xl h-fit">
         {/* Header */}
         <Box className="flex flex-col space-y-3">
@@ -149,8 +149,6 @@ function RegisterPage() {
           </Link>
         </div>
       </Box>
-
-      <Box className="bg-primary hidden lg:flex grow" />
     </Box>
   );
 }

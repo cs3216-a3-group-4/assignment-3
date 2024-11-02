@@ -71,12 +71,12 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             </div>
           }
         >
-          {isLoggedIn && isUserVerified && (
-            <div className="h-fit flex flex-col w-full items-stretch">
-              <UnverifiedAlert />
-            </div>
-          )}
           <ContentLayout isLoading={isUserProfileLoading}>
+            {isLoggedIn && isUserVerified && (
+              <div className="h-fit flex flex-col w-full items-stretch">
+                <UnverifiedAlert />
+              </div>
+            )}
             {children}
           </ContentLayout>
         </Suspense>
