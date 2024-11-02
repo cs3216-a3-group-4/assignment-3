@@ -18,6 +18,7 @@ interface UserActions {
   setIsNotFetching: () => void;
   setLoggedIn: (user: UserPublic) => void;
   setNotLoggedIn: () => void;
+  setIsUserVerified: (verfied: boolean, tierId: number) => void;
 }
 
 export type UserStore = UserState & UserActions;
@@ -33,5 +34,14 @@ export const createUserStore = (initState: UserState = defaultUserState) => {
         isLoggedIn: false,
         user: undefined,
       })),
+    setIsUserVerified: (verified: boolean, tierId: number) =>
+      set((store) => {
+        const user = store.user;
+        if (user) {
+          user.verified = verified;
+          user.tier_id = tierId;
+        }
+        return { ...store, user };
+      }),
   }));
 };

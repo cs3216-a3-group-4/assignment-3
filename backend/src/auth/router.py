@@ -126,6 +126,22 @@ def complete_email_verification(
     if not email_verification:
         raise HTTPException(HTTPStatus.NOT_FOUND)
     elif email_verification.used:
+        user = session.scalar(
+            select(User)
+            .where(User.id == email_verification.user_id)
+            .options(
+                selectinload(User.categories),
+                selectinload(User.tier),
+                selectinload(User.usage),
+            )
+        )
+
+        if user.verified and user.tier_id != UNVERIFIED_TIER_ID:
+            print(
+                f"""ERROR: Attempt to verify email of user with ID {user.id} who is already verified"""
+            )
+            raise HTTPException(HTTPStatus.CONFLICT)
+
         print(
             f"""ERROR: Attempt to reuse an old email verification code {code} for user with ID {email_verification.user_id}"""
         )
