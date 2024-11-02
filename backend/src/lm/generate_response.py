@@ -1,3 +1,4 @@
+import json
 from src.lm.generate_points import get_relevant_analyses
 from src.lm.lm import lm_model_essay as lm_model
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -114,5 +115,6 @@ def generate_fallback_response(question: str, point: str):
 
 
 if __name__ == "__main__":
-    question = "Should the government provide free education for all citizens?"
-    print(generate_response(question))
+    question = "Longer life expectancy creates more problems than benefits. Discuss."
+    response = asyncio.run(generate_response(question))
+    print(json.dumps(response, indent=2))
