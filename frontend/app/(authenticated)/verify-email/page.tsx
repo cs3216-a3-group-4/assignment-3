@@ -137,7 +137,8 @@ const VerifyEmail = () => {
       <Card className="flex flex-col border-0 md:border shadow-none md:shadow-sm md:max-w-md text-center">
         <CardHeader className="space-y-3">
           <CardTitle>
-            {isLoading ? "Verifying your email" : postVerifyTitle}
+            {!isLoggedIn ? "Log in to verify your email" : 
+              isLoading ? "Verifying your email" : postVerifyTitle}
           </CardTitle>
         </CardHeader>
 
@@ -153,11 +154,12 @@ const VerifyEmail = () => {
           </Box>
           <CardDescription>
             <span className="max-w-sm whitespace-pre-line">
-              {isLoading
-                ? "Hang tight! We're verifying your email. This shouldn't take long."
-                : postVerifySubtitle}
+              {!isLoggedIn ? "Redirecting you to the log in page..." : 
+                isLoading
+                  ? "Hang tight! We're verifying your email. This shouldn't take long."
+                  : postVerifySubtitle}
             </span>
-            {!isLoading && isVerifySuccess && (
+            {isLoggedIn && !isLoading && isVerifySuccess && (
               <span
                 className="underline cursor-pointer"
                 onClick={redirectAfterVerify}
