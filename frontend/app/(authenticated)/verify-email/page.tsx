@@ -22,7 +22,7 @@ const VerifyEmail = () => {
   const VERIFY_SUCCESS_DELAY = 1;
   const VERIFY_ERROR_DELAY = 5;
 
-  const {isLoggedIn, user} = useUserStore((store) => store);
+  const { isLoggedIn, user } = useUserStore((store) => store);
   const setIsUserVerified = useUserStore((store) => store.setIsUserVerified);
 
   const router = useRouter();
@@ -47,7 +47,8 @@ const VerifyEmail = () => {
     if (!isLoading || !code || !isLoggedIn || !user) {
       return;
     }
-    const isUserUnverified = user && !user.verified && user.tier_id === UNVERIFIED_TIER_ID;
+    const isUserUnverified =
+      user && !user.verified && user.tier_id === UNVERIFIED_TIER_ID;
     let timeout: NodeJS.Timeout | null = null;
 
     if (isUserUnverified) {
@@ -137,8 +138,11 @@ const VerifyEmail = () => {
       <Card className="flex flex-col border-0 md:border shadow-none md:shadow-sm md:max-w-md text-center">
         <CardHeader className="space-y-3">
           <CardTitle>
-            {!isLoggedIn ? "Log in to verify your email" : 
-              isLoading ? "Verifying your email" : postVerifyTitle}
+            {!isLoggedIn
+              ? "Log in to verify your email"
+              : isLoading
+                ? "Verifying your email"
+                : postVerifyTitle}
           </CardTitle>
         </CardHeader>
 
@@ -154,8 +158,9 @@ const VerifyEmail = () => {
           </Box>
           <CardDescription>
             <span className="max-w-sm whitespace-pre-line">
-              {!isLoggedIn ? "Redirecting you to the log in page..." : 
-                isLoading
+              {!isLoggedIn
+                ? "Redirecting you to the log in page..."
+                : isLoading
                   ? "Hang tight! We're verifying your email. This shouldn't take long."
                   : postVerifySubtitle}
             </span>
