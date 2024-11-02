@@ -115,7 +115,7 @@ const VerifyEmail = () => {
           }
         }
       })();
-    } else if (!isUserUnverified) {
+    } else {
       console.log("WARNING: User is already verified");
       // User is already verified, don't make the backend verify again
       setIsVerifySuccess(true);
