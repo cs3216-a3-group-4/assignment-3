@@ -22,15 +22,13 @@ const VerifyEmail = () => {
   const VERIFY_SUCCESS_DELAY = 1;
   const VERIFY_ERROR_DELAY = 5;
 
-  const user = useUserStore((store) => store.user);
+  const { isLoggedIn, user } = useUserStore((store) => store);
   const setIsUserVerified = useUserStore((store) => store.setIsUserVerified);
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
-  const isUserUnverified =
-    !user?.verified && user?.tier_id === UNVERIFIED_TIER_ID;
   const [isVerifySuccess, setIsVerifySuccess] = useState<boolean>(false);
   const [postVerifyTitle, setPostVerifyTitle] = useState<string>(
     "Verified! Redirecting you to Jippy...",
@@ -45,8 +43,15 @@ const VerifyEmail = () => {
   };
 
   useEffect(() => {
+    // Only trigger the rest of the useEffect logic if code is valid, user is logged in, and useEffect() has not already run
+    if (!isLoading || !code || !isLoggedIn || !user) {
+      return;
+    }
+    const isUserUnverified =
+      user && !user.verified && user.tier_id === UNVERIFIED_TIER_ID;
     let timeout: NodeJS.Timeout | null = null;
-    if (code && isUserUnverified) {
+
+    if (isUserUnverified) {
       (async () => {
         const response =
           await completeEmailVerificationAuthEmailVerificationPut({
@@ -111,7 +116,7 @@ const VerifyEmail = () => {
           }
         }
       })();
-    } else if (!isUserUnverified) {
+    } else {
       console.log("WARNING: User is already verified");
       // User is already verified, don't make the backend verify again
       setIsVerifySuccess(true);
@@ -126,14 +131,18 @@ const VerifyEmail = () => {
         clearTimeout(timeout);
       }
     };
-  }, [code, isUserUnverified, redirectAfterVerify]);
+  }, [code, isLoggedIn, user]);
 
   return (
     <Box className="flex flex-col m-auto w-full h-full justify-center items-center gap-y-10">
       <Card className="flex flex-col border-0 md:border shadow-none md:shadow-sm md:max-w-md text-center">
         <CardHeader className="space-y-3">
           <CardTitle>
-            {isLoading ? "Verifying your email" : postVerifyTitle}
+            {!isLoggedIn
+              ? "Log in to verify your email"
+              : isLoading
+                ? "Verifying your email"
+                : postVerifyTitle}
           </CardTitle>
         </CardHeader>
 
@@ -149,11 +158,13 @@ const VerifyEmail = () => {
           </Box>
           <CardDescription>
             <span className="max-w-sm whitespace-pre-line">
-              {isLoading
-                ? "Hang tight! We're verifying your email. This shouldn't take long."
-                : postVerifySubtitle}
+              {!isLoggedIn
+                ? "Redirecting you to the log in page..."
+                : isLoading
+                  ? "Hang tight! We're verifying your email. This shouldn't take long."
+                  : postVerifySubtitle}
             </span>
-            {!isLoading && isVerifySuccess && (
+            {isLoggedIn && !isLoading && isVerifySuccess && (
               <span
                 className="underline cursor-pointer"
                 onClick={redirectAfterVerify}
