@@ -104,6 +104,7 @@ async def create_user_question(
 
     user_question = UserQuestion(question=data.question, user_id=user.id)
 
+    # NOTE: to be replaced with concept based generation
     results = await generate_response(data.question)
     answer = form_answer_analysis_based(results)
     user_question.answer = answer

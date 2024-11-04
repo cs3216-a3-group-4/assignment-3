@@ -103,3 +103,10 @@ class ConceptAnswerDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     points = list[CPointDTO]
+
+
+class UserQuestionConceptDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    question: str
+    answer: ConceptAnswerDTO
