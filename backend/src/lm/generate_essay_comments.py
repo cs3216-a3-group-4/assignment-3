@@ -2,6 +2,7 @@ import asyncio
 import json
 from typing import List
 from pydantic import BaseModel
+from src.lm.dict_types import CommentsType
 from src.lm.lm import lm_model_essay as lm_model
 
 from langchain_core.output_parsers import JsonOutputParser
@@ -42,7 +43,7 @@ class Comments(BaseModel):
 
 def generate_paragraph_comments(
     content: str, question: str, paragraph_type: ParagraphType
-) -> dict:
+) -> CommentsType:
     sysprompt = ""
     if paragraph_type == ParagraphType.INTRODUCTION:
         sysprompt = INTRO_SYSPROMPT
@@ -62,7 +63,9 @@ def generate_paragraph_comments(
 
     result = lm_model.invoke(messages)
     parser = JsonOutputParser(pydantic_object=Comments)
-    comments = parser.invoke(result.content)
+    # print("COMMENT: ", comments)
+    comments: CommentsType = parser.invoke(result.content)
+
     if (
         paragraph_type == ParagraphType.CONCLUSION
         or paragraph_type == ParagraphType.INTRODUCTION
@@ -107,7 +110,7 @@ def generate_comment_orm(
     return orm_list
 
 
-def extract_point(content: str, question: str):
+def extract_point(content: str, question: str) -> str:
     prompt = f"""
     Question: {question}
     Paragraph: {content}

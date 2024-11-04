@@ -1,3 +1,11 @@
+import json
+from src.embeddings.vector_store import AnalysisLMType
+from src.lm.dict_types import (
+    ElaboratedAnalysisType,
+    FallbackType,
+    PointWithAnalysisType,
+    PointsAfterLLMType,
+)
 from src.lm.generate_points import get_relevant_analyses
 from src.lm.lm import lm_model_essay as lm_model
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -5,9 +13,8 @@ from src.lm.prompts import QUESTION_ANALYSIS_GEN_SYSPROMPT_2 as SYSPROMPT
 from src.lm.prompts import (
     QUESTION_ANALYSIS_GEN_FALLBACK_SYSPROMPT as FALLBACK_SYSPROMPT,
 )
-from src.lm.prompts import (
-    SOCIETY_QUESTION_CLASSIFICATION_SYSPROMPT as SOCIETY_SYSPROMPT,
-)
+from src.lm.society_classifier import classify_society_qn
+from src.lm.dict_types import Point
 
 from langchain_core.output_parsers import JsonOutputParser
 from sqlalchemy.orm import Session
@@ -42,7 +49,12 @@ def format_prompt_input(
 
 
 async def get_elaborated_analysis(
-    question, analysis, point, elaborated_analyses, index, events_map
+    question: str,
+    analysis: AnalysisLMType,
+    point: Point,
+    elaborated_analyses: list[tuple[ElaboratedAnalysisType, int]],
+    index: int,
+    events_map: dict[int, Event],
 ):
     prompt_input = format_prompt_input(question, analysis, point, events_map)
     messages = [
@@ -57,7 +69,7 @@ async def get_elaborated_analysis(
         elaborated_analyses.append((analysis, index))
 
 
-async def process_point_dict(point_dict, question):
+async def process_point_dict(point_dict: PointWithAnalysisType, question: str):
     point = point_dict.get("point")
     analyses = point_dict.get("analyses")
     with Session(engine) as session:
@@ -67,17 +79,22 @@ async def process_point_dict(point_dict, question):
             )
         ).all()
         events_map = {event.id: event for event in events}
-    elaborated_analyses = []
+    elaborated_analyses_with_index: list[tuple[ElaboratedAnalysisType, int]] = []
     await asyncio.gather(
         *[
             get_elaborated_analysis(
-                question, analysis, point, elaborated_analyses, index, events_map
+                question,
+                analysis,
+                point,
+                elaborated_analyses_with_index,
+                index,
+                events_map,
             )
             for index, analysis in enumerate(analyses)
         ]
     )
-    elaborated_analyses.sort(key=lambda item: item[1])
-    elaborated_analyses = [item[0] for item in elaborated_analyses]
+    elaborated_analyses_with_index.sort(key=lambda item: item[1])
+    elaborated_analyses = [item[0] for item in elaborated_analyses_with_index]
 
     point_dict["analyses"] = elaborated_analyses
 
@@ -85,7 +102,7 @@ async def process_point_dict(point_dict, question):
         point_dict["fall_back_response"] = generate_fallback_response(question, point)
 
 
-async def generate_response(question: str) -> dict:
+async def generate_response(question: str) -> PointsAfterLLMType:
     # NOTE: add a check to see if the question is a society question
     is_society_qn = classify_society_qn(question)
     relevant_analyses = await get_relevant_analyses(
@@ -104,7 +121,7 @@ async def generate_response(question: str) -> dict:
     return relevant_analyses
 
 
-def generate_fallback_response(question: str, point: str):
+def generate_fallback_response(question: str, point: str) -> FallbackType:
     messages = [
         SystemMessage(content=FALLBACK_SYSPROMPT),
         HumanMessage(content=f"Question: {question}\nPoint: {point}"),
@@ -115,22 +132,7 @@ def generate_fallback_response(question: str, point: str):
     return parser.invoke(result)
 
 
-def classify_society_qn(question: str) -> bool:
-    # NOTE: if the words "In your society" are in the question, then there is no doubt
-    if "in your society" in question.lower():
-        return True
-
-    # Otherwise, we let the LM decide
-    messages = [
-        SystemMessage(content=SOCIETY_SYSPROMPT),
-        HumanMessage(content=question),
-    ]
-    result = lm_model.invoke(messages)
-    if result.content == "Yes":
-        return True
-    return False
-
-
 if __name__ == "__main__":
-    question = "Should the government provide free education for all citizens?"
-    print(generate_response(question))
+    question = "Longer life expectancy creates more problems than benefits. Discuss."
+    response = asyncio.run(generate_response(question))
+    print(json.dumps(response, indent=2))
