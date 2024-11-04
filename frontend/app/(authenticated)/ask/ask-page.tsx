@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/card";
 import JippyIcon from "@/public/jippy-icon/jippy-icon-sm";
 import { useUserStore } from "@/store/user/user-store-provider";
+import { UNVERIFIED_TIER_ID } from "@/types/billing";
 import { getNextMonday, toQueryDateFriendly } from "@/utils/date";
 
 const MAX_GP_QUESTION_LEN: number = 200; // max character count
@@ -37,6 +38,32 @@ interface AskPageProps {
   isLoading: boolean;
 }
 
+const LimitAlert = ({
+  warningText,
+  isRedAlert,
+}: {
+  warningText: string;
+  isRedAlert: boolean;
+}) => {
+  return (
+    <Alert
+      className="my-2 flex items-center space-x-2"
+      variant={`${isRedAlert ? "destructive" : "teal"}`}
+    >
+      <div className="flex items-center">
+        <CircleAlert
+          className={`h-5 w-5 ${isRedAlert ? "" : "stroke-teal-700"}`}
+        />
+      </div>
+      <AlertDescription
+        className={`${isRedAlert ? "" : "text-teal-700"} font-medium`}
+      >
+        {warningText}
+      </AlertDescription>
+    </Alert>
+  );
+};
+
 const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
   const router = useRouter();
   const [questionInput, setQuestionInput] = useState<string>("");
@@ -44,6 +71,8 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const user = useUserStore((store) => store.user);
   const setLoggedIn = useUserStore((store) => store.setLoggedIn);
+  const isUserUnverified =
+    user?.verified === false || user?.tier_id === UNVERIFIED_TIER_ID;
 
   if (!user) {
     // This should be impossible.
@@ -124,52 +153,29 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
             <h1 className="font-medium mb-2 text-text-muted">
               Ask Jippy a General Paper exam question
             </h1>
-            {hasTriesLeft ? (
-              <Alert
-                className="my-2 flex items-center space-x-2"
-                variant="teal"
-              >
-                <div className="flex items-center">
-                  <CircleAlert className="h-5 w-5 stroke-teal-700" />
-                </div>
-                <AlertDescription className="text-teal-700 font-medium">
-                  You have {triesLeft}{" "}
-                  {triesLeft === 1 ? "question" : "questions"} left. It will
-                  reset on 4 Nov 2024 12:00AM.
-                </AlertDescription>
-              </Alert>
+            {isUserUnverified ? (
+              <LimitAlert
+                isRedAlert={true}
+                warningText="Verify your email to start asking essay questions."
+              />
+            ) : hasTriesLeft ? (
+              <LimitAlert
+                isRedAlert={errorMsg ? true : false}
+                warningText={
+                  errorMsg ||
+                  `You have ${triesLeft} ${triesLeft === 1 ? "question" : "questions"} left. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`
+                }
+              />
             ) : (
-              <Alert
-                className="my-2 flex items-center space-x-2 bg-red-50"
-                variant="destructive"
-              >
-                <div className="flex items-center">
-                  <CircleAlert className="h-5 w-5" />
-                </div>
-                <AlertDescription className="font-medium">
-                  You&apos;ve reached the question limit. It will reset on{" "}
-                  {toQueryDateFriendly(getNextMonday())} 12:00AM.
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {errorMsg && (
-              <Alert
-                className="my-2 bg-red-50 flex items-center space-x-2"
-                variant="destructive"
-              >
-                <div className="flex items-center">
-                  <CircleAlert className="h-5 w-5" />
-                </div>
-                <AlertDescription className="font-medium">
-                  {errorMsg}
-                </AlertDescription>
-              </Alert>
+              <LimitAlert
+                isRedAlert={true}
+                warningText={`You've reached the question limit. It will reset on ${toQueryDateFriendly(getNextMonday())} 12:00AM.`}
+              />
             )}
             <div className="w-full flex items-center gap-x-4 gap-y-6 flex-col md:flex-row">
               <AutosizeTextarea
-                className="md:text-lg px-4 py-4 resize-none"
-                disabled={!hasTriesLeft}
+                className={`md:text-lg px-4 py-4 resize-none ${isUserUnverified ? "border-red-400" : ""}`}
+                disabled={isUserUnverified || !hasTriesLeft}
                 maxHeight={200}
                 maxLength={MAX_GP_QUESTION_LEN}
                 onChange={(event) => setQuestionInput(event.target.value)}
@@ -178,9 +184,10 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
               />
               <Button
                 className="w-full md:px-4 md:w-auto"
-                disabled={!hasTriesLeft}
+                disabled={isUserUnverified || !hasTriesLeft}
                 onClick={handleAskQuestion}
                 size="lg"
+                variant={isUserUnverified ? "destructive_outline" : "default"}
               >
                 <Wand2Icon className="mr-3" />
                 Ask

@@ -58,7 +58,11 @@ function LoginPage() {
     } else {
       setIsError(false);
       setLoggedIn(response.data.user);
-      router.push("/");
+      if (window.history?.length && window.history.length > 1) {
+        router.back();
+      } else {
+        router.replace("/", { scroll: false });
+      }
     }
   };
 
@@ -95,7 +99,7 @@ function LoginPage() {
                 <CircleAlert className="h-5 w-5" />
                 <AlertDescription>
                   Your email or password is incorrect. Please try again, or{" "}
-                  <Link href="/password-reset" size="sm">
+                  <Link href="/reset-password" size="sm">
                     reset your password
                   </Link>
                   .

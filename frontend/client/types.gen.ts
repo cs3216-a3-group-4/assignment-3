@@ -410,7 +410,7 @@ export type TierDTO = {
     gp_question_limit: number;
 };
 
-export type TierNames = 'FREE' | 'ADMIN' | 'PREMIUM';
+export type TierNames = 'FREE' | 'ADMIN' | 'PREMIUM' | 'UNVERIFIED';
 
 export type Token = {
     access_token: string;
@@ -432,6 +432,7 @@ export type UserPublic = {
     subscription?: (SubscriptionDTO | null);
     usage?: (UsageDTO | null);
     tier: TierDTO;
+    verified: boolean;
 };
 
 export type UserQuestionDTO = {
@@ -500,6 +501,22 @@ export type LogInAuthLoginPostResponse = (Token);
 
 export type LogInAuthLoginPostError = (HTTPValidationError);
 
+export type CompleteEmailVerificationAuthEmailVerificationPutData = {
+    query: {
+        code: string;
+    };
+};
+
+export type CompleteEmailVerificationAuthEmailVerificationPutResponse = (Token);
+
+export type CompleteEmailVerificationAuthEmailVerificationPutError = (HTTPValidationError);
+
+export type ResendVerificationEmailAuthEmailVerificationPostData = unknown;
+
+export type ResendVerificationEmailAuthEmailVerificationPostResponse = (unknown);
+
+export type ResendVerificationEmailAuthEmailVerificationPostError = (HTTPValidationError);
+
 export type LoginGoogleAuthLoginGoogleGetResponse = (unknown);
 
 export type LoginGoogleAuthLoginGoogleGetError = unknown;
@@ -513,6 +530,25 @@ export type AuthGoogleAuthGoogleGetData = {
 export type AuthGoogleAuthGoogleGetResponse = (Token);
 
 export type AuthGoogleAuthGoogleGetError = (HTTPValidationError);
+
+export type RequestPasswordResetAuthPasswordResetPostData = {
+    body: PasswordResetRequestData;
+};
+
+export type RequestPasswordResetAuthPasswordResetPostResponse = (unknown);
+
+export type RequestPasswordResetAuthPasswordResetPostError = (HTTPValidationError);
+
+export type CompletePasswordResetAuthPasswordResetPutData = {
+    body: PasswordResetCompleteData;
+    query: {
+        code: string;
+    };
+};
+
+export type CompletePasswordResetAuthPasswordResetPutResponse = (unknown);
+
+export type CompletePasswordResetAuthPasswordResetPutError = (HTTPValidationError);
 
 export type StripeWebhookBillingWebhookPostData = {
     headers?: {
@@ -535,25 +571,6 @@ export type LogoutAuthLogoutGetData = unknown;
 export type LogoutAuthLogoutGetResponse = (unknown);
 
 export type LogoutAuthLogoutGetError = (HTTPValidationError);
-
-export type RequestPasswordResetAuthPasswordResetPostData = {
-    body: PasswordResetRequestData;
-};
-
-export type RequestPasswordResetAuthPasswordResetPostResponse = (unknown);
-
-export type RequestPasswordResetAuthPasswordResetPostError = (HTTPValidationError);
-
-export type CompletePasswordResetAuthPasswordResetPutData = {
-    body: PasswordResetCompleteData;
-    query: {
-        code: string;
-    };
-};
-
-export type CompletePasswordResetAuthPasswordResetPutResponse = (unknown);
-
-export type CompletePasswordResetAuthPasswordResetPutError = (HTTPValidationError);
 
 export type ChangePasswordAuthChangePasswordPutData = {
     body: PasswordResetMoreCompleteData;

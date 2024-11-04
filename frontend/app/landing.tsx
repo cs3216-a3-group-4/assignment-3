@@ -32,7 +32,7 @@ import {
 
 const Landing = () => {
   return (
-    <div className="relative w-full h-full overflow-y-auto">
+    <div className="relative w-full h-full overflow-y-auto scroll-smooth">
       <div className="flex flex-col bg-muted min-w-full h-fit">
         <div
           // h-[calc(100vh_-_84px)] min-h-[calc(100vh_-_84px)] max-h-[calc(100vh_-_84px)]
@@ -148,8 +148,8 @@ const Landing = () => {
                 provide fall-backs instead during essay generation.
               </li>
               <li>
-                Jippy is trained on a set real current affair news data set. We
-                currently have 13k articles in our dataset.
+                Jippy is trained on a set of real current affairs news data set.
+                We currently have 13k articles in our dataset.
               </li>
             </ul>
           </div>
@@ -181,13 +181,19 @@ const Landing = () => {
             <h1 className="text-5xl tracking-tight leading-tight text-primary font-bold">
               Frequently asked questions
             </h1>
-            <span className="text-2xl flex items-center mt-6">
-              Still curious? Drop us an email at jippythefrog@gmail.com
-            </span>
+            <div className="text-2xl mt-4">
+              <span>Still curious? Drop us an email at </span>
+              <a
+                className="hover:text-text/80"
+                href="mailto:jippythefrog@gmail.com"
+              >
+                jippythefrog@gmail.com
+              </a>
+            </div>
           </div>
 
           <div className="flex-1 md:basis-7/12 md:p-12 gap-y-8 mt-8 md:mt-0">
-            <Accordion type="multiple">
+            <Accordion className="flex flex-col gap-y-8" type="multiple">
               <AccordionItem
                 className="border rounded-lg px-8 py-2 bg-background text-2xl font-medium text-text"
                 value="q1"
@@ -208,8 +214,8 @@ const Landing = () => {
                   Cannot just ChatGPT meh?
                 </AccordionTrigger>
                 <AccordionContent>
-                  Jippy is trained on 13k datasets, and built specially for A
-                  Level GP students.
+                  Jippy is trained on a dataset with 13k articles and built
+                  specially for A Level GP students.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
