@@ -1,4 +1,5 @@
 import asyncio
+from typing import TypedDict
 from sqlalchemy import select
 from src.embeddings.vector_store import create_vector_store
 
@@ -12,6 +13,14 @@ from sqlalchemy.orm import Session
 CONCURRENCY = 150
 
 vector_store = create_vector_store("test-concepts")
+
+
+class ArticleConceptLLMType(TypedDict):
+    concept_id: int
+    article_id: int
+    is_singapore: bool
+    content: str
+    score: float
 
 
 def fetch_all_article_concepts(limit: int = None) -> list[ArticleConcept]:
@@ -88,7 +97,7 @@ async def get_similar_concepts(query: str, top_k: int = 3, filter_sg: bool = Fal
         k=top_k,
         filter=filter_dict,
     )
-    results = []
+    results: list[ArticleConceptLLMType] = []
     for document, score in documents:
         results.append(
             {

@@ -1,5 +1,5 @@
 import asyncio
-from typing import List
+from typing import List, TypedDict
 from langchain_openai import OpenAIEmbeddings
 
 from langchain_pinecone import PineconeVectorStore
@@ -157,6 +157,14 @@ def store_documents(analysis_list: List[Analysis]):
     print(f"Stored {len(documents)} documents")
 
 
+class AnalysisLMType(TypedDict):
+    id: int  # this is a guess
+    event_id: int
+    category_id: int
+    content: str
+    score: float
+
+
 async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = False):
     # NOTE: filter_sg == False means all examples are allowed, not just Singapore examples
     filter_dict = {"is_singapore": True} if filter_sg else {}
@@ -166,7 +174,7 @@ async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = Fals
         k=top_k,
         filter=filter_dict,
     )
-    results = []
+    results: list[AnalysisLMType] = []
     for document, score in documents:
         results.append(
             {
