@@ -2,7 +2,7 @@ from datetime import datetime
 from http import HTTPStatus
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session, selectinload
 from src.articles.dependencies import retrieve_article
 from src.auth.dependencies import get_current_user
@@ -30,6 +30,7 @@ def get_articles(
     start_date: Annotated[datetime | None, Query()] = None,
     end_date: Annotated[datetime | None, Query()] = None,
     category_ids: Annotated[list[int] | None, Query()] = None,
+    search: Annotated[str | None, Query()] = None,
     limit: int | None = None,
     offset: int | None = None,
     bookmarks: bool = False,
@@ -52,6 +53,10 @@ def get_articles(
         query = query.where(Article.categories.any(Category.id.in_(category_ids)))
     if bookmarks:
         query = query.where(Article.bookmarks.any(ArticleBookmark.user_id == user.id))
+    if search:
+        query = query.where(
+            or_(Article.title.ilike(f"%{search}"), Article.summary.ilike(f"%{search}%"))
+        )
 
     relevant_ids = [id for id in session.scalars(query)]
 
