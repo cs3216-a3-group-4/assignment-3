@@ -41,13 +41,15 @@ ESSAY_HELPER_FALLBACK_PROMPT_CONCEPTS = """
     You will be given a General Paper essay question that is argumentative or discursive in nature.
     You will also be given a point that either supports or refutes the argument in the question, and the reason for the point.
 
-    The context is that a student has given a point that cannot be supported or refuted by news events.
+    The context is that you have been given a point that cannot be supported or refuted by examples from news events.
 
     Your task:
     Provide a response that suggests other alternatives to support or refute the point given in the question.
 
     You may suggest a different type of evidence to support that point. Do NOT provide any examples in your response.
     You may also suggest a general argument or reasoning that can be used to reinforce the point given.
+
+    Your responses must be suggestions. Give about 2 to 3 sentences for each suggestion.
 
     Your response should be in the following format:
     {

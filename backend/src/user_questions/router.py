@@ -11,11 +11,11 @@ from src.notes.models import Note
 from src.limits.check_usage import within_usage_limit
 from src.user_questions.models import (
     Answer,
-    Fallback,
     Point,
     PointAnalysis,
     UserQuestion,
 )
+from src.essay_helper.form_answer import form_answer_analysis_based
 from src.user_questions.schemas import (
     CreateUserQuestion,
     UserQuestionDTO,
@@ -104,47 +104,9 @@ async def create_user_question(
 
     user_question = UserQuestion(question=data.question, user_id=user.id)
 
-    answer = Answer()
-    user_question.answer = answer
-
     results = await generate_response(data.question)
-
-    for row in results["for_points"]:
-        point = row["point"]
-        analyses = row["analyses"]
-        point = Point(title=point, body="", positive=True)
-
-        for analysis in analyses:
-            point.point_analysises.append(
-                PointAnalysis(
-                    elaboration=analysis["elaborations"],
-                    analysis_id=analysis["id"],
-                )
-            )
-        if not analyses:
-            point.fallback = Fallback(
-                alt_approach=row["fall_back_response"]["alt_approach"],
-                general_argument=row["fall_back_response"]["general_argument"],
-            )
-        answer.points.append(point)
-
-    for row in results["against_points"]:
-        point = row["point"]
-        analyses = row["analyses"]
-        point = Point(title=point, body="", positive=False)
-        for analysis in analyses:
-            point.point_analysises.append(
-                PointAnalysis(
-                    elaboration=analysis["elaborations"],
-                    analysis_id=analysis["id"],
-                )
-            )
-        if not analyses:
-            point.fallback = Fallback(
-                alt_approach=row["fall_back_response"]["alt_approach"],
-                general_argument=row["fall_back_response"]["general_argument"],
-            )
-        answer.points.append(point)
+    answer = form_answer_analysis_based(results)
+    user_question.answer = answer
 
     session.add(user_question)
     session.commit()

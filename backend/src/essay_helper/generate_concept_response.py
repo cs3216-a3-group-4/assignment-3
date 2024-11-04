@@ -198,6 +198,12 @@ async def populate_point_with_concepts(
 
 
 if __name__ == "__main__":
-    question = "Longer life expectancy creates more problems than benefits. Discuss."
-    concepts = asyncio.run(generate_concept_response(question))
-    print(json.dumps(concepts, indent=2))
+    question = "Discuss the view that prisoners should lose all their rights"
+    # concepts = asyncio.run(generate_concept_response(question))
+    # print(json.dumps(concepts, indent=2))
+
+    fallback = generate_fallback_response(
+        question,
+        "Prisoners should not lose all their rights because retaining certain rights can facilitate their reintegration into society post-release, reducing recidivism rates and benefiting the community as a whole.",
+    )
+    print(json.dumps(fallback, indent=2))

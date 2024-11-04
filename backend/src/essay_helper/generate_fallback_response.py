@@ -5,7 +5,7 @@ from src.lm.dict_types import FallbackType
 from src.lm.lm import lm_model_essay as lm_model
 
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain.output_parsers import JsonOutputParser
+from langchain_core.output_parsers import JsonOutputParser
 
 
 def generate_fallback_response(question: str, point: str) -> FallbackType:
