@@ -44,7 +44,6 @@ class Comments(BaseModel):
 def generate_paragraph_comments(
     content: str, question: str, paragraph_type: ParagraphType
 ) -> CommentsType:
-
     sysprompt = ""
     if paragraph_type == ParagraphType.INTRODUCTION:
         sysprompt = INTRO_SYSPROMPT
