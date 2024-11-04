@@ -151,6 +151,8 @@ async def create_user_question(
 # Endpoints to create concept-based user questions
 @router.get("/{id}")
 def get_concept_based_user_qn():
+    pass
+
 
 @router.post("/")
 async def create_concept_based_user_qn(
