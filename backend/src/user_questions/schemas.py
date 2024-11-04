@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict, model_validator
-from src.events.schemas import MiniEventDTO
+from src.events.schemas import ArticleConceptDTO, MiniEventDTO
 from src.likes.schemas import LikeDTO
 
 
@@ -80,3 +80,26 @@ class ValidationResult(BaseModel):
 
 class CreateUserQuestion(BaseModel):
     question: str
+
+
+# Concept-based essay helper response models
+class PointConceptDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    article_concept: ArticleConceptDTO
+    elaboration: str
+    point_id: int
+
+    # NOTE: Not sure if I need the model_validator part here @seelengxd
+
+
+class CPointDTO(PointMiniDTO):
+    point_concepts: list[PointConceptDTO]
+    fallback: FallbackDTO | None = None
+    likes: list[LikeDTO]
+
+
+class ConceptAnswerDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    points = list[CPointDTO]
