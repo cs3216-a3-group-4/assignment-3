@@ -2,9 +2,15 @@ import asyncio
 import json
 from sqlalchemy import select
 from src.events.models import Article
+from src.lm.dict_types import (
+    AllPointsWithConceptsType,
+    PointWithConceptsAndLLMType,
+    PointWithConceptsType,
+    PointsWithConceptsAfterLLMType,
+)
 from src.lm.society_classifier import classify_society_qn
 from src.lm.generate_points import generate_points_from_question
-from src.embeddings.store_concepts import get_similar_concepts
+from src.embeddings.store_concepts import ArticleConceptLLMType, get_similar_concepts
 
 from src.common.database import engine
 from sqlalchemy.orm import Session
@@ -16,7 +22,7 @@ from src.lm.lm import lm_model_essay as lm_model
 from langchain_core.messages import HumanMessage, SystemMessage
 
 
-async def generate_concept_response(question: str) -> dict:
+async def generate_concept_response(question: str) -> PointsWithConceptsAfterLLMType:
     """
     Given a question, generate relevant concepts from vector db and elaborate
     on the concepts.
@@ -41,7 +47,9 @@ async def generate_concept_response(question: str) -> dict:
     return relevant_concepts
 
 
-async def generate_elaborations_for_point(point_dict: dict, question: str):
+async def generate_elaborations_for_point(
+    point_dict: PointWithConceptsType, question: str
+):
     """
     Given an essay topic sentence, generate elaborations for the point to the given dictionary.
     Augmented with concepts from vector db.
@@ -58,25 +66,33 @@ async def generate_elaborations_for_point(point_dict: dict, question: str):
         ).all()
         articles_map = {article.id: article for article in articles}
 
-    elaborated_concepts = []
+    elaborated_concepts_with_index: list[tuple[PointWithConceptsAndLLMType, int]] = []
     await asyncio.gather(
         *(
             [
                 generate_elaborated_concept(
-                    question, concept, point, elaborated_concepts, index, articles_map
+                    question,
+                    concept,
+                    point,
+                    elaborated_concepts_with_index,
+                    index,
+                    articles_map,
                 )
                 for index, concept in enumerate(concepts)
             ]
         )
     )
-    elaborated_concepts.sort(key=lambda item: item[1])
-    elaborated_concepts = [item[0] for item in elaborated_concepts]
+    elaborated_concepts_with_index.sort(key=lambda item: item[1])
+    elaborated_concepts = [item[0] for item in elaborated_concepts_with_index]
 
     point_dict["concepts"] = elaborated_concepts
 
 
 def format_prompt_input(
-    question: str, concept: dict, point: str, articles_map: dict[int, Article]
+    question: str,
+    concept: ArticleConceptLLMType,
+    point: str,
+    articles_map: dict[int, Article],
 ) -> str:
     article_id = concept.get("article_id")
     article = articles_map[int(article_id)]
@@ -95,11 +111,11 @@ def format_prompt_input(
 
 async def generate_elaborated_concept(
     question: str,
-    concept: dict,
+    concept: ArticleConceptLLMType,
     point: str,
-    elaborated_concepts: list,
+    elaborated_concepts: list[tuple[PointWithConceptsAndLLMType, int]],
     index: int,
-    articles_map: dict,
+    articles_map: dict[int, Article],
 ):
     """
     Given a concept and point, generate an essay paragraph elaborating using the concept.
@@ -120,7 +136,7 @@ async def generate_elaborated_concept(
 
 async def get_relevant_concepts(
     question: str, concepts_per_point: int = 5, is_singapore: bool = False
-) -> dict:
+) -> AllPointsWithConceptsType:
     """
     Given a question, generates topic sentences and adds vector db queried concepts to them.
     Returns a dictionary with for and against points and their relevant concepts.
@@ -130,7 +146,10 @@ async def get_relevant_concepts(
     for_pts = points.get("for_points", [])
     against_pts = points.get("against_points", [])
 
-    relevant_results = {"for_points": [], "against_points": []}
+    relevant_results: AllPointsWithConceptsType = {
+        "for_points": [],
+        "against_points": [],
+    }
 
     await asyncio.gather(
         *(
@@ -160,7 +179,7 @@ async def get_relevant_concepts(
 async def populate_point_with_concepts(
     point: str,
     concepts_per_point: int,
-    relevant_results: list,
+    relevant_results: list[PointWithConceptsType],
     is_singapore: bool = False,
 ):
     """

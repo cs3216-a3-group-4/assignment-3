@@ -3,6 +3,11 @@ from typing import List
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel
+from src.lm.dict_types import (
+    AllPointsWithAnalysisType,
+    PointWithAnalysisType,
+    PointsType,
+)
 from src.lm.lm import lm_model_essay as lm_model
 from src.embeddings.vector_store import get_similar_results
 
@@ -11,11 +16,11 @@ from src.lm.prompts import QUESTION_POINT_GEN_SYSPROMPT as HUMAN_PROMPT
 
 
 class Points(BaseModel):
-    for_points: List[dict]
-    against_points: List[dict]
+    for_points: List[str]
+    against_points: List[str]
 
 
-async def generate_points_from_question(question: str) -> dict:
+async def generate_points_from_question(question: str) -> PointsType:
     human_message = HUMAN_PROMPT + question
     messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
 
@@ -28,7 +33,7 @@ async def generate_points_from_question(question: str) -> dict:
 async def populate_point(
     point: str,
     analyses_per_point: int,
-    relevant_results: list,
+    relevant_results: list[PointWithAnalysisType],
     is_singapore: bool = False,
 ):
     """
@@ -42,16 +47,20 @@ async def populate_point(
 
 async def get_relevant_analyses(
     question: str, analyses_per_point: int = 5, is_singapore: bool = False
-) -> dict:
+) -> AllPointsWithAnalysisType:
     """
     Given a question, generate topic sentences and populate them with relevant analyses.
     """
+    print(f"Freq penalty: {lm_model.frequency_penalty}")
     points = await generate_points_from_question(question)
 
     for_pts = points.get("for_points", [])
     against_pts = points.get("against_points", [])
 
-    relevant_results = {"for_points": [], "against_points": []}
+    relevant_results: AllPointsWithAnalysisType = {
+        "for_points": [],
+        "against_points": [],
+    }
 
     await asyncio.gather(
         *(
