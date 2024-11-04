@@ -16,6 +16,8 @@ from src.common.database import engine
 from sqlalchemy.orm import Session
 
 from src.essay_helper.prompts import ESSAY_HELPER_SYSPROMPT_CONCEPTS as SYSPROMPT
+from src.essay_helper.generate_fallback_response import generate_fallback_response
+
 
 from src.lm.lm import lm_model_essay as lm_model
 
@@ -51,7 +53,7 @@ async def generate_elaborations_for_point(
     point_dict: PointWithConceptsType, question: str
 ):
     """
-    Given an essay topic sentence, generate elaborations for the point to the given dictionary.
+    Given an essay topic sentence, generate LLM elaborations for the point to the given dictionary.
     Augmented with concepts from vector db.
     """
 
@@ -86,6 +88,9 @@ async def generate_elaborations_for_point(
     elaborated_concepts = [item[0] for item in elaborated_concepts_with_index]
 
     point_dict["concepts"] = elaborated_concepts
+
+    if len(elaborated_concepts) == 0:
+        point_dict["fall_back_response"] = generate_fallback_response(question, point)
 
 
 def format_prompt_input(
