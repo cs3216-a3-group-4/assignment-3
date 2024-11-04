@@ -83,7 +83,7 @@ class CreateUserQuestion(BaseModel):
 
 
 # Concept-based essay helper response models
-class PointConceptDTO(BaseModel):
+class PointArticleConceptDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     article_concept: ArticleConceptDTO
@@ -94,7 +94,7 @@ class PointConceptDTO(BaseModel):
 
 
 class CPointDTO(PointMiniDTO):
-    point_concepts: list[PointConceptDTO]
+    point_article_concepts: list[PointArticleConceptDTO]
     fallback: FallbackDTO | None = None
     likes: list[LikeDTO]
 
@@ -102,7 +102,7 @@ class CPointDTO(PointMiniDTO):
 class ConceptAnswerDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    points = list[CPointDTO]
+    points: list[CPointDTO]
 
 
 class UserQuestionConceptDTO(BaseModel):
