@@ -125,6 +125,19 @@ export type BookmarkDTO = {
     user_id: number;
 };
 
+export type CPointDTO = {
+    id: number;
+    title: string;
+    body: string;
+    positive: boolean;
+    point_article_concepts: Array<PointArticleConceptDTO>;
+    fallback?: (FallbackDTO | null);
+    likes: Array<LikeDTO>;
+    type?: 'CONCEPT';
+};
+
+export type type = 'CONCEPT';
+
 export type CategoryDTO = {
     id: number;
     name: string;
@@ -154,6 +167,11 @@ export type CommentMiniDTO = {
     lack_example: boolean;
     inclination: Inclination;
     content: string;
+};
+
+export type ConceptAnswerDTO = {
+    id: number;
+    points: Array<CPointDTO>;
 };
 
 export type ConceptDTO = {
@@ -358,6 +376,12 @@ export type PointAnalysisDTO = {
     point_id: number;
 };
 
+export type PointArticleConceptDTO = {
+    article_concept: ArticleConceptWithArticleDTO;
+    elaboration: string;
+    point_id: number;
+};
+
 export type PointDTO = {
     id: number;
     title: string;
@@ -366,7 +390,10 @@ export type PointDTO = {
     point_analysises: Array<PointAnalysisDTO>;
     fallback?: (FallbackDTO | null);
     likes: Array<LikeDTO>;
+    type?: 'ANALYSIS';
 };
+
+export type type2 = 'ANALYSIS';
 
 export type PointMiniDTO = {
     id: number;
@@ -435,6 +462,12 @@ export type UserPublic = {
     verified: boolean;
 };
 
+export type UserQuestionConceptDTO = {
+    id: number;
+    question: string;
+    answer: ConceptAnswerDTO;
+};
+
 export type UserQuestionDTO = {
     id: number;
     question: string;
@@ -501,22 +534,6 @@ export type LogInAuthLoginPostResponse = (Token);
 
 export type LogInAuthLoginPostError = (HTTPValidationError);
 
-export type CompleteEmailVerificationAuthEmailVerificationPutData = {
-    query: {
-        code: string;
-    };
-};
-
-export type CompleteEmailVerificationAuthEmailVerificationPutResponse = (Token);
-
-export type CompleteEmailVerificationAuthEmailVerificationPutError = (HTTPValidationError);
-
-export type ResendVerificationEmailAuthEmailVerificationPostData = unknown;
-
-export type ResendVerificationEmailAuthEmailVerificationPostResponse = (unknown);
-
-export type ResendVerificationEmailAuthEmailVerificationPostError = (HTTPValidationError);
-
 export type LoginGoogleAuthLoginGoogleGetResponse = (unknown);
 
 export type LoginGoogleAuthLoginGoogleGetError = unknown;
@@ -559,6 +576,22 @@ export type StripeWebhookBillingWebhookPostData = {
 export type StripeWebhookBillingWebhookPostResponse = (unknown);
 
 export type StripeWebhookBillingWebhookPostError = (HTTPValidationError);
+
+export type CompleteEmailVerificationAuthEmailVerificationPutData = {
+    query: {
+        code: string;
+    };
+};
+
+export type CompleteEmailVerificationAuthEmailVerificationPutResponse = (Token);
+
+export type CompleteEmailVerificationAuthEmailVerificationPutError = (HTTPValidationError);
+
+export type ResendVerificationEmailAuthEmailVerificationPostData = unknown;
+
+export type ResendVerificationEmailAuthEmailVerificationPostResponse = (unknown);
+
+export type ResendVerificationEmailAuthEmailVerificationPostError = (HTTPValidationError);
 
 export type GetUserAuthSessionGetData = unknown;
 
@@ -696,13 +729,13 @@ export type GetUserQuestionsUserQuestionsGetResponse = (Array<UserQuestionMiniDT
 
 export type GetUserQuestionsUserQuestionsGetError = (HTTPValidationError);
 
-export type CreateUserQuestionUserQuestionsPostData = {
+export type CreateConceptBasedUserQnUserQuestionsPostData = {
     body: CreateUserQuestion;
 };
 
-export type CreateUserQuestionUserQuestionsPostResponse = ((UserQuestionDTO | ValidationResult));
+export type CreateConceptBasedUserQnUserQuestionsPostResponse = ((UserQuestionConceptDTO | ValidationResult));
 
-export type CreateUserQuestionUserQuestionsPostError = (HTTPValidationError);
+export type CreateConceptBasedUserQnUserQuestionsPostError = (HTTPValidationError);
 
 export type GetUserQuestionUserQuestionsIdGetData = {
     path: {
@@ -710,7 +743,7 @@ export type GetUserQuestionUserQuestionsIdGetData = {
     };
 };
 
-export type GetUserQuestionUserQuestionsIdGetResponse = (UserQuestionDTO);
+export type GetUserQuestionUserQuestionsIdGetResponse = ((UserQuestionConceptDTO | UserQuestionDTO));
 
 export type GetUserQuestionUserQuestionsIdGetError = (HTTPValidationError);
 
@@ -818,6 +851,7 @@ export type GetArticlesArticlesGetData = {
         end_date?: (string | null);
         limit?: (number | null);
         offset?: (number | null);
+        search?: (string | null);
         singapore_only?: boolean;
         start_date?: (string | null);
     };

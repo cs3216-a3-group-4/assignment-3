@@ -1,3 +1,4 @@
+from typing import Literal
 from pydantic import BaseModel, ConfigDict, model_validator
 from src.events.schemas import (
     ArticleConceptWithArticleDTO,
@@ -49,6 +50,7 @@ class PointDTO(PointMiniDTO):
     point_analysises: list[PointAnalysisDTO]
     fallback: FallbackDTO | None = None
     likes: list[LikeDTO]
+    type: Literal["ANALYSIS"] = "ANALYSIS"
 
 
 class AnswerDTO(BaseModel):
@@ -100,6 +102,7 @@ class CPointDTO(PointMiniDTO):
     point_article_concepts: list[PointArticleConceptDTO]
     fallback: FallbackDTO | None = None
     likes: list[LikeDTO]
+    type: Literal["CONCEPT"] = "CONCEPT"
 
 
 class ConceptAnswerDTO(BaseModel):

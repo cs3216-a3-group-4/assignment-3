@@ -1,14 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import {
-  BookOpenTextIcon,
-  FileSymlinkIcon,
-  SparkleIcon,
-  ZapIcon,
-} from "lucide-react";
+import { BookOpenTextIcon } from "lucide-react";
 
+import PointAccordion from "@/app/(authenticated)/answers/point-accordion";
+import { CPointDTO, PointDTO } from "@/client";
 import Chip from "@/components/display/chip";
 import LikeButtons from "@/components/likes/like-buttons";
 import ScrollToTopButton from "@/components/navigation/scroll-to-top-button";
@@ -19,7 +15,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useLikePoint } from "@/queries/like";
 import { getAnswer } from "@/queries/user-question";
@@ -57,7 +52,12 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                   (like) => like.user_id === user?.id,
                 )[0];
                 const userLikeValue = userLike ? userLike.type : 0;
-                const pointHasAnalysis = point.point_analysises.length > 0;
+
+                const pointHasExamples =
+                  (point.type === "ANALYSIS" &&
+                    (point as PointDTO).point_analysises.length > 0) ||
+                  (point.type === "CONCEPT" &&
+                    (point as CPointDTO).point_article_concepts.length > 0);
                 return (
                   <AccordionItem
                     className="border border-primary/15 rounded-lg px-8 py-2 2xl:px-12 2xl:py-6 bg-background"
@@ -110,71 +110,60 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
                           />
                         </div>
 
-                        {pointHasAnalysis ? (
+                        {pointHasExamples ? (
                           <Accordion className="" type="multiple">
                             {/* TODO: get confidence score, sort and bucket */}
-                            {point.point_analysises.map(
-                              (point_analysis, index) => {
-                                const { analysis, elaboration } =
-                                  point_analysis;
-                                const { id: analysisId, event } = analysis;
-                                return (
-                                  <AccordionItem
-                                    className="py-2 2xl:py-4 px-6 2xl:px-10"
-                                    key={analysisId}
-                                    value={analysisId.toString()}
-                                  >
-                                    <AccordionTrigger
-                                      chevronClassName="ml-4"
-                                      className="text-start text-lg xl:text-xl 3xl:text-2xl text-primary-alt-800 font-medium"
-                                    >
-                                      {index + 1}. {event.title}
-                                    </AccordionTrigger>
-                                    <AccordionContent className="flex flex-col gap-y-8 2xl:gap-y-12 text-lg 2xl:text-xl 3xl:text-2xl py-2 2xl:py-4">
-                                      <div className="flex flex-col gap-y-4 text-text-muted/80">
-                                        <div className="flex justify-between items-baseline">
-                                          <span className="font-medium text-lg 2xl:text-xl text-text-muted/80">
-                                            <ZapIcon
-                                              className="inline-flex mr-3"
-                                              size={20}
-                                            />
-                                            Event summary
-                                          </span>
-                                          <Link
-                                            href={`/articles/${point_analysis.analysis.event.original_article.id}`}
-                                          >
-                                            <Button
-                                              className="h-8 w-fit text-text-muted mt-2"
-                                              size="sm"
-                                              variant="outline"
-                                            >
-                                              <FileSymlinkIcon className="h-4 w-4 mr-2" />
-                                              Read more
-                                            </Button>
-                                          </Link>
-                                        </div>
-                                        <blockquote className="border-l-2 pl-6 italic text-text-muted 2xl:text-2xl tracking-wide">
-                                          {event.description}
-                                        </blockquote>
-                                      </div>
-
-                                      <div className="flex flex-col gap-y-4 mb-4">
-                                        <span className="font-medium text-lg 2xl:text-xl text-text-muted/80">
-                                          <SparkleIcon
-                                            className="inline-flex mr-3"
-                                            size={20}
-                                          />
-                                          Possible argument
-                                        </span>
-                                        <p className="tracking-wide">
-                                          {elaboration}
-                                        </p>
-                                      </div>
-                                    </AccordionContent>
-                                  </AccordionItem>
-                                );
-                              },
-                            )}
+                            {point.type === "ANALYSIS" &&
+                              (point as PointDTO).point_analysises.map(
+                                (point_analysis, index) => {
+                                  const { analysis, elaboration } =
+                                    point_analysis;
+                                  const { id: analysisId, event } = analysis;
+                                  return (
+                                    <PointAccordion
+                                      article_id={
+                                        point_analysis.analysis.event
+                                          .original_article.id
+                                      }
+                                      description={
+                                        event.original_article.summary
+                                      }
+                                      elaboration={elaboration}
+                                      id={`analysis-${analysisId}`}
+                                      index={index}
+                                      key={`analysis-${analysisId}`}
+                                      title={event.original_article.title}
+                                    />
+                                  );
+                                },
+                              )}
+                            {point.type === "CONCEPT" &&
+                              (point as CPointDTO).point_article_concepts.map(
+                                (point_article_concept, index) => {
+                                  return (
+                                    <PointAccordion
+                                      article_id={
+                                        point_article_concept.article_concept
+                                          .article.id
+                                      }
+                                      description={
+                                        point_article_concept.article_concept
+                                          .article.summary
+                                      }
+                                      elaboration={
+                                        point_article_concept.elaboration
+                                      }
+                                      id={`article_concept-${point_article_concept.article_concept.article.id}-${point_article_concept.article_concept.concept.id}`}
+                                      index={index}
+                                      key={`article_concept-${point_article_concept.article_concept.article.id}-${point_article_concept.article_concept.concept.id}`}
+                                      title={
+                                        point_article_concept.article_concept
+                                          .article.title
+                                      }
+                                    />
+                                  );
+                                },
+                              )}
                           </Accordion>
                         ) : (
                           <Alert className="p-8 bg-accent-100/20 mt-2">

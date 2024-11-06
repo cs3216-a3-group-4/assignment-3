@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CircleAlert, Wand2Icon, ZapIcon } from "lucide-react";
 
-import { createUserQuestionUserQuestionsPost } from "@/client";
+import { createConceptBasedUserQnUserQuestionsPost } from "@/client";
 import Chip from "@/components/display/chip";
 import {
   Accordion,
@@ -105,7 +105,7 @@ const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
     }
 
     try {
-      const response = await createUserQuestionUserQuestionsPost({
+      const response = await createConceptBasedUserQnUserQuestionsPost({
         body: { question: questionInput },
       });
       if (response.error) {

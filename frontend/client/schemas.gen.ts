@@ -546,6 +546,61 @@ export const BookmarkDTOSchema = {
 despite them using two different ORM models (ArticleBookmark & Bookmark)`
 } as const;
 
+export const CPointDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        title: {
+            type: 'string',
+            title: 'Title'
+        },
+        body: {
+            type: 'string',
+            title: 'Body'
+        },
+        positive: {
+            type: 'boolean',
+            title: 'Positive'
+        },
+        point_article_concepts: {
+            items: {
+                '$ref': '#/components/schemas/PointArticleConceptDTO'
+            },
+            type: 'array',
+            title: 'Point Article Concepts'
+        },
+        fallback: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/FallbackDTO'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        likes: {
+            items: {
+                '$ref': '#/components/schemas/LikeDTO'
+            },
+            type: 'array',
+            title: 'Likes'
+        },
+        type: {
+            type: 'string',
+            enum: ['CONCEPT'],
+            const: 'CONCEPT',
+            title: 'Type',
+            default: 'CONCEPT'
+        }
+    },
+    type: 'object',
+    required: ['id', 'title', 'body', 'positive', 'point_article_concepts', 'likes'],
+    title: 'CPointDTO'
+} as const;
+
 export const CategoryDTOSchema = {
     properties: {
         id: {
@@ -651,6 +706,25 @@ export const CommentMiniDTOSchema = {
     type: 'object',
     required: ['id', 'lack_example', 'inclination', 'content'],
     title: 'CommentMiniDTO'
+} as const;
+
+export const ConceptAnswerDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        points: {
+            items: {
+                '$ref': '#/components/schemas/CPointDTO'
+            },
+            type: 'array',
+            title: 'Points'
+        }
+    },
+    type: 'object',
+    required: ['id', 'points'],
+    title: 'ConceptAnswerDTO'
 } as const;
 
 export const ConceptDTOSchema = {
@@ -1554,6 +1628,25 @@ export const PointAnalysisDTOSchema = {
     title: 'PointAnalysisDTO'
 } as const;
 
+export const PointArticleConceptDTOSchema = {
+    properties: {
+        article_concept: {
+            '$ref': '#/components/schemas/ArticleConceptWithArticleDTO'
+        },
+        elaboration: {
+            type: 'string',
+            title: 'Elaboration'
+        },
+        point_id: {
+            type: 'integer',
+            title: 'Point Id'
+        }
+    },
+    type: 'object',
+    required: ['article_concept', 'elaboration', 'point_id'],
+    title: 'PointArticleConceptDTO'
+} as const;
+
 export const PointDTOSchema = {
     properties: {
         id: {
@@ -1595,6 +1688,13 @@ export const PointDTOSchema = {
             },
             type: 'array',
             title: 'Likes'
+        },
+        type: {
+            type: 'string',
+            enum: ['ANALYSIS'],
+            const: 'ANALYSIS',
+            title: 'Type',
+            default: 'ANALYSIS'
         }
     },
     type: 'object',
@@ -1882,6 +1982,25 @@ export const UserPublicSchema = {
     type: 'object',
     required: ['id', 'email', 'last_accessed', 'categories', 'tier', 'verified'],
     title: 'UserPublic'
+} as const;
+
+export const UserQuestionConceptDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        question: {
+            type: 'string',
+            title: 'Question'
+        },
+        answer: {
+            '$ref': '#/components/schemas/ConceptAnswerDTO'
+        }
+    },
+    type: 'object',
+    required: ['id', 'question', 'answer'],
+    title: 'UserQuestionConceptDTO'
 } as const;
 
 export const UserQuestionDTOSchema = {
