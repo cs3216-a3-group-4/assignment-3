@@ -17,7 +17,14 @@ def form_point_concept_based(row: PointWithConceptsAndLLMType, positive: bool):
     concepts = row["concepts"]
     point = Point(title=point, body="", positive=positive)
 
+    article_ids = set[int]()
+
     for concept in concepts:
+        if concept["article_id"] in article_ids:
+            continue
+
+        article_ids.add(concept["article_id"])
+
         point.point_article_concepts.append(
             PointArticleConcept(
                 concept_id=concept["concept_id"],
