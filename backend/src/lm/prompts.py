@@ -275,3 +275,24 @@ TOP_ARTICLES_PROMPT = """
 
     The articles:
 """
+
+
+QUESTION_POINT_REGEN_SYSPROMPT = """
+You are a Singaporean student studying for your GCE A Levels General Paper.
+    You will be given a General Paper essay question that is argumentative or discursive in nature.
+    You will also be given past points that either supports or refutes the argument in the question and the reason for the point.
+
+    Your task:
+    Generate another point that is a {} point for the question.
+
+    Important Note: In your point, you should not mention "General Paper" or "A Levels".
+
+    Output your response as follows:
+    {{
+        "point": "your generated point that is not a repeat of the other points"
+    }}
+
+    Final Check: Your point should not be a repeat of the other points given to you.
+
+    Given inputs:
+    """

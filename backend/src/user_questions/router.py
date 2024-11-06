@@ -12,6 +12,7 @@ from src.essay_helper.generate_concept_response import (
     generate_elaborations_for_point,
 )
 from src.events.models import Analysis, ArticleConcept, Event
+from src.lm.generate_points import generate_new_point_for_question
 from src.lm.society_classifier import classify_society_qn
 from src.notes.models import Note
 from src.limits.check_usage import within_usage_limit
@@ -183,6 +184,15 @@ async def create_point(
         return HTTPException(HTTPStatus.NOT_FOUND)
 
     point = data.title
+
+    # Point regeneration
+    # TODO: yes, consider refactoring this to another route or something
+    if point == "":
+        point = await generate_new_point_for_question(
+            user_question.question,
+            [point.title for point in user_question.answer.points],
+            data.positive,
+        )
 
     # TODO: refactor this to be stored on qn creation so we aren't calling this for every new point
     is_society_question = classify_society_qn(user_question.question)

@@ -47,6 +47,7 @@ class PointMiniDTO(BaseModel):
 
 
 class PointCreateDTO(BaseModel):
+    # if empty, autogenerate
     title: str
     positive: bool
 
