@@ -5,7 +5,41 @@ from src.user_questions.models import (
     PointAnalysis,
     PointArticleConcept,
 )
-from src.lm.dict_types import PointsAfterLLMType, PointsWithConceptsAfterLLMType
+from src.lm.dict_types import (
+    PointsAfterLLMType,
+    PointsWithConceptsAfterLLMType,
+    PointWithConceptsAndLLMType,
+)
+
+
+def form_point_concept_based(row: PointWithConceptsAndLLMType, positive: bool):
+    point = row["point"]
+    concepts = row["concepts"]
+    point = Point(title=point, body="", positive=positive)
+
+    article_ids = set[int]()
+
+    for concept in concepts:
+        if concept["article_id"] in article_ids:
+            continue
+
+        article_ids.add(concept["article_id"])
+
+        point.point_article_concepts.append(
+            PointArticleConcept(
+                concept_id=concept["concept_id"],
+                article_id=concept["article_id"],
+                elaboration=concept["elaborations"],
+            )
+        )
+
+    if not concepts:
+        point.fallback = Fallback(
+            alt_approach=row["fall_back_response"]["alt_approach"],
+            general_argument=row["fall_back_response"]["general_argument"],
+        )
+
+    return point
 
 
 def form_answer_concept_based(results: PointsWithConceptsAfterLLMType) -> Answer:
@@ -14,32 +48,11 @@ def form_answer_concept_based(results: PointsWithConceptsAfterLLMType) -> Answer
     """
     answer = Answer()
     for row in results["for_points"]:
-        point = row["point"]
-        concepts = row["concepts"]
-        point = Point(title=point, body="", positive=True)
-
-        for concept in concepts:
-            point.point_article_concepts.append(
-                PointArticleConcept(
-                    concept_id=concept["concept_id"],
-                    article_id=concept["article_id"],
-                    elaboration=concept["elaborations"],
-                )
-            )
+        point = form_point_concept_based(row, True)
         answer.points.append(point)
 
     for row in results["against_points"]:
-        point = row["point"]
-        concepts = row["concepts"]
-        point = Point(title=point, body="", positive=False)
-        for concept in concepts:
-            point.point_article_concepts.append(
-                PointArticleConcept(
-                    concept_id=concept["concept_id"],
-                    article_id=concept["article_id"],
-                    elaboration=concept["elaborations"],
-                )
-            )
+        point = form_point_concept_based(row, False)
         answer.points.append(point)
 
     return answer
