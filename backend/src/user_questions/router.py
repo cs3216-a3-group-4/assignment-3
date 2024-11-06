@@ -18,7 +18,6 @@ from src.user_questions.models import (
     UserQuestion,
 )
 from src.essay_helper.form_answer import (
-    form_answer_analysis_based,
     form_answer_concept_based,
 )
 from src.user_questions.schemas import (
@@ -28,7 +27,6 @@ from src.user_questions.schemas import (
     UserQuestionMiniDTO,
     ValidationResult,
 )
-from src.lm.generate_response import generate_response
 from src.lm.validate_question import validate_question
 
 
@@ -190,6 +188,12 @@ async def create_concept_based_user_qn(
                 Point.point_article_concepts,
                 PointArticleConcept.article_concept,
                 ArticleConcept.article,
+            ),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_article_concepts,
+                PointArticleConcept.article_concept,
                 ArticleConcept.concept,
             ),
             selectinload(
