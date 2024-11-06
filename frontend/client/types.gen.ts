@@ -24,7 +24,7 @@ export type AnalysisToEventDTO = {
 
 export type AnswerDTO = {
     id: number;
-    points: Array<PointDTO>;
+    points: Array<(PointDTO | CPointDTO)>;
 };
 
 export type AnswerMiniDTO = {
@@ -167,11 +167,6 @@ export type CommentMiniDTO = {
     lack_example: boolean;
     inclination: Inclination;
     content: string;
-};
-
-export type ConceptAnswerDTO = {
-    id: number;
-    points: Array<CPointDTO>;
 };
 
 export type ConceptDTO = {
@@ -467,12 +462,6 @@ export type UserPublic = {
     verified: boolean;
 };
 
-export type UserQuestionConceptDTO = {
-    id: number;
-    question: string;
-    answer: ConceptAnswerDTO;
-};
-
 export type UserQuestionDTO = {
     id: number;
     question: string;
@@ -738,7 +727,7 @@ export type CreateConceptBasedUserQnUserQuestionsPostData = {
     body: CreateUserQuestion;
 };
 
-export type CreateConceptBasedUserQnUserQuestionsPostResponse = ((UserQuestionConceptDTO | ValidationResult));
+export type CreateConceptBasedUserQnUserQuestionsPostResponse = ((UserQuestionDTO | ValidationResult));
 
 export type CreateConceptBasedUserQnUserQuestionsPostError = (HTTPValidationError);
 
@@ -748,7 +737,7 @@ export type GetUserQuestionUserQuestionsIdGetData = {
     };
 };
 
-export type GetUserQuestionUserQuestionsIdGetResponse = ((UserQuestionConceptDTO | UserQuestionDTO));
+export type GetUserQuestionUserQuestionsIdGetResponse = (UserQuestionDTO);
 
 export type GetUserQuestionUserQuestionsIdGetError = (HTTPValidationError);
 
@@ -772,6 +761,16 @@ export type CreatePointUserQuestionsIdPointsPostData = {
 export type CreatePointUserQuestionsIdPointsPostResponse = (unknown);
 
 export type CreatePointUserQuestionsIdPointsPostError = (HTTPValidationError);
+
+export type RegenerateExamplesUserQuestionsPointIdExamplesPutData = {
+    path: {
+        point_id: number;
+    };
+};
+
+export type RegenerateExamplesUserQuestionsPointIdExamplesPutResponse = (number);
+
+export type RegenerateExamplesUserQuestionsPointIdExamplesPutError = (HTTPValidationError);
 
 export type GetAllNotesNotesGetData = {
     query?: {

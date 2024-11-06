@@ -109,7 +109,14 @@ export const AnswerDTOSchema = {
         },
         points: {
             items: {
-                '$ref': '#/components/schemas/PointDTO'
+                anyOf: [
+                    {
+                        '$ref': '#/components/schemas/PointDTO'
+                    },
+                    {
+                        '$ref': '#/components/schemas/CPointDTO'
+                    }
+                ]
             },
             type: 'array',
             title: 'Points'
@@ -706,25 +713,6 @@ export const CommentMiniDTOSchema = {
     type: 'object',
     required: ['id', 'lack_example', 'inclination', 'content'],
     title: 'CommentMiniDTO'
-} as const;
-
-export const ConceptAnswerDTOSchema = {
-    properties: {
-        id: {
-            type: 'integer',
-            title: 'Id'
-        },
-        points: {
-            items: {
-                '$ref': '#/components/schemas/CPointDTO'
-            },
-            type: 'array',
-            title: 'Points'
-        }
-    },
-    type: 'object',
-    required: ['id', 'points'],
-    title: 'ConceptAnswerDTO'
 } as const;
 
 export const ConceptDTOSchema = {
@@ -1998,25 +1986,6 @@ export const UserPublicSchema = {
     type: 'object',
     required: ['id', 'email', 'last_accessed', 'categories', 'tier', 'verified'],
     title: 'UserPublic'
-} as const;
-
-export const UserQuestionConceptDTOSchema = {
-    properties: {
-        id: {
-            type: 'integer',
-            title: 'Id'
-        },
-        question: {
-            type: 'string',
-            title: 'Question'
-        },
-        answer: {
-            '$ref': '#/components/schemas/ConceptAnswerDTO'
-        }
-    },
-    type: 'object',
-    required: ['id', 'question', 'answer'],
-    title: 'UserQuestionConceptDTO'
 } as const;
 
 export const UserQuestionDTOSchema = {
