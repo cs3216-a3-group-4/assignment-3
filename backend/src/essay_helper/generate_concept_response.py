@@ -16,6 +16,8 @@ from src.common.database import engine
 from sqlalchemy.orm import Session
 
 from src.essay_helper.prompts import ESSAY_HELPER_SYSPROMPT_CONCEPTS as SYSPROMPT
+from src.essay_helper.generate_fallback_response import generate_fallback_response
+
 
 from src.lm.lm import lm_model_essay as lm_model
 
@@ -51,7 +53,7 @@ async def generate_elaborations_for_point(
     point_dict: PointWithConceptsType, question: str
 ):
     """
-    Given an essay topic sentence, generate elaborations for the point to the given dictionary.
+    Given an essay topic sentence, generate LLM elaborations for the point to the given dictionary.
     Augmented with concepts from vector db.
     """
 
@@ -86,6 +88,9 @@ async def generate_elaborations_for_point(
     elaborated_concepts = [item[0] for item in elaborated_concepts_with_index]
 
     point_dict["concepts"] = elaborated_concepts
+
+    if len(elaborated_concepts) == 0:
+        point_dict["fall_back_response"] = generate_fallback_response(question, point)
 
 
 def format_prompt_input(
@@ -193,6 +198,12 @@ async def populate_point_with_concepts(
 
 
 if __name__ == "__main__":
-    question = "Longer life expectancy creates more problems than benefits. Discuss."
+    question = "Discuss the view that prisoners should lose all their rights"
     concepts = asyncio.run(generate_concept_response(question))
     print(json.dumps(concepts, indent=2))
+
+    # fallback = generate_fallback_response(
+    #     question,
+    #     "Prisoners should not lose all their rights because retaining certain rights can facilitate their reintegration into society post-release, reducing recidivism rates and benefiting the community as a whole.",
+    # )
+    # print(json.dumps(fallback, indent=2))

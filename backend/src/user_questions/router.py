@@ -6,23 +6,27 @@ from sqlalchemy.orm import with_polymorphic, selectinload
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.common.dependencies import get_session
-from src.events.models import Analysis, Event
+from src.essay_helper.generate_concept_response import generate_concept_response
+from src.events.models import Analysis, ArticleConcept, Event
 from src.notes.models import Note
 from src.limits.check_usage import within_usage_limit
 from src.user_questions.models import (
     Answer,
-    Fallback,
     Point,
     PointAnalysis,
+    PointArticleConcept,
     UserQuestion,
+)
+from src.essay_helper.form_answer import (
+    form_answer_concept_based,
 )
 from src.user_questions.schemas import (
     CreateUserQuestion,
+    UserQuestionConceptDTO,
     UserQuestionDTO,
     UserQuestionMiniDTO,
     ValidationResult,
 )
-from src.lm.generate_response import generate_response
 from src.lm.validate_question import validate_question
 
 
@@ -49,7 +53,7 @@ def get_user_question(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-) -> UserQuestionDTO:
+) -> UserQuestionConceptDTO | UserQuestionDTO:
     user_question = session.scalar(
         select(UserQuestion)
         .where(UserQuestion.id == id)
@@ -77,6 +81,20 @@ def get_user_question(
             .selectinload(Point.point_analysises)
             .selectinload(PointAnalysis.analysis)
             .selectinload(Analysis.likes),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_article_concepts,
+                PointArticleConcept.article_concept,
+                ArticleConcept.article,
+            ),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_article_concepts,
+                PointArticleConcept.article_concept,
+                ArticleConcept.concept,
+            ),
         )
     )
 
@@ -92,11 +110,11 @@ def classify_question(question: str):
 
 
 @router.post("/")
-async def create_user_question(
+async def create_concept_based_user_qn(
     data: CreateUserQuestion,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-) -> UserQuestionDTO | ValidationResult:
+) -> UserQuestionConceptDTO | ValidationResult:
     validation = within_usage_limit(user, session, data.question)
 
     if not validation.is_valid:
@@ -104,47 +122,10 @@ async def create_user_question(
 
     user_question = UserQuestion(question=data.question, user_id=user.id)
 
-    answer = Answer()
+    results = await generate_concept_response(data.question)
+    answer = form_answer_concept_based(results)
+
     user_question.answer = answer
-
-    results = await generate_response(data.question)
-
-    for row in results["for_points"]:
-        point = row["point"]
-        analyses = row["analyses"]
-        point = Point(title=point, body="", positive=True)
-
-        for analysis in analyses:
-            point.point_analysises.append(
-                PointAnalysis(
-                    elaboration=analysis["elaborations"],
-                    analysis_id=analysis["id"],
-                )
-            )
-        if not analyses:
-            point.fallback = Fallback(
-                alt_approach=row["fall_back_response"]["alt_approach"],
-                general_argument=row["fall_back_response"]["general_argument"],
-            )
-        answer.points.append(point)
-
-    for row in results["against_points"]:
-        point = row["point"]
-        analyses = row["analyses"]
-        point = Point(title=point, body="", positive=False)
-        for analysis in analyses:
-            point.point_analysises.append(
-                PointAnalysis(
-                    elaboration=analysis["elaborations"],
-                    analysis_id=analysis["id"],
-                )
-            )
-        if not analyses:
-            point.fallback = Fallback(
-                alt_approach=row["fall_back_response"]["alt_approach"],
-                general_argument=row["fall_back_response"]["general_argument"],
-            )
-        answer.points.append(point)
 
     session.add(user_question)
     session.commit()
@@ -156,22 +137,21 @@ async def create_user_question(
             selectinload(
                 UserQuestion.answer,
                 Answer.points,
-                Point.point_analysises,
-                PointAnalysis.analysis,
-                Analysis.event,
-                Event.original_article,
+                Point.point_article_concepts,
+                PointArticleConcept.article_concept,
+                ArticleConcept.article,
+            ),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_article_concepts,
+                PointArticleConcept.article_concept,
+                ArticleConcept.concept,
             ),
             selectinload(
                 UserQuestion.answer,
                 Answer.points,
                 Point.fallback,
-            ),
-            selectinload(
-                UserQuestion.answer,
-                Answer.points,
-                Point.point_analysises,
-                PointAnalysis.analysis,
-                Analysis.category,
             ),
         )
     )
