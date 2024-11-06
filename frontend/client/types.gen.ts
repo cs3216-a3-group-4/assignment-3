@@ -130,6 +130,7 @@ export type CPointDTO = {
     title: string;
     positive: boolean;
     generated: boolean;
+    example_regenerated: boolean;
     point_article_concepts: Array<PointArticleConceptDTO>;
     fallback?: (FallbackDTO | null);
     likes: Array<LikeDTO>;
@@ -387,6 +388,7 @@ export type PointDTO = {
     title: string;
     positive: boolean;
     generated: boolean;
+    example_regenerated: boolean;
     point_analysises: Array<PointAnalysisDTO>;
     fallback?: (FallbackDTO | null);
     likes: Array<LikeDTO>;
@@ -400,6 +402,7 @@ export type PointMiniDTO = {
     title: string;
     positive: boolean;
     generated: boolean;
+    example_regenerated: boolean;
 };
 
 export type ProfileUpdate = {

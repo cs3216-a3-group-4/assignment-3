@@ -175,17 +175,19 @@ const PointAccordion: React.FC<OwnProps> = ({ answer_id, point }) => {
                     );
                   },
                 )}
-              <div className="flex justify-between items-center bg-violet-100 shadow-inner py-2 px-8">
-                <p className="font-medium">
-                  Not satisfied with these examples?
-                </p>
-                <div className="flex gap-2 flex-wrap">
-                  <Button onClick={regenerateExamples} variant="ghost">
-                    Regenerate more examples{" "}
-                    <LucideRefreshCw className="h-4 w-4 ml-2" />
-                  </Button>
+              {!point.example_regenerated && (
+                <div className="flex justify-between items-center bg-violet-100 shadow-inner py-2 px-8">
+                  <p className="font-medium">
+                    Not satisfied with these examples?
+                  </p>
+                  <div className="flex gap-2 flex-wrap">
+                    <Button onClick={regenerateExamples} variant="ghost">
+                      Regenerate more examples
+                      <LucideRefreshCw className="h-4 w-4 ml-2" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
             </Accordion>
           ) : (
             <Alert className="p-8 bg-accent-100/20 mt-2">

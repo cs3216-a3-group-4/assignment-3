@@ -571,6 +571,10 @@ export const CPointDTOSchema = {
             type: 'boolean',
             title: 'Generated'
         },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
+        },
         point_article_concepts: {
             items: {
                 '$ref': '#/components/schemas/PointArticleConceptDTO'
@@ -604,7 +608,7 @@ export const CPointDTOSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'title', 'positive', 'generated', 'point_article_concepts', 'likes'],
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated', 'point_article_concepts', 'likes'],
     title: 'CPointDTO'
 } as const;
 
@@ -1669,6 +1673,10 @@ export const PointDTOSchema = {
             type: 'boolean',
             title: 'Generated'
         },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
+        },
         point_analysises: {
             items: {
                 '$ref': '#/components/schemas/PointAnalysisDTO'
@@ -1702,7 +1710,7 @@ export const PointDTOSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'title', 'positive', 'generated', 'point_analysises', 'likes'],
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated', 'point_analysises', 'likes'],
     title: 'PointDTO'
 } as const;
 
@@ -1723,10 +1731,14 @@ export const PointMiniDTOSchema = {
         generated: {
             type: 'boolean',
             title: 'Generated'
+        },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'positive', 'generated'],
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated'],
     title: 'PointMiniDTO'
 } as const;
 

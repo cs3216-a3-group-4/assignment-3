@@ -230,6 +230,13 @@ async def regenerate_examples(
     if not point:
         return HTTPException(HTTPStatus.NOT_FOUND)
 
+    if point.example_regenerated:
+        return HTTPException(HTTPStatus.TOO_MANY_REQUESTS)
+
+    # Even if it fails, I don't want them to regenerate it again
+    # since it'll probably fail again.
+    point.example_regenerated = True
+
     user_question = point.answer.user_question
     # TODO: THIS IS COSTING US MONEY, REFACTOR IT.
     is_society_question = classify_society_qn(user_question.question)
