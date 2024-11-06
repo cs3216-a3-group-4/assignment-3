@@ -53,7 +53,7 @@ def get_user_question(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-) -> UserQuestionDTO:
+) -> UserQuestionConceptDTO | UserQuestionDTO:
     user_question = session.scalar(
         select(UserQuestion)
         .where(UserQuestion.id == id)
@@ -81,6 +81,20 @@ def get_user_question(
             .selectinload(Point.point_analysises)
             .selectinload(PointAnalysis.analysis)
             .selectinload(Analysis.likes),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_article_concepts,
+                PointArticleConcept.article_concept,
+                ArticleConcept.article,
+            ),
+            selectinload(
+                UserQuestion.answer,
+                Answer.points,
+                Point.point_article_concepts,
+                PointArticleConcept.article_concept,
+                ArticleConcept.concept,
+            ),
         )
     )
 
@@ -93,68 +107,6 @@ def get_user_question(
 @router.post("/classify")
 def classify_question(question: str):
     return validate_question(question)
-
-
-# @router.post("/")
-# async def create_user_question(
-#     data: CreateUserQuestion,
-#     user: Annotated[User, Depends(get_current_user)],
-#     session=Depends(get_session),
-# ) -> UserQuestionDTO | ValidationResult:
-#     validation = within_usage_limit(user, session, data.question)
-
-#     if not validation.is_valid:
-#         return validation
-
-#     user_question = UserQuestion(question=data.question, user_id=user.id)
-
-#     # NOTE: to be replaced with concept based generation
-#     results = await generate_response(data.question)
-#     answer = form_answer_analysis_based(results)
-#     user_question.answer = answer
-
-#     session.add(user_question)
-#     session.commit()
-#     session.refresh(user_question)
-#     same_user_question = session.scalar(
-#         select(UserQuestion)
-#         .where(UserQuestion.id == user_question.id)
-#         .options(
-#             selectinload(
-#                 UserQuestion.answer,
-#                 Answer.points,
-#                 Point.point_analysises,
-#                 PointAnalysis.analysis,
-#                 Analysis.event,
-#                 Event.original_article,
-#             ),
-#             selectinload(
-#                 UserQuestion.answer,
-#                 Answer.points,
-#                 Point.fallback,
-#             ),
-#             selectinload(
-#                 UserQuestion.answer,
-#                 Answer.points,
-#                 Point.point_analysises,
-#                 PointAnalysis.analysis,
-#                 Analysis.category,
-#             ),
-#         )
-#     )
-
-#     return same_user_question
-
-
-# Endpoints to create concept-based user questions
-@router.get("/{id}")
-def get_concept_based_user_qn(
-    id: int,
-    user: Annotated[User, Depends(get_current_user)],
-    session=Depends(get_session),
-) -> UserQuestionConceptDTO | UserQuestionDTO:
-    # NOTE: If
-    pass
 
 
 @router.post("/")
