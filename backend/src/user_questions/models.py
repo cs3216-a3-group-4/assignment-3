@@ -69,8 +69,8 @@ class PointAnalysis(Base):
 class PointArticleConcept(Base):
     __tablename__ = "point_article_concept"
 
-    article_id: Mapped[int]
-    concept_id: Mapped[int]
+    article_id: Mapped[int] = mapped_column(primary_key=True)
+    concept_id: Mapped[int] = mapped_column(primary_key=True)
 
     point_id: Mapped[int] = mapped_column(ForeignKey("point.id"), primary_key=True)
     elaboration: Mapped[str]
