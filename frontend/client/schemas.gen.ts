@@ -109,7 +109,14 @@ export const AnswerDTOSchema = {
         },
         points: {
             items: {
-                '$ref': '#/components/schemas/PointDTO'
+                anyOf: [
+                    {
+                        '$ref': '#/components/schemas/PointDTO'
+                    },
+                    {
+                        '$ref': '#/components/schemas/CPointDTO'
+                    }
+                ]
             },
             type: 'array',
             title: 'Points'
@@ -564,6 +571,10 @@ export const CPointDTOSchema = {
             type: 'boolean',
             title: 'Generated'
         },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
+        },
         point_article_concepts: {
             items: {
                 '$ref': '#/components/schemas/PointArticleConceptDTO'
@@ -597,7 +608,7 @@ export const CPointDTOSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'title', 'positive', 'generated', 'point_article_concepts', 'likes'],
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated', 'point_article_concepts', 'likes'],
     title: 'CPointDTO'
 } as const;
 
@@ -706,25 +717,6 @@ export const CommentMiniDTOSchema = {
     type: 'object',
     required: ['id', 'lack_example', 'inclination', 'content'],
     title: 'CommentMiniDTO'
-} as const;
-
-export const ConceptAnswerDTOSchema = {
-    properties: {
-        id: {
-            type: 'integer',
-            title: 'Id'
-        },
-        points: {
-            items: {
-                '$ref': '#/components/schemas/CPointDTO'
-            },
-            type: 'array',
-            title: 'Points'
-        }
-    },
-    type: 'object',
-    required: ['id', 'points'],
-    title: 'ConceptAnswerDTO'
 } as const;
 
 export const ConceptDTOSchema = {
@@ -1681,6 +1673,10 @@ export const PointDTOSchema = {
             type: 'boolean',
             title: 'Generated'
         },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
+        },
         point_analysises: {
             items: {
                 '$ref': '#/components/schemas/PointAnalysisDTO'
@@ -1714,7 +1710,7 @@ export const PointDTOSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'title', 'positive', 'generated', 'point_analysises', 'likes'],
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated', 'point_analysises', 'likes'],
     title: 'PointDTO'
 } as const;
 
@@ -1735,10 +1731,14 @@ export const PointMiniDTOSchema = {
         generated: {
             type: 'boolean',
             title: 'Generated'
+        },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'positive', 'generated'],
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated'],
     title: 'PointMiniDTO'
 } as const;
 
@@ -1998,25 +1998,6 @@ export const UserPublicSchema = {
     type: 'object',
     required: ['id', 'email', 'last_accessed', 'categories', 'tier', 'verified'],
     title: 'UserPublic'
-} as const;
-
-export const UserQuestionConceptDTOSchema = {
-    properties: {
-        id: {
-            type: 'integer',
-            title: 'Id'
-        },
-        question: {
-            type: 'string',
-            title: 'Question'
-        },
-        answer: {
-            '$ref': '#/components/schemas/ConceptAnswerDTO'
-        }
-    },
-    type: 'object',
-    required: ['id', 'question', 'answer'],
-    title: 'UserQuestionConceptDTO'
 } as const;
 
 export const UserQuestionDTOSchema = {

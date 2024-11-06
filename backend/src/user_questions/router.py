@@ -12,6 +12,7 @@ from src.essay_helper.generate_concept_response import (
     generate_elaborations_for_point,
 )
 from src.events.models import Analysis, ArticleConcept, Event
+from src.lm.generate_points import generate_new_point_for_question
 from src.lm.society_classifier import classify_society_qn
 from src.notes.models import Note
 from src.limits.check_usage import within_usage_limit
@@ -184,6 +185,15 @@ async def create_point(
 
     point = data.title
 
+    # Point regeneration
+    # TODO: yes, consider refactoring this to another route or something
+    if point == "":
+        point = await generate_new_point_for_question(
+            user_question.question,
+            [point.title for point in user_question.answer.points],
+            data.positive,
+        )
+
     # TODO: refactor this to be stored on qn creation so we aren't calling this for every new point
     is_society_question = classify_society_qn(user_question.question)
 
@@ -200,3 +210,67 @@ async def create_point(
     session.commit()
 
     return
+
+
+@router.put("/{point_id}/examples")
+async def regenerate_examples(
+    point_id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
+) -> int:
+    point = session.scalar(
+        select(Point)
+        .where(Point.id == point_id)
+        .where(
+            Point.answer.has(Answer.user_question.has(UserQuestion.user_id == user.id))
+        )
+        .options(selectinload(Point.point_article_concepts))
+        .options(selectinload(Point.answer).selectinload(Answer.user_question))
+    )
+    if not point:
+        return HTTPException(HTTPStatus.NOT_FOUND)
+
+    if point.example_regenerated:
+        return HTTPException(HTTPStatus.TOO_MANY_REQUESTS)
+
+    # Even if it fails, I don't want them to regenerate it again
+    # since it'll probably fail again.
+    point.example_regenerated = True
+
+    user_question = point.answer.user_question
+    # TODO: THIS IS COSTING US MONEY, REFACTOR IT.
+    is_society_question = classify_society_qn(user_question.question)
+
+    banned_ids = [
+        (point_article_concept.concept_id, point_article_concept.article_id)
+        for point_article_concept in point.point_article_concepts
+    ]
+
+    point_dict = {
+        "point": point,
+        "concepts": await get_similar_concepts(
+            point.title, 3, filter_sg=is_society_question, banned_ids=banned_ids
+        ),
+    }
+    await generate_elaborations_for_point(point_dict, user_question.question)
+
+    article_ids = set[int]()
+    new_article_concepts_count = 0
+    for concept in point_dict["concepts"]:
+        if concept["article_id"] in article_ids:
+            continue
+
+        article_ids.add(concept["article_id"])
+
+        point.point_article_concepts.append(
+            PointArticleConcept(
+                concept_id=concept["concept_id"],
+                article_id=concept["article_id"],
+                elaboration=concept["elaborations"],
+            )
+        )
+        new_article_concepts_count += 1
+
+    session.commit()
+
+    return new_article_concepts_count

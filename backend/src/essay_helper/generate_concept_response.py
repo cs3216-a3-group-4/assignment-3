@@ -186,13 +186,14 @@ async def populate_point_with_concepts(
     concepts_per_point: int,
     relevant_results: list[PointWithConceptsType],
     is_singapore: bool = False,
+    banned_ids: list[tuple[int, int]] | None = None,
 ):
     """
     Given a topic sentence, query top k results from vector store,
     populate the result list with relevant concepts.
     """
     relevant_concepts = await get_similar_concepts(
-        point, top_k=concepts_per_point, filter_sg=is_singapore
+        point, top_k=concepts_per_point, filter_sg=is_singapore, banned_ids=banned_ids
     )
     relevant_results.append({"point": point, "concepts": relevant_concepts})
 

@@ -11,7 +11,7 @@ from src.lm.dict_types import (
 from src.lm.lm import lm_model_essay as lm_model
 from src.embeddings.vector_store import get_similar_results
 
-from src.lm.prompts import ROLE_SYSPROMPT as SYSPROMPT
+from src.lm.prompts import QUESTION_POINT_REGEN_SYSPROMPT, ROLE_SYSPROMPT as SYSPROMPT
 from src.lm.prompts import QUESTION_POINT_GEN_SYSPROMPT as HUMAN_PROMPT
 
 
@@ -28,6 +28,30 @@ async def generate_points_from_question(question: str) -> PointsType:
     parser = JsonOutputParser(pydantic_object=Points)
     points = parser.invoke(result)
     return points
+
+
+async def generate_new_point_for_question(
+    question: str, past_points: list[str], supporting: bool
+):
+    inputs_str = f"""
+    Question: {question}
+    Past points: {past_points}
+"""
+    human_message = (
+        QUESTION_POINT_REGEN_SYSPROMPT.format("supporting" if supporting else "against")
+        + inputs_str
+    )
+    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
+
+    # TODO: refactor magic number
+    for _ in range(3):
+        try:
+            result = await lm_model.ainvoke(messages)
+            parser = JsonOutputParser()
+            point = parser.invoke(result).get("point")
+        except:  # noqa: E722
+            continue
+    return point
 
 
 async def populate_point(

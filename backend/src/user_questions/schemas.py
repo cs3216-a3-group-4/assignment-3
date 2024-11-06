@@ -44,9 +44,11 @@ class PointMiniDTO(BaseModel):
     title: str
     positive: bool
     generated: bool
+    example_regenerated: bool
 
 
 class PointCreateDTO(BaseModel):
+    # if empty, autogenerate
     title: str
     positive: bool
 

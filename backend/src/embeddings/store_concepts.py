@@ -88,15 +88,33 @@ async def store_concept_batch(
     print(f"Completed storing batch of {len(documents)} concepts")
 
 
-async def get_similar_concepts(query: str, top_k: int = 3, filter_sg: bool = False):
+async def get_similar_concepts(
+    query: str,
+    top_k: int = 3,
+    filter_sg: bool = False,
+    # concept then article
+    banned_ids: list[tuple[int, int]] | None = None,
+):
     # NOTE: filter_sg == False means all examples are allowed, not just Singapore examples
     filter_dict = {"is_singapore": True} if filter_sg else {}
 
+    # NOTE: banning logic: if i ban x ids and want k, i get k+x documents, filter out banned and get the top k
+    banned_id_count = 0 if banned_ids is None else len(banned_ids)
+
     documents = await vector_store.asimilarity_search_with_relevance_scores(
         query=query,
-        k=top_k,
+        k=top_k + banned_id_count,
         filter=filter_dict,
     )
+
+    if banned_ids:
+        documents = [
+            (document, score)
+            for document, score in documents
+            if (document.metadata["concept_id"], document.metadata["article_id"])
+            not in banned_ids
+        ][:top_k]
+
     results: list[ArticleConceptLLMType] = []
     for document, score in documents:
         results.append(

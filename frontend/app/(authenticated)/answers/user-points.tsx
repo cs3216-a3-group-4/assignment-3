@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
+import { LucideRefreshCw, Pen, Plus } from "lucide-react";
 import { z } from "zod";
 
 import { CPointDTO } from "@/client";
@@ -63,31 +63,68 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
     });
   };
 
+  const generateNewPoint = async (supporting: boolean) => {
+    setIsLoading(true);
+    createPointMutation.mutate(
+      {
+        title: "",
+        positive: supporting,
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          setShowForm(false);
+        },
+      },
+    );
+  };
+
   return (
     <div className="flex flex-col gap-y-4 mt-8">
       {isLoading && (
         <div className="absolute w-full h-full bg-slate-600/80 z-50 bottom-0 right-0 flex justify-center items-center">
           <Card className="p-8 flex flex-col justify-center items-center gap-8">
             <h1 className="text-lg">
-              Jippy is finding examples for your point! Please wait...
+              Jippy is finding examples for your new point! Please wait...
             </h1>
             <JippyIcon classname="animate-bounce w-24 h-24 pt-4" />
           </Card>
         </div>
       )}
       {!hasUserPoints && (
-        <div className="flex justify-between items-center bg-violet-100 shadow-inner py-2 px-8">
-          <p className="font-medium">Not satisfied with these points?</p>
-          <Button onClick={() => setShowForm(true)}>Write your own</Button>
+        <div className="flex flex-wrap justify-between items-center bg-violet-100 shadow-inner py-2 px-8">
+          <p className="font-medium pt-2">Not satisfied with these points?</p>
+          <div className="flex flex-wrap">
+            <Button onClick={() => generateNewPoint(true)} variant="ghost">
+              Generate supporting point{" "}
+              <LucideRefreshCw className="h-4 w-4 ml-2" />
+            </Button>
+            <Button onClick={() => generateNewPoint(false)} variant="ghost">
+              Generate opposing point{" "}
+              <LucideRefreshCw className="h-4 w-4 ml-2" />
+            </Button>
+            <Button onClick={() => setShowForm(true)} variant="ghost">
+              Write your own <Pen className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
         </div>
       )}
       {hasUserPoints && (
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center">
           <h4 className="text-2xl font-semibold">Your custom points</h4>
-
-          <Button onClick={() => setShowForm(true)} size="sm" variant="ghost">
-            New Point <Plus className="h-4 w-4 ml-2" />
-          </Button>
+          <div className="flex gap-2 flex-wrap">
+            <Button onClick={() => generateNewPoint(true)} variant="ghost">
+              Generate supporting point
+              <LucideRefreshCw className="h-4 w-4 ml-2" />
+            </Button>
+            <Button onClick={() => generateNewPoint(false)} variant="ghost">
+              Generate opposing point{" "}
+              <LucideRefreshCw className="h-4 w-4 ml-2" />
+            </Button>
+            <Button onClick={() => setShowForm(true)} size="sm" variant="ghost">
+              New Point <Plus className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
         </div>
       )}
       {userPoints.map((point) => (
