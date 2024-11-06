@@ -32,6 +32,13 @@ def form_point_concept_based(row: PointWithConceptsAndLLMType, positive: bool):
                 elaboration=concept["elaborations"],
             )
         )
+
+    if not concepts:
+        point.fallback = Fallback(
+            alt_approach=row["fall_back_response"]["alt_approach"],
+            general_argument=row["fall_back_response"]["general_argument"],
+        )
+
     return point
 
 

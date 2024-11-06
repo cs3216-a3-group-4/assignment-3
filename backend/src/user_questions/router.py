@@ -29,7 +29,6 @@ from src.essay_helper.form_answer import (
 from src.user_questions.schemas import (
     CreateUserQuestion,
     PointCreateDTO,
-    UserQuestionConceptDTO,
     UserQuestionDTO,
     UserQuestionMiniDTO,
     ValidationResult,
@@ -60,7 +59,7 @@ def get_user_question(
     id: int,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-) -> UserQuestionConceptDTO | UserQuestionDTO:
+) -> UserQuestionDTO:
     user_question = session.scalar(
         select(UserQuestion)
         .where(UserQuestion.id == id)
@@ -121,7 +120,7 @@ async def create_concept_based_user_qn(
     data: CreateUserQuestion,
     user: Annotated[User, Depends(get_current_user)],
     session=Depends(get_session),
-) -> UserQuestionConceptDTO | ValidationResult:
+) -> UserQuestionDTO | ValidationResult:
     validation = within_usage_limit(user, session, data.question)
 
     if not validation.is_valid:

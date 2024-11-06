@@ -128,8 +128,8 @@ export type BookmarkDTO = {
 export type CPointDTO = {
     id: number;
     title: string;
-    body: string;
     positive: boolean;
+    generated: boolean;
     point_article_concepts: Array<PointArticleConceptDTO>;
     fallback?: (FallbackDTO | null);
     likes: Array<LikeDTO>;
@@ -382,11 +382,16 @@ export type PointArticleConceptDTO = {
     point_id: number;
 };
 
+export type PointCreateDTO = {
+    title: string;
+    positive: boolean;
+};
+
 export type PointDTO = {
     id: number;
     title: string;
-    body: string;
     positive: boolean;
+    generated: boolean;
     point_analysises: Array<PointAnalysisDTO>;
     fallback?: (FallbackDTO | null);
     likes: Array<LikeDTO>;
@@ -398,8 +403,8 @@ export type type2 = 'ANALYSIS';
 export type PointMiniDTO = {
     id: number;
     title: string;
-    body: string;
     positive: boolean;
+    generated: boolean;
 };
 
 export type ProfileUpdate = {
@@ -756,6 +761,17 @@ export type ClassifyQuestionUserQuestionsClassifyPostData = {
 export type ClassifyQuestionUserQuestionsClassifyPostResponse = (unknown);
 
 export type ClassifyQuestionUserQuestionsClassifyPostError = (HTTPValidationError);
+
+export type CreatePointUserQuestionsIdPointsPostData = {
+    body: PointCreateDTO;
+    path: {
+        id: number;
+    };
+};
+
+export type CreatePointUserQuestionsIdPointsPostResponse = (unknown);
+
+export type CreatePointUserQuestionsIdPointsPostError = (HTTPValidationError);
 
 export type GetAllNotesNotesGetData = {
     query?: {

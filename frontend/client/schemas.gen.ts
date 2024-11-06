@@ -556,13 +556,13 @@ export const CPointDTOSchema = {
             type: 'string',
             title: 'Title'
         },
-        body: {
-            type: 'string',
-            title: 'Body'
-        },
         positive: {
             type: 'boolean',
             title: 'Positive'
+        },
+        generated: {
+            type: 'boolean',
+            title: 'Generated'
         },
         point_article_concepts: {
             items: {
@@ -597,7 +597,7 @@ export const CPointDTOSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'title', 'body', 'positive', 'point_article_concepts', 'likes'],
+    required: ['id', 'title', 'positive', 'generated', 'point_article_concepts', 'likes'],
     title: 'CPointDTO'
 } as const;
 
@@ -1647,6 +1647,22 @@ export const PointArticleConceptDTOSchema = {
     title: 'PointArticleConceptDTO'
 } as const;
 
+export const PointCreateDTOSchema = {
+    properties: {
+        title: {
+            type: 'string',
+            title: 'Title'
+        },
+        positive: {
+            type: 'boolean',
+            title: 'Positive'
+        }
+    },
+    type: 'object',
+    required: ['title', 'positive'],
+    title: 'PointCreateDTO'
+} as const;
+
 export const PointDTOSchema = {
     properties: {
         id: {
@@ -1657,13 +1673,13 @@ export const PointDTOSchema = {
             type: 'string',
             title: 'Title'
         },
-        body: {
-            type: 'string',
-            title: 'Body'
-        },
         positive: {
             type: 'boolean',
             title: 'Positive'
+        },
+        generated: {
+            type: 'boolean',
+            title: 'Generated'
         },
         point_analysises: {
             items: {
@@ -1698,7 +1714,7 @@ export const PointDTOSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'title', 'body', 'positive', 'point_analysises', 'likes'],
+    required: ['id', 'title', 'positive', 'generated', 'point_analysises', 'likes'],
     title: 'PointDTO'
 } as const;
 
@@ -1712,17 +1728,17 @@ export const PointMiniDTOSchema = {
             type: 'string',
             title: 'Title'
         },
-        body: {
-            type: 'string',
-            title: 'Body'
-        },
         positive: {
             type: 'boolean',
             title: 'Positive'
+        },
+        generated: {
+            type: 'boolean',
+            title: 'Generated'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'body', 'positive'],
+    required: ['id', 'title', 'positive', 'generated'],
     title: 'PointMiniDTO'
 } as const;
 

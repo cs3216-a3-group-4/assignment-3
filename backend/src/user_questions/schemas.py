@@ -43,6 +43,7 @@ class PointMiniDTO(BaseModel):
     id: int
     title: str
     positive: bool
+    generated: bool
 
 
 class PointCreateDTO(BaseModel):
@@ -57,10 +58,27 @@ class PointDTO(PointMiniDTO):
     type: Literal["ANALYSIS"] = "ANALYSIS"
 
 
+class PointArticleConceptDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    article_concept: ArticleConceptWithArticleDTO
+    elaboration: str
+    point_id: int
+
+    # NOTE: Not sure if I need the model_validator part here @seelengxd
+
+
+class CPointDTO(PointMiniDTO):
+    point_article_concepts: list[PointArticleConceptDTO]
+    fallback: FallbackDTO | None = None
+    likes: list[LikeDTO]
+    type: Literal["CONCEPT"] = "CONCEPT"
+
+
 class AnswerDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    points: list[PointDTO]
+    points: list[PointDTO | CPointDTO]
 
 
 class AnswerMiniDTO(BaseModel):
@@ -89,34 +107,3 @@ class ValidationResult(BaseModel):
 
 class CreateUserQuestion(BaseModel):
     question: str
-
-
-# Concept-based essay helper response models
-class PointArticleConceptDTO(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    article_concept: ArticleConceptWithArticleDTO
-    elaboration: str
-    point_id: int
-
-    # NOTE: Not sure if I need the model_validator part here @seelengxd
-
-
-class CPointDTO(PointMiniDTO):
-    point_article_concepts: list[PointArticleConceptDTO]
-    fallback: FallbackDTO | None = None
-    likes: list[LikeDTO]
-    type: Literal["CONCEPT"] = "CONCEPT"
-
-
-class ConceptAnswerDTO(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    id: int
-    points: list[CPointDTO]
-
-
-class UserQuestionConceptDTO(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    id: int
-    question: str
-    answer: ConceptAnswerDTO
