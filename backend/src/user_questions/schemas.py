@@ -1,5 +1,8 @@
 from pydantic import BaseModel, ConfigDict, model_validator
-from src.events.schemas import ArticleConceptDTO, MiniEventDTO
+from src.events.schemas import (
+    ArticleConceptWithArticleDTO,
+    MiniEventDTO,
+)
 from src.likes.schemas import LikeDTO
 
 
@@ -86,7 +89,7 @@ class CreateUserQuestion(BaseModel):
 class PointArticleConceptDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    article_concept: ArticleConceptDTO
+    article_concept: ArticleConceptWithArticleDTO
     elaboration: str
     point_id: int
 
