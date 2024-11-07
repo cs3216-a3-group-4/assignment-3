@@ -68,7 +68,6 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
           setShowForm(false);
           setValidationError(null);
         } else {
-          console.log(response.data);
           const results = response.data as invalidPointError;
           setShowForm(true);
           setValidationError(results.detail);
@@ -87,9 +86,7 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
       {
         onSuccess: () => {
           setIsLoading(false);
-          if (createPointMutation.data?.status === HttpStatusCode.Ok) {
-            setShowForm(false);
-          }
+          setShowForm(false);
         },
       },
     );
