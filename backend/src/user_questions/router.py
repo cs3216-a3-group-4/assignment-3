@@ -27,6 +27,7 @@ from src.essay_helper.form_answer import (
     form_answer_concept_based,
     form_point_concept_based,
 )
+from src.essay_helper.validate_point import validate_point
 from src.user_questions.schemas import (
     CreateUserQuestion,
     PointCreateDTO,
@@ -184,6 +185,10 @@ async def create_point(
         return HTTPException(HTTPStatus.NOT_FOUND)
 
     point = data.title
+
+    validation_result = validate_point(point, user_question.question)
+    if not validation_result["valid"]:
+        return HTTPException(HTTPStatus.BAD_REQUEST, detail=validation_result["reason"])
 
     # Point regeneration
     # TODO: yes, consider refactoring this to another route or something
