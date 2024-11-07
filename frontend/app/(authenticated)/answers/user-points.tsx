@@ -63,14 +63,14 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
     createPointMutation.mutate(data, {
       onSuccess: (response) => {
         setIsLoading(false);
-        if (!response.data) {
-          console.log("Success");
+        if (!response.data || Object.keys(response.data).length === 0) {
           setShowForm(false);
+          setValidationError(null);
         } else {
+          console.log(response.data);
           const results = response.data as invalidPointError;
           setShowForm(true);
           setValidationError(results.detail);
-          console.log(results.detail);
         }
       },
     });
