@@ -15,7 +15,8 @@ export default function Profile() {
           <h1 className="text-3xl 2xl:text-4xl font-bold">Settings</h1>
         </div>
 
-        <div className="flex flex-col gap-8">
+        {/* "mx-4 md:mx-0" i dont know wth is going on with the margins but i add this to and it aligned */}
+        <div className="flex flex-col gap-8 mx-4 md:mx-0">
           <CategoryForm
             initialCategoryIds={user.categories.map((category) => category.id)}
           />
