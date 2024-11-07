@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { HttpStatusCode } from "axios";
 import { LucideRefreshCw, Pen, Plus } from "lucide-react";
 import { z } from "zod";
 
@@ -64,14 +65,18 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
     createPointMutation.mutate(data, {
       onSuccess: (response) => {
         setIsLoading(false);
-        if (!response.data || Object.keys(response.data).length === 0) {
-          setShowForm(false);
-          setValidationError(null);
-        } else {
-          const results = response.data as invalidPointError;
+
+        if (response.status === HttpStatusCode.BadRequest) {
+          const results = response.error as unknown as invalidPointError;
           setShowForm(true);
           setValidationError(results.detail);
+        } else {
+          setShowForm(false);
+          setValidationError(null);
         }
+      },
+      onError: (error) => {
+        console.log({ error });
       },
     });
   };

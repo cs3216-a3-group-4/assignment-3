@@ -182,13 +182,13 @@ async def create_point(
     )
 
     if not user_question:
-        return HTTPException(HTTPStatus.NOT_FOUND)
+        raise HTTPException(HTTPStatus.NOT_FOUND)
 
     point = data.title
 
     validation_result = validate_point(point, user_question.question)
     if not validation_result["valid"]:
-        return HTTPException(HTTPStatus.BAD_REQUEST, detail=validation_result["reason"])
+        raise HTTPException(HTTPStatus.BAD_REQUEST, detail=validation_result["reason"])
 
     # Point regeneration
     # TODO: yes, consider refactoring this to another route or something
@@ -233,10 +233,10 @@ async def regenerate_examples(
         .options(selectinload(Point.answer).selectinload(Answer.user_question))
     )
     if not point:
-        return HTTPException(HTTPStatus.NOT_FOUND)
+        raise HTTPException(HTTPStatus.NOT_FOUND)
 
     if point.example_regenerated:
-        return HTTPException(HTTPStatus.TOO_MANY_REQUESTS)
+        raise HTTPException(HTTPStatus.TOO_MANY_REQUESTS)
 
     # Even if it fails, I don't want them to regenerate it again
     # since it'll probably fail again.
