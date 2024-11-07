@@ -93,7 +93,7 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
       )}
       {!hasUserPoints && (
         <div className="flex flex-wrap justify-between items-center bg-violet-100 shadow-inner py-2 px-8">
-          <p className="font-medium pt-2">Not satisfied with these points?</p>
+          <p className="font-medium">Not satisfied with these points?</p>
           <div className="flex flex-wrap">
             <Button onClick={() => generateNewPoint(true)} variant="ghost">
               Generate supporting point{" "}

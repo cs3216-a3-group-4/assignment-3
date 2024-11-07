@@ -219,12 +219,15 @@ const EssayFeedbackPage = () => {
       className="flex flex-col bg-muted w-full h-full max-h-full overflow-y-auto py-8 px-4 md:px-8 xl:px-24"
       id="home-page"
     >
-      <div className="px-6 mt-4 mb-8">
-        <span className="flex items-center text-primary-800">
-          <BookOpenCheckIcon className="w-12 h-12 mr-6" />
-          <h1 className="text-4xl font-semibold">Get essay feedback</h1>
+      <div className="px-4 sm:px-6 mt-4 mb-8">
+        <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-center">
+          <span className="flex items-center text-primary-800">
+            <BookOpenCheckIcon className="w-12 h-12 mr-6" />
+            <h1 className="text-4xl font-semibold">Get essay feedback</h1>
+          </span>
           <Chip className="sm:ml-3" label="Beta" />
-        </span>
+        </div>
+
         <h2 className="text-lg mt-3 text-gray-700">
           Get feedback on your GP essay at the snap of your fingers. Rest
           assured, your essay is yours. Jippy will never use your essay for
@@ -246,7 +249,7 @@ const EssayFeedbackPage = () => {
           </Alert>
         </div>
       )}
-      <div className="grow flex flex-col">
+      <div className="grow flex flex-col px-4 sm:px-6">
         <Form {...form}>
           <form className="h-full" onSubmit={form.handleSubmit(onSubmit)}>
             <div
@@ -259,9 +262,9 @@ const EssayFeedbackPage = () => {
                   <FormItem className="mb-2">
                     <FormControl>
                       <AutosizeTextarea
-                        className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-3xl font-semibold text-primary-700"
+                        className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-2xl sm:text-3xl font-semibold text-primary-700"
                         disabled={isUserUnverified}
-                        placeholder="Type your GP essay question"
+                        placeholder="Type your essay question"
                         {...field}
                       />
                     </FormControl>
@@ -276,7 +279,7 @@ const EssayFeedbackPage = () => {
                   <FormItem className="mb-2">
                     <FormControl>
                       <AutosizeTextarea
-                        className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-lg overflow-x-hidden"
+                        className="bg-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none text-base sm:text-lg overflow-x-hidden"
                         disabled={isUserUnverified}
                         placeholder="Type or paste your essay here"
                         {...field}

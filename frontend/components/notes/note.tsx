@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatDate } from "date-fns";
 
@@ -12,8 +14,13 @@ import {
 } from "@/client";
 import Chip from "@/components/display/chip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Category, getIconFor } from "@/types/categories";
-import { parseDate } from "@/utils/date";
+import { parseDate, parseDateNoYear } from "@/utils/date";
 
 import NoteDialogContent from "./note-dialog-content";
 
@@ -72,20 +79,21 @@ const Note = ({ data, handleDelete }: Props) => {
   return (
     <Dialog onOpenChange={setNoteOpen} open={noteOpen}>
       <DialogTrigger asChild>
-        <div className="flex items-center py-5 lg:flex-row w-full lg:py-3 px-4 md:px-8 xl:px-12 xl:py-5 gap-x-5 border-y-[1px] lg:border-y-[0px] hover:bg-primary-alt-foreground/[2.5%] lg:rounded-md cursor-pointer">
-          <Icon className="mr-3 flex-shrink-0" size={30} strokeWidth={1.7} />
-          <div className="flex flex-col space-y-2.5">
+        <div className="flex items-center px-4 py-5 lg:flex-row w-full lg:py-3 sm:px-4 md:px-8 xl:px-12 xl:py-5 gap-x-5 border-y-[1px] lg:border-y-[0px] hover:bg-primary-alt-foreground/[2.5%] lg:rounded-md cursor-pointer">
+          <div className="flex flex-col space-y-2.5 w-full">
             <div className="flex w-full justify-between">
-              <span className="text-text-muted/90">
+              <Chip
+                Icon={Icon}
+                className="w-fit"
+                label={categoryName}
+                size="sm"
+                variant="primary"
+              />
+              <span className="text-text-muted/90 text-base">
                 {parseDate(dateCreated)}
               </span>
             </div>
-            <Chip
-              className="w-fit"
-              label={categoryName}
-              size="sm"
-              variant="primary"
-            />
+
             {data.parent_type === "analysis" && (
               <div className="border-l-primary-500/50 border-l-4 pl-4">
                 {(data as AnalysisNoteDTO).analysis.content.slice(
@@ -105,11 +113,49 @@ const Note = ({ data, handleDelete }: Props) => {
               </div>
             )}
             <p>{noteContent}</p>
-            <p>
+            <p className="italic font-light text-sm">
               From{" "}
-              <span className="underline" onClick={() => router.push(source)}>
-                {article.title} {formatDate(article.date, "(dd MMM yyyy)")}
-              </span>
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <span
+                    className="hover:opacity-80 font-normal hover:text-primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(source);
+                    }}
+                  >
+                    {article.title} {formatDate(article.date, "(dd MMM yyyy)")}
+                  </span>
+                </HoverCardTrigger>
+                <HoverCardContent
+                  className="w-[80vw] sm:w-[50vw] cursor-default"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="w-full py-2 flex justify-between gap-4 md:py-0">
+                    <div className="">
+                      <Link href={`/articles/${article.id}`}>
+                        <h4 className="text-sm md:text-lg font-medium hover:opacity-80">
+                          {article.title}{" "}
+                        </h4>
+                      </Link>
+                      <span className="font-light text-xs">
+                        {parseDateNoYear(article.date)}
+                      </span>
+                    </div>
+                    <Image
+                      alt={article.title}
+                      className="h-12 w-auto"
+                      height={100}
+                      src={article.image_url}
+                      unoptimized
+                      width={100}
+                    />
+                  </div>
+                  <div className="text-xs md:text-sm text-wrap w-full mt-2">
+                    {article.summary}
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
             </p>
           </div>
         </div>
