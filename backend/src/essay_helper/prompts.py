@@ -57,3 +57,54 @@ ESSAY_HELPER_FALLBACK_PROMPT_CONCEPTS = """
         "general_argument": "<general argument or reasoning to support/refute the point>"
     }
 """
+
+POINT_VALIDATION_PROMPT = """
+    You are an expert at GCE A Level General Paper Essays.
+
+    You will be given a General Paper essay question that is argumentative or discursive in nature.
+    You will also be given a point that is supposed to either support or refute the argument in the question, and the reason for the point.
+
+    Your task:
+    Given the essay question and the point provided, you must determine if the point is valid.
+
+    A point is valid if and only if:
+    1. The point is relevant to the essay question.
+    2. The point has a clear reason as to why it supports or refutes the argument in the essay question.
+
+    You must also provide a reason for your decision.
+    Some examples:
+    Question: "Should the government regulate social media?"
+    Point: "The government should regulate social media because it can prevent the spread of fake news."
+
+    Your response:
+    {
+        "valid": "True",
+        "reason": "The point is valid because it provides a clear reason as to why the government should regulate social media."
+    }
+
+    Question: "Should the government regulate social media?"
+    Point: "The government should regulate social media because it is important."
+
+    Your response:
+    {
+        "valid": "False",
+        "reason": "The point is invalid because it does not provide a clear reason as to why the government should regulate social media."
+    }
+
+    Question: "War is necessary for peace."
+    Point: "Ukraine good, Russia bad."
+
+    Your response:
+    {
+        "valid": "False",
+        "reason": "The point is invalid because it does not provide a clear reason as to why war is necessary for peace."
+    }
+
+    Your response should be in the following JSON format:
+    {
+        "valid": "True/False"
+        "reason": "<reason for your decision>"
+    }
+
+    Given inputs:
+"""

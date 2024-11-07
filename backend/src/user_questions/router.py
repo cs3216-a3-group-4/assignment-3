@@ -27,6 +27,7 @@ from src.essay_helper.form_answer import (
     form_answer_concept_based,
     form_point_concept_based,
 )
+from src.essay_helper.validate_point import validate_point
 from src.user_questions.schemas import (
     CreateUserQuestion,
     PointCreateDTO,
@@ -181,9 +182,13 @@ async def create_point(
     )
 
     if not user_question:
-        return HTTPException(HTTPStatus.NOT_FOUND)
+        raise HTTPException(HTTPStatus.NOT_FOUND)
 
     point = data.title
+
+    validation_result = validate_point(point, user_question.question)
+    if not validation_result["valid"]:
+        raise HTTPException(HTTPStatus.BAD_REQUEST, detail=validation_result["reason"])
 
     # Point regeneration
     # TODO: yes, consider refactoring this to another route or something
@@ -228,10 +233,10 @@ async def regenerate_examples(
         .options(selectinload(Point.answer).selectinload(Answer.user_question))
     )
     if not point:
-        return HTTPException(HTTPStatus.NOT_FOUND)
+        raise HTTPException(HTTPStatus.NOT_FOUND)
 
     if point.example_regenerated:
-        return HTTPException(HTTPStatus.TOO_MANY_REQUESTS)
+        raise HTTPException(HTTPStatus.TOO_MANY_REQUESTS)
 
     # Even if it fails, I don't want them to regenerate it again
     # since it'll probably fail again.

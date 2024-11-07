@@ -2,12 +2,14 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { HttpStatusCode } from "axios";
 import { LucideRefreshCw, Pen, Plus } from "lucide-react";
 import { z } from "zod";
 
 import { CPointDTO } from "@/client";
 import CheckboxField from "@/components/form/fields/checkbox-field";
 import TextField from "@/components/form/fields/text-field";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
@@ -18,6 +20,10 @@ import PointAccordion from "./point-accordion";
 
 type OwnProps = {
   answer_id: number;
+};
+
+type invalidPointError = {
+  detail: string;
 };
 
 const pointFormSchema = z.object({
@@ -37,6 +43,7 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
 
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const form = useForm<PointForm>({
     resolver: zodResolver(pointFormSchema),
     defaultValues: pointFormDefault,
@@ -56,9 +63,20 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
   const onSubmit: SubmitHandler<PointForm> = async (data) => {
     setIsLoading(true);
     createPointMutation.mutate(data, {
-      onSuccess: () => {
-        setShowForm(false);
+      onSuccess: (response) => {
         setIsLoading(false);
+
+        if (response.status === HttpStatusCode.BadRequest) {
+          const results = response.error as unknown as invalidPointError;
+          setShowForm(true);
+          setValidationError(results.detail);
+        } else {
+          setShowForm(false);
+          setValidationError(null);
+        }
+      },
+      onError: (error) => {
+        console.log({ error });
       },
     });
   };
@@ -130,6 +148,13 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
       {userPoints.map((point) => (
         <PointAccordion answer_id={answer_id} key={point.id} point={point} />
       ))}
+      {validationError && (
+        <Alert variant="destructive">
+          <AlertTitle>Invalid point!</AlertTitle>
+          <AlertDescription>{validationError}</AlertDescription>
+        </Alert>
+      )}
+
       {showForm && (
         <Form {...form}>
           <form className="p-6 border" onSubmit={form.handleSubmit(onSubmit)}>
@@ -139,9 +164,13 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
                 label="Is this a supporting point?"
                 name="positive"
               />
+
               <div className="flex justify-between">
                 <Button
-                  onClick={() => setShowForm(false)}
+                  onClick={() => {
+                    setShowForm(false);
+                    setValidationError(null);
+                  }}
                   type="button"
                   variant="ghost"
                 >
