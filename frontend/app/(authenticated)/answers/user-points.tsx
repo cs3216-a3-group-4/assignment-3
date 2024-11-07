@@ -8,6 +8,7 @@ import { z } from "zod";
 import { CPointDTO } from "@/client";
 import CheckboxField from "@/components/form/fields/checkbox-field";
 import TextField from "@/components/form/fields/text-field";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
@@ -145,7 +146,13 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
       {userPoints.map((point) => (
         <PointAccordion answer_id={answer_id} key={point.id} point={point} />
       ))}
-      {validationError && <div className="text-red-500">{validationError}</div>}
+      {validationError && (
+        <Alert variant="destructive">
+          <AlertTitle>Invalid point!</AlertTitle>
+          <AlertDescription>{validationError}</AlertDescription>
+        </Alert>
+      )}
+
       {showForm && (
         <Form {...form}>
           <form className="p-6 border" onSubmit={form.handleSubmit(onSubmit)}>
