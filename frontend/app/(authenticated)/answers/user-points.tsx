@@ -20,6 +20,10 @@ type OwnProps = {
   answer_id: number;
 };
 
+type invalidPointError = {
+  detail: string;
+};
+
 const pointFormSchema = z.object({
   title: z.string().min(1, "Required"),
   positive: z.boolean(),
@@ -37,6 +41,7 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
 
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const form = useForm<PointForm>({
     resolver: zodResolver(pointFormSchema),
     defaultValues: pointFormDefault,
@@ -56,9 +61,17 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
   const onSubmit: SubmitHandler<PointForm> = async (data) => {
     setIsLoading(true);
     createPointMutation.mutate(data, {
-      onSuccess: () => {
-        setShowForm(false);
+      onSuccess: (response) => {
         setIsLoading(false);
+        if (!response.data) {
+          console.log("Success");
+          setShowForm(false);
+        } else {
+          const results = response.data as invalidPointError;
+          setShowForm(true);
+          setValidationError(results.detail);
+          console.log(results.detail);
+        }
       },
     });
   };
@@ -73,7 +86,9 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
       {
         onSuccess: () => {
           setIsLoading(false);
-          setShowForm(false);
+          if (createPointMutation.data?.status === HttpStatusCode.Ok) {
+            setShowForm(false);
+          }
         },
       },
     );
@@ -130,6 +145,7 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
       {userPoints.map((point) => (
         <PointAccordion answer_id={answer_id} key={point.id} point={point} />
       ))}
+      {validationError && <div className="text-red-500">{validationError}</div>}
       {showForm && (
         <Form {...form}>
           <form className="p-6 border" onSubmit={form.handleSubmit(onSubmit)}>
@@ -139,6 +155,7 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
                 label="Is this a supporting point?"
                 name="positive"
               />
+
               <div className="flex justify-between">
                 <Button
                   onClick={() => setShowForm(false)}
