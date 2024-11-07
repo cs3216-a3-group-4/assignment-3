@@ -167,7 +167,10 @@ const UserPoints: React.FC<OwnProps> = ({ answer_id }) => {
 
               <div className="flex justify-between">
                 <Button
-                  onClick={() => setShowForm(false)}
+                  onClick={() => {
+                    setShowForm(false);
+                    setValidationError(null);
+                  }}
                   type="button"
                   variant="ghost"
                 >
