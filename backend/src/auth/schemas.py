@@ -12,6 +12,7 @@ class UserPublic(BaseModel):
     id: int
     email: EmailStr
     last_accessed: datetime
+    image_url: str | None = None
 
     categories: list[CategoryDTO]
     top_events_period: int = 7

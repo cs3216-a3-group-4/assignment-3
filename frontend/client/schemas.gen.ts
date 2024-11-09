@@ -1950,6 +1950,17 @@ export const UserPublicSchema = {
             format: 'date-time',
             title: 'Last Accessed'
         },
+        image_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Image Url'
+        },
         categories: {
             items: {
                 '$ref': '#/components/schemas/CategoryDTO'

@@ -232,8 +232,11 @@ def auth_google(
         "https://www.googleapis.com/oauth2/v1/userinfo",
         headers={"Authorization": f"Bearer {access_token}"},
     ).json()
+
     # 2. Check for existing user.
     email = user_info["email"]
+    image_url = user_info.get("picture", None)
+
     user = session.scalars(
         select(User).where(User.email == email).options(selectinload(User.categories))
     ).first()
@@ -242,15 +245,18 @@ def auth_google(
             raise HTTPException(
                 HTTPStatus.CONFLICT, "there exists a normal (non-google) account"
             )
+        user.image_url = image_url
     else:
         user = User(
             email=email,
             # doesnt matter
             hashed_password=get_password_hash(GOOGLE_CLIENT_SECRET),
             account_type=AccountType.GOOGLE,
+            image_url=image_url,
         )
         session.add(user)
-        session.commit()
+
+    session.commit()
 
     # 3. Add jwt token
     token = create_token(user, response)
