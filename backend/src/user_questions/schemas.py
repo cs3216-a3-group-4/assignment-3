@@ -1,5 +1,9 @@
+from typing import Literal
 from pydantic import BaseModel, ConfigDict, model_validator
-from src.events.schemas import MiniEventDTO
+from src.events.schemas import (
+    ArticleConceptWithArticleDTO,
+    MiniEventDTO,
+)
 from src.likes.schemas import LikeDTO
 
 
@@ -38,7 +42,14 @@ class PointMiniDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
-    body: str
+    positive: bool
+    generated: bool
+    example_regenerated: bool
+
+
+class PointCreateDTO(BaseModel):
+    # if empty, autogenerate
+    title: str
     positive: bool
 
 
@@ -46,12 +57,30 @@ class PointDTO(PointMiniDTO):
     point_analysises: list[PointAnalysisDTO]
     fallback: FallbackDTO | None = None
     likes: list[LikeDTO]
+    type: Literal["ANALYSIS"] = "ANALYSIS"
+
+
+class PointArticleConceptDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    article_concept: ArticleConceptWithArticleDTO
+    elaboration: str
+    point_id: int
+
+    # NOTE: Not sure if I need the model_validator part here @seelengxd
+
+
+class CPointDTO(PointMiniDTO):
+    point_article_concepts: list[PointArticleConceptDTO]
+    fallback: FallbackDTO | None = None
+    likes: list[LikeDTO]
+    type: Literal["CONCEPT"] = "CONCEPT"
 
 
 class AnswerDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    points: list[PointDTO]
+    points: list[PointDTO | CPointDTO]
 
 
 class AnswerMiniDTO(BaseModel):

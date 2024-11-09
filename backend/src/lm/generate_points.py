@@ -3,19 +3,24 @@ from typing import List
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel
+from src.lm.dict_types import (
+    AllPointsWithAnalysisType,
+    PointWithAnalysisType,
+    PointsType,
+)
 from src.lm.lm import lm_model_essay as lm_model
 from src.embeddings.vector_store import get_similar_results
 
-from src.lm.prompts import ROLE_SYSPROMPT as SYSPROMPT
+from src.lm.prompts import QUESTION_POINT_REGEN_SYSPROMPT, ROLE_SYSPROMPT as SYSPROMPT
 from src.lm.prompts import QUESTION_POINT_GEN_SYSPROMPT as HUMAN_PROMPT
 
 
 class Points(BaseModel):
-    for_points: List[dict]
-    against_points: List[dict]
+    for_points: List[str]
+    against_points: List[str]
 
 
-async def generate_points_from_question(question: str) -> dict:
+async def generate_points_from_question(question: str) -> PointsType:
     human_message = HUMAN_PROMPT + question
     messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
 
@@ -25,12 +30,39 @@ async def generate_points_from_question(question: str) -> dict:
     return points
 
 
+async def generate_new_point_for_question(
+    question: str, past_points: list[str], supporting: bool
+):
+    inputs_str = f"""
+    Question: {question}
+    Past points: {past_points}
+"""
+    human_message = (
+        QUESTION_POINT_REGEN_SYSPROMPT.format("supporting" if supporting else "against")
+        + inputs_str
+    )
+    messages = [SystemMessage(content=SYSPROMPT), HumanMessage(content=human_message)]
+
+    # TODO: refactor magic number
+    for _ in range(3):
+        try:
+            result = await lm_model.ainvoke(messages)
+            parser = JsonOutputParser()
+            point = parser.invoke(result).get("point")
+        except:  # noqa: E722
+            continue
+    return point
+
+
 async def populate_point(
     point: str,
     analyses_per_point: int,
-    relevant_results: list,
+    relevant_results: list[PointWithAnalysisType],
     is_singapore: bool = False,
 ):
+    """
+    Given a topic sentence, query top k results from vector store and populate the result list.
+    """
     relevant_analyses = await get_similar_results(
         point, top_k=analyses_per_point, filter_sg=is_singapore
     )
@@ -39,14 +71,20 @@ async def populate_point(
 
 async def get_relevant_analyses(
     question: str, analyses_per_point: int = 5, is_singapore: bool = False
-) -> dict:
+) -> AllPointsWithAnalysisType:
+    """
+    Given a question, generate topic sentences and populate them with relevant analyses.
+    """
     print(f"Freq penalty: {lm_model.frequency_penalty}")
     points = await generate_points_from_question(question)
 
     for_pts = points.get("for_points", [])
     against_pts = points.get("against_points", [])
 
-    relevant_results = {"for_points": [], "against_points": []}
+    relevant_results: AllPointsWithAnalysisType = {
+        "for_points": [],
+        "against_points": [],
+    }
 
     await asyncio.gather(
         *(

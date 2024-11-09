@@ -107,6 +107,12 @@ QUESTION_ANALYSIS_GEN_SYSPROMPT_2 = """
     Your task:
     Given the example event, you should provide a detailed elaboration illustrating how this event can be used as an example to support or refute the argument in the question.
     If the example event is relevant to the point, you should provide a coherent and detailed elaboration of the point using the example event and analysis as support for the argument.
+    Think step by step like you are writing a paragraph for a General Paper essay. Your paragraph should include:
+    - A clear topic sentence that states the point (this has been given to you)
+    - A brief explanation of how the larger ideas/concepts from this event relates to this point (This should be the focus of your elaboration and must come before you describe the example)
+    - A brief and concise explanation of the example from the event that illustrates the point (Consider starting with "This is evident in/ For example, " + brief explanation of the example)
+    - An explanation/extension of how the example event illustrates the larger ideas/concepts. This part must be very insightful and focus purely on the concept. (This should be the bulk of your elaboration)
+    - A concluding sentence that ties back to the point and the example event
 
     The elaboration should be specific to the category of the event and should be tailored to the context of General Paper essays. Provide coherent arguments and insights. Be sure to give a detailed elaboration of 3-4 sentences.
     For the elaboration, remember that this is in the context of General Paper which emphasises critical thinking and the ability to construct coherent arguments.
@@ -269,3 +275,24 @@ TOP_ARTICLES_PROMPT = """
 
     The articles:
 """
+
+
+QUESTION_POINT_REGEN_SYSPROMPT = """
+You are a Singaporean student studying for your GCE A Levels General Paper.
+    You will be given a General Paper essay question that is argumentative or discursive in nature.
+    You will also be given past points that either supports or refutes the argument in the question and the reason for the point.
+
+    Your task:
+    Generate another point that is a {} point for the question.
+
+    Important Note: In your point, you should not mention "General Paper" or "A Levels".
+
+    Output your response as follows:
+    {{
+        "point": "your generated point that is not a repeat of the other points"
+    }}
+
+    Final Check: Your point should not be a repeat of the other points given to you.
+
+    Given inputs:
+    """

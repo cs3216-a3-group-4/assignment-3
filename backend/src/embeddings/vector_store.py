@@ -1,5 +1,5 @@
 import asyncio
-from typing import List
+from typing import List, TypedDict
 from langchain_openai import OpenAIEmbeddings
 
 from langchain_pinecone import PineconeVectorStore
@@ -26,9 +26,7 @@ os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 
-def create_vector_store():
-    index_name = "prod-index-embedding-3-model"  # change to create a new index
-
+def create_vector_store(index_name: str = None):
     existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 
     if index_name not in existing_indexes:
@@ -52,7 +50,7 @@ def create_vector_store():
     return vector_store
 
 
-vector_store = create_vector_store()
+vector_store = create_vector_store("prod-index-embedding-3-model")
 
 
 def get_is_singapore(event_id):
@@ -86,6 +84,52 @@ def get_analyses_from_useful_articles(limit: int = None):
         return analyses
 
 
+async def store_documents_async(
+    analysis_list: List[Analysis], semaphore: asyncio.Semaphore
+):
+    documents: list[Document] = []
+    for analysis in analysis_list:
+        document = Document(
+            page_content=analysis.content,
+            metadata={
+                "id": analysis.id,
+                "event_id": analysis.event_id,
+                "category_id": analysis.category_id,
+                "is_singapore": get_is_singapore(analysis.event_id),
+            },
+        )
+        documents.append(document)
+
+    ids = [
+        str(document.metadata["id"])
+        + "-"
+        + str(document.metadata["event_id"])
+        + "-"
+        + str(document.metadata["category_id"])
+        for document in documents
+    ]
+
+    async with semaphore:
+        await vector_store.aadd_documents(documents=documents, ids=ids)
+
+    print(f"Completed storing {len(documents)} documents")
+
+
+async def store_analyses_embeddings_async(
+    analysis_list: List[Analysis], batch_size: int = 100
+):
+    semaphore = asyncio.Semaphore(batch_size)
+    tasks = []
+    for i in range(0, len(analysis_list), batch_size):
+        tasks.append(
+            store_documents_async(analysis_list[i : i + batch_size], semaphore)
+        )
+
+    await asyncio.gather(*tasks)
+
+    print(f"Stored total {len(analysis_list)} documents. Task completed.")
+
+
 def store_documents(analysis_list: List[Analysis]):
     documents: list[Document] = []
     for analysis in analysis_list:
@@ -113,6 +157,14 @@ def store_documents(analysis_list: List[Analysis]):
     print(f"Stored {len(documents)} documents")
 
 
+class AnalysisLMType(TypedDict):
+    id: int  # this is a guess
+    event_id: int
+    category_id: int
+    content: str
+    score: float
+
+
 async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = False):
     # NOTE: filter_sg == False means all examples are allowed, not just Singapore examples
     filter_dict = {"is_singapore": True} if filter_sg else {}
@@ -122,7 +174,7 @@ async def get_similar_results(query: str, top_k: int = 3, filter_sg: bool = Fals
         k=top_k,
         filter=filter_dict,
     )
-    results = []
+    results: list[AnalysisLMType] = []
     for document, score in documents:
         results.append(
             {
@@ -147,5 +199,10 @@ if __name__ == "__main__":
     print(docs)
 
     # NOTE: this is for repopulation of the entire database
-    # analyses = get_analyses_from_useful_articles()
+    # analyses = get_analyses_from_useful_articles(3000)
+    # # start timer
+    # start = time.time()
     # store_documents(analyses)
+    # # end timer
+    # end = time.time()
+    # print(f"Time taken: {end - start}")

@@ -55,7 +55,7 @@ function AllQuestions() {
                 </div>
               )
             )}
-            {!isLoading && data!.length === 0 && (
+            {!isLoading && data && data.length === 0 && (
               <Card className="mx-auto my-8 p-8 flex flex-col gap-8 max-w-lg">
                 <h2 className="text-xl">
                   You don&apos;t have any past questions!

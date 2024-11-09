@@ -109,7 +109,14 @@ export const AnswerDTOSchema = {
         },
         points: {
             items: {
-                '$ref': '#/components/schemas/PointDTO'
+                anyOf: [
+                    {
+                        '$ref': '#/components/schemas/PointDTO'
+                    },
+                    {
+                        '$ref': '#/components/schemas/CPointDTO'
+                    }
+                ]
             },
             type: 'array',
             title: 'Points'
@@ -544,6 +551,65 @@ export const BookmarkDTOSchema = {
     title: 'BookmarkDTO',
     description: `Be careful when editing this model. It is used by both article/event
 despite them using two different ORM models (ArticleBookmark & Bookmark)`
+} as const;
+
+export const CPointDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        title: {
+            type: 'string',
+            title: 'Title'
+        },
+        positive: {
+            type: 'boolean',
+            title: 'Positive'
+        },
+        generated: {
+            type: 'boolean',
+            title: 'Generated'
+        },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
+        },
+        point_article_concepts: {
+            items: {
+                '$ref': '#/components/schemas/PointArticleConceptDTO'
+            },
+            type: 'array',
+            title: 'Point Article Concepts'
+        },
+        fallback: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/FallbackDTO'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        likes: {
+            items: {
+                '$ref': '#/components/schemas/LikeDTO'
+            },
+            type: 'array',
+            title: 'Likes'
+        },
+        type: {
+            type: 'string',
+            enum: ['CONCEPT'],
+            const: 'CONCEPT',
+            title: 'Type',
+            default: 'CONCEPT'
+        }
+    },
+    type: 'object',
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated', 'point_article_concepts', 'likes'],
+    title: 'CPointDTO'
 } as const;
 
 export const CategoryDTOSchema = {
@@ -1554,6 +1620,41 @@ export const PointAnalysisDTOSchema = {
     title: 'PointAnalysisDTO'
 } as const;
 
+export const PointArticleConceptDTOSchema = {
+    properties: {
+        article_concept: {
+            '$ref': '#/components/schemas/ArticleConceptWithArticleDTO'
+        },
+        elaboration: {
+            type: 'string',
+            title: 'Elaboration'
+        },
+        point_id: {
+            type: 'integer',
+            title: 'Point Id'
+        }
+    },
+    type: 'object',
+    required: ['article_concept', 'elaboration', 'point_id'],
+    title: 'PointArticleConceptDTO'
+} as const;
+
+export const PointCreateDTOSchema = {
+    properties: {
+        title: {
+            type: 'string',
+            title: 'Title'
+        },
+        positive: {
+            type: 'boolean',
+            title: 'Positive'
+        }
+    },
+    type: 'object',
+    required: ['title', 'positive'],
+    title: 'PointCreateDTO'
+} as const;
+
 export const PointDTOSchema = {
     properties: {
         id: {
@@ -1564,13 +1665,17 @@ export const PointDTOSchema = {
             type: 'string',
             title: 'Title'
         },
-        body: {
-            type: 'string',
-            title: 'Body'
-        },
         positive: {
             type: 'boolean',
             title: 'Positive'
+        },
+        generated: {
+            type: 'boolean',
+            title: 'Generated'
+        },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
         },
         point_analysises: {
             items: {
@@ -1595,10 +1700,17 @@ export const PointDTOSchema = {
             },
             type: 'array',
             title: 'Likes'
+        },
+        type: {
+            type: 'string',
+            enum: ['ANALYSIS'],
+            const: 'ANALYSIS',
+            title: 'Type',
+            default: 'ANALYSIS'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'body', 'positive', 'point_analysises', 'likes'],
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated', 'point_analysises', 'likes'],
     title: 'PointDTO'
 } as const;
 
@@ -1612,17 +1724,21 @@ export const PointMiniDTOSchema = {
             type: 'string',
             title: 'Title'
         },
-        body: {
-            type: 'string',
-            title: 'Body'
-        },
         positive: {
             type: 'boolean',
             title: 'Positive'
+        },
+        generated: {
+            type: 'boolean',
+            title: 'Generated'
+        },
+        example_regenerated: {
+            type: 'boolean',
+            title: 'Example Regenerated'
         }
     },
     type: 'object',
-    required: ['id', 'title', 'body', 'positive'],
+    required: ['id', 'title', 'positive', 'generated', 'example_regenerated'],
     title: 'PointMiniDTO'
 } as const;
 
@@ -1833,6 +1949,17 @@ export const UserPublicSchema = {
             type: 'string',
             format: 'date-time',
             title: 'Last Accessed'
+        },
+        image_url: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Image Url'
         },
         categories: {
             items: {

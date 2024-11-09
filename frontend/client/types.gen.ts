@@ -24,7 +24,7 @@ export type AnalysisToEventDTO = {
 
 export type AnswerDTO = {
     id: number;
-    points: Array<PointDTO>;
+    points: Array<(PointDTO | CPointDTO)>;
 };
 
 export type AnswerMiniDTO = {
@@ -124,6 +124,20 @@ export type Body_log_in_auth_login_post = {
 export type BookmarkDTO = {
     user_id: number;
 };
+
+export type CPointDTO = {
+    id: number;
+    title: string;
+    positive: boolean;
+    generated: boolean;
+    example_regenerated: boolean;
+    point_article_concepts: Array<PointArticleConceptDTO>;
+    fallback?: (FallbackDTO | null);
+    likes: Array<LikeDTO>;
+    type?: 'CONCEPT';
+};
+
+export type type = 'CONCEPT';
 
 export type CategoryDTO = {
     id: number;
@@ -358,21 +372,37 @@ export type PointAnalysisDTO = {
     point_id: number;
 };
 
+export type PointArticleConceptDTO = {
+    article_concept: ArticleConceptWithArticleDTO;
+    elaboration: string;
+    point_id: number;
+};
+
+export type PointCreateDTO = {
+    title: string;
+    positive: boolean;
+};
+
 export type PointDTO = {
     id: number;
     title: string;
-    body: string;
     positive: boolean;
+    generated: boolean;
+    example_regenerated: boolean;
     point_analysises: Array<PointAnalysisDTO>;
     fallback?: (FallbackDTO | null);
     likes: Array<LikeDTO>;
+    type?: 'ANALYSIS';
 };
+
+export type type2 = 'ANALYSIS';
 
 export type PointMiniDTO = {
     id: number;
     title: string;
-    body: string;
     positive: boolean;
+    generated: boolean;
+    example_regenerated: boolean;
 };
 
 export type ProfileUpdate = {
@@ -426,6 +456,7 @@ export type UserPublic = {
     id: number;
     email: string;
     last_accessed: string;
+    image_url?: (string | null);
     categories: Array<CategoryDTO>;
     top_events_period?: number;
     tier_id?: number;
@@ -501,22 +532,6 @@ export type LogInAuthLoginPostResponse = (Token);
 
 export type LogInAuthLoginPostError = (HTTPValidationError);
 
-export type CompleteEmailVerificationAuthEmailVerificationPutData = {
-    query: {
-        code: string;
-    };
-};
-
-export type CompleteEmailVerificationAuthEmailVerificationPutResponse = (Token);
-
-export type CompleteEmailVerificationAuthEmailVerificationPutError = (HTTPValidationError);
-
-export type ResendVerificationEmailAuthEmailVerificationPostData = unknown;
-
-export type ResendVerificationEmailAuthEmailVerificationPostResponse = (unknown);
-
-export type ResendVerificationEmailAuthEmailVerificationPostError = (HTTPValidationError);
-
 export type LoginGoogleAuthLoginGoogleGetResponse = (unknown);
 
 export type LoginGoogleAuthLoginGoogleGetError = unknown;
@@ -559,6 +574,22 @@ export type StripeWebhookBillingWebhookPostData = {
 export type StripeWebhookBillingWebhookPostResponse = (unknown);
 
 export type StripeWebhookBillingWebhookPostError = (HTTPValidationError);
+
+export type CompleteEmailVerificationAuthEmailVerificationPutData = {
+    query: {
+        code: string;
+    };
+};
+
+export type CompleteEmailVerificationAuthEmailVerificationPutResponse = (Token);
+
+export type CompleteEmailVerificationAuthEmailVerificationPutError = (HTTPValidationError);
+
+export type ResendVerificationEmailAuthEmailVerificationPostData = unknown;
+
+export type ResendVerificationEmailAuthEmailVerificationPostResponse = (unknown);
+
+export type ResendVerificationEmailAuthEmailVerificationPostError = (HTTPValidationError);
 
 export type GetUserAuthSessionGetData = unknown;
 
@@ -696,13 +727,13 @@ export type GetUserQuestionsUserQuestionsGetResponse = (Array<UserQuestionMiniDT
 
 export type GetUserQuestionsUserQuestionsGetError = (HTTPValidationError);
 
-export type CreateUserQuestionUserQuestionsPostData = {
+export type CreateConceptBasedUserQnUserQuestionsPostData = {
     body: CreateUserQuestion;
 };
 
-export type CreateUserQuestionUserQuestionsPostResponse = ((UserQuestionDTO | ValidationResult));
+export type CreateConceptBasedUserQnUserQuestionsPostResponse = ((UserQuestionDTO | ValidationResult));
 
-export type CreateUserQuestionUserQuestionsPostError = (HTTPValidationError);
+export type CreateConceptBasedUserQnUserQuestionsPostError = (HTTPValidationError);
 
 export type GetUserQuestionUserQuestionsIdGetData = {
     path: {
@@ -723,6 +754,27 @@ export type ClassifyQuestionUserQuestionsClassifyPostData = {
 export type ClassifyQuestionUserQuestionsClassifyPostResponse = (unknown);
 
 export type ClassifyQuestionUserQuestionsClassifyPostError = (HTTPValidationError);
+
+export type CreatePointUserQuestionsIdPointsPostData = {
+    body: PointCreateDTO;
+    path: {
+        id: number;
+    };
+};
+
+export type CreatePointUserQuestionsIdPointsPostResponse = (unknown);
+
+export type CreatePointUserQuestionsIdPointsPostError = (HTTPValidationError);
+
+export type RegenerateExamplesUserQuestionsPointIdExamplesPutData = {
+    path: {
+        point_id: number;
+    };
+};
+
+export type RegenerateExamplesUserQuestionsPointIdExamplesPutResponse = (number);
+
+export type RegenerateExamplesUserQuestionsPointIdExamplesPutError = (HTTPValidationError);
 
 export type GetAllNotesNotesGetData = {
     query?: {
@@ -818,6 +870,7 @@ export type GetArticlesArticlesGetData = {
         end_date?: (string | null);
         limit?: (number | null);
         offset?: (number | null);
+        search?: (string | null);
         singapore_only?: boolean;
         start_date?: (string | null);
     };

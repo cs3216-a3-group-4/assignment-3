@@ -33,13 +33,26 @@ const NotesSelector = ({ filter, setFilter }: Props) => {
       <DropdownMenu>
         {/* Trigger: button with the selected option displayed */}
         <DropdownMenuTrigger asChild>
-          <Button
-            className="flex p-2 gap-1 rounded-md"
-            size="lg"
-            variant="ghost"
-          >
-            {filter} <ChevronDown className="w-4 h-4 self-center" />
-          </Button>
+          <div>
+            <div className="hidden sm:block">
+              <Button
+                className="flex p-2 gap-1 rounded-md"
+                size="lg"
+                variant="ghost"
+              >
+                {filter} <ChevronDown className="w-4 h-4 self-center" />
+              </Button>
+            </div>
+            <div className="sm:hidden">
+              <Button
+                className="flex p-2 gap-1 rounded-md"
+                size="sm"
+                variant="ghost"
+              >
+                {filter} <ChevronDown className="w-4 h-4 self-center" />
+              </Button>
+            </div>
+          </div>
         </DropdownMenuTrigger>
 
         {/* Menu content */}

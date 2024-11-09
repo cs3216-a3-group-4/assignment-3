@@ -41,12 +41,12 @@ const Page = () => {
             id="notes-page-content"
           >
             <div
-              className="flex flex-col sm:flex-row justify-start sm:justify-between mb-4 gap-y-2"
+              className="flex flex-wrap justify-between mb-4 gap-y-2"
               id="note-page-title"
             >
               <span className="flex items-center">
-                <Notebook className="w-8 h-8 grow-0 self-center mr-4" />
-                <span className="text-4xl 2xl:text-4xl font-bold text-primary-800 grow">
+                <Notebook className="w-5 h-5 md:w-7 md:h-7 grow-0 self-center mr-4" />
+                <span className="text-2xl md:text-4xl font-bold text-primary-800 grow">
                   My Notes
                 </span>
               </span>
