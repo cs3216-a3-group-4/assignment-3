@@ -35,6 +35,7 @@ class User(Base):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+
     email: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
     account_type: Mapped[AccountType]
@@ -44,6 +45,7 @@ class User(Base):
         ForeignKey("tier.id"), default=1, server_default="1"
     )
     verified: Mapped[bool] = mapped_column(server_default="true")
+    image_url: Mapped[str] = mapped_column(nullable=True)
 
     role: Mapped[Role] = mapped_column(server_default="NORMAL")
     categories: Mapped[list[Category]] = relationship(secondary=user_category_table)

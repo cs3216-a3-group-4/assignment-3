@@ -456,6 +456,7 @@ export type UserPublic = {
     id: number;
     email: string;
     last_accessed: string;
+    image_url?: (string | null);
     categories: Array<CategoryDTO>;
     top_events_period?: number;
     tier_id?: number;

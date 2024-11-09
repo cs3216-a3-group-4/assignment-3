@@ -6,7 +6,7 @@ import { CreditCardIcon, LogOutIcon, UserIcon } from "lucide-react";
 
 import { logoutAuthLogoutGet } from "@/client";
 import Chip from "@/components/display/chip";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,12 +46,21 @@ const UserProfileButton = () => {
   }
 
   const email = user.email;
+  const image_url = user.image_url;
+  console.log({ image_url });
   return (
     <div className="cursor-pointer">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex items-center w-full max-w-64 rounded-full p-2 hover:bg-muted-foreground/10">
             <Avatar className="h-9 w-9">
+              {image_url && (
+                <AvatarImage
+                  alt={email}
+                  referrerPolicy="no-referrer"
+                  src={image_url}
+                />
+              )}
               <AvatarFallback>{getInitialFromEmail(email)}</AvatarFallback>
             </Avatar>
           </div>
