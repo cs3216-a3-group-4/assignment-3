@@ -41,7 +41,7 @@ class Comments(BaseModel):
     comments: List[LMComment]
 
 
-def generate_paragraph_comments(
+async def generate_paragraph_comments(
     content: str, question: str, paragraph_type: ParagraphType
 ) -> CommentsType:
     sysprompt = ""
@@ -61,7 +61,7 @@ def generate_paragraph_comments(
 
     messages = [SystemMessage(content=sysprompt), HumanMessage(content=prompt)]
 
-    result = lm_model.invoke(messages)
+    result = await lm_model.ainvoke(messages)
     parser = JsonOutputParser(pydantic_object=Comments)
     # print("COMMENT: ", comments)
     comments: CommentsType = parser.invoke(result.content)
@@ -77,7 +77,7 @@ def generate_paragraph_comments(
     return comments
 
 
-def generate_comment_orm(
+async def generate_comment_orm(
     comments: dict,
     content: str,
     question: str,
@@ -98,7 +98,7 @@ def generate_comment_orm(
         )
         if lacking_examples:
             print("Caught lacking")
-            examples = asyncio.run(generate_comment_with_example(content, question))
+            examples = await generate_comment_with_example(content, question)
             orm.comment_analysises.append(
                 CommentAnalysis(
                     skill_issue=examples[0].get("content"),
@@ -110,7 +110,7 @@ def generate_comment_orm(
     return orm_list
 
 
-def extract_point(content: str, question: str) -> str:
+async def extract_point(content: str, question: str) -> str:
     prompt = f"""
     Question: {question}
     Paragraph: {content}
@@ -121,7 +121,7 @@ def extract_point(content: str, question: str) -> str:
         HumanMessage(content=prompt),
     ]
 
-    result = lm_model.invoke(messages)
+    result = await lm_model.ainvoke(messages)
     parser = JsonOutputParser()
     points = parser.invoke(result.content)
     return points["argument"]
@@ -131,28 +131,33 @@ async def generate_comment_with_example(content: str, question: str):
     """
     Generate comments for a paragraph with bad examples
     """
-    argument = extract_point(content, question)
+    argument = await extract_point(content, question)
     examples = await get_similar_results(argument, top_k=1)
 
     return examples
 
 
 async def get_paragraph_comments_async(paragraphs, essay: Essay) -> list[Paragraph]:
-    res: list[Paragraph] = []
+    res: list[tuple[int, Paragraph]] = []
     semaphore = asyncio.Semaphore(CONCURRENCY)
     async with asyncio.TaskGroup() as tg:
-        for paragraph in paragraphs:
+        for index, paragraph in enumerate(paragraphs):
             tg.create_task(
                 generate_paragraph_comments_async(
-                    paragraph, res, essay.question, semaphore
+                    paragraph, res, essay.question, semaphore, index
                 )
             )
+    res.sort(key=lambda paragraph_with_index: paragraph_with_index[0])
 
-    return res
+    return [paragraph for _, paragraph in res]
 
 
 async def generate_paragraph_comments_async(
-    paragraph, res: list[Paragraph], question: str, semaphore: asyncio.Semaphore
+    paragraph,
+    res: list[Paragraph],
+    question: str,
+    semaphore: asyncio.Semaphore,
+    index: int,
 ):
     """
     Generate comments for a list of paragraphs asynchronously
@@ -162,22 +167,24 @@ async def generate_paragraph_comments_async(
         try:
             paragraph_orm = Paragraph(type=paragraph.type, content=paragraph.content)
 
-            comments_orm = get_paragraph_comments(paragraph, question, paragraph.type)
+            comments_orm = await get_paragraph_comments(
+                paragraph, question, paragraph.type
+            )
             paragraph_orm.comments = comments_orm
-            res.append(paragraph_orm)
+            res.append((index, paragraph_orm))
         except Exception as e:
             print(e)
 
 
-def get_paragraph_comments(
+async def get_paragraph_comments(
     content: str, question: str, paragraph_type: ParagraphType
 ) -> List[Comment]:
-    comments = generate_paragraph_comments(content, question, paragraph_type)
-    comment_orm = generate_comment_orm(comments, content, question)
+    comments = await generate_paragraph_comments(content, question, paragraph_type)
+    comment_orm = await generate_comment_orm(comments, content, question)
     return comment_orm
 
 
-def generate_essay_comments(paragraphs: list[str], question: str):
+async def generate_essay_comments(paragraphs: list[str], question: str):
     essay = form_essay(paragraphs)
     prompt = f"""
     Question: {question}
@@ -191,15 +198,15 @@ def generate_essay_comments(paragraphs: list[str], question: str):
         HumanMessage(content=prompt),
     ]
 
-    result = lm_model.invoke(messages)
+    result = await lm_model.ainvoke(messages)
     parser = JsonOutputParser(pydantic_object=Comments)
     comments = parser.invoke(result.content)
     return comments
 
 
-def get_essay_comments(paragraphs: list[str], question: str):
-    comments = generate_essay_comments(paragraphs, question)
-    comment_orm = generate_comment_orm(
+async def get_essay_comments(paragraphs: list[str], question: str):
+    comments = await generate_essay_comments(paragraphs, question)
+    comment_orm = await generate_comment_orm(
         comments, paragraphs, question, CommentParentType.ESSAY
     )
     return comment_orm
@@ -212,7 +219,7 @@ def form_essay(paragraphs: list[str]):
     return essay
 
 
-if __name__ == "__main__":
+async def main():
     # paragraphs = [
     #     "The President of the United States has been long recognised by many as the most influential figure in the world. Yet, quite ironically, the constant love-hate feud between the incumbent President Donald Trump and social media has prompted many to question the dynamics between politicians and social media, perhaps even insinuating that the power of politicians today have diminished due to the emergence of social media platforms that today dictate much of the social discourse, and that has seeped into every aspect imaginable of everyday life. While the influence of social media certainly cannot be dismissed, I do not fully agree that social media has more influence than politicians as the issue is much more nuanced and complexed. Instead, I believe that while at the individual scale, social media may be more influential in shifting mindsets, politicians and social media are rather, mutually reinforcing in influencing social changes and political decisions at the national, and global scale.",
     #     "At the individual scale, it is hard to deny that social media has more influence on the common man than politicians. Social media has lent us each a voice and a platform to be heard- bringing together virtual communities and providing us a means to engage closely without others at the tip of our fingers. This engagement has birthed a ‘ground-up’ approach of influencing the way we think, how we communicate with others, and how we perceive our roles and duties as citizens of the world, more so than the top-down directive politicians often take. For instance, awareness towards the need for more sustainable lifestyle habits had skyrocketed thanks to lifestyle gurus who advocated for these causes using social media- this particularly resonated with the common man as it establishes a personable connection to these ‘influencers’ which appealed to them. It is no wonder that one would be expected to be well familiar with online personalities- such as “Pewdiepie” “Mr Beast” , , and “Charli D'Amelio” , but forgiven for not knowing many politicians: shockingly, one in three Americans do not know the Governor of their state. Hence, as opposed to the impersonal and distant image portrayed by politicians, social media provides a ‘bottom-up’ engagement that significantly appeals to and thus, can establish a deeper connection, to and hence, influence us at the individual level more so than politicians.",
@@ -236,5 +243,11 @@ if __name__ == "__main__":
         "To what extent is the pursuit of continuous economic growth a desirable goal?"
     )
 
-    comments = generate_paragraph_comments(paragraph, question, ParagraphType.PARAGRAPH)
+    comments = await generate_paragraph_comments(
+        paragraph, question, ParagraphType.PARAGRAPH
+    )
     print(json.dumps(comments, indent=4))
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

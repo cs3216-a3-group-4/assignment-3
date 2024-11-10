@@ -47,7 +47,7 @@ async def create_essay(
 
     paragraph_comments = await get_paragraph_comments_async(data.paragraphs, essay)
     essay.paragraphs = paragraph_comments
-    essay.comments = get_essay_comments(paragraphs, data.question)
+    essay.comments = await get_essay_comments(paragraphs, data.question)
 
     session.add(essay)
     session.commit()
