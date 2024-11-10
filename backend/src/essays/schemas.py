@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from src.essays.models import Inclination, ParagraphType
 from src.events.schemas import AnalysisToEventDTO
 from src.likes.schemas import LikeDTO
@@ -57,6 +57,7 @@ class CommentDTO(CommentMiniDTO):
 
 class ParagraphDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+    id: int
     content: str
     type: str
 
@@ -66,3 +67,8 @@ class ParagraphDTO(BaseModel):
 class EssayDTO(EssayBaseDTO):
     comments: list[CommentMiniDTO]
     paragraphs: list[ParagraphDTO]
+
+    @model_validator(mode="after")
+    def check_passwords_match(self):
+        self.paragraphs.sort(key=lambda paragraph: paragraph.id)
+        return self
