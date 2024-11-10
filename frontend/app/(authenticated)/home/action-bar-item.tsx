@@ -37,7 +37,7 @@ const ActionBarItem = ({
       </div>
 
       <div className="flex flex-col w-full text-text">
-        <p className="text-sm md:text-base line-clamp-4 text-ellipsis md:h-[100px] lg:h-[80px] xl:h-[6vh]">
+        <p className="text-sm md:text-base line-clamp-4 text-ellipsis md:min-h-[100px] lg:min-h-[80px] xl:min-h-[6vh]">
           {description}
         </p>
         {children}
