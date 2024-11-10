@@ -185,7 +185,7 @@ def add_concepts_to_db(article_concepts: list[ArticleConceptsWithId]):
 
 async def generate_concepts(limit: int | None = None, add_to_db: bool = True):
     with Session(engine) as session:
-        # query db for article
+        # query db for articles without concept
         subquery = select(ArticleConcept.article_id)
         query = (
             select(Article)
