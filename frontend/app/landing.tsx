@@ -30,7 +30,10 @@ import {
   TierPrice,
 } from "@/types/billing";
 
+
 const Landing = () => {
+
+
   return (
     <div className="relative w-full h-full overflow-y-auto scroll-smooth">
       <div className="flex flex-col bg-muted min-w-full h-fit">
@@ -77,13 +80,10 @@ const Landing = () => {
                   <Card className="flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
                     <CardHeader>
                       <CardTitle className="text-primary-800 text-3xl">
-                        Saves you time
+                        Saves time
                       </CardTitle>
                       <CardDescription className="text-xl text-text-muted pt-3">
-                        No more combing through the web for hours to find
-                        examples. Jippy sifts through the mountain of news
-                        articles to bring the most interesting events going on
-                        around the world right to you.
+                        Learn current affairs faster with summarised event details. Get feedback for your GP essay within a minute.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -93,12 +93,10 @@ const Landing = () => {
                   <Card className="flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
                     <CardHeader>
                       <CardTitle className="text-primary-800 text-3xl">
-                        Helps you build your example bank
+                        Powered by AI
                       </CardTitle>
                       <CardDescription className="text-xl text-text-muted pt-3">
-                        Keeping up to date with current affairs is important for
-                        scoring well in GP. Jippy is here to encourage everyone
-                        to read the news by making it accessible.
+                        Generate suggested topic sentences with relevant examples and analyses for your chosen GP question. Get comments on strengths and weaknesses for your GP essay anytime.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -108,13 +106,10 @@ const Landing = () => {
                   <Card className="flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
                     <CardHeader>
                       <CardTitle className="text-primary-800 text-3xl">
-                        Insights and analysis
+                        Latest GP syllabus
                       </CardTitle>
                       <CardDescription className="text-xl text-text-muted pt-3">
-                        Ever tried reading the news and forget it immediately?
-                        Or wonder how to even apply the knowledge to your GP
-                        essays? Not anymore. Jippy can intelligently extract
-                        relevant GP analysis and even generate essay points.
+                        Build the conceptual analysis skills required by the latest syllabus with Jippy's suggested conceptual analysis for each news event. Get comments for your essay based on the 2024 Band Descriptors used by SEAB.
                       </CardDescription>
                     </CardHeader>
                   </Card>
