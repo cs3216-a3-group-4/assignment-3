@@ -6,6 +6,8 @@ from src.embeddings.vector_store import create_vector_store
 from src.events.models import ArticleConcept, Concept, Event
 from langchain_core.documents import Document
 
+from src.lm.generate_concepts import ArticleConceptsWithId
+
 
 from src.common.database import engine
 from sqlalchemy.orm import Session
@@ -29,6 +31,26 @@ def fetch_all_article_concepts(limit: int = None) -> list[ArticleConcept]:
         if limit:
             query = query.limit(limit)
         return session.scalars(query).all()
+
+
+async def store_daily_article_concepts(article_concepts: list[ArticleConceptsWithId]):
+    concepts = get_new_article_concepts(article_concepts)
+    await store_concepts_async(concepts)
+
+
+def get_new_article_concepts(
+    article_concepts: list[ArticleConceptsWithId], limit: int = None
+) -> list[ArticleConcept]:
+    """
+    Given a list of ArticleConceptsWithId objects, return a list of ArticleConcept objects
+    """
+    article_ids = [article_concept.article_id for article_concept in article_concepts]
+
+    with Session(engine) as session:
+        query = select(ArticleConcept).where(ArticleConcept.article_id.in_(article_ids))
+        if limit:
+            query = query.limit(limit)
+    return session.scalars(query).all()
 
 
 async def store_concepts_async(concepts: list[ArticleConcept], batch_size: int = 200):

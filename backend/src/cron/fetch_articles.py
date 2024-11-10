@@ -5,6 +5,7 @@ import os
 
 from src.common.constants import GUARDIAN_API_KEY
 from sqlalchemy import select
+from src.embeddings.store_concepts import store_daily_article_concepts
 from src.embeddings.vector_store import store_documents
 from src.events.models import Article, ArticleSource, Event
 from src.common.database import engine
@@ -155,7 +156,7 @@ async def run(limit: int = 30):
     # Add new articles to database
     await populate_daily_articles_cna()
 
-    # Process new articles i.e. find articles that we have not generated events for
+    # Get new articles i.e. find articles that we have not generated events for
     articles = process_new_articles()
 
     # # Generate events from articles, written to lm_events_output.json
@@ -168,7 +169,10 @@ async def run(limit: int = 30):
 
     store_documents(analyses)
 
-    await generate_concepts()
+    # NOTE: this is the part to store concepts in database
+    article_concepts_with_id = await generate_concepts()
+    await store_daily_article_concepts(article_concepts_with_id)
+
     print(analyses)
 
 
