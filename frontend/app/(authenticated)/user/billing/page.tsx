@@ -26,7 +26,7 @@ const getPriceButtonText = (
   priceTierId: number,
   user: UserPublic | undefined,
 ) => {
-  const userTierId = user?.tier_id || 1;
+  const userTierId = user?.tier_id || JippyTierID.Free;
   const isUserUnverified =
     user?.verified === false || userTierId === UNVERIFIED_TIER_ID;
   if (isUserUnverified) {
@@ -84,7 +84,8 @@ const Page = () => {
       onClickBuy: () => {
         stripeCheckoutMutation.mutate({
           price_id: process.env.NEXT_PUBLIC_STRIPE_PREMIUM_TIER_PRICE_ID || "",
-          tier_id: Number(process.env.NEXT_PUBLIC_PREMIUM_TIER_ID) || 1,
+          tier_id:
+            Number(process.env.NEXT_PUBLIC_PREMIUM_TIER_ID) || JippyTierID.Free,
         });
       },
       price: TierPrice.Premium,
@@ -116,7 +117,7 @@ const Page = () => {
       // Display toast to notify the user that payment got cancelled
       toast({
         title: "Payment Cancelled",
-        description: `Unable to upgrade your tier, you remain at ${tierIDToTierName(user?.tier_id || 1)} Tier`,
+        description: `Unable to upgrade your tier, you remain at ${tierIDToTierName(user?.tier_id || JippyTierID.Free)} Tier`,
       });
 
       // Remove query parameters from the URL after showing the toast
