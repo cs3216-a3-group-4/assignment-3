@@ -95,7 +95,9 @@ class Essay(Base):
     question: Mapped[str]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
-    paragraphs: Mapped[list["Paragraph"]] = relationship(back_populates="essay")
+    paragraphs: Mapped[list["Paragraph"]] = relationship(
+        back_populates="essay", order_by="Paragraph.id"
+    )
 
     comments = relationship(
         Comment,
