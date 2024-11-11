@@ -154,6 +154,11 @@ export type CommentAnalysisDTO = {
     analysis: AnalysisToEventDTO;
 };
 
+export type CommentArticleConceptDTO = {
+    skill_issue: string;
+    article_concept: ArticleConceptWithArticleDTO;
+};
+
 export type CommentDTO = {
     id: number;
     lack_example: boolean;
@@ -161,6 +166,7 @@ export type CommentDTO = {
     content: string;
     likes: Array<LikeDTO>;
     comment_analysises: Array<CommentAnalysisDTO>;
+    comment_article_concepts: Array<CommentArticleConceptDTO>;
 };
 
 export type CommentMiniDTO = {
@@ -495,6 +501,7 @@ export type src__essays__schemas__ParagraphDTO__1 = {
 };
 
 export type src__essays__schemas__ParagraphDTO__2 = {
+    id: number;
     content: string;
     type: string;
     comments: Array<CommentDTO>;
