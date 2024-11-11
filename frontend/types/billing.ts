@@ -8,8 +8,8 @@ export enum JippyTier {
 
 export enum JippyTierID {
   Free = 1,
-  Premium = 2,
-  Enterprise = 3,
+  Premium = 3,
+  Enterprise = 5,
 }
 
 export enum JippyTierStatus {
