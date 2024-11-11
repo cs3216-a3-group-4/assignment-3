@@ -133,6 +133,6 @@ def generate_fallback_response(question: str, point: str) -> FallbackType:
 
 
 if __name__ == "__main__":
-    question = "Longer life expectancy creates more problems than benefits. Discuss."
+    question = "‘Longer life expectancy creates more problems than benefits. Discuss."
     response = asyncio.run(generate_response(question))
     print(json.dumps(response, indent=2))
