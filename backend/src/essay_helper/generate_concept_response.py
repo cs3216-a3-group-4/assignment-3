@@ -135,7 +135,7 @@ async def generate_elaborated_concept(
     result = await lm_model.ainvoke(messages)
 
     concept["elaborations"] = result.content
-    if concept["elaborations"] != "NOT RELEVANT":
+    if len(concept["elaborations"]) >= 20:
         elaborated_concepts.append((concept, index))
 
 
