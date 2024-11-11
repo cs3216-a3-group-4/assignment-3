@@ -23,7 +23,9 @@ class Answer(Base):
 
     user_question: Mapped[UserQuestion] = relationship(back_populates="answer")
 
-    points: Mapped[list["Point"]] = relationship(back_populates="answer")
+    points: Mapped[list["Point"]] = relationship(
+        back_populates="answer", order_by="Point.id"
+    )
 
 
 class Point(Base):
