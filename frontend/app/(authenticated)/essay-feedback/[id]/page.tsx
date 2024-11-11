@@ -203,6 +203,83 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                                           </AccordionItem>
                                         ),
                                       )}
+                                      {comment.comment_article_concepts.map(
+                                        (comment_article_concept) => (
+                                          <AccordionItem
+                                            className="border-none"
+                                            key={
+                                              comment_article_concept
+                                                .article_concept.article.id +
+                                              "-" +
+                                              comment_article_concept
+                                                .article_concept.concept.id
+                                            }
+                                            value={(
+                                              comment_article_concept
+                                                .article_concept.article.id +
+                                              "-" +
+                                              comment_article_concept
+                                                .article_concept.concept.id
+                                            ).toString()}
+                                          >
+                                            {/* TODO: currently assuming analysis always has event */}
+                                            <AccordionTrigger className="text-lg text-text-muted">
+                                              {
+                                                comment_article_concept
+                                                  .article_concept.article.title
+                                              }
+                                            </AccordionTrigger>
+                                            <AccordionContent className="text-lg">
+                                              <div className="flex justify-between items-baseline mb-4">
+                                                <span className="font-medium text-lg 2xl:text-xl text-text-muted/80">
+                                                  <ZapIcon
+                                                    className="inline-flex mr-3"
+                                                    size={20}
+                                                  />
+                                                  Article summary
+                                                </span>
+                                                <Link
+                                                  href={`/articles/${
+                                                    comment_article_concept
+                                                      .article_concept.article
+                                                      .id
+                                                  }`}
+                                                >
+                                                  <Button
+                                                    className="h-8 w-fit text-text-muted mt-2"
+                                                    size="sm"
+                                                    variant="outline"
+                                                  >
+                                                    <FileSymlinkIcon className="h-4 w-4 mr-2" />
+                                                    Read more
+                                                  </Button>
+                                                </Link>
+                                              </div>
+                                              <blockquote className="border-l-2 pl-6 italic text-text-muted 2xl:text-2xl tracking-wide mb-8">
+                                                {
+                                                  comment_article_concept
+                                                    .article_concept.article
+                                                    .summary
+                                                }
+                                              </blockquote>
+                                              <div className="flex flex-col gap-y-4">
+                                                <span className="font-medium text-lg 2xl:text-xl text-text-muted/80">
+                                                  <SparkleIcon
+                                                    className="inline-flex mr-3"
+                                                    size={20}
+                                                  />
+                                                  Possible concepts
+                                                </span>
+                                                <p className="tracking-wide">
+                                                  {
+                                                    comment_article_concept.skill_issue
+                                                  }
+                                                </p>
+                                              </div>
+                                            </AccordionContent>
+                                          </AccordionItem>
+                                        ),
+                                      )}
                                     </Accordion>
                                   </AlertDescription>
                                 </Alert>

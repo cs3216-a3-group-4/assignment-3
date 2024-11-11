@@ -2,6 +2,7 @@ import asyncio
 import json
 from typing import List
 from pydantic import BaseModel
+from src.embeddings.store_concepts import get_similar_concepts
 from src.lm.dict_types import CommentsType
 from src.lm.lm import lm_model_essay as lm_model
 
@@ -16,11 +17,10 @@ from src.lm.essay_grader_prompts import (
 from src.lm.essay_grader_prompts import (
     POINT_EXTRACTION_PROMPT as POINT_EXTRACTION_PROMPT,
 )
-from src.embeddings.vector_store import get_similar_results
 
 from src.essays.models import (
     Comment,
-    CommentAnalysis,
+    CommentArticleConcept,
     CommentParentType,
     Essay,
     Inclination,
@@ -99,10 +99,11 @@ async def generate_comment_orm(
         if lacking_examples:
             print("Caught lacking")
             examples = await generate_comment_with_example(content, question)
-            orm.comment_analysises.append(
-                CommentAnalysis(
-                    skill_issue=examples[0].get("content"),
-                    analysis_id=examples[0].get("id"),
+            orm.comment_article_concepts.append(
+                CommentArticleConcept(
+                    skill_issue=examples[0].get("content").split(":", 1)[1],
+                    article_id=examples[0].get("article_id"),
+                    concept_id=examples[0].get("concept_id"),
                 )
             )
         orm_list.append(orm)
@@ -132,7 +133,7 @@ async def generate_comment_with_example(content: str, question: str):
     Generate comments for a paragraph with bad examples
     """
     argument = await extract_point(content, question)
-    examples = await get_similar_results(argument, top_k=1)
+    examples = await get_similar_concepts(argument, top_k=1)
 
     return examples
 

@@ -186,10 +186,6 @@ async def create_point(
 
     point = data.title
 
-    validation_result = validate_point(point, user_question.question)
-    if not validation_result["valid"]:
-        raise HTTPException(HTTPStatus.BAD_REQUEST, detail=validation_result["reason"])
-
     # Point regeneration
     # TODO: yes, consider refactoring this to another route or something
     if point == "":
@@ -198,6 +194,12 @@ async def create_point(
             [point.title for point in user_question.answer.points],
             data.positive,
         )
+    else:
+        validation_result = validate_point(point, user_question.question)
+        if not validation_result["valid"]:
+            raise HTTPException(
+                HTTPStatus.BAD_REQUEST, detail=validation_result["reason"]
+            )
 
     # TODO: refactor this to be stored on qn creation so we aren't calling this for every new point
     is_society_question = classify_society_qn(user_question.question)
