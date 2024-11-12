@@ -222,7 +222,7 @@ const Landing = () => {
             Feeling <Highlight>overwhelmed</Highlight> with A-Level General
             Paper studies?
           </h2>
-          <h3 className="text-xl md:text-2xl lg:text-3xl font-medium mt-3 text-center mb-10">
+          <h3 className="text-xl md:text-2xl lg:text-3xl text-text-muted mt-8 text-center mb-10">
             We&apos;ve been there. Learn how Jippy can help.
           </h3>
           <div className="flex justify-stretch w-full">
@@ -230,7 +230,7 @@ const Landing = () => {
               className="md:hidden max-w-[450px] mx-auto overflow-x-hidden"
               opts={{ align: "center", loop: true }}
             >
-              <CarouselContent className="flex items-stretch mt-8 lg:mt-16 min-w-0">
+              <CarouselContent className="flex items-stretch min-w-0">
                 {whyJippyReasons.map((whyJippyReason, index) => (
                   <CarouselItem
                     className="flex flex-col basis-full md:basis-7/12 min-w-0"
@@ -251,7 +251,7 @@ const Landing = () => {
               </CarouselContent>
               <CarouselPagination />
             </Carousel>
-            <div className="hidden md:grid md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] w-full h-fit items-stretch gap-x-5 gap-y-2.5">
+            <div className="hidden md:grid md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] w-full h-fit items-stretch gap-x-5 gap-y-3">
               {whyJippyReasons.map((whyJippyReason, index) => (
                 <Card
                   className="m-1 drop-shadow-sm shadow-background-50 px-4 py-3"
@@ -271,11 +271,11 @@ const Landing = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center bg-background w-full px-8 py-12 md:px-12 lg:py-24 lg:px-24">
+        <div className="flex flex-col items-center justify-center bg-background w-full gap-y-8 px-8 py-12 md:px-12 lg:py-24 lg:px-24">
           <h2 className="w-full text-center text-3xl md:text-5xl leading-tight text-primary justify-center font-bold max-w-[50rem] tracking-tight">
             Built for <Highlight>all</Highlight> your GP essay needs
           </h2>
-          <h3 className="text-sm lg:text-lg font-medium mt-10 text-center w-9/12 mb-10 md:mb-20">
+          <h3 className="text-xl md:text-2xl lg:text-3xl text-text-muted text-center w-9/12 mb-10">
             Whether you need to build your example bank for your next essay, get
             comments to improve your practice essay, or generate essay points
             for a new essay prompt you&apos;re stuck on, Jippy has what you need
@@ -287,18 +287,18 @@ const Landing = () => {
         </div>
 
         <div className="flex flex-col md:flex-row bg-background w-full px-8 py-12 md:px-12 lg:py-24 lg:px-24 md:gap-x-24">
-          <div className="flex flex-col flex-1 mb-6 md:basis-5/12 w-full md:w-fit items-center md:items-start">
-            <h1 className="text-5xl tracking-tight leading-tight text-primary font-bold">
+          <div className="flex flex-col flex-1 gap-y-8 md:basis-5/12 w-full md:w-fit items-center md:items-start">
+            <h1 className="text-5xl tracking-tight leading-tight text-primary font-bold text-center md:text-left">
               Why you can trust Jippy
             </h1>
-            <span className="mt-3 text-2xl font-medium flex items-center">
+            <span className="text-xl md:text-2xl lg:text-3xl flex items-center">
               <Wand2 className="inline-flex mr-3 hover:animate-wiggle-more text-text-muted" />
               Learn how Jippy AI works
             </span>
           </div>
 
-          <div className="flex-1 md:basis-7/12 p-12 bg-background border rounded-lg shadow-lg">
-            <p className="text-xl md:text-2xl text-text">
+          <div className="flex-1 md:basis-7/12 p-12 mt-10 bg-background border rounded-lg shadow-lg">
+            <p className="text-xl md:text-2xl lg:text-3xl text-text">
               Jippy is after all just an AI frog, and can make mistakes, but
               here are some things made sure to train Jippy on to avoid mistakes
               (or alert you to them) as much as possible:
@@ -318,10 +318,10 @@ const Landing = () => {
 
         <div className="flex flex-col items-center justify-center bg-background w-full py-16 md:py-24 px-8 md:px-24 place-items-start">
           <h1 className="text-5xl font-bold text-primary">Plans & pricing</h1>
-          <h2 className="text-2xl text-text-muted mt-4">
+          <h2 className="text-xl md:text-2xl lg:text-3xl text-text-muted mt-8">
             We strive to keep Jippy accessible for everyone.
           </h2>
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 mt-8 lg:mt-16 gap-x-8 bg-card gap-y-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 mt-10 lg:mt-16 gap-x-8 bg-card gap-y-3">
             <PricingTier
               price={TierPrice.Free}
               tierDescription={tierIDToTierDescription[JippyTierID.Free]}
@@ -338,11 +338,11 @@ const Landing = () => {
         </div>
 
         <div className="flex flex-col items-center bg-background w-full py-16 md:py-24 px-8 md:px-24">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center gap-y-8">
             <h1 className="text-center max-w-[50rem] text-5xl tracking-tight leading-tight text-primary font-bold">
               Frequently asked questions
             </h1>
-            <div className="text-center text-xl mt-4">
+            <div className="text-xl md:text-2xl lg:text-3xl text-center">
               <span>Still curious? Drop us an email at </span>
               <a
                 className="hover:text-text/80"
@@ -353,9 +353,9 @@ const Landing = () => {
             </div>
           </div>
 
-          <div className="flex flex-col w-full md:p-12 gap-y-8 mt-8">
+          <div className="flex flex-col w-full md:p-12 mt-10">
             <Accordion
-              className="flex flex-col gap-y-8 items-stretch w-full max-w-2xl mx-auto"
+              className="flex flex-col gap-y-3 items-stretch w-full max-w-2xl mx-auto"
               type="multiple"
             >
               {faqAnswers.map((faqAnswer, index) => (
@@ -369,7 +369,7 @@ const Landing = () => {
             </Accordion>
           </div>
         </div>
-        <div className="flex flex-col text-primary-foreground bg-primary w-full items-center py-16">
+        <div className="flex flex-col text-primary-foreground bg-primary w-full items-center py-8 lg:py-16">
           <h1 className="text-lg w-fit">
             Built with 💚 (and stress and adrenaline)
           </h1>

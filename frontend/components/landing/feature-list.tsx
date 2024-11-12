@@ -24,7 +24,7 @@ const FeatureList = ({ features }: FeatureListProps) => {
   return (
     <div className="flex flex-col md:flex-row items-stretch md:items-center md:gap-8 xl:gap-12 w-full">
       {/* List of features with initially-hidden description */}
-      <div className="grow md:basis-1/3 space-y-4">
+      <div className="grow md:basis-1/3 space-y-3">
         {features.map((feature, index) => (
           <div
             className="w-full max-w-full cursor-pointer border-b pb-2"
@@ -34,7 +34,7 @@ const FeatureList = ({ features }: FeatureListProps) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-x-2">
                 {feature.icon}
-                <h3 className="text-lg font-semibold">{feature.title}</h3>
+                <h3 className="text-lg font-medium">{feature.title}</h3>
               </div>
               {selectedFeature === feature ? (
                 <ChevronUp className="w-4 h-4" />
@@ -44,7 +44,7 @@ const FeatureList = ({ features }: FeatureListProps) => {
             </div>
             {selectedFeature === feature && (
               <div className="mt-2 max-w-full">
-                <p className="text-sm text-gray-600 text-wrap">
+                <p className="text-sm lg:text-base text-gray-600 text-wrap">
                   {feature.description}
                 </p>
                 <div
