@@ -217,13 +217,13 @@ const Landing = () => {
           </h3>
           <div className="flex justify-stretch w-full">
             <Carousel
-              className="md:hidden max-w-[450px] mx-auto"
+              className="md:hidden max-w-[450px] mx-auto overflow-x-hidden"
               opts={{ align: "center", loop: true }}
             >
-              <CarouselContent className="flex items-stretch mt-8 lg:mt-16">
+              <CarouselContent className="flex items-stretch mt-8 lg:mt-16 min-w-0">
                 {whyJippyReasons.map((whyJippyReason, index) => (
                   <CarouselItem
-                    className="flex flex-col basis-full md:basis-7/12"
+                    className="flex flex-col basis-full md:basis-7/12 min-w-0"
                     key={index}
                   >
                     <Card className="flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
