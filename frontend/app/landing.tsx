@@ -47,7 +47,7 @@ const faqAnswers = [
   {
     title: "Cannot just ChatGPT meh?",
     description:
-      "Jippy is trained on a dataset with 13k articles and built specially for A Level GP students.",
+      "Jippy is trained on a dataset with 18k articles and built specially for A Level GP students.",
   },
   {
     title:
@@ -310,7 +310,7 @@ const Landing = () => {
               </li>
               <li>
                 Jippy is trained on a set of real current affairs news data set.
-                We currently have 13k articles in our dataset.
+                We currently have 18k articles in our dataset.
               </li>
             </ul>
           </div>
