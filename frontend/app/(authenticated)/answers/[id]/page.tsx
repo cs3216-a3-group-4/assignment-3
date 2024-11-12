@@ -30,7 +30,7 @@ const AnswerPage = ({ params }: { params: { id: string } }) => {
         id="answer"
       >
         <div className="flex flex-col pb-4 mb-4 py-8 xl:py-16 max-w-6xl md:mx-8 lg:mx-16 xl:mx-auto">
-          <h1 className="px-8 md:px-0 text-2xl lg:text-3x xl:text-4xl font-semibold text-text mb-10 2xl:mb-12">
+          <h1 className="px-8 md:px-0 text-2xl lg:text-3xl xl:text-4xl font-semibold text-text mb-10 2xl:mb-12">
             {data.question}
           </h1>
           <div className="flex flex-col">
