@@ -91,7 +91,7 @@ const whyJippyReasons = [
   {
     reason: "Latest GP syllabus",
     description:
-      "Build the conceptual analysis skills required by the latest syllabus with Jippy&apos;s suggested conceptual analysis for each news event. Get comments for your essay based on the 2024 Band Descriptors used by SEAB.",
+      "Build the conceptual analysis skills required by the latest syllabus with Jippy's suggested conceptual analysis for each news event. Get comments for your essay based on the 2024 Band Descriptors used by SEAB.",
   },
 ];
 
