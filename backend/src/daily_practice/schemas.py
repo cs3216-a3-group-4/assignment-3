@@ -17,8 +17,14 @@ class DailyPracticeAttemptBaseDTO(BaseModel):
     daily_practice: DailyPracticeDTO
 
 
+class DailyPracticeAttemptPointDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    content: str
+
+
 class DailyPracticeAttemptDTO(DailyPracticeAttemptBaseDTO):
     comments: list[CommentDTO]
+    points: list[DailyPracticeAttemptPointDTO]
 
 
 class CreateDailyPracticeAttemptDTO(BaseModel):

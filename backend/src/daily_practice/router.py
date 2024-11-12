@@ -17,8 +17,9 @@ from src.daily_practice.schemas import (
     DailyPracticeAttemptDTO,
     DailyPracticeDTO,
 )
-from src.essays.models import Comment, CommentParentType, Inclination
+from src.essays.models import Comment, CommentParentType
 from src.events.models import Article, ArticleBookmark
+from src.lm.generate_daily_practice_comments import generate_practice_comments
 
 
 router = APIRouter(prefix="/daily-practices", tags=["daily-practices"])
@@ -70,7 +71,7 @@ def create_daily_practice_attempt(
     user: Annotated[User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
     data: CreateDailyPracticeAttemptDTO,
-):
+) -> int:
     daily_practice = session.scalar(select(DailyPractice).where(DailyPractice.id == id))
 
     if not daily_practice:
@@ -81,17 +82,30 @@ def create_daily_practice_attempt(
         DailyPracticeAttemptPoint(content=point) for point in data.points
     ]
 
+    for _ in range(5):
+        try:
+            comments_llm = generate_practice_comments(data.points)
+            break
+        except Exception as e:  # noqa: E722
+            print(e)
+    else:
+        # should be 500 tbh
+        raise HTTPException(HTTPStatus.BAD_REQUEST)
+
     new_attempt.comments = [
         Comment(
-            inclination=Inclination.GOOD,
-            content="whatever",
+            inclination=comment["inclination"],
+            content=comment["comment"],
             lack_example=False,
             parent_type=CommentParentType.DAILY_PRACTICE_ATTEMPT,
         )
+        for comment in comments_llm["comments"]
     ]
     daily_practice.attempts.append(new_attempt)
 
     session.commit()
+    session.refresh(new_attempt)
+    return new_attempt.id
 
 
 @router.get("/attempts")
@@ -128,6 +142,7 @@ def get_attempt(
                 DailyPractice.article
             ),
             selectinload(DailyPracticeAttempt.comments),
+            selectinload(DailyPracticeAttempt.points),
         )
     )
     return attempts
