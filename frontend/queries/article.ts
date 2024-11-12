@@ -24,9 +24,17 @@ export const getArticlesPage = (
   page: number,
   isSingapore: boolean,
   categoryIds?: number[],
+  searchQuery?: string,
 ) =>
   queryOptions({
-    queryKey: [QueryKeys.Articles, startDate, isSingapore, page, categoryIds],
+    queryKey: [
+      QueryKeys.Articles,
+      startDate,
+      isSingapore,
+      page,
+      categoryIds,
+      searchQuery,
+    ],
     queryFn: () =>
       getArticlesArticlesGet({
         query: {
@@ -35,6 +43,7 @@ export const getArticlesPage = (
           limit: NUM_EVENTS_PER_PAGE,
           offset: (page - 1) * NUM_EVENTS_PER_PAGE,
           singapore_only: isSingapore,
+          search: searchQuery,
         },
       }).then((data) => data.data),
   });

@@ -28,7 +28,9 @@ export const getAnswers = () =>
   queryOptions({
     queryKey: [QueryKeys.Answers],
     queryFn: () =>
-      getUserQuestionsUserQuestionsGet().then((response) => response.data),
+      getUserQuestionsUserQuestionsGet().then((response) =>
+        response.data?.sort((a, b) => b.id - a.id),
+      ),
   });
 
 export const useCreatePoint = (id: number) => {
