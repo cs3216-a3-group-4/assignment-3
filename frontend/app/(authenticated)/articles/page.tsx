@@ -235,32 +235,36 @@ const Articles = () => {
           </div>
 
           {isSearching && (
-            <div className="flex items-center w-full sm:px-1 md:px-5 xl:px-9 gap-x-2 mt-4 mb-4">
+            <div className="flex items-center w-full px-4 md:px-8 xl:px-12 gap-x-2 mt-2 flex-col sm:flex-row">
               <Input
                 className="mr-2"
                 placeholder="Search for article titles..."
                 ref={searchBar}
               />
-              <Button
-                onClick={() => {
-                  setSearchQuery(searchBar.current?.value ?? null);
-                  refetchPage();
-                }}
-                size="sm"
-              >
-                Search
-              </Button>
-              <Button
-                onClick={() => {
-                  setIsSearching(false);
-                  setSearchQuery(null);
-                  refetchPage();
-                }}
-                size="sm"
-                variant="outline"
-              >
-                Cancel
-              </Button>
+              <div className="flex items-center gap-x-2 mt-2 sm:mt-0 w-full sm:w-fit sm:inline-flex">
+                <Button
+                  onClick={() => {
+                    setSearchQuery(searchBar.current?.value ?? null);
+                    refetchPage();
+                  }}
+                  className="w-full sm:w-fit"
+                  size="sm"
+                >
+                  Search
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsSearching(false);
+                    setSearchQuery(null);
+                    refetchPage();
+                  }}
+                  size="sm"
+                  className="w-full sm:w-fit"
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+              </div>
             </div>
           )}
 
