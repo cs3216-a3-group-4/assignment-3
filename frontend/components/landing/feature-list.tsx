@@ -43,12 +43,12 @@ const FeatureList = ({ features }: FeatureListProps) => {
               )}
             </div>
             {selectedFeature === feature && (
-              <div className="mt-2 max-w-full">
-                <p className="text-sm lg:text-base text-gray-600 text-wrap">
+              <div className="max-w-full">
+                <p className="text-sm lg:text-base text-gray-600 text-wrap py-3">
                   {feature.description}
                 </p>
                 <div
-                  className="mt-4 flex flex-col w-full items-stretch cursor-default py-4 md:hidden"
+                  className="flex flex-col w-full items-stretch cursor-default py-8 md:hidden"
                   id="mobile-demo"
                   onClick={(e) => e.stopPropagation()}
                 >

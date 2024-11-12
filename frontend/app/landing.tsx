@@ -297,7 +297,7 @@ const Landing = () => {
             </span>
           </div>
 
-          <div className="flex-1 md:basis-7/12 p-12 mt-10 bg-background border rounded-lg shadow-lg">
+          <div className="flex-1 md:basis-7/12 p-12 mt-10 md:mt-0 bg-background border rounded-lg shadow-lg">
             <p className="text-xl md:text-2xl lg:text-3xl text-text">
               Jippy is after all just an AI frog, and can make mistakes, but
               here are some things made sure to train Jippy on to avoid mistakes
