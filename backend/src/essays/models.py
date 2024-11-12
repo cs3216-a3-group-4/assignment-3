@@ -8,6 +8,7 @@ from src.events.models import Analysis, ArticleConcept
 class CommentParentType(str, Enum):
     ESSAY = "essay"
     PARAGRAPH = "paragraph"
+    DAILY_PRACTICE_ATTEMPT = "daily_practice_attempt"
 
 
 class Inclination(str, Enum):
