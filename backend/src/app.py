@@ -19,6 +19,7 @@ from src.likes.router import router as likes_router
 from src.essays.router import router as essays_router
 from src.articles.router import router as articles_router
 from src.subscriptions.router import router as subscriptions_router
+from src.daily_practice.router import router as daily_practices_router
 
 
 from contextlib import asynccontextmanager
@@ -86,5 +87,6 @@ authenticated_router.include_router(likes_router)
 authenticated_router.include_router(essays_router)
 authenticated_router.include_router(articles_router)
 authenticated_router.include_router(subscriptions_router)
+authenticated_router.include_router(daily_practices_router)
 
 server.include_router(authenticated_router)

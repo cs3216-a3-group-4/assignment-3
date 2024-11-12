@@ -54,6 +54,13 @@ class ParagraphComment(Comment):
     }
 
 
+class DailyPracticeComment(Comment):
+    __mapper_args__ = {
+        "polymorphic_on": "parent_type",
+        "polymorphic_identity": CommentParentType.DAILY_PRACTICE_ATTEMPT.value,
+    }
+
+
 # TODO: deprecate CommentAnalysis
 class CommentAnalysis(Base):
     __tablename__ = "comment_analysis"

@@ -1,9 +1,9 @@
 from datetime import datetime
-from enum import StrEnum
 from sqlalchemy import DateTime, ForeignKey, and_, func
 from src.common.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship, foreign
 from src.essays.models import Comment, CommentParentType
+from src.events.models import Article
 
 
 class DailyPractice(Base):
@@ -14,10 +14,11 @@ class DailyPractice(Base):
     question: Mapped[str]
     date: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
+    attempts: Mapped[list["DailyPracticeAttempt"]] = relationship(
+        back_populates="daily_practice"
+    )
 
-class DailyPracticeAttemptType(StrEnum):
-    OUTLINE = "OUTLINE"
-    PARAGRAPH = "PARAGRAPH"
+    article: Mapped[Article] = relationship("Article", backref="daily_practices")
 
 
 class DailyPracticeAttempt(Base):
@@ -25,9 +26,7 @@ class DailyPracticeAttempt(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     daily_practice_id: Mapped[int] = mapped_column(ForeignKey("daily_practice.id"))
-    type: Mapped[DailyPracticeAttemptType]
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    content: Mapped[str]
 
     comments = relationship(  # noqa: F821
         Comment,
@@ -36,6 +35,11 @@ class DailyPracticeAttempt(Base):
             Comment.parent_type == CommentParentType.DAILY_PRACTICE_ATTEMPT.value,
         ),
         backref="daily_practice_attempt",
+    )
+
+    daily_practice: Mapped[DailyPractice] = relationship(back_populates="attempts")
+    points: Mapped[list["DailyPracticeAttemptPoint"]] = relationship(
+        back_populates="daily_practice_attempt"
     )
 
 
@@ -47,3 +51,7 @@ class DailyPracticeAttemptPoint(Base):
         ForeignKey("daily_practice_attempt.id")
     )
     content: Mapped[str]
+
+    daily_practice_attempt: Mapped[DailyPracticeAttempt] = relationship(
+        back_populates="points"
+    )
