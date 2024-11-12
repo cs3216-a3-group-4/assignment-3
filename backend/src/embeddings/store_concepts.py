@@ -162,18 +162,21 @@ def get_concept_explanation(concept_id: int, article_id: int) -> str:
 
 
 if __name__ == "__main__":
-    # concepts = fetch_all_article_concepts()
-    # asyncio.run(store_concepts_async(concepts))
-    point = "The value of work can indeed be assessed by the salary it commands, as higher salaries often reflect the level of skill, expertise, and responsibility required for a job"
-    results = asyncio.run(get_similar_concepts(point, top_k=3))
-    explanations = []
-    for result in results:
-        explanation = get_concept_explanation(
-            result["concept_id"], result["article_id"]
-        )
-        explanations.append(explanation)
+    concepts = fetch_all_article_concepts()
+    asyncio.run(store_concepts_async(concepts))
+    # point = "The value of work can indeed be assessed by the salary it commands, as higher salaries often reflect the level of skill, expertise, and responsibility required for a job"
+    # results = asyncio.run(get_similar_concepts(point, top_k=3))
+    # explanations = []
+    # for result in results:
+    #     explanation = get_concept_explanation(
+    #         result["concept_id"], result["article_id"]
+    #     )
 
-    for explanation in explanations:
-        print(explanation + "\n")
+    #     explanations.append(explanation)
 
-    print(results)
+    # for explanation in explanations:
+    #     print(explanation + "\n")
+
+    # print(results)
+    # result = "concept: name : hello"
+    # print(result.split(":", 1)[1])

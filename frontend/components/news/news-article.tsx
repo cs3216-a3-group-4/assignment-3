@@ -15,7 +15,10 @@ import {
 import { articleSourceToDisplayNameMap } from "@/types/events";
 import { parseDate, parseDateNoYear } from "@/utils/date";
 
-const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
+const NewsArticle = (props: {
+  onClick?: () => void;
+  newsArticle: MiniArticleDTO;
+}) => {
   const router = useRouter();
 
   const ASPECT_RATIO = 273 / 154;
@@ -28,14 +31,14 @@ const NewsArticle = (props: { newsArticle: MiniArticleDTO }) => {
     getCategoryFor(category.name),
   );
 
-  const onClick = () => {
+  const onClickArticle = () => {
     router.push(`/articles/${newsArticle.id}`);
   };
 
   return (
     <div
       className="flex h-full flex-col py-4 w-full lg:py-6 sm:px-4 md:px-8 xl:px-12 xl:py-10 gap-x-28 border-t-[1px] first:border-none lg:border-y-[0px] hover:bg-primary-alt-foreground/[2.5%] lg:rounded-md cursor-pointer"
-      onClick={onClick}
+      onClick={props.onClick || onClickArticle}
     >
       <div className="hidden sm:flex w-full justify-between text-text-muted/90 mt-2">
         <span>{articleSourceToDisplayNameMap[newsArticle.source]}</span>
