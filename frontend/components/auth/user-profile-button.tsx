@@ -47,7 +47,6 @@ const UserProfileButton = () => {
 
   const email = user.email;
   const image_url = user.image_url;
-  console.log({ image_url });
   return (
     <div className="cursor-pointer">
       <DropdownMenu>

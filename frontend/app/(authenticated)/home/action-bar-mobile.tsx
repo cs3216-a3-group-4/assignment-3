@@ -39,6 +39,17 @@ const ActionBarMobile = () => {
           />
         </CardContent>
       </Card>
+
+      <Card className="bg-primary-100/80 col-span-2">
+        <CardContent className="p-4">
+          <ActionBarItem
+            actionLabel="Practice"
+            actionPath="/daily-practice"
+            description="Dig into today’s bite-sized GP exercise."
+            title="Daily Practice"
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 };
