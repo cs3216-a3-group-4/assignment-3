@@ -20,11 +20,11 @@ export const getTopArticles = (isSingapore: boolean) =>
   });
 
 export const getArticlesPage = (
-  startDate: string,
   page: number,
   isSingapore: boolean,
   categoryIds?: number[],
   searchQuery?: string,
+  startDate?: string,
 ) =>
   queryOptions({
     queryKey: [
@@ -85,9 +85,16 @@ export const getArticlesForCategory = (
   categoryId: number,
   page: number,
   singaporeOnly: boolean,
+  searchQuery?: string,
 ) =>
   queryOptions({
-    queryKey: [QueryKeys.Categories, categoryId, singaporeOnly, page],
+    queryKey: [
+      QueryKeys.Categories,
+      categoryId,
+      singaporeOnly,
+      page,
+      searchQuery,
+    ],
     queryFn: () =>
       getArticlesArticlesGet({
         withCredentials: true,
@@ -96,6 +103,7 @@ export const getArticlesForCategory = (
           category_ids: [categoryId],
           limit: NUM_EVENTS_PER_PAGE,
           offset: (page - 1) * NUM_EVENTS_PER_PAGE,
+          search: searchQuery,
         },
       }).then((data) => data.data),
   });
