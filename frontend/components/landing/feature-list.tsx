@@ -48,7 +48,7 @@ const FeatureList = ({ features }: FeatureListProps) => {
                   {feature.description}
                 </p>
                 <div
-                  className="mt-4 flex flex-col w-full items-stretch cursor-default md:hidden"
+                  className="mt-4 flex flex-col w-full items-stretch cursor-default py-4 md:hidden"
                   id="mobile-demo"
                   onClick={(e) => e.stopPropagation()}
                 >
