@@ -235,7 +235,7 @@ const Articles = () => {
           </div>
 
           {isSearching && (
-            <div className="flex items-center w-full px-4 md:px-8 xl:px-12 gap-x-2 mt-2">
+            <div className="flex items-center w-full sm:px-1 md:px-5 xl:px-9 gap-x-2 mt-4 mb-4">
               <Input
                 className="mr-2"
                 placeholder="Search for article titles..."
