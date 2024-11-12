@@ -268,8 +268,8 @@ const Landing = () => {
           <h3 className="text-sm lg:text-lg font-medium mt-10 text-center w-9/12 mb-10 md:mb-20">
             Whether you need to build your example bank for your next essay, get
             comments to improve your practice essay, or generate essay points
-            for a new essay prompt you&apos;re stuck on, Jippy has what you need for
-            your essay revision.
+            for a new essay prompt you&apos;re stuck on, Jippy has what you need
+            for your essay revision.
           </h3>
           <div className="flex flex-row flex-wrap w-full h-fit items-stretch justify-center">
             <FeatureList features={jippyFeatures} />
