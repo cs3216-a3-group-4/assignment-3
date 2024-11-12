@@ -215,9 +215,9 @@ const Landing = () => {
           <h3 className="text-xl md:text-2xl lg:text-3xl font-medium mt-3 text-center mb-10">
             We&apos;ve been there. Learn how Jippy can help.
           </h3>
-          <div className="flex w-full">
+          <div className="flex justify-stretch w-full">
             <Carousel
-              className="md:hidden w-full"
+              className="md:hidden max-w-[450px] mx-auto"
               opts={{ align: "center", loop: true }}
             >
               <CarouselContent className="flex items-stretch mt-8 lg:mt-16">
@@ -241,10 +241,10 @@ const Landing = () => {
               </CarouselContent>
               <CarouselPagination />
             </Carousel>
-            <div className="hidden md:flex md:flex-row md:flex-wrap w-full h-fit items-stretch justify-start gap-x-5 gap-y-2.5">
+            <div className="hidden md:grid md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] w-full h-fit items-stretch gap-x-5 gap-y-2.5">
               {whyJippyReasons.map((whyJippyReason, index) => (
                 <Card
-                  className="basis-1/3 flex-1 m-1 drop-shadow-sm shadow-background-50 px-4 py-3 w-full min-w-[300px] md:w-auto md:h-auto"
+                  className="m-1 drop-shadow-sm shadow-background-50 px-4 py-3"
                   key={index}
                 >
                   <CardHeader>
