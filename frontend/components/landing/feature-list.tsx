@@ -22,7 +22,7 @@ const FeatureList = ({ features }: FeatureListProps) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-stretch md:items-center md:gap-8 w-full">
+    <div className="flex flex-col md:flex-row items-stretch md:items-center md:gap-8 xl:gap-12 w-full">
       {/* List of features with initially-hidden description */}
       <div className="grow md:basis-1/3 space-y-4">
         {features.map((feature, index) => (
