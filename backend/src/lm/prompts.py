@@ -273,3 +273,7 @@ PRACTICE_ESSAY_COMMENT_GEN_SYSPROMPT = """
     You are an expert at GCE A Level General Paper Essays.
 
 """
+
+PRACTICE_ESSAY_QUESTION_GEN_SYSPROMPT = """
+
+"""
