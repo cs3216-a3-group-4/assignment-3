@@ -1,6 +1,15 @@
-import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import { useUpdateTopEventsPeriod } from "@/queries/user";
 import { useUserStore } from "@/store/user/user-store-provider";
 
@@ -24,10 +33,17 @@ export const getDisplayValueFor = (period: Period) => {
 
 interface DateRangeSelectorProps {
   selectedPeriod: Period;
+  clearFilter?: () => void;
+  onFilter?: () => void;
+  isFiltered?: boolean;
 }
 
-const DateRangeSelector = ({ selectedPeriod }: DateRangeSelectorProps) => {
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+const DateRangeSelector = ({
+  selectedPeriod,
+  clearFilter,
+  onFilter,
+  isFiltered,
+}: DateRangeSelectorProps) => {
   const updateTopEventsMutation = useUpdateTopEventsPeriod();
   const setLoggedIn = useUserStore((store) => store.setLoggedIn);
 
@@ -42,45 +58,48 @@ const DateRangeSelector = ({ selectedPeriod }: DateRangeSelectorProps) => {
         { onSuccess: (data) => setLoggedIn(data.data!) },
       );
     }
-    // Close dropdown
-    setShowDropdown(false);
+    if (onFilter) {
+      onFilter();
+    }
   };
 
   return (
     <div className="relative z-20 inline-block">
-      <button
-        className="flex items-center space-x-2 text-3xl 2xl:text-4xl font-bold hover:underline"
-        onClick={() => setShowDropdown(!showDropdown)}
-      >
-        <span className="text-2xl md:text-4xl 2xl:text-4xl font-bold text-primary-800">
-          {getDisplayValueFor(selectedPeriod)}
-        </span>
-        <ChevronDown className="w-4 h-4" />
-      </button>
-      {showDropdown && (
-        <div className="absolute mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-          <div className="py-1">
-            <button
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              onClick={() => handleSelection(Period.Day)}
-            >
-              past day
-            </button>
-            <button
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              onClick={() => handleSelection(Period.Week)}
-            >
-              week
-            </button>
-            <button
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              onClick={() => handleSelection(Period.Month)}
-            >
-              month
-            </button>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center gap-x-2">
+            <span className="text-2xl md:text-4xl 2xl:text-4xl font-bold text-primary-800">
+              {isFiltered ? "" : getDisplayValueFor(selectedPeriod)}
+            </span>
+            <ChevronDown className="w-4 h-4" />
           </div>
-        </div>
-      )}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56">
+          <DropdownMenuLabel className="text-sm">Date filter</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem onClick={() => handleSelection(Period.Day)}>
+              Past day
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSelection(Period.Week)}>
+              Past week
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSelection(Period.Month)}>
+              Past month
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          {clearFilter && (
+            <>
+              <Separator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={clearFilter}>
+                  Clear date filter
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

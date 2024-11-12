@@ -223,7 +223,7 @@ const EssayFeedbackPage = ({ params }: { params: { id: string } }) => {
                                             ).toString()}
                                           >
                                             {/* TODO: currently assuming analysis always has event */}
-                                            <AccordionTrigger className="text-lg text-text-muted">
+                                            <AccordionTrigger className="text-lg text-text-muted text-left">
                                               {
                                                 comment_article_concept
                                                   .article_concept.article.title

@@ -103,8 +103,8 @@ const PointAccordion: React.FC<OwnProps> = ({ answer_id, point }) => {
       </AccordionTrigger>
       <AccordionContent>
         <div className="border-t-[0.5px] border-primary-600 mt-2 pt-4 2xl:pt-8">
-          <div className="flex items-center text-lg 2xl:text-2xl px-6 2xl:px-10 pb-2 2xl:pb-0 pt-2 justify-between">
-            <span className="flex items-center">
+          <div className="flex items-center text-lg 2xl:text-2xl px-6 2xl:px-10 pb-2 2xl:pb-0 pt-2 justify-between flex-col sm:flex-row">
+            <span className="flex items-center mb-4 w-full sm:w-fit sm:mb-0">
               <BookOpenTextIcon
                 className="inline-flex mr-3"
                 size={20}
@@ -113,7 +113,7 @@ const PointAccordion: React.FC<OwnProps> = ({ answer_id, point }) => {
               <h2>Jippy Examples</h2>
             </span>
             <LikeButtons
-              className="mt-0"
+              className="mt-0 w-full sm:w-fit"
               onDislike={() =>
                 likeMutation.mutate({
                   point_id: point.id,
@@ -176,11 +176,11 @@ const PointAccordion: React.FC<OwnProps> = ({ answer_id, point }) => {
                   },
                 )}
               {!point.example_regenerated && (
-                <div className="flex justify-between items-center bg-violet-100 shadow-inner py-2 px-8">
-                  <p className="font-medium">
+                <div className="flex flex-col sm:flex-row justify-between items-center bg-violet-100 shadow-inner py-2 px-8">
+                  <p className="font-medium w-full px-4 mt-2 sm:mt-0 sm:px-0 sm:w-fit">
                     Not satisfied with these examples?
                   </p>
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="flex gap-2 flex-wrap w-full sm:w-fit">
                     <Button onClick={regenerateExamples} variant="ghost">
                       Regenerate more examples
                       <LucideRefreshCw className="h-4 w-4 ml-2" />
