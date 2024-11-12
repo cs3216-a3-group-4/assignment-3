@@ -47,7 +47,11 @@ const FeatureList = ({ features }: FeatureListProps) => {
                 <p className="text-sm text-gray-600 text-wrap">
                   {feature.description}
                 </p>
-                <div className="mt-4 flex flex-col w-full items-stretch md:hidden">
+                <div
+                  className="mt-4 flex flex-col w-full items-stretch cursor-default md:hidden"
+                  id="mobile-demo"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {feature.featureRender}
                 </div>
               </div>
@@ -57,7 +61,10 @@ const FeatureList = ({ features }: FeatureListProps) => {
       </div>
 
       {/* Feature demo */}
-      <div className="hidden md:grow md:flex md:flex-col md:basis-2/3 md:items-stretch md:justify-center">
+      <div
+        className="hidden md:grow md:flex md:flex-col md:basis-2/3 md:items-stretch md:justify-center"
+        id="desktop-demo"
+      >
         {selectedFeature ? (
           selectedFeature.featureRender
         ) : features[0] ? (
