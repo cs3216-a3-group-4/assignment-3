@@ -298,12 +298,12 @@ const Landing = () => {
           </div>
 
           <div className="flex-1 md:basis-7/12 p-12 mt-10 md:mt-0 bg-background border rounded-lg shadow-lg">
-            <p className="text-xl md:text-2xl lg:text-3xl text-text">
+            <p className="text-xl text-text font-medium">
               Jippy is after all just an AI frog, and can make mistakes, but
               here are some things made sure to train Jippy on to avoid mistakes
               (or alert you to them) as much as possible:
             </p>
-            <ul className="flex flex-col gap-y-4 mt-4 text-lg md:text-xl">
+            <ul className="flex flex-col gap-y-4 mt-4 text-lg">
               <li>
                 Jippy will alert you when Jippy is unsure of something and
                 provide fall-backs instead during essay generation.
@@ -323,12 +323,16 @@ const Landing = () => {
           </h2>
           <div className="w-full grid grid-cols-1 md:grid-cols-2 mt-10 lg:mt-16 gap-x-8 bg-card gap-y-3">
             <PricingTier
+              cardClassName="px-8 py-10"
+              descriptionClassName="text-lg"
               price={TierPrice.Free}
               tierDescription={tierIDToTierDescription[JippyTierID.Free]}
               tierFeatures={tierIDToTierFeature[JippyTierID.Free]}
               tierName={tierIDToTierName(JippyTierID.Free)}
             />
             <PricingTier
+              cardClassName="px-8 py-10"
+              descriptionClassName="text-lg"
               price={TierPrice.Premium}
               tierDescription={tierIDToTierDescription[JippyTierID.Premium]}
               tierFeatures={tierIDToTierFeature[JippyTierID.Premium]}

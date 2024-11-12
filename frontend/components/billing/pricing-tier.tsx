@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Dialog from "@/components/dialog/Dialog";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export interface PricingTierInfo {
   className?: string;
@@ -15,6 +16,8 @@ export interface PricingTierInfo {
   isButtonDisabled?: boolean;
   buttonText?: string;
   onClickBuy?: () => void;
+  descriptionClassName?: string;
+  cardClassName?: string;
 }
 
 const DOWNGRADE_TEXT = "Downgrade";
@@ -28,13 +31,20 @@ const PricingTier = ({
   price,
   tierDescription,
   tierFeatures,
+  descriptionClassName,
+  cardClassName,
 }: PricingTierInfo) => {
   const hasButton = onClickBuy && buttonText;
   const isDowngrade = buttonText === DOWNGRADE_TEXT;
   const [downgradeDialogOpen, setDowngradeDialogOpen] = useState(false);
   return (
     <div className={`h-full ${className}`}>
-      <div className="relative flex flex-col h-full p-6 rounded-2xl border border-slate-200 shadow">
+      <div
+        className={cn(
+          "relative flex flex-col h-full p-6 rounded-2xl border border-slate-200 shadow",
+          cardClassName,
+        )}
+      >
         <div className={hasButton ? "mb-5" : "mb-3"}>
           <div className="text-slate-900 font-semibold mb-1">{tierName}</div>
           <div className="inline-flex items-baseline mb-2">
@@ -43,7 +53,12 @@ const PricingTier = ({
             <span className="text-slate-500 font-medium">/month</span>
           </div>
           {/* Ensure that tierDescription div is at least 2 lines at all times */}
-          <div className={`text-sm text-slate-500 min-h-10`}>
+          <div
+            className={cn(
+              `text-sm text-slate-500 min-h-10`,
+              descriptionClassName,
+            )}
+          >
             {tierDescription}
           </div>
           {isDowngrade && downgradeDialogOpen && (
@@ -66,7 +81,12 @@ const PricingTier = ({
           )}
         </div>
         <div className="text-slate-900 font-medium mb-3">Includes:</div>
-        <ul className="text-slate-600 text-sm space-y-3 grow">
+        <ul
+          className={cn(
+            "text-slate-600 text-sm space-y-3 grow",
+            descriptionClassName,
+          )}
+        >
           {tierFeatures.map((feature, index) => {
             return (
               <li className="flex items-center" key={index}>
