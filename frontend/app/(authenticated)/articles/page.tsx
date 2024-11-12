@@ -49,6 +49,7 @@ const Articles = () => {
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
+  const [isDateFilterCleared, setIsDateFilterCleared] = useState(false);
 
   const { page, pageCount, getPageUrl } = usePagination({
     totalCount,
@@ -72,11 +73,11 @@ const Articles = () => {
     refetch: refetchPage,
   } = useQuery(
     getArticlesPage(
-      toQueryDate(eventStartDate),
       page,
       singaporeOnly,
       user?.categories.map((category) => category.id),
       searchQuery ?? undefined,
+      isDateFilterCleared ? undefined : toQueryDate(eventStartDate),
     ),
   );
 
@@ -90,6 +91,10 @@ const Articles = () => {
 
     router.push(`?${params.toString()}`);
   }, [singaporeOnly, router, searchParams]);
+
+  useEffect(() => {
+    refetchPage();
+  }, [isDateFilterCleared, refetchPage]);
 
   if (!user) {
     return;
@@ -111,11 +116,21 @@ const Articles = () => {
             className="flex flex-col mb-4 gap-y-2 sm:px-4 md:px-8 xl:px-12"
             id="homePage"
           >
-            <div>
+            <div className="flex items-center">
               <span className="text-2xl md:text-4xl 2xl:text-4xl font-bold text-primary-800">
-                What happened this&nbsp;
+                {isDateFilterCleared ? "All articles" : "What happened this"}
+                &nbsp;
               </span>
-              <DateRangeSelector selectedPeriod={eventPeriod} />
+              <DateRangeSelector
+                clearFilter={() => {
+                  setIsDateFilterCleared(true);
+                }}
+                isFiltered={isDateFilterCleared}
+                onFilter={() => {
+                  setIsDateFilterCleared(false);
+                }}
+                selectedPeriod={eventPeriod}
+              />
             </div>
             <span className="text-primary text-lg">
               {parseDate(eventStartDate)} - {parseDate(new Date())}

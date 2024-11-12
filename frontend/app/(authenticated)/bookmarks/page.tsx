@@ -104,7 +104,7 @@ const Page = () => {
                 ),
               )}
           </div>
-          {isArticlesLoaded && (
+          {isArticlesLoaded && pageCount > 0 && (
             <Pagination
               getPageUrl={getPageUrl}
               page={page}
