@@ -7,7 +7,9 @@ interface HighlightProps {
 
 const Highlight: FC<HighlightProps> = ({ children, color = "bg-primary" }) => {
   return (
-    <span className={`${color} px-1 rounded-md inline align-baseline text-white`} >
+    <span
+      className={`${color} px-1 rounded-md inline align-baseline text-white`}
+    >
       {children}
     </span>
   );
