@@ -168,7 +168,7 @@ const jippyFeatures = [
     icon: <BookOpenCheckIcon />,
     featureRender: (
       <>
-        <SamplePoints points={samplePoints} />
+        <SamplePoints question="How far do you agree that the value of work can be assessed by the salary it commands?" points={samplePoints} />
       </>
     ),
   },
