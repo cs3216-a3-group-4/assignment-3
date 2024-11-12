@@ -8,4 +8,5 @@ export enum QueryKeys {
   Notes = "notes",
   Essays = "essays",
   Articles = "articles",
+  DailyPractice = "daily_practice",
 }

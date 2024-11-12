@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import {
   categoriesToDisplayName,
   categoriesToIconsMap,
@@ -11,6 +12,7 @@ interface CategoryChipProps extends Omit<ChipProps, "label"> {
   size?: "sm" | "lg" | "default";
   iconSize?: string | number;
   showIcon?: boolean;
+  className?: string;
 }
 
 const CategoryChip = ({
@@ -18,12 +20,13 @@ const CategoryChip = ({
   iconSize,
   size = "lg",
   showIcon = true,
+  className,
   ...props
 }: CategoryChipProps) => {
   return (
     <Chip
       Icon={(showIcon && categoriesToIconsMap[category]) || undefined}
-      className="mb-2 md:mb-0"
+      className={cn("mb-2 md:mb-0", className)}
       iconSize={iconSize}
       key={category}
       label={categoriesToDisplayName[category]}

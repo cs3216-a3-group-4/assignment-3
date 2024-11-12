@@ -18,6 +18,15 @@ export const parseDateNoYear = (date: string | Date | number): string => {
   }
 };
 
+export const parseLongDateNoYear = (date: string | Date | number): string => {
+  const PLACEHOLDER_DATE = "-";
+  try {
+    return format(date, "EEEE, d MMMM");
+  } catch {
+    return PLACEHOLDER_DATE;
+  }
+};
+
 export const toQueryDate = (date: Date): string => {
   return format(date, "yyyy-MM-dd");
 };

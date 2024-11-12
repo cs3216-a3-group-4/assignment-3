@@ -213,23 +213,23 @@ const Page = ({ params }: { params: { id: string } }) => {
               />
               <div className="flex items-center gap-x-2 mt-2 sm:mt-0 w-full sm:w-fit sm:inline-flex">
                 <Button
+                  className="w-full sm:w-fit"
                   onClick={() => {
                     setSearchQuery(searchBar.current?.value ?? null);
                     refetchPage();
                   }}
-                  className="w-full sm:w-fit"
                   size="sm"
                 >
                   Search
                 </Button>
                 <Button
+                  className="w-full sm:w-fit"
                   onClick={() => {
                     setIsSearching(false);
                     setSearchQuery(null);
                     refetchPage();
                   }}
                   size="sm"
-                  className="w-full sm:w-fit"
                   variant="outline"
                 >
                   Cancel

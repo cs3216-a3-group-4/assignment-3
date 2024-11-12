@@ -757,6 +757,21 @@ export const ConceptDTOSchema = {
     title: 'ConceptDTO'
 } as const;
 
+export const CreateDailyPracticeAttemptDTOSchema = {
+    properties: {
+        points: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Points'
+        }
+    },
+    type: 'object',
+    required: ['points'],
+    title: 'CreateDailyPracticeAttemptDTO'
+} as const;
+
 export const CreateUserQuestionSchema = {
     properties: {
         question: {
@@ -767,6 +782,73 @@ export const CreateUserQuestionSchema = {
     type: 'object',
     required: ['question'],
     title: 'CreateUserQuestion'
+} as const;
+
+export const DailyPracticeAttemptBaseDTOSchema = {
+    properties: {
+        daily_practice: {
+            '$ref': '#/components/schemas/DailyPracticeDTO'
+        }
+    },
+    type: 'object',
+    required: ['daily_practice'],
+    title: 'DailyPracticeAttemptBaseDTO'
+} as const;
+
+export const DailyPracticeAttemptDTOSchema = {
+    properties: {
+        daily_practice: {
+            '$ref': '#/components/schemas/DailyPracticeDTO'
+        },
+        comments: {
+            items: {
+                '$ref': '#/components/schemas/CommentDTO'
+            },
+            type: 'array',
+            title: 'Comments'
+        },
+        points: {
+            items: {
+                '$ref': '#/components/schemas/DailyPracticeAttemptPointDTO'
+            },
+            type: 'array',
+            title: 'Points'
+        }
+    },
+    type: 'object',
+    required: ['daily_practice', 'comments', 'points'],
+    title: 'DailyPracticeAttemptDTO'
+} as const;
+
+export const DailyPracticeAttemptPointDTOSchema = {
+    properties: {
+        content: {
+            type: 'string',
+            title: 'Content'
+        }
+    },
+    type: 'object',
+    required: ['content'],
+    title: 'DailyPracticeAttemptPointDTO'
+} as const;
+
+export const DailyPracticeDTOSchema = {
+    properties: {
+        id: {
+            type: 'integer',
+            title: 'Id'
+        },
+        article: {
+            '$ref': '#/components/schemas/ArticleDTO'
+        },
+        question: {
+            type: 'string',
+            title: 'Question'
+        }
+    },
+    type: 'object',
+    required: ['id', 'article', 'question'],
+    title: 'DailyPracticeDTO'
 } as const;
 
 export const EssayCreateSchema = {
