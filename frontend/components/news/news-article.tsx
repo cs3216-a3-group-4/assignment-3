@@ -15,7 +15,10 @@ import {
 import { articleSourceToDisplayNameMap } from "@/types/events";
 import { parseDate, parseDateNoYear } from "@/utils/date";
 
-const NewsArticle = (props: { onClick?: () => void, newsArticle: MiniArticleDTO }) => {
+const NewsArticle = (props: {
+  onClick?: () => void;
+  newsArticle: MiniArticleDTO;
+}) => {
   const router = useRouter();
 
   const ASPECT_RATIO = 273 / 154;

@@ -6,7 +6,13 @@ import {
 } from "@/components/ui/accordion";
 import { SamplePoint } from "@/types/landing";
 
-const SamplePoints = ({ question, points }: { question: string, points: SamplePoint[] }) => {
+const SamplePoints = ({
+  question,
+  points,
+}: {
+  question: string;
+  points: SamplePoint[];
+}) => {
   return (
     <>
       <h1 className="px-8 md:px-0 text-2xl lg:text-3x xl:text-4xl font-semibold text-text mb-5 2xl:mb-6">

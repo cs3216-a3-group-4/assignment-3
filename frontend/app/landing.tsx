@@ -36,8 +36,8 @@ import {
   tierIDToTierName,
   TierPrice,
 } from "@/types/billing";
-import { SampleComment, SamplePoint } from "@/types/landing";
 import { Category } from "@/types/categories";
+import { SampleComment, SamplePoint } from "@/types/landing";
 
 const faqAnswers = [
   {
@@ -97,13 +97,15 @@ const whyJippyReasons = [
 
 const sampleArticle1: MiniArticleDTO = {
   id: 1,
-  title: "Bitcoin surge triggers billions in losses for crypto short traders after Trump win",
+  title:
+    "Bitcoin surge triggers billions in losses for crypto short traders after Trump win",
   summary:
     "Following Donald Trump's election victory, there has been a significant surge in Bitcoin prices, leading to substantial losses for short sellers in the cryptocurrency market. Bitcoin reached record highs above $82,000, driven by speculation that a more favorable regulatory environment would emerge under Trump's leadership. Traders who shorted various cryptocurrency-related stocks, including MicroStrategy and Coinbase, faced billions in losses, with cumulative short-selling losses exceeding $6 billion this year. The optimistic outlook from investors, along with Trump's campaign promises to promote digital assets, has fueled increased demand for Bitcoin and related stocks.",
   url: "https://www.channelnewsasia.com/business/bitcoin-surge-triggers-billions-losses-crypto-short-traders-after-trump-win-4741331",
   source: "CNA",
   date: "2024-11-11T00:00:00Z",
-  image_url: "https://onecms-res.cloudinary.com/image/upload/s--wkMuQv8t--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-11-11t142959z_1_lynxmpekaa0hi_rtroptp_3_fintech-crypto-column.jpg?itok=JTYqt_4U",
+  image_url:
+    "https://onecms-res.cloudinary.com/image/upload/s--wkMuQv8t--/c_fill,g_auto,h_355,w_632/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-11-11t142959z_1_lynxmpekaa0hi_rtroptp_3_fintech-crypto-column.jpg?itok=JTYqt_4U",
   categories: [
     {
       id: 11,
@@ -112,7 +114,7 @@ const sampleArticle1: MiniArticleDTO = {
     {
       id: 3,
       name: Category.Politics,
-    }
+    },
   ],
   bookmarks: [],
 };
@@ -173,7 +175,10 @@ const jippyFeatures = [
     icon: <BookOpenCheckIcon />,
     featureRender: (
       <>
-        <SamplePoints question="How far do you agree that the value of work can be assessed by the salary it commands?" points={samplePoints} />
+        <SamplePoints
+          points={samplePoints}
+          question="How far do you agree that the value of work can be assessed by the salary it commands?"
+        />
       </>
     ),
   },
