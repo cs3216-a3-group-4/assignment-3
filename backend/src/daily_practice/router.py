@@ -78,7 +78,10 @@ def get_day_practice(
             selectinload(DailyPractice.article),
             selectinload(
                 DailyPractice.attempts.and_(DailyPracticeAttempt.user_id == user.id)
-            ),
+            ).selectinload(DailyPracticeAttempt.points),
+            selectinload(
+                DailyPractice.attempts.and_(DailyPracticeAttempt.user_id == user.id)
+            ).selectinload(DailyPracticeAttempt.comments),
         )
     )
     return daily_practice

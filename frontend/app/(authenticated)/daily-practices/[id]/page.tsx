@@ -30,7 +30,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { getDailyPractice } from "@/queries/daily-practice";
+import {
+  getDailyPractice,
+  useCreateDailyPracticeAttempt,
+} from "@/queries/daily-practice";
 import { parseLongDateNoYear } from "@/utils/date";
 
 const pointSchema = z.object({
@@ -67,6 +70,8 @@ const DailyPracticePage = ({ params }: { params: { id: string } }) => {
   const addPoint = () => append("");
   // const removePoint = (index: number) => remove(index);
 
+  const createDailyPracticeAttemptMutation = useCreateDailyPracticeAttempt(id);
+
   const [isHidden, setIsHidden] = useState(true); // TODO: hidden if not attempted yet
   const [isForm, setIsForm] = useState(false);
 
@@ -79,7 +84,9 @@ const DailyPracticePage = ({ params }: { params: { id: string } }) => {
   }
 
   const onSubmit = form.handleSubmit((data) => {
-    console.log("Form submitted:", data);
+    createDailyPracticeAttemptMutation.mutate(data, {
+      onSuccess: (response) => console.log(response.data),
+    });
   });
 
   return (

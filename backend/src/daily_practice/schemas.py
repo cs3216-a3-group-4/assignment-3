@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, ConfigDict
 from src.essays.schemas import CommentDTO
 from src.events.schemas import ArticleDTO
@@ -16,6 +17,14 @@ class DailyPracticeDTO(BaseModel):
     practice_intro: str
     practice_hook_title: str
     practice_hook_question: str
+
+    attempts: list["ScuffedAttemptDTO"]
+
+
+class ScuffedAttemptDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    comments: list[CommentDTO]
+    points: list["DailyPracticeAttemptPointDTO"]
 
 
 class DailyPracticeAttemptBaseDTO(BaseModel):
