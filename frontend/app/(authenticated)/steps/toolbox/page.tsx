@@ -22,6 +22,16 @@ import { cn } from "@/lib/utils";
 import JippyIconSm from "@/public/jippy-icon/jippy-icon-sm";
 
 const GP_QUESTIONS = {
+  2024: [
+    "To what extent are science and technology able to solve the problem of waste disposal?",
+    "How desirable is it for a country to provide free healthcare for all its citizens?",
+    "Evaluate the measures taken in your society to deter crime and punish criminals.",
+    "‘Education today should involve more than the study of academic subjects.’ How far do you agree?",
+    "Assess the view that it is always right to challenge injustice.",
+    "‘Online advertisements use increasingly sophisticated methods to target consumers.’ To what extent does this bring more harm than good?",
+    "‘Humour is essential for an individual’s well-being.’ Discuss.",
+    "‘There is a lack of appreciation for the value of music.’ How far is this true in your society?",
+  ],
   2023: [
     "How realistic is it for countries to implement a national minimum wage for all their workers?",
     "“Fossil fuels should no longer have a part in the production of energy.” Discuss",
