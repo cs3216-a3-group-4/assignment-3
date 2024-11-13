@@ -65,6 +65,25 @@ def get_todays_practice(
     return daily_practice
 
 
+@router.get("/{id}")
+def get_day_practice(
+    id: int,
+    user: Annotated[User, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
+) -> DailyPracticeDTO:
+    daily_practice = session.scalar(
+        select(DailyPractice)
+        .where(DailyPractice.id == id)
+        .options(
+            selectinload(DailyPractice.article),
+            selectinload(
+                DailyPractice.attempts.and_(DailyPracticeAttempt.user_id == user.id)
+            ),
+        )
+    )
+    return daily_practice
+
+
 @router.post("/{id}/attempts")
 def create_daily_practice_attempt(
     id: int,

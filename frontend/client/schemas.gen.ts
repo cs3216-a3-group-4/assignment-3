@@ -838,6 +838,11 @@ export const DailyPracticeDTOSchema = {
             type: 'integer',
             title: 'Id'
         },
+        date: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Date'
+        },
         article: {
             '$ref': '#/components/schemas/ArticleDTO'
         },
@@ -847,7 +852,7 @@ export const DailyPracticeDTOSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'article', 'question'],
+    required: ['id', 'date', 'article', 'question'],
     title: 'DailyPracticeDTO'
 } as const;
 

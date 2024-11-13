@@ -205,6 +205,7 @@ export type DailyPracticeAttemptPointDTO = {
 
 export type DailyPracticeDTO = {
     id: number;
+    date: string;
     article: ArticleDTO;
     question: string;
 };
@@ -992,6 +993,12 @@ export type GetTodaysPracticeDailyPracticesTodayGetData = unknown;
 export type GetTodaysPracticeDailyPracticesTodayGetResponse = (DailyPracticeDTO);
 
 export type GetTodaysPracticeDailyPracticesTodayGetError = (HTTPValidationError);
+
+export type GetDayPracticeDailyPracticesIdGetData = unknown;
+
+export type GetDayPracticeDailyPracticesIdGetResponse = (DailyPracticeDTO);
+
+export type GetDayPracticeDailyPracticesIdGetError = (HTTPValidationError);
 
 export type CreateDailyPracticeAttemptDailyPracticesIdAttemptsPostData = {
     body: CreateDailyPracticeAttemptDTO;

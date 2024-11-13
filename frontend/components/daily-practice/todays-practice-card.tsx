@@ -17,12 +17,14 @@ import { getTodaysDailyPractice } from "@/queries/daily-practice";
 import { Category } from "@/types/categories";
 import { parseLongDateNoYear } from "@/utils/date";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface TodaysPracticeCardProps {
   className?: string;
 }
 
 const TodaysPracticeCard = ({ className }: TodaysPracticeCardProps) => {
+  const router = useRouter();
   const { data, isLoading } = useQuery(getTodaysDailyPractice());
   return (
     <div
@@ -39,9 +41,13 @@ const TodaysPracticeCard = ({ className }: TodaysPracticeCardProps) => {
         Today’s practice dives into the ethical questions behind what we eat.
       </h3>
 
-      <div className="flex items-center justify-between text-lg text-[#416978] p-4 bg-[#ecf4f8] rounded-xl font-[450]">
+      <div className="flex flex-col md:flex-row items-center md:justify-between text-lg text-[#416978] p-4 bg-[#ecf4f8] rounded-xl font-[450]">
         Ready to rethink the impact of the chicken industry?
-        <Button className="ml-4 text-base" variant="secondary">
+        <Button
+          className="w-full mt-3 md:mt-0 md:w-fit md:ml-4 text-base"
+          variant="secondary"
+          onClick={() => data && router.push(`/daily-practices/${data.id}`)}
+        >
           <BicepsFlexed className="mr-2 h-5 w-5" /> Let&apos;s go!
         </Button>
       </div>

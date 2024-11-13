@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 from src.essays.schemas import CommentDTO
 from src.events.schemas import ArticleDTO
@@ -7,6 +8,7 @@ class DailyPracticeDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    date: datetime
     article: ArticleDTO
     question: str
 
