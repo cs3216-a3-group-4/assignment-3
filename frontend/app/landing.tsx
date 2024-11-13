@@ -288,17 +288,17 @@ const Landing = () => {
 
         <div className="flex flex-col bg-background w-full px-8 py-12 md:px-12 lg:py-24 lg:px-24 md:gap-x-24">
           <div className="flex flex-col flex-1 gap-y-8 w-full items-center">
-            <div className="text-3xl md:text-5xl tracking-tight leading-tight text-primary font-bold text-center">
+            <h2 className="text-3xl md:text-5xl tracking-tight leading-tight text-primary font-bold text-center">
               Why you can trust Jippy AI
               <span className="relative inline-block ml-1 lg:ml-2">
                 <Wand2 className="w-5 h-5 md:w-8 md:h-8 ml-2 hover:animate-wiggle-more text-text-muted" />
               </span>
-            </div>
-            <span className="text-xl md:text-2xl lg:text-3xl text-center w-9/12">
+            </h2>
+            <h3 className="text-xl md:text-2xl lg:text-3xl text-center w-9/12">
               Jippy is just an AI frog after all and can make mistakes, but
               measures are in place to minimise mistakes or alert you to issues
               as much as possible
-            </span>
+            </h3>
           </div>
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] w-full h-fit items-stretch gap-x-5 gap-y-3 mt-10">
