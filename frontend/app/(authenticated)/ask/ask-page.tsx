@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CircleAlert, Wand2Icon, ZapIcon } from "lucide-react";
 
 import { createConceptBasedUserQnUserQuestionsPost } from "@/client";
@@ -65,8 +65,11 @@ const LimitAlert = ({
 };
 
 const AskPage = ({ setIsLoading, isLoading }: AskPageProps) => {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search");
+
   const router = useRouter();
-  const [questionInput, setQuestionInput] = useState<string>("");
+  const [questionInput, setQuestionInput] = useState<string>(search || "");
   // Whether there are any errors
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const user = useUserStore((store) => store.user);

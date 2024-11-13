@@ -268,3 +268,12 @@ You are a Singaporean student studying for your GCE A Levels General Paper.
 
     Given inputs:
     """
+
+PRACTICE_ESSAY_COMMENT_GEN_SYSPROMPT = """
+    You are an expert at GCE A Level General Paper Essays.
+
+"""
+
+PRACTICE_ESSAY_QUESTION_GEN_SYSPROMPT = """
+
+"""
