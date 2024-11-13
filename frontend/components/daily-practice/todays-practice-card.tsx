@@ -1,23 +1,16 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { BicepsFlexed, Newspaper } from "lucide-react";
 
 import CategoryChip from "@/components/display/category-chip";
 import Chip from "@/components/display/chip";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { getTodaysDailyPractice } from "@/queries/daily-practice";
 import { Category } from "@/types/categories";
 import { parseLongDateNoYear } from "@/utils/date";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 
 interface TodaysPracticeCardProps {
   className?: string;
@@ -50,8 +43,8 @@ const TodaysPracticeCard = ({ className }: TodaysPracticeCardProps) => {
         {data.practice_hook_question}
         <Button
           className="w-full mt-3 md:mt-0 md:w-fit md:ml-4 text-base"
-          variant="secondary"
           onClick={() => data && router.push(`/daily-practices/${data.id}`)}
+          variant="secondary"
         >
           <BicepsFlexed className="mr-2 h-5 w-5" /> Let&apos;s go!
         </Button>
