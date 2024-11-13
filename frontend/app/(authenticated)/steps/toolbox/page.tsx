@@ -142,7 +142,7 @@ const Toolbox = () => {
           <TabsContent value="all">
             {Object.entries(GP_QUESTIONS)
               // ts-expect-error steps is in an hour idc about types
-              .sort((a, b) => b[0] - a[0])
+              .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
               .map(([year, questionList]) => (
                 <Collapsible defaultOpen={true} key={year}>
                   <div className="flex items-center justify-between space-x-4 px-4">
