@@ -296,15 +296,13 @@ const Landing = () => {
             </div>
             <span className="text-xl md:text-2xl lg:text-3xl text-center w-9/12">
               Jippy is just an AI frog after all and can make mistakes, but
-              measures are in place to minimise mistakes
-              or alert you to issues as much as possible
+              measures are in place to minimise mistakes or alert you to issues
+              as much as possible
             </span>
           </div>
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] w-full h-fit items-stretch gap-x-5 gap-y-3 mt-10">
-            <Card
-              className="m-1 drop-shadow-sm shadow-background-50 px-4 py-3"
-            >
+            <Card className="m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
               <CardHeader>
                 <CardTitle className="text-primary-800 text-xl md:text-2xl lg:text-3xl">
                   Alerts
@@ -315,16 +313,14 @@ const Landing = () => {
                 </CardDescription>
               </CardHeader>
             </Card>
-            <Card
-              className="m-1 drop-shadow-sm shadow-background-50 px-4 py-3"
-            >
+            <Card className="m-1 drop-shadow-sm shadow-background-50 px-4 py-3">
               <CardHeader>
                 <CardTitle className="text-primary-800 text-xl md:text-2xl lg:text-3xl">
                   Credible news
                 </CardTitle>
                 <CardDescription className="md:text-xl text-text-muted pt-3">
-                  Jippy is trained on real current affairs news from a reliable source,
-                  with more than 18k articles and counting.
+                  Jippy is trained on real current affairs news from a reliable
+                  source, with more than 18k articles and counting.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -332,7 +328,9 @@ const Landing = () => {
         </div>
 
         <div className="flex flex-col items-center justify-center bg-background w-full py-16 md:py-24 px-8 md:px-24 place-items-start">
-          <h1 className="text-3xl md:text-5xl font-bold text-primary">Plans & pricing</h1>
+          <h1 className="text-3xl md:text-5xl font-bold text-primary">
+            Plans & pricing
+          </h1>
           <h2 className="text-xl md:text-2xl lg:text-3xl text-text-muted mt-8">
             We strive to keep Jippy accessible for everyone.
           </h2>
