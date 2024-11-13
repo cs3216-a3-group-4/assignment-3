@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Form, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +20,7 @@ import Link from "@/components/navigation/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
+  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -56,12 +57,14 @@ const DailyPracticePage = ({ params }: { params: { id: string } }) => {
     defaultValues: { points: [""] },
   });
 
-  const { fields } = useFieldArray<PointSchema>({
+  const { fields, append } = useFieldArray<PointSchema>({
+    // @ts-expect-error whdujwehudfhu
     name: "points" as const,
     control: form.control,
   });
 
-  // const addPoint = () => append("");
+  // @ts-expect-error whdujwehudfhu
+  const addPoint = () => append("");
   // const removePoint = (index: number) => remove(index);
 
   const [isHidden, setIsHidden] = useState(true); // TODO: hidden if not attempted yet
@@ -174,7 +177,7 @@ const DailyPracticePage = ({ params }: { params: { id: string } }) => {
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-medium">New attempt</h3>
                       <div>
-                        <Button variant="outline">
+                        <Button onClick={addPoint} variant="outline">
                           <SquarePlus className="h-4 w-4 mr-2" /> New point
                         </Button>
                       </div>
@@ -182,34 +185,39 @@ const DailyPracticePage = ({ params }: { params: { id: string } }) => {
                     <Separator className="w-full my-4" />
 
                     <Form {...form}>
-                      <form onSubmit={onSubmit}>
-                        {fields.map((field, index) => (
-                          <FormField
-                            control={form.control}
-                            key={field.id}
-                            name={`points.${index}`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{`Point ${index + 1}`}</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder={`Point ${index + 1}`}
-                                    type="text"
-                                    {...field}
-                                    {...form.register(
-                                      `points.${index}` as const,
-                                    )}
-                                  />
-                                </FormControl>
-                                <FormDescription>
-                                  Write your topic sentence here.
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        ))}
-                      </form>
+                      <div className="flex flex-col px-4">
+                        <form onSubmit={onSubmit}>
+                          {fields.map((field, index) => (
+                            <FormField
+                              control={form.control}
+                              key={field.id}
+                              name={`points.${index}`}
+                              render={({ field }) => (
+                                <FormItem className="mt-2">
+                                  <FormLabel>{`Point ${index + 1}`}</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder={`Point ${index + 1}`}
+                                      type="text"
+                                      {...field}
+                                      {...form.register(
+                                        `points.${index}` as const,
+                                      )}
+                                    />
+                                  </FormControl>
+                                  <FormDescription>
+                                    Write your topic sentence here.
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          ))}
+                          <Button className="mt-6 w-full" onClick={onSubmit}>
+                            Submit
+                          </Button>
+                        </form>
+                      </div>
                     </Form>
                   </div>
                 ) : (
