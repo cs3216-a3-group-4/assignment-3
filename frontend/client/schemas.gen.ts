@@ -849,10 +849,26 @@ export const DailyPracticeDTOSchema = {
         question: {
             type: 'string',
             title: 'Question'
+        },
+        practice_title: {
+            type: 'string',
+            title: 'Practice Title'
+        },
+        practice_intro: {
+            type: 'string',
+            title: 'Practice Intro'
+        },
+        practice_hook_title: {
+            type: 'string',
+            title: 'Practice Hook Title'
+        },
+        practice_hook_question: {
+            type: 'string',
+            title: 'Practice Hook Question'
         }
     },
     type: 'object',
-    required: ['id', 'date', 'article', 'question'],
+    required: ['id', 'date', 'article', 'question', 'practice_title', 'practice_intro', 'practice_hook_title', 'practice_hook_question'],
     title: 'DailyPracticeDTO'
 } as const;
 

@@ -34,21 +34,14 @@ const DailyPracticePage = ({ params }: { params: { id: string } }) => {
 
         <div className="mt-4">
           <h2 className="text-2xl font-semibold">
-            Ethics of the Chicken Industry
+            {dailyPractice.practice_title}
           </h2>
           <h3 className="text-text-muted">
             {parseLongDateNoYear(dailyPractice.date)}
           </h3>
         </div>
 
-        <div className="mt-6">
-          Today’s exercise dives into the ethical questions surrounding what we
-          eat, with a focus on the chicken industry. From farming practices to
-          consumer choices, you’ll explore how this industry impacts animal
-          welfare, sustainability, and our own moral responsibilities. This
-          topic challenges us to think about the true cost of our food and the
-          ethical implications behind everyday choices.
-        </div>
+        <div className="mt-6">{dailyPractice.practice_intro}</div>
 
         <Separator className="my-6" />
 

@@ -414,7 +414,7 @@ export const getTodaysPracticeDailyPracticesTodayGet = <ThrowOnError extends boo
 /**
  * Get Day Practice
  */
-export const getDayPracticeDailyPracticesIdGet = <ThrowOnError extends boolean = false>(options?: Options<GetDayPracticeDailyPracticesIdGetData, ThrowOnError>) => { return (options?.client ?? client).get<GetDayPracticeDailyPracticesIdGetResponse, GetDayPracticeDailyPracticesIdGetError, ThrowOnError>({
+export const getDayPracticeDailyPracticesIdGet = <ThrowOnError extends boolean = false>(options: Options<GetDayPracticeDailyPracticesIdGetData, ThrowOnError>) => { return (options?.client ?? client).get<GetDayPracticeDailyPracticesIdGetResponse, GetDayPracticeDailyPracticesIdGetError, ThrowOnError>({
     ...options,
     url: '/daily-practices/{id}'
 }); };

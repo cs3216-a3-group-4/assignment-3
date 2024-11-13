@@ -10,6 +10,12 @@ class DailyPractice(Base):
     __tablename__ = "daily_practice"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+
+    practice_title: Mapped[str]
+    practice_intro: Mapped[str]
+    practice_hook_title: Mapped[str]
+    practice_hook_question: Mapped[str]
+
     article_id: Mapped[int] = mapped_column(ForeignKey("article.id"))
     question: Mapped[str]
     date: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())

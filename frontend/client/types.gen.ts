@@ -208,6 +208,10 @@ export type DailyPracticeDTO = {
     date: string;
     article: ArticleDTO;
     question: string;
+    practice_title: string;
+    practice_intro: string;
+    practice_hook_title: string;
+    practice_hook_question: string;
 };
 
 export type EssayCreate = {
@@ -994,7 +998,11 @@ export type GetTodaysPracticeDailyPracticesTodayGetResponse = (DailyPracticeDTO)
 
 export type GetTodaysPracticeDailyPracticesTodayGetError = (HTTPValidationError);
 
-export type GetDayPracticeDailyPracticesIdGetData = unknown;
+export type GetDayPracticeDailyPracticesIdGetData = {
+    path: {
+        id: number;
+    };
+};
 
 export type GetDayPracticeDailyPracticesIdGetResponse = (DailyPracticeDTO);
 

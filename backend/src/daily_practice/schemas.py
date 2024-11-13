@@ -12,6 +12,11 @@ class DailyPracticeDTO(BaseModel):
     article: ArticleDTO
     question: str
 
+    practice_title: str
+    practice_intro: str
+    practice_hook_title: str
+    practice_hook_question: str
+
 
 class DailyPracticeAttemptBaseDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)

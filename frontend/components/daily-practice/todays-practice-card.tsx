@@ -26,6 +26,11 @@ interface TodaysPracticeCardProps {
 const TodaysPracticeCard = ({ className }: TodaysPracticeCardProps) => {
   const router = useRouter();
   const { data, isLoading } = useQuery(getTodaysDailyPractice());
+
+  if (!data) {
+    return <></>;
+  }
+
   return (
     <div
       className={cn(
@@ -37,12 +42,12 @@ const TodaysPracticeCard = ({ className }: TodaysPracticeCardProps) => {
         {parseLongDateNoYear(Date.now())}
       </span>
 
-      <h3 className="text-2xl text-[#236780] font-medium mb-4">
-        Today’s practice dives into the ethical questions behind what we eat.
+      <h3 className="text-xl text-[#236780] font-medium mb-4">
+        {data.practice_hook_title}
       </h3>
 
       <div className="flex flex-col md:flex-row items-center md:justify-between text-lg text-[#416978] p-4 bg-[#ecf4f8] rounded-xl font-[450]">
-        Ready to rethink the impact of the chicken industry?
+        {data.practice_hook_question}
         <Button
           className="w-full mt-3 md:mt-0 md:w-fit md:ml-4 text-base"
           variant="secondary"
