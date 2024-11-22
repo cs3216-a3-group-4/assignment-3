@@ -8,6 +8,7 @@ from src.events.models import Analysis, ArticleConcept
 class CommentParentType(str, Enum):
     ESSAY = "essay"
     PARAGRAPH = "paragraph"
+    DAILY_PRACTICE_ATTEMPT = "daily_practice_attempt"
 
 
 class Inclination(str, Enum):
@@ -50,6 +51,13 @@ class ParagraphComment(Comment):
     __mapper_args__ = {
         "polymorphic_on": "parent_type",
         "polymorphic_identity": CommentParentType.PARAGRAPH.value,
+    }
+
+
+class DailyPracticeComment(Comment):
+    __mapper_args__ = {
+        "polymorphic_on": "parent_type",
+        "polymorphic_identity": CommentParentType.DAILY_PRACTICE_ATTEMPT.value,
     }
 
 
